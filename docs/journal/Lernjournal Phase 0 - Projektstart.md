@@ -46,10 +46,10 @@ npm run check                                # Linter, Formatierung, Typen, Test
 - **ESPN (NFL):** inoffiziell und nicht dokumentiert, der Testabruf kam mit 403 zurück.
 - **X-API:** ab etwa 200 $ im Monat, deshalb zum Start RSS.
 
-### Next.js 16.4 ist anders als 16.2 in musik-app
+### Vite braucht kein Plugin mehr für Pfad-Kürzel
 
-Tailwind CSS 4 läuft über `@tailwindcss/turbopack`, eine `postcss.config.mjs` gibt es nicht mehr. Vite löst die
-Pfad-Kürzel aus `tsconfig.json` selbst auf, das Plugin `vite-tsconfig-paths` entfällt.
+Vite löst die Pfad-Kürzel aus `tsconfig.json` (z. B. `@/app/page`) selbst auf, das Plugin `vite-tsconfig-paths`
+aus dem Rezept entfällt. musik-app (Next.js 16.4.2) nutzt es noch.
 
 ## Fehler und Lösungen
 
