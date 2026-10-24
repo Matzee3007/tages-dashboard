@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Lokale Geheimnisse und Verbindungsdaten
+.env
+.env.*
+!.env.example
+
+# Obsidian: ändert sich bei jedem Öffnen
+.obsidian/workspace.json
+.obsidian/graph.json
+
+# Claude Code: persönliche Einstellungen dieses Rechners
+.claude/settings.local.json
+
+# Stack (ergänzt von /projekt-starten)
+/node_modules
+/.next/
+/out/
+/build
+/coverage
+*.pem
+npm-debug.log*
+.vercel
+*.tsbuildinfo
+next-env.d.ts
