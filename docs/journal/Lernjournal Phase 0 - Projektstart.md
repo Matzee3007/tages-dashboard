@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 0 - Projektstart
-status: aktiv
+status: abgeschlossen
 phase: 0
 erstellt: 2026-10-24
 tags: [lernjournal, phase-0, projekt-starten, nextjs, typescript, vitest, pwa, datenquellen]

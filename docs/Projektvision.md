@@ -91,7 +91,7 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 Jede Phase endet mit etwas, das läuft und getestet ist. Eine fertige Phase wird in derselben Session
 abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 
-- [ ] **Phase 0 – Fundament:** Repo und `CLAUDE.md` stehen, Stack eingerichtet, erster Test grün,
+- [x] **Phase 0 – Fundament:** Repo und `CLAUDE.md` stehen, Stack eingerichtet, erster Test grün,
   Projektvision mit `/grill-with-docs` geschärft, Phasen 1 bis 3 geplant
 - [ ] **Phase 1 – Grundgerüst:** Login, PWA (Symbol, Vollbild auf iPhone und iPad), Kachel-System mit einer
   Beispielkachel, online auf Vercel
