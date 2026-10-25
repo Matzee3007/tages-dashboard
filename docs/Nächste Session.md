@@ -34,6 +34,9 @@ Session-Ende schreibt der Skill `naechste-session` diese Datei.
 2. Danach mit `plan-schreiben` den Plan für den Rest von Phase 0 schreiben (erster Test, Prüfbefehle,
    evtl. CI).
 
+Nebenbei: Musik-App, sport-fantasy und die globale `CLAUDE.md` wurden am 2026-10-25 mit `/agent-md-refactor`
+aufgeräumt. Hier lohnt es sich erst, wenn die `CLAUDE.md` nach der Projektvision gewachsen ist.
+
 ## Passende Skills
 
 - `grill-with-docs`: Projektvision und Phasen schärfen
