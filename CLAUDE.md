@@ -28,11 +28,13 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 1. **Kontext liegt in Dateien** (`CLAUDE.md`, `docs/`), nicht im Chatverlauf.
 2. **Nur für mich:** genau ein Nutzer, jede Seite und jede Schnittstelle hinter dem Login. Ausnahme: der Eingang
    für den Kurzbefehl, der mit einem eigenen geheimen Schlüssel geschützt ist.
-3. **Kacheln:** Jeder Bereich (Sport, Schritte, News …) ist eine eigene Kachel mit eigener Datenquelle. Eine neue
-   Kachel kommt dazu, ohne die anderen zu ändern.
+3. **Kacheln:** Jede Kachel (je Wettbewerb, Schritte, KI-News …) ist eigenständig, mit eigener Art von Datenquelle,
+   und besteht aus Abschnitten. Eine neue Kachel kommt dazu, ohne die anderen zu ändern. Begriffe: `docs/Glossar.md`.
 4. **Daten holt der Server**, nicht der Browser: API-Schlüssel bleiben auf dem Server, Antworten werden kurz
    zwischengespeichert, damit die Gratis-Grenzen der Anbieter reichen.
 5. **Erst gratis:** keine bezahlte Datenquelle ohne eigenes ADR (z. B. X-API, Live-Daten für Formel 1).
+6. **Einstellungen im Code:** Kacheln, Reihenfolge, Mein Team, Absender und Feeds, Tagesziel stehen in einer Datei
+   im Code, nicht in der Datenbank. Eine Einstellungsseite gibt es erst später.
 
 ## Repo-Struktur
 
