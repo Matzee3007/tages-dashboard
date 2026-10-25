@@ -12,15 +12,23 @@ tags: [projektvision, roadmap, tages-dashboard]
 Ein persönliches Live-Dashboard als Web-App (PWA), das **nur ich** nutze, auf Mac, iPhone und iPad. Es zeigt
 auf einen Blick, was heute wichtig ist, in Kacheln, die sich später erweitern lassen:
 
-- **Sport live:** Bundesliga, FC Bayern, Arsenal, NFL mit den Seattle Seahawks, Formel 1
+- **Sport live:** Bundesliga (FC Bayern), Premier League (Arsenal), Champions League, NFL (Seattle Seahawks),
+  Formel 1
 - **Schritte:** aus Apple Health, per iPhone-Kurzbefehl an die App geschickt
 - **KI-News:** per RSS von Anthropic, OpenAI, Google DeepMind, Fachseiten sowie Andrej Karpathy und Matt Pocock
-  über ihre eigenen Kanäle (Blog, Newsletter, YouTube)
+  über ihre eigenen Feeds (Blog, Newsletter, YouTube)
 
 Problem: Die Infos liegen in vielen Apps und Seiten verstreut. Das Dashboard bündelt sie.
 
-**Ausdrücklich nicht:** keine anderen Nutzer, kein App Store, keine native iOS-App, zum Start keine bezahlten
-Datenquellen (X-API erst später, siehe Offene Fragen).
+**Ausdrücklich nicht:** keine anderen Nutzer, kein App Store, keine native iOS-App, keine bezahlten
+Datenquellen ohne eigenes ADR (X-API erst später, siehe Offene Fragen). Zum Start auch keine Push-Benachrichtigungen, keine
+Mitmach-Funktionen (z. B. „als gelesen markieren“), keine Offline-Daten und keine Einstellungsseite.
+
+**Wann ich draufschaue:** kurz zwischendurch auf dem iPhone („Was ist los?“) und nebenher auf Mac oder iPad,
+z. B. während eines Spiels. Gebaut wird zuerst fürs iPhone, auf größeren Bildschirmen stehen die Kacheln
+nebeneinander.
+
+Fachbegriffe (Kachel, Abschnitt, Wettbewerb, Spieltag …): [[projects/tages-dashboard/docs/Glossar|Glossar]].
 
 Weitere Notizen: [[projects/tages-dashboard/docs/Arbeitsumgebung|Arbeitsumgebung]] (was der Rechner braucht), [[projects/tages-dashboard/docs/Nächste Session|Nächste Session]] (womit es weitergeht),
 [[projects/tages-dashboard/docs/Tools für später|Tools für später]] (vorgemerkte Werkzeuge).
@@ -60,11 +68,23 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 1. **Web-App statt iOS-App:** ein Code für Mac, iPhone und iPad, kostenlos, ohne App Store und ohne
    Neuinstallieren alle 7 Tage. Schritte kommen per Kurzbefehl statt über HealthKit.
 2. **Nur ein Nutzer:** alles hinter dem Login. Der Eingang für den Kurzbefehl hat einen eigenen geheimen Schlüssel.
-3. **Kacheln:** jeder Bereich eigenständig, neue Bereiche ohne Umbau der anderen.
+3. **Kacheln:** jeder Bereich eigenständig, neue Bereiche ohne Umbau der anderen. Eine Kachel besteht aus
+   Abschnitten.
 4. **Daten holt der Server** und speichert sie kurz zwischen. Die Seite fragt jede Minute neu, solange sie offen ist.
+   Verzögerte Ergebnisse im Gratis-Tarif (football-data.org) sind in Ordnung.
 5. **Erst gratis:** bezahlte Quellen nur mit eigenem ADR.
+6. **Einstellungen im Code:** Kacheln, Reihenfolge, Mein Team, Absender und Feeds, Tagesziel stehen in einer Datei
+   im Code. Ändern heißt: Datei ändern und neu veröffentlichen. Eine Einstellungsseite lässt sich später nachrüsten.
 
-Stack-Wahl mit Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR 0001]].
+## Inhalt der Kacheln
+
+- **KI-News:** eine Kachel, darin ein Abschnitt pro Absender (ein Absender kann mehrere Feeds haben). Jeder
+  Abschnitt zeigt die neuesten 3 Meldungen der letzten 7 Tage mit Titel und Alter, ein Tipp öffnet das Original.
+  Ohne neue Meldung schrumpft der Abschnitt auf eine Zeile. Der Abschnitt mit der neuesten Meldung steht oben.
+- **Sport:** eine Kachel pro Wettbewerb mit den Abschnitten Spieltag und Tabelle (Formel 1: Rennwochenende und
+  WM-Wertung). Gezeigt wird der aktuelle Spieltag, nicht nur heute. Mein Team ist hervorgehoben und steht oben.
+  Uhrzeiten in deutscher Zeit.
+- **Schritte:** Schritte von heute, Tagesziel mit Fortschrittsbalken, Verlauf der letzten 7 Tage als Balken.
 
 ## Roadmap
 
@@ -76,12 +96,13 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 - [ ] **Phase 1 – Grundgerüst:** Login, PWA (Symbol, Vollbild auf iPhone und iPad), Kachel-System mit einer
   Beispielkachel, online auf Vercel
 - [ ] **Phase 2 – KI-News:** RSS-Feeds von Anthropic, OpenAI, Google DeepMind, Fachseiten, Karpathy und Matt Pocock
-  zusammenführen, neueste zuerst
-- [ ] **Phase 3 – Sport:** Bundesliga und FC Bayern (OpenLigaDB), Arsenal und Champions League (football-data.org),
-  NFL und Seattle Seahawks (ESPN), Formel 1 (Jolpica, OpenF1)
+  in einer Kachel mit einem Abschnitt pro Absender
+- [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (OpenLigaDB), Premier League und Champions League
+  (football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
 - [ ] **Phase 4 – Schritte:** iPhone-Kurzbefehl schickt die Schritte aus Apple Health an die App, Kachel mit
-  Tageswert und Verlauf
-- [ ] **Später:** X-API (Kosten), weitere Kacheln
+  Tageswert, Tagesziel und Verlauf
+- [ ] **Später:** X-API (Kosten), weitere Wettbewerbe (z. B. DFB-Pokal, FA Cup), Push-Benachrichtigungen,
+  „als gelesen markieren“, Offline-Daten, Einstellungsseite, weitere Kacheln
 
 ## Stolpersteine
 
@@ -97,7 +118,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 
 ## Offene Fragen
 
-- Sind Karpathy und Matt Pocock auf Bluesky aktiv (kostenloses RSS)? Welche Feeds haben ihre Blogs und Kanäle?
+- Sind Karpathy und Matt Pocock auf Bluesky aktiv (kostenloses RSS)? Welche Feeds haben sie?
 - Welche Fachseiten genau (z. B. heise, The Verge, Hacker News)?
 - Antwortet die ESPN-Schnittstelle von einem Server aus (Testabruf ergab 403)?
 - Lohnen sich später Live-Daten für Arsenal (12 €/Monat) oder Formel 1 (9,90 €/Monat)?
