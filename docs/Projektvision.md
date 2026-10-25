@@ -104,6 +104,43 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 - [ ] **Später:** X-API (Kosten), weitere Wettbewerbe (z. B. DFB-Pokal, FA Cup), Push-Benachrichtigungen,
   „als gelesen markieren“, Offline-Daten, Einstellungsseite, weitere Kacheln
 
+### Fahrplan Phasen 1 bis 3
+
+Grobplan, Stand 2026-10-25. Jeder Schritt wird ein PR. Am Start einer Phase klärt `/grill-with-docs` die offenen
+Fragen, am Start jedes Schritts schreibt `plan-schreiben` den genauen Plan in `docs/plaene/`. Spätere Phasen
+dürfen den Fahrplan ändern, wenn frühere Neues zeigen.
+
+**Phase 1 – Grundgerüst**
+
+1. **Online auf Vercel:** Repo mit Vercel verbinden, jede Änderung an `main` geht live, jeder PR bekommt eine
+   Vorschau. Zuerst, weil die Seite noch nichts Privates zeigt.
+2. **Login mit Supabase:** Supabase-Projekt, Anmeldung für genau einen Nutzer (Methode in der Befragung klären,
+   z. B. Magic Link oder Passwort), jede Seite hinter dem Login. Ab hier braucht der Build Schlüssel: in Vercel und
+   in der CI hinterlegen (Fund aus dem `/code-review` von PR #4).
+3. **PWA:** Manifest, Symbol, Vollbild und „Zum Home-Bildschirm“ auf iPhone und iPad. Prüfen, ob der Login in der
+   installierten App erhalten bleibt.
+4. **Kachel-Gerüst:** Einstellungsdatei, Kachel aus Abschnitten, eine Spalte auf dem iPhone und mehrere auf Mac
+   und iPad, Aktualisierung jede Minute, eigener Fehlerzustand je Kachel, eine Beispielkachel.
+
+**Phase 2 – KI-News**
+
+1. **Feeds heraussuchen:** Absender, Fachseiten und ihre Feeds (Blog, YouTube, Newsletter, Bluesky) prüfen und
+   in die Einstellungsdatei eintragen.
+2. **Feeds lesen:** Der Server liest RSS- und Atom-Feeds, fasst die Feeds eines Absenders zusammen und speichert
+   kurz zwischen. Fällt ein Feed aus, laufen die anderen weiter.
+3. **KI-News-Kachel:** ein Abschnitt pro Absender, die neuesten 3 Meldungen der letzten 7 Tage, die neueste
+   oben, ohne neue Meldung nur eine Zeile.
+
+**Phase 3 – Sport**
+
+1. **Bundesliga (OpenLigaDB):** Spieltag und Tabelle, Mein Team hervorgehoben. Die erste Sport-Kachel legt das
+   Muster für die anderen fest.
+2. **Premier League und Champions League (football-data.org):** API-Schlüssel auf dem Server, Zwischenspeicher
+   für die Grenze von 10 Abrufen pro Minute.
+3. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
+4. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
+   nicht, eine andere Gratis-Quelle suchen oder die Kachel unter „Später“ schieben.
+
 ## Stolpersteine
 
 - **Arsenal und Champions League nur verzögert:** football-data.org liefert im Gratis-Tarif verzögerte
