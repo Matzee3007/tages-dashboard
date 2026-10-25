@@ -23,7 +23,14 @@ Workflow `.github/workflows/ci.yml`, Job `check`, bei jedem Pull Request und jed
 4. `npm run build`: Produktionsfassung bauen.
 
 Die CI benutzt nur die npm-Skripte aus `package.json`, lokal und in der CI läuft also dasselbe. Ein Lauf dauert
-etwa 40 Sekunden.
+etwa 40 Sekunden. Dass `npm run build` die Typen ein zweites Mal prüft, ist Absicht: So bleibt `npm run check`
+in CI und lokal gleich.
+
+Schutz nach dem `/code-review` von PR #4:
+
+- `timeout-minutes: 10`: Ein hängender Lauf bricht nach 10 Minuten ab, nicht erst nach 6 Stunden.
+- `concurrency` mit `cancel-in-progress`: Ein neuer Push bricht den alten Lauf desselben Branches ab.
+- `permissions: contents: read`: Der Token der CI darf nur lesen.
 
 ## Wie haben wir es eingerichtet?
 
