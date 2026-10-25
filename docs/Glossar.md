@@ -15,7 +15,7 @@ Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]]. Techni
 
 **Kachel**:
 Ein eigenständiger Bereich des Dashboards mit einer Art von Datenquelle, z. B. Bundesliga, Formel 1 oder KI-News
-(alle RSS-Feeds zusammen). Fällt eine Quelle aus, ist nur ihre Kachel betroffen.
+(alle RSS-Feeds zusammen).
 _Nicht verwenden_: Widget, Modul, Karte
 
 **Abschnitt**:
@@ -31,8 +31,8 @@ Champions League, NFL, Formel 1.
 _Nicht verwenden_: Liga (für alle), Turnier, Sportart
 
 **Mein Team**:
-Das Team, dem ich in einem Wettbewerb folge (FC Bayern, Arsenal, Seattle Seahawks). Es ist in seiner Kachel
-hervorgehoben und steht oben; eigene Team-Kacheln gibt es nicht.
+Das Team, dem ich in einem Wettbewerb folge (FC Bayern, Arsenal, Seattle Seahawks). Eigene Team-Kacheln gibt es
+nicht.
 _Nicht verwenden_: Lieblingsverein, Favorit
 
 **Spieltag**:

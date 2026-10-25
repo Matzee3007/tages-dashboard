@@ -16,12 +16,12 @@ auf einen Blick, was heute wichtig ist, in Kacheln, die sich später erweitern l
   Formel 1
 - **Schritte:** aus Apple Health, per iPhone-Kurzbefehl an die App geschickt
 - **KI-News:** per RSS von Anthropic, OpenAI, Google DeepMind, Fachseiten sowie Andrej Karpathy und Matt Pocock
-  über ihre eigenen Kanäle (Blog, Newsletter, YouTube)
+  über ihre eigenen Feeds (Blog, Newsletter, YouTube)
 
 Problem: Die Infos liegen in vielen Apps und Seiten verstreut. Das Dashboard bündelt sie.
 
 **Ausdrücklich nicht:** keine anderen Nutzer, kein App Store, keine native iOS-App, keine bezahlten
-Datenquellen (X-API erst später, siehe Offene Fragen). Zum Start auch keine Push-Benachrichtigungen, keine
+Datenquellen ohne eigenes ADR (X-API erst später, siehe Offene Fragen). Zum Start auch keine Push-Benachrichtigungen, keine
 Mitmach-Funktionen (z. B. „als gelesen markieren“), keine Offline-Daten und keine Einstellungsseite.
 
 **Wann ich draufschaue:** kurz zwischendurch auf dem iPhone („Was ist los?“) und nebenher auf Mac oder iPad,
@@ -86,8 +86,6 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
   Uhrzeiten in deutscher Zeit.
 - **Schritte:** Schritte von heute, Tagesziel mit Fortschrittsbalken, Verlauf der letzten 7 Tage als Balken.
 
-Stack-Wahl mit Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR 0001]].
-
 ## Roadmap
 
 Jede Phase endet mit etwas, das läuft und getestet ist. Eine fertige Phase wird in derselben Session
@@ -120,7 +118,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 
 ## Offene Fragen
 
-- Sind Karpathy und Matt Pocock auf Bluesky aktiv (kostenloses RSS)? Welche Feeds haben ihre Blogs und Kanäle?
+- Sind Karpathy und Matt Pocock auf Bluesky aktiv (kostenloses RSS)? Welche Feeds haben sie?
 - Welche Fachseiten genau (z. B. heise, The Verge, Hacker News)?
 - Antwortet die ESPN-Schnittstelle von einem Server aus (Testabruf ergab 403)?
 - Lohnen sich später Live-Daten für Arsenal (12 €/Monat) oder Formel 1 (9,90 €/Monat)?
