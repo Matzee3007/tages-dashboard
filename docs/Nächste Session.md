@@ -33,6 +33,8 @@ der [[projects/tages-dashboard/docs/Projektvision|Projektvision]] unter „Roadm
 1. **Zuerst fragen**, ob vorher etwas anderes ansteht: neue Ideen, Skills oder Tools, Restpunkte. Vorschlag:
    - `/agent-md-refactor` für die Projekt-`CLAUDE.md` lohnt sich erst, wenn sie gewachsen ist (Musik-App,
      sport-fantasy und die globale `CLAUDE.md` wurden am 2026-10-25 damit aufgeräumt).
+   - Ein Projekt-Dashboard für den Fortschritt mit `/dashboard-bauen`, dazu ein projekt-eigener Skill
+     `dashboard-aktualisieren` wie in sport-fantasy (global gibt es nur `dashboard-bauen`).
 2. `docs/Tools für später.md` auf Werkzeuge für Phase 1 prüfen (Stand 2026-10-25: leer).
 3. `/grill-with-docs Phase 1 Grundgerüst`: offene Fragen klären, vor allem die Anmeldemethode (Magic Link oder
    Passwort) und die Reihenfolge Vercel vor Login.
