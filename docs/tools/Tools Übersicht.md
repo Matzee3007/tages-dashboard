@@ -23,6 +23,7 @@ alle benutzten Befehle, Fehler.
 | [[Claude Code]] | 2026-10-24 | KI-Entwickler im Terminal |
 | [[projects/tages-dashboard/docs/tools/Next.js.md\|Next.js]] | 2026-10-24 | App, Seiten und Server-Code |
 | [[projects/tages-dashboard/docs/tools/Vitest, ESLint und Prettier\|Vitest, ESLint und Prettier]] | 2026-10-24 | Tests, Linter, Formatierung |
+| [[GitHub Actions]] ([[projects/tages-dashboard/docs/tools/GitHub Actions - Einrichtung\|Einrichtung]]) | 2026-10-25 | prüft jeden PR mit `npm run check` und Build |
 
 ## Geplant
 
