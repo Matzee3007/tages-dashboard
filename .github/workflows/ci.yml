@@ -1,0 +1,29 @@
+# Prüft jeden Pull Request und jeden Push auf main mit denselben Befehlen wie lokal.
+# Einrichtung und Fehler: docs/tools/GitHub Actions - Einrichtung.md
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # Node-Version aus engines in package.json (wie Vercel), npm-Cache beschleunigt npm ci
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+
+      - name: Prüfungen (lint, format:check, typecheck, test)
+        run: npm run check
+
+      - name: Produktionsfassung bauen
+        run: npm run build
