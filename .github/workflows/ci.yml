@@ -1,0 +1,40 @@
+# Prüft jeden Pull Request und jeden Push auf main mit denselben Befehlen wie lokal.
+# Einrichtung und Fehler: docs/tools/GitHub Actions - Einrichtung.md
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Ein neuer Push bricht den noch laufenden Lauf desselben Branches ab, spart Freiminuten
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Die CI liest nur, ein manipuliertes npm-Paket bekommt so keinen Schreibzugriff aufs Repo
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # Ein normaler Lauf dauert unter einer Minute, ein hängender bricht nach 10 ab statt nach 6 Stunden
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      # Node-Version aus engines in package.json (wie Vercel), npm-Cache beschleunigt npm ci
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+
+      - name: Prüfungen (lint, format:check, typecheck, test)
+        run: npm run check
+
+      - name: Produktionsfassung bauen
+        run: npm run build
