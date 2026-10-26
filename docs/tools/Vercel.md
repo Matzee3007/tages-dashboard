@@ -55,11 +55,15 @@ Merge auf `main` geht live, jeder PR bekommt eine eigene Vorschau.
 # Antwortet die Produktion? (erwartet 200)
 /usr/bin/curl -s -o /dev/null -w '%{http_code}\n' 'https://tages-dashboard-iota.vercel.app'
 
-# Ist eine Vorschau geschützt? (erwartet 401 oder eine Weiterleitung, nicht 200)
-/usr/bin/curl -s -o /dev/null -w '%{http_code}\n' '<vorschau-adresse>'
+# Vorschau-Adresse aus dem Kommentar des Vercel-Bots
+gh pr view <nr> --json comments --jq '.comments[].body' | grep -oE 'https://[a-zA-Z0-9.-]+\.vercel\.app' | sort -u
 
-# Von welchem Commit stammt die Produktion?
-gh api repos/Matzee3007/tages-dashboard/deployments --jq '[.[] | select(.environment=="Production")][0] | {sha: .sha[0:7], ref}'
+# Ist eine Vorschau geschützt? (erwartet 302 auf vercel.com/sso-api, nicht 200)
+/usr/bin/curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' '<vorschau-adresse>'
+
+# Hat Vercel den aktuellen Commit auf main gebaut?
+gh api "repos/Matzee3007/tages-dashboard/commits/$(git rev-parse HEAD)/check-runs" \
+  --jq '.check_runs[] | select(.name=="Vercel") | {conclusion, output: .output.title}'
 
 # Checks eines PRs, darunter Vercel
 gh pr checks <nr>
@@ -67,5 +71,8 @@ gh pr checks <nr>
 
 ## Fehler
 
-- **`gh api …/deployments` liefert nach dem Import nur `null`:** Der erste Build beim Import wird nicht durch einen
-  Push ausgelöst und erscheint deshalb nicht als Deployment bei GitHub. Erst Pushes nach dem Import tauchen dort auf.
+- **`gh api …/deployments` ist leer (`null` bzw. Länge `0`):** Ursache: Vercel meldet sich in diesem Repo nur als
+  Check (`Vercel`) und per Bot-Kommentar, nicht als GitHub-Deployment, auch nicht nach Pushes (geprüft an PR #9).
+  Lösung: den Check am Commit abfragen (Befehl oben).
+- **`gh pr view <nr> --comments --json …` → „specify only one of --comments or --json“:** Ursache: Die beiden
+  Schalter schließen sich aus. Lösung: `--json comments` mit `--jq '.comments[].body'`.
