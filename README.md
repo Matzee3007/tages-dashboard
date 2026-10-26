@@ -7,13 +7,14 @@ am 2026-10-24.
 
 ## Loslegen
 
+Live: https://tages-dashboard-iota.vercel.app
+
 ```bash
 cd ~/claude-ecosystem/projects/tages-dashboard
 claude
-```
-
 npm ci
 npm run dev   # http://localhost:3000
+```
 
 ## Doku
 
