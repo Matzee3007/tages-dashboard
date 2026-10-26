@@ -40,6 +40,16 @@ vier Schritte stehen im Fahrplan der [[projects/tages-dashboard/docs/Projektvisi
    Projekt-URL und Publishable Key in `.env.local`, bei Vercel und als GitHub Repository Variables.
 3. **Am Ende von Phase 1:** Cloudflare Security Audit Skill einmal laufen lassen (vorgemerkt in den Tools für später
    des Ecosystems), weil die App dann mit Login im Netz steht.
+4. **Aus musik-app (2026-10-26), klein, je ein PR mit `/code-review`:**
+   - **CI-Falle beheben:** `.github/workflows/ci.yml` hat `group: ci-${{ github.ref }}` mit
+     `cancel-in-progress: true`. Werden zwei PRs kurz nacheinander gemergt, bricht der Lauf auf `main` ab und ein
+     Merge-Commit bleibt ungeprüft (auch mit `cancel-in-progress: false`: ein wartender Lauf wird verdrängt). Lösung
+     aus musik-app PR #61: `group: ci-${{ github.event.pull_request.number || github.sha }}` und
+     `cancel-in-progress: ${{ github.event_name == 'pull_request' }}`.
+   - **Dependabot einrichten** nach dem Muster von musik-app (`.github/dependabot.yml` mit Gruppen für Next und React,
+     `docs/tools/Dependabot - Einrichtung.md`), Sicherheits-Updates im Repo einschalten.
+   - Zu Punkt 1: Die Pause von Supabase ist inzwischen nachgelesen (7 Tage ohne Datenbank-Aktivität, ein Jahr wieder
+     startbar), Quelle in musik-app `docs/tools/Supabase.md`. Mailversand bleibt nachzulesen.
 
 Punkte fürs Ecosystem aus dieser Session stehen in dessen Übergabe.
 
