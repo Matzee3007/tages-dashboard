@@ -86,6 +86,9 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
   Uhrzeiten in deutscher Zeit.
 - **Schritte:** Schritte von heute, Tagesziel mit Fortschrittsbalken, Verlauf der letzten 7 Tage als Balken.
 
+So könnte das fertige Dashboard aussehen: [Entwurf](https://claude.ai/artifact/VeWhiFgrVYtqnrivy3hFKt) vom
+2026-10-25 (Mac/iPad und iPhone, Beispieldaten).
+
 ## Roadmap
 
 Jede Phase endet mit etwas, das läuft und getestet ist. Eine fertige Phase wird in derselben Session
@@ -112,15 +115,33 @@ dürfen den Fahrplan ändern, wenn frühere Neues zeigen.
 
 **Phase 1 – Grundgerüst**
 
-1. **Online auf Vercel:** Repo mit Vercel verbinden, jede Änderung an `main` geht live, jeder PR bekommt eine
-   Vorschau. Zuerst, weil die Seite noch nichts Privates zeigt.
-2. **Login mit Supabase:** Supabase-Projekt, Anmeldung für genau einen Nutzer (Methode in der Befragung klären,
-   z. B. Magic Link oder Passwort), jede Seite hinter dem Login. Ab hier braucht der Build Schlüssel: in Vercel und
-   in der CI hinterlegen (Fund aus dem `/code-review` von PR #4).
-3. **PWA:** Manifest, Symbol, Vollbild und „Zum Home-Bildschirm“ auf iPhone und iPad. Prüfen, ob der Login in der
-   installierten App erhalten bleibt.
+1. **Online auf Vercel:** Repo über die Git-Integration von Vercel verbinden (keine Vercel-CLI), jede Änderung an
+   `main` geht live, jeder PR bekommt eine Vorschau, geschützt mit der Deployment Protection von Vercel. Adresse
+   `*.vercel.app`, keine eigene Domain. Zuerst, weil die Seite noch nichts Privates zeigt.
+2. **Login mit Supabase:** ein Supabase-Projekt online (Tarif Free, keine lokale Supabase vor Phase 4), auch der
+   lokale Entwicklungsserver meldet sich dort an. Anmeldung mit **Passwort** (iCloud-Schlüsselbund), Registrierung
+   aus, der einzige Nutzer wird im Supabase-Dashboard angelegt. Jede Seite hinter dem Login. Angemeldet bleiben bis
+   „Abmelden“. Ab hier braucht der Build Schlüssel (Fund aus dem `/code-review` von PR #4): Projekt-URL und
+   Publishable Key von Supabase in `.env.local` (dazu eine `.env.example` im Repo), bei Vercel und in der CI als
+   Repository Variables von GitHub (keine Secrets, die Werte sind öffentlich). Der Secret Key wird nicht gebraucht.
+   Tests ersetzen Supabase durch eine Attrappe.
+3. **PWA:** Manifest, Symbol, Vollbild und „Zum Home-Bildschirm“ auf iPhone und iPad, „Zum Dock hinzufügen“ auf
+   dem Mac. Auf allen drei Geräten prüfen, ob Vollbild und Login in der installierten App erhalten bleiben. Kurzer
+   Name unter dem Symbol: „Heute“. Symbol: Kachel-Raster in Orange auf dunklem Grund, erst als SVG zur Freigabe,
+   dann als PNG (180, 192, 512 px).
 4. **Kachel-Gerüst:** Einstellungsdatei, Kachel aus Abschnitten, eine Spalte auf dem iPhone und mehrere auf Mac
-   und iPad, Aktualisierung jede Minute, eigener Fehlerzustand je Kachel, eine Beispielkachel.
+   und iPad, Aktualisierung jede Minute, eigener Fehlerzustand je Kachel. Aussehen aus dem
+   [Entwurf](https://claude.ai/artifact/VeWhiFgrVYtqnrivy3hFKt) (dunkel, Barlow und Barlow Condensed, Orange für
+   Mein Team und Live), Farben und Schriften zentral als Design-Token in Tailwind. Als Beispiel eine Testkachel
+   ohne fremde Quelle: Sie zeigt die Server-Uhrzeit, kann per Schalter in der Einstellungsdatei einen Fehler werfen
+   und verschwindet in Phase 2.
+
+Entscheidungen aus der Befragung vom 2026-10-25:
+
+- **Passwort statt Magic Link:** Eine PWA auf dem iPhone hat eigene Cookies, getrennt von Safari. Ein Link aus der
+  Mail meldet deshalb Safari an, nicht die App. Der Gratis-Mailversand von Supabase schafft zudem nur wenige Mails
+  pro Stunde. Ein E-Mail-Code (OTP) ginge auch, braucht aber jedes Mal eine Mail.
+- **Supabase im Gratis-Tarif pausiert** nach 7 Tagen ohne Nutzung, bei täglicher Nutzung kein Problem.
 
 **Phase 2 – KI-News**
 
