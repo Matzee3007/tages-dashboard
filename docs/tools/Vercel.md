@@ -62,8 +62,8 @@ gh pr view <nr> --json comments --jq '.comments[].body' | grep -oE 'https://[a-z
 /usr/bin/curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' '<vorschau-adresse>'
 
 # Hat Vercel den aktuellen Commit auf main gebaut?
-gh api "repos/Matzee3007/tages-dashboard/commits/$(git rev-parse HEAD)/check-runs" \
-  --jq '.check_runs[] | select(.name=="Vercel") | {conclusion, output: .output.title}'
+gh api "repos/Matzee3007/tages-dashboard/commits/$(git rev-parse HEAD)/status" \
+  --jq '.statuses[] | {context, state, description}'
 
 # Checks eines PRs, darunter Vercel
 gh pr checks <nr>
@@ -72,7 +72,9 @@ gh pr checks <nr>
 ## Fehler
 
 - **`gh api …/deployments` ist leer (`null` bzw. Länge `0`):** Ursache: Vercel meldet sich in diesem Repo nur als
-  Check (`Vercel`) und per Bot-Kommentar, nicht als GitHub-Deployment, auch nicht nach Pushes (geprüft an PR #9).
-  Lösung: den Check am Commit abfragen (Befehl oben).
+  Commit-Status (`Vercel`) und per Bot-Kommentar, nicht als GitHub-Deployment, auch nicht nach Pushes (geprüft an
+  PR #9). Lösung: den Status am Commit abfragen (Befehl oben).
+- **`…/check-runs` zeigt keinen Vercel-Eintrag:** Ursache: Vercel liefert einen Commit-Status, keinen Check-Run
+  (nur die CI ist ein Check-Run). Lösung: `…/commits/<sha>/status`.
 - **`gh pr view <nr> --comments --json …` → „specify only one of --comments or --json“:** Ursache: Die beiden
   Schalter schließen sich aus. Lösung: `--json comments` mit `--jq '.comments[].body'`.
