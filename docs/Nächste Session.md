@@ -7,15 +7,15 @@ tags: [session, übergabe]
 
 # Nächste Session
 
-Stand vom 2026-10-26. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
+Stand vom 2026-11-01. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
 [[projects/tages-dashboard/docs/journal/Lernjournal Phase 1 - Befragung und Vercel|Lernjournal Phase 1 - Befragung und Vercel]].
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge von PR #10)
+- **Branch:** `main`
 - **Offene PRs:** keine
 - **Nicht committet:** nichts
-- **Live:** https://tages-dashboard-iota.vercel.app (noch ohne Login, zeigt nur die Startseite)
+- **Live:** https://tages-dashboard-iota.vercel.app (mit Login, zeigt nur die Startseite)
 
 ## Vor dem Start
 
@@ -28,16 +28,16 @@ Stand vom 2026-10-26. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 
 ## Womit es weitergeht
 
-**Phase 1 – Grundgerüst** läuft. Fahrplan-Schritt 1 (online auf Vercel) ist erledigt, die Entscheidungen für alle
+**Phase 1 – Grundgerüst** läuft. Die Fahrplan-Schritte 1 (online auf Vercel) und 2 (Login mit Supabase) sind erledigt, die Entscheidungen für alle
 vier Schritte stehen im Fahrplan der [[projects/tages-dashboard/docs/Projektvision|Projektvision]] (Befragung vom
 2026-10-25, PR #8).
 
-1. **Fahrplan-Schritt 2: Login mit Supabase**, Plan mit `plan-schreiben`. Vorher die Gratis-Grenzen von Supabase
-   frisch nachlesen (Pause nach 7 Tagen ohne Nutzung, Mailversand), sie wurden in der Befragung nur aus dem Gedächtnis
-   genannt. Next.js 16 nennt die Login-Prüfung vor jeder Seite `proxy.ts` (früher `middleware.ts`), Anleitung in
-   `node_modules/next/dist/docs/01-app/02-guides/authentication.md`. Konto bei Supabase gibt es schon.
-2. Danach im Assistenten (`assistent-bauen`): Supabase-Projekt anlegen, Registrierung aus, Nutzer anlegen,
-   Projekt-URL und Publishable Key in `.env.local`, bei Vercel und als GitHub Repository Variables.
+1. **Fahrplan-Schritt 3: PWA**, Plan mit `plan-schreiben`. Dabei prüfen, ob die Anmeldung in der installierten App auf
+   iPhone und iPad hält und ob die geleerten Felder nach falschem Passwort stören
+   ([[projects/tages-dashboard/docs/tools/Supabase|Supabase]], Abschnitt „Bekannte Grenzen“). `proxy.ts` muss Manifest und
+   Symbole durchlassen.
+2. **Ab 2026-11-08: Pause prüfen.** Im Supabase-Dashboard nachsehen, ob das Projekt pausiert hat. Die Doku sagt nicht, ob
+   Logins als Aktivität zählen. Falls ja: über Datenbank-Aktivität per Zeitplan entscheiden, sonst nichts bauen.
 3. **Am Ende von Phase 1:** Cloudflare Security Audit Skill einmal laufen lassen (vorgemerkt in den Tools für später
    des Ecosystems), weil die App dann mit Login im Netz steht.
 4. **Aus musik-app (2026-10-26), klein, je ein PR mit `/code-review`:**
@@ -48,13 +48,10 @@ vier Schritte stehen im Fahrplan der [[projects/tages-dashboard/docs/Projektvisi
      `cancel-in-progress: ${{ github.event_name == 'pull_request' }}`.
    - **Dependabot einrichten** nach dem Muster von musik-app (`.github/dependabot.yml` mit Gruppen für Next und React,
      `docs/tools/Dependabot - Einrichtung.md`), Sicherheits-Updates im Repo einschalten.
-   - Zu Punkt 1: Die Pause von Supabase ist inzwischen nachgelesen (7 Tage ohne Datenbank-Aktivität, ein Jahr wieder
-     startbar), Quelle in musik-app `docs/tools/Supabase.md`. Mailversand bleibt nachzulesen.
 
 Punkte fürs Ecosystem aus dieser Session stehen in dessen Übergabe.
 
 ## Passende Skills
 
-- `plan-schreiben`: Plan für Fahrplan-Schritt 2
-- `assistent-bauen`: führt dich durch die Einrichtung von Supabase und das Eintragen der Schlüssel
-- `tdd`: Login-Prüfung und Seitenschutz testgetrieben bauen
+- `plan-schreiben`: Plan für Fahrplan-Schritt 3
+- `tdd`: Manifest und Ausnahmen im Proxy testgetrieben bauen
