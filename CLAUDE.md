@@ -41,6 +41,8 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 ```
 tages-dashboard/
 ├── app/          Next.js-Seiten und Layout
+├── lib/          Code ohne Seite (z. B. Supabase-Client)
+├── proxy.ts      Login-Prüfung vor jeder Anfrage
 ├── __tests__/    Tests (Vitest)
 ├── docs/         Doku, zugleich Obsidian-Vault
 ├── CLAUDE.md     Projektkontext für Claude Code
