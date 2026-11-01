@@ -20,7 +20,13 @@ installierte Web-App auf dem iPhone, die eigene Cookies hat, getrennt von Safari
 - **Kein Supabase-Code im Browser.** `proxy.ts` prüft und erneuert die Sitzung vor jeder Anfrage, An- und Abmelden laufen
   als Server Actions.
 - **Cookies `HttpOnly`,** weil JavaScript im Browser sie nie lesen muss.
-- **Der Proxy schützt alles außer `/login` und Statischem,** sodass neue Seiten und Schnittstellen von selbst geschützt sind.
+- **Der Proxy schützt alle Adressen außer `/login` und Statischem,** sodass neue Seiten und Schnittstellen von selbst
+  geschützt sind.
+- **Der Proxy lässt nur das eine Konto durch:** Er vergleicht die Nutzer-ID aus dem Token mit `BESITZER_ID` in
+  `lib/besitzer.ts`. Ein gültiges fremdes Konto kommt nicht hinein, auch wenn ein Schalter bei Supabase falsch steht.
+- **Jede private Server Action prüft die Anmeldung selbst.** Eine Action ist nur ein POST an eine Seite, und `/login`
+  lässt der Proxy ohne Sitzung durch. Der Proxy schützt also Adressen, nicht Actions. Heute gibt es nur `anmelden` und
+  `abmelden`, beide brauchen keine Prüfung. Die erste private Action bringt die gemeinsame Prüfung mit.
 - **Fehlende Variablen führen zu Fehler 500,** nie zu einer offenen Seite.
 
 ## Alternativen
@@ -35,7 +41,8 @@ installierte Web-App auf dem iPhone, die eigene Cookies hat, getrennt von Safari
 ## Konsequenzen
 
 - Schadcode auf der Seite kommt nicht an die Sitzung, und die Sitzung hängt nicht an der 7-Tage-Grenze.
-- Der Proxy prüft nur, ob jemand angemeldet ist, nicht wer. Der Schalter „Allow new users to sign up“ ist deshalb
-  sicherheitsrelevant: Mit eingeschalteter Registrierung käme jeder durch den Login.
+- Die Schalter „Allow new users to sign up“ und anonyme Anmeldung bleiben aus, sind aber nicht mehr der einzige Schutz:
+  Ein fremdes Konto ließe sich zwar anlegen, käme aber nicht durch den Proxy.
+- Wird das Konto neu angelegt, muss `BESITZER_ID` mit. Sonst sperrt der Proxy auch den Besitzer aus.
 - Echtzeit-Funktionen von Supabase im Browser bräuchten später ein neues ADR.
 - Der Eingang für den Kurzbefehl (Phase 4) muss ausdrücklich vom Proxy ausgenommen werden und hat seinen eigenen Schlüssel.

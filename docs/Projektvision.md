@@ -118,7 +118,7 @@ dürfen den Fahrplan ändern, wenn frühere Neues zeigen.
 1. **Online auf Vercel** (erledigt 2026-10-26, PR #9, https://tages-dashboard-iota.vercel.app): Repo über die Git-Integration von Vercel verbinden (keine Vercel-CLI), jede Änderung an
    `main` geht live, jeder PR bekommt eine Vorschau, geschützt mit der Deployment Protection von Vercel. Adresse
    `*.vercel.app`, keine eigene Domain. Zuerst, weil die Seite noch nichts Privates zeigt.
-2. **Login mit Supabase** (erledigt 2026-11-01, siehe
+2. **Login mit Supabase** (siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-01-login|Plan]] und
    [[projects/tages-dashboard/docs/adr/0002-login-nur-auf-dem-server|ADR 0002]]): ein Supabase-Projekt online (Tarif
    Free, keine lokale Supabase vor Phase 4), auch der lokale Entwicklungsserver meldet sich dort an. Anmeldung mit

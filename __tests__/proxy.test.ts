@@ -5,14 +5,16 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { config, proxy } from "@/proxy";
 
 vi.mock("@supabase/ssr", () => ({ createServerClient: vi.fn() }));
+vi.mock("@/lib/besitzer", () => ({ BESITZER_ID: "meine-id" }));
 
 type Erneuerung = {
   cookies: { name: string; value: string; options: object }[];
   headers: Record<string, string>;
 };
 
-// Attrappe von Supabase: meldet eine Sitzung oder keine und kann beim Prüfen Cookies erneuern.
-function attrappe(angemeldet: boolean, erneuerung?: Erneuerung) {
+// Attrappe von Supabase: meldet die Sitzung eines Kontos oder keine und kann beim Prüfen Cookies erneuern.
+function attrappe(konto: boolean | string, erneuerung?: Erneuerung) {
+  const sub = konto === true ? "meine-id" : konto;
   vi.mocked(createServerClient).mockImplementation(((
     _url: string,
     _key: string,
@@ -31,7 +33,7 @@ function attrappe(angemeldet: boolean, erneuerung?: Erneuerung) {
           optionen.cookies.setAll(erneuerung.cookies, erneuerung.headers);
         }
         return {
-          data: angemeldet ? { claims: { sub: "nutzer" } } : null,
+          data: sub ? { claims: { sub } } : null,
           error: null,
         };
       },
@@ -93,6 +95,22 @@ describe("mit Sitzung", () => {
   });
 });
 
+describe("mit fremdem Konto", () => {
+  test("die Startseite führt zum Login", async () => {
+    attrappe("fremde-id");
+    const antwort = await proxy(anfrage("/"));
+    expect(antwort.status).toBe(307);
+    expect(zielPfad(antwort)).toBe("/login");
+  });
+
+  test("der Login ist erreichbar, ohne Schleife", async () => {
+    attrappe("fremde-id");
+    const antwort = await proxy(anfrage("/login"));
+    expect(antwort.headers.get("location")).toBeNull();
+    expect(antwort.status).toBe(200);
+  });
+});
+
 describe("erneuerte Cookies und Cache-Header bleiben erhalten", () => {
   const erneuerung: Erneuerung = {
     cookies: [{ name: "sb-token", value: "neu", options: { path: "/" } }],
@@ -126,7 +144,18 @@ test("ohne Variablen bleibt die Seite zu", async () => {
 describe("matcher", () => {
   const muster = new RegExp(`^${config.matcher[0]}$`);
 
-  test.each(["/", "/login", "/api/x", "/kacheln"])("prüft %s", (pfad) => {
+  test.each([
+    "/",
+    "/login",
+    "/api/x",
+    "/kacheln",
+    "/favicon.icon",
+    "/favicon.ico-alt",
+    "/favicon.ico/x",
+    "/_next/static-alt",
+    "/_next/image-x",
+    "/_next/imagex/y",
+  ])("prüft %s", (pfad) => {
     expect(muster.test(pfad)).toBe(true);
   });
 

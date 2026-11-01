@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { BESITZER_ID } from "@/lib/besitzer";
 import { SUPABASE_COOKIE_OPTIONEN } from "@/lib/supabase/cookies";
 
 // Läuft vor jeder Anfrage: prüft und erneuert die Sitzung und schickt ohne Sitzung zum Login.
@@ -37,7 +38,8 @@ export async function proxy(request: NextRequest) {
 
   // Kein Code zwischen createServerClient und getClaims: sonst drohen zufällige Abmeldungen (Doku von Supabase).
   const { data } = await supabase.auth.getClaims();
-  const angemeldet = Boolean(data?.claims);
+  // Nur das eine Konto zählt: Ein gültiges fremdes Konto (Schalter bei Supabase falsch) kommt nicht hinein.
+  const angemeldet = data?.claims?.sub === BESITZER_ID;
   const aufLogin = request.nextUrl.pathname === "/login";
 
   if (angemeldet === aufLogin) {
@@ -59,5 +61,5 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   // Nur Statisches auslassen, damit jede neue Seite und Schnittstelle von selbst geschützt ist.
-  matcher: ["/((?!_next/static|_next/image|favicon\\.ico).*)"],
+  matcher: ["/((?!_next/static/|_next/image(?:/|$)|favicon\\.ico$).*)"],
 };

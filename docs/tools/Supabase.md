@@ -55,11 +55,31 @@ Supabase]], mit einem Assistent-Skript (Skill `assistent-bauen`):
 3. Authentication → Sign In / Providers: „Allow new users to sign up“ aus und speichern. Der Anbieter „Email“ bleibt an.
 4. Authentication → Users → „Add user“ mit „Auto Confirm User“.
 5. Bei Vercel beide Variablen für Production und Preview. Sie gelten erst für das nächste Deployment.
+6. Die User UID des Kontos (Authentication → Users) als `BESITZER_ID` in `lib/besitzer.ts`. Wird das Konto neu angelegt,
+   muss sie mit, sonst sperrt der Proxy auch den Besitzer aus.
 
 Die CI braucht die Variablen nicht: Beim Bauen laufen weder Proxy noch Server Actions.
 
 Im Code: `proxy.ts` (Schutz und Erneuerung), `lib/supabase/server.ts` (Client für Server Actions), `app/login/actions.ts`
 (`anmelden`, `abmelden`). Tests ersetzen Supabase durch eine Attrappe.
+
+## Bekannte Grenzen
+
+Aus dem `/code-review` von PR #12, bewusst nicht behoben:
+
+- **Abmelden bei einem Ausfall:** `abmelden` wertet das Ergebnis von `signOut()` nicht aus. Je nach Fehler bleibt die
+  Sitzung auf dem Server gültig, oder man landet ohne Meldung wieder auf der Startseite. Dann später noch einmal drücken.
+- **Ausfall sieht aus wie abgemeldet:** `proxy.ts` wertet den Fehler von `getClaims()` nicht aus, jede Seite leitet zu
+  `/login`. Die Seite bleibt zu, die Ursache zeigt erst der Anmeldeversuch.
+- **Falsches Passwort leert die Felder:** React setzt das Formular nach der Action zurück. In Fahrplan-Schritt 3 auf dem
+  iPhone prüfen, ob das stört.
+- **Limit je IP-Adresse:** Die Anmeldung läuft über den Server, Supabase zählt also dessen Adresse. Viele fremde Versuche
+  könnten die eigene Anmeldung zeitweise blockieren (Fehler 429). Beim Security Audit am Ende von Phase 1 ansehen.
+- **`secure` hängt an `NODE_ENV`:** Ein Produktions-Build über `http://` (`npm start`, auch im Heimnetz vom iPhone) setzt
+  Cookies, die der Browser ablehnt. Das Passwort scheint zu stimmen, man landet aber wieder auf `/login`. Lokal mit
+  `npm run dev` testen.
+- **Doppelter Aufruf:** `proxy.ts` und `lib/supabase/server.ts` rufen beide `createServerClient` auf, und `NEXT_PUBLIC_` wäre
+  ohne Browser-Code unnötig. Kostet nur Pflege.
 
 ## Typischer Ablauf
 
