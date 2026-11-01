@@ -25,6 +25,7 @@ alle benutzten Befehle, Fehler.
 | [[projects/tages-dashboard/docs/tools/Vitest, ESLint und Prettier\|Vitest, ESLint und Prettier]] | 2026-10-24 | Tests, Linter, Formatierung |
 | [[GitHub Actions]] ([[projects/tages-dashboard/docs/tools/GitHub Actions - Einrichtung\|Einrichtung]]) | 2026-10-25 | prüft jeden PR mit `npm run check` und Build |
 | [[projects/tages-dashboard/docs/tools/Vercel\|Vercel]] | 2026-10-26 | bringt die App ins Netz, Vorschau je PR |
+| [[projects/tages-dashboard/docs/tools/Supabase\|Supabase]] | 2026-11-01 | Login für genau einen Nutzer, später Datenbank |
 
 ## Geplant
 

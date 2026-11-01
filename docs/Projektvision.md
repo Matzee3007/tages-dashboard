@@ -118,12 +118,14 @@ dürfen den Fahrplan ändern, wenn frühere Neues zeigen.
 1. **Online auf Vercel** (erledigt 2026-10-26, PR #9, https://tages-dashboard-iota.vercel.app): Repo über die Git-Integration von Vercel verbinden (keine Vercel-CLI), jede Änderung an
    `main` geht live, jeder PR bekommt eine Vorschau, geschützt mit der Deployment Protection von Vercel. Adresse
    `*.vercel.app`, keine eigene Domain. Zuerst, weil die Seite noch nichts Privates zeigt.
-2. **Login mit Supabase:** ein Supabase-Projekt online (Tarif Free, keine lokale Supabase vor Phase 4), auch der
-   lokale Entwicklungsserver meldet sich dort an. Anmeldung mit **Passwort** (iCloud-Schlüsselbund), Registrierung
-   aus, der einzige Nutzer wird im Supabase-Dashboard angelegt. Jede Seite hinter dem Login. Angemeldet bleiben bis
-   „Abmelden“. Ab hier braucht der Build Schlüssel (Fund aus dem `/code-review` von PR #4): Projekt-URL und
-   Publishable Key von Supabase in `.env.local` (dazu eine `.env.example` im Repo), bei Vercel und in der CI als
-   Repository Variables von GitHub (keine Secrets, die Werte sind öffentlich). Der Secret Key wird nicht gebraucht.
+2. **Login mit Supabase** (erledigt 2026-11-01, siehe
+   [[projects/tages-dashboard/docs/plaene/2026-11-01-login|Plan]] und
+   [[projects/tages-dashboard/docs/adr/0002-login-nur-auf-dem-server|ADR 0002]]): ein Supabase-Projekt online (Tarif
+   Free, keine lokale Supabase vor Phase 4), auch der lokale Entwicklungsserver meldet sich dort an. Anmeldung mit
+   **Passwort** (iCloud-Schlüsselbund), Registrierung aus, der einzige Nutzer wird im Supabase-Dashboard angelegt. Jede
+   Seite hinter dem Login. Angemeldet bleiben bis „Abmelden“. Projekt-URL und Publishable Key von Supabase in
+   `.env.local` (dazu eine `.env.example` im Repo) und bei Vercel. Der Secret Key wird nicht gebraucht. Die CI braucht
+   die Werte nicht: Der Build läuft auch ohne sie (geprüft 2026-11-01, anders als im `/code-review` von PR #4 erwartet).
    Tests ersetzen Supabase durch eine Attrappe.
 3. **PWA:** Manifest, Symbol, Vollbild und „Zum Home-Bildschirm“ auf iPhone und iPad, „Zum Dock hinzufügen“ auf
    dem Mac. Auf allen drei Geräten prüfen, ob Vollbild und Login in der installierten App erhalten bleiben. Kurzer
@@ -139,9 +141,10 @@ dürfen den Fahrplan ändern, wenn frühere Neues zeigen.
 Entscheidungen aus der Befragung vom 2026-10-25:
 
 - **Passwort statt Magic Link:** Eine PWA auf dem iPhone hat eigene Cookies, getrennt von Safari. Ein Link aus der
-  Mail meldet deshalb Safari an, nicht die App. Der Gratis-Mailversand von Supabase schafft zudem nur wenige Mails
+  Mail meldet deshalb Safari an, nicht die App. Der Gratis-Mailversand von Supabase schafft zudem nur 2 Mails
   pro Stunde. Ein E-Mail-Code (OTP) ginge auch, braucht aber jedes Mal eine Mail.
-- **Supabase im Gratis-Tarif pausiert** nach 7 Tagen ohne Nutzung, bei täglicher Nutzung kein Problem.
+- **Supabase im Gratis-Tarif pausiert** nach 7 Tagen mit zu wenig Datenbank-Aktivität. Ob Logins dazu zählen, sagt die
+  Doku nicht (nachgelesen 2026-11-01). Wird beobachtet, siehe [[projects/tages-dashboard/docs/tools/Supabase|Supabase]].
 
 **Phase 2 – KI-News**
 
