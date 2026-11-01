@@ -31,3 +31,9 @@ export async function anmelden(
 
   redirect("/");
 }
+
+export async function abmelden(): Promise<void> {
+  const supabase = await erstelleClient();
+  await supabase.auth.signOut();
+  redirect("/login");
+}

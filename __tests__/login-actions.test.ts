@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { anmelden } from "@/app/login/actions";
+import { abmelden, anmelden } from "@/app/login/actions";
 import { erstelleClient } from "@/lib/supabase/server";
 
 vi.mock("next/navigation", () => ({ redirect: vi.fn() }));
 vi.mock("@/lib/supabase/server", () => ({ erstelleClient: vi.fn() }));
 
 const signInWithPassword = vi.fn();
+const signOut = vi.fn();
 
 function formular(email: string, passwort: string) {
   const daten = new FormData();
@@ -18,7 +19,7 @@ function formular(email: string, passwort: string) {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(erstelleClient).mockResolvedValue({
-    auth: { signInWithPassword },
+    auth: { signInWithPassword, signOut },
   } as unknown as Awaited<ReturnType<typeof erstelleClient>>);
 });
 
@@ -62,4 +63,11 @@ describe("anmelden", () => {
     expect(status).toEqual({ fehler: "Bitte E-Mail und Passwort eingeben." });
     expect(signInWithPassword).not.toHaveBeenCalled();
   });
+});
+
+test("abmelden beendet die Sitzung und führt zum Login", async () => {
+  signOut.mockResolvedValue({ error: null });
+  await abmelden();
+  expect(signOut).toHaveBeenCalled();
+  expect(redirect).toHaveBeenCalledWith("/login");
 });
