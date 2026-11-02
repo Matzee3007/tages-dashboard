@@ -155,14 +155,29 @@ describe("matcher", () => {
     "/_next/static-alt",
     "/_next/image-x",
     "/_next/imagex/y",
+    "/manifest.webmanifest/x",
+    "/manifest.webmanifest-alt",
+    "/icons",
+    "/icons-alt",
+    "/icons-alt/a.png",
+    "/icons/",
+    "/icons/seite",
+    "/icons/a.svg",
+    "/icons/unter/a.png",
+    "/icons/a.png/x",
   ])("prüft %s", (pfad) => {
     expect(muster.test(pfad)).toBe(true);
   });
 
-  test.each(["/_next/static/a.js", "/_next/image", "/favicon.ico"])(
-    "lässt %s aus",
-    (pfad) => {
-      expect(muster.test(pfad)).toBe(false);
-    },
-  );
+  test.each([
+    "/_next/static/a.js",
+    "/_next/image",
+    "/favicon.ico",
+    "/manifest.webmanifest",
+    "/icons/icon-180.png",
+    "/icons/icon-512.png",
+    "/icons/favicon-32.png",
+  ])("lässt %s aus", (pfad) => {
+    expect(muster.test(pfad)).toBe(false);
+  });
 });
