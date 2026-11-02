@@ -56,6 +56,7 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 |---|---|
 | Sprache und App | TypeScript, Next.js (App Router), Tailwind CSS |
 | PWA | Web-App-Manifest von Next.js |
+| Mac-App | Tauri, zeigt die Website in einem eigenen Fenster ([[projects/tages-dashboard/docs/adr/0003-mac-app-mit-tauri\|ADR 0003]]) |
 | Login und Datenbank | Supabase (Auth, Postgres) |
 | Hosting | Vercel (kostenloser Tarif) |
 | Tests und Qualität | Vitest, Testing Library, ESLint, Prettier |
@@ -96,8 +97,8 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 
 - [x] **Phase 0 – Fundament:** Repo und `CLAUDE.md` stehen, Stack eingerichtet, erster Test grün,
   Projektvision mit `/grill-with-docs` geschärft, Phasen 1 bis 3 geplant
-- [ ] **Phase 1 – Grundgerüst:** Login, PWA (Symbol, Vollbild auf iPhone und iPad), Kachel-System mit einer
-  Beispielkachel, online auf Vercel
+- [ ] **Phase 1 – Grundgerüst:** Login, PWA (Symbol, Vollbild auf iPhone und iPad), Mac-App mit Tauri, Kachel-System mit
+  einer Beispielkachel, online auf Vercel
 - [ ] **Phase 2 – KI-News:** RSS-Feeds von Anthropic, OpenAI, Google DeepMind, Fachseiten, Karpathy und Matt Pocock
   in einer Kachel mit einem Abschnitt pro Absender
 - [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (OpenLigaDB), Premier League und Champions League
@@ -131,7 +132,10 @@ dürfen den Fahrplan ändern, wenn frühere Neues zeigen.
    dem Mac. Auf allen drei Geräten prüfen, ob Vollbild und Login in der installierten App erhalten bleiben. Kurzer
    Name unter dem Symbol: „Heute“. Symbol: Kachel-Raster in Orange auf dunklem Grund, erst als SVG zur Freigabe,
    dann als PNG (180, 192, 512 px).
-4. **Kachel-Gerüst:** Einstellungsdatei, Kachel aus Abschnitten, eine Spalte auf dem iPhone und mehrere auf Mac
+4. **Mac-App mit Tauri** (siehe [[projects/tages-dashboard/docs/adr/0003-mac-app-mit-tauri|ADR 0003]]): eine kleine
+   Mac-App, die die Vercel-Adresse in einem eigenen Fenster zeigt, selbst gebaut und nur auf dem eigenen Mac installiert.
+   Prüfen, ob die Anmeldung erhalten bleibt und die App ohne Bezahlkonto bei Apple startet.
+5. **Kachel-Gerüst:** Einstellungsdatei, Kachel aus Abschnitten, eine Spalte auf dem iPhone und mehrere auf Mac
    und iPad, Aktualisierung jede Minute, eigener Fehlerzustand je Kachel. Aussehen aus dem
    [Entwurf](https://claude.ai/artifact/VeWhiFgrVYtqnrivy3hFKt) (dunkel, Barlow und Barlow Condensed, Orange für
    Mein Team und Live), Farben und Schriften zentral als Design-Token in Tailwind. Als Beispiel eine Testkachel

@@ -17,6 +17,7 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 
 - **Sprache und App:** TypeScript mit Next.js (App Router), Tailwind CSS
 - **PWA:** Web-App-Manifest von Next.js, „Zum Home-Bildschirm“ auf iPhone und iPad
+- **Mac-App:** Tauri, zeigt die Website in einem eigenen Fenster (ADR 0003)
 - **Login und Datenbank:** Supabase (Auth und Postgres)
 - **Hosting:** Vercel (kostenloser Tarif)
 - **Tests und Qualität:** Vitest, Testing Library, ESLint, Prettier
