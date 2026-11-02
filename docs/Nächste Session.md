@@ -50,10 +50,12 @@ Entscheidungen für die restlichen Schritte stehen im Fahrplan der
    - **Dependabot einrichten** nach dem Muster von musik-app (`.github/dependabot.yml` mit Gruppen für Next und React,
      `docs/tools/Dependabot - Einrichtung.md`), Sicherheits-Updates im Repo einschalten. Dabei klären, woher die 17 mittleren
      Meldungen von `npm audit` kommen (mit `--omit=dev` sind es 0).
-4. **Fahrplan-Schritt 4: Kachel-Gerüst.** Die erste private Server Action bringt die gemeinsame Anmeldeprüfung mit
+4. **Fahrplan-Schritt 4: Mac-App mit Tauri**
+   ([[projects/tages-dashboard/docs/adr/0003-mac-app-mit-tauri|ADR 0003]]), Plan mit `plan-schreiben`.
+5. **Fahrplan-Schritt 5: Kachel-Gerüst.** Die erste private Server Action bringt die gemeinsame Anmeldeprüfung mit
    ([[projects/tages-dashboard/docs/adr/0002-login-nur-auf-dem-server|ADR 0002]]). `BESITZER_ID` aus `lib/besitzer.ts` kann in
    die Einstellungsdatei umziehen.
-5. **Am Ende von Phase 1:** Cloudflare Security Audit Skill einmal laufen lassen (vorgemerkt in den Tools für später
+6. **Am Ende von Phase 1:** Cloudflare Security Audit Skill einmal laufen lassen (vorgemerkt in den Tools für später
    des Ecosystems), weil die App dann mit Login im Netz steht. Dabei das Limit je IP-Adresse ansehen (Bekannte Grenzen).
 
 ## Passende Skills

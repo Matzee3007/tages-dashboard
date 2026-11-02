@@ -31,3 +31,4 @@ alle benutzten Befehle, Fehler.
 
 | Werkzeug | Phase | Wofür in einem Satz |
 |---|---|---|
+| [[projects/tages-dashboard/docs/tools/Tauri\|Tauri]] | 1 | zeigt das Dashboard als eigene Mac-App |
