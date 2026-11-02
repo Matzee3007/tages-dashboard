@@ -1,18 +1,18 @@
 ---
 titel: Nächste Session
 status: aktiv
-erstellt: 2026-11-01
+erstellt: 2026-11-02
 tags: [session, übergabe]
 ---
 
 # Nächste Session
 
 Stand vom 2026-11-02. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
-[[projects/tages-dashboard/docs/journal/Lernjournal Phase 1 - Login mit Supabase|Lernjournal Phase 1 - Login mit Supabase]].
+[[projects/tages-dashboard/docs/journal/Lernjournal Phase 1 - PWA und Mock-Agent|Lernjournal Phase 1 - PWA und Mock-Agent]].
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge des Abschluss-PRs zur PWA)
+- **Branch:** `main` (nach dem Merge von PR #18)
 - **Offene PRs:** keine
 - **Nicht committet:** nichts
 - **Live:** https://tages-dashboard-iota.vercel.app (mit Login, zeigt nur die Startseite, als PWA „Heute“ installierbar)
@@ -49,10 +49,12 @@ Entscheidungen für die restlichen Schritte stehen im Fahrplan der
      `docs/tools/Dependabot - Einrichtung.md`), Sicherheits-Updates im Repo einschalten. Dabei klären, woher die 17 mittleren
      Meldungen von `npm audit` kommen (mit `--omit=dev` sind es 0).
 4. **Fahrplan-Schritt 4: Mac-App mit Tauri**
-   ([[projects/tages-dashboard/docs/adr/0003-mac-app-mit-tauri|ADR 0003]]), Plan mit `plan-schreiben`.
+   ([[projects/tages-dashboard/docs/adr/0003-mac-app-mit-tauri|ADR 0003]]), Plan mit `plan-schreiben`. Vorher klären, ob sie mehr
+   als ein Fenster mit der Website können soll (z. B. Symbol in der Menüleiste), und bei sichtbaren Extras zuerst ein Mock.
 5. **Fahrplan-Schritt 5: Kachel-Gerüst.** Die erste private Server Action bringt die gemeinsame Anmeldeprüfung mit
    ([[projects/tages-dashboard/docs/adr/0002-login-nur-auf-dem-server|ADR 0002]]). `BESITZER_ID` aus `lib/besitzer.ts` kann in
-   die Einstellungsdatei umziehen.
+   die Einstellungsdatei umziehen. Zuerst ein Mock mit `mock-bauer`. Dabei bekommt die Seite `#0E1013` als Grund, dann passt sie
+   zur dunklen Leiste der App (Fund 4 aus dem `/code-review` von PR #16).
 6. **Am Ende von Phase 1:** Cloudflare Security Audit Skill einmal laufen lassen (vorgemerkt in den Tools für später
    des Ecosystems), weil die App dann mit Login im Netz steht. Dabei das Limit je IP-Adresse ansehen (Bekannte Grenzen).
 
