@@ -7,15 +7,15 @@ tags: [session, übergabe]
 
 # Nächste Session
 
-Stand vom 2026-11-01. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
+Stand vom 2026-11-02. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
 [[projects/tages-dashboard/docs/journal/Lernjournal Phase 1 - Login mit Supabase|Lernjournal Phase 1 - Login mit Supabase]].
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge von PR #14)
+- **Branch:** `main` (nach dem Merge des Abschluss-PRs zur PWA)
 - **Offene PRs:** keine
 - **Nicht committet:** nichts
-- **Live:** https://tages-dashboard-iota.vercel.app (mit Login, zeigt nur die Startseite)
+- **Live:** https://tages-dashboard-iota.vercel.app (mit Login, zeigt nur die Startseite, als PWA „Heute“ installierbar)
 
 ## Vor dem Start
 
@@ -31,14 +31,12 @@ Stand vom 2026-11-01. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 
 ## Womit es weitergeht
 
-**Phase 1 – Grundgerüst** läuft. Die Fahrplan-Schritte 1 (online auf Vercel) und 2 (Login mit Supabase) sind erledigt, die
+**Phase 1 – Grundgerüst** läuft. Die Fahrplan-Schritte 1 (online auf Vercel), 2 (Login mit Supabase) und 3 (PWA) sind erledigt, die
 Entscheidungen für die restlichen Schritte stehen im Fahrplan der
 [[projects/tages-dashboard/docs/Projektvision|Projektvision]].
 
-1. **Fahrplan-Schritt 3: PWA**, Plan mit `plan-schreiben`.
-   - `proxy.ts` muss Manifest und Symbole ohne Anmeldung durchlassen.
-   - Prüfen, ob die Anmeldung in der installierten App auf iPhone und iPad hält und ob die geleerten Felder nach falschem
-     Passwort stören ([[projects/tages-dashboard/docs/tools/Supabase|Supabase]], Abschnitt „Bekannte Grenzen“).
+1. **PWA nachprüfen:** Die installierte App auf iPhone, iPad und Mac öffnen. Bist du am Tag nach dem 2026-11-02 noch
+   angemeldet? Falls nicht, mit `fehler-diagnose` klären. Das Ergebnis in `docs/tools/Next.js.md` eintragen.
 2. **Ab 2026-11-08: Pause prüfen.** Im Supabase-Dashboard nachsehen, ob das Projekt pausiert hat. Die Doku sagt nicht, ob
    Logins als Aktivität zählen. Falls ja: über Datenbank-Aktivität per Zeitplan entscheiden, sonst nichts bauen.
 3. **Aus musik-app (2026-10-26), klein, je ein PR mit `/code-review`:**
@@ -60,6 +58,5 @@ Entscheidungen für die restlichen Schritte stehen im Fahrplan der
 
 ## Passende Skills
 
-- `plan-schreiben`: Plan für Fahrplan-Schritt 3
-- `tdd`: Manifest und Ausnahmen im Proxy testgetrieben bauen
-- `frontend-design:frontend-design`: Symbol und Aussehen der installierten App
+- `plan-schreiben`: Plan für Fahrplan-Schritt 4
+- Agent `mock-bauer`: Mock für das Kachel-Gerüst, bevor es gebaut wird
