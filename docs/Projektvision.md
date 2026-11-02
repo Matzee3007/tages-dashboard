@@ -128,7 +128,8 @@ dürfen den Fahrplan ändern, wenn frühere Neues zeigen.
    `.env.local` (dazu eine `.env.example` im Repo) und bei Vercel. Der Secret Key wird nicht gebraucht. Die CI braucht
    die Werte nicht: Der Build läuft auch ohne sie (geprüft 2026-11-01, anders als im `/code-review` von PR #4 erwartet).
    Tests ersetzen Supabase durch eine Attrappe.
-3. **PWA:** Manifest, Symbol, Vollbild und „Zum Home-Bildschirm“ auf iPhone und iPad, „Zum Dock hinzufügen“ auf
+3. **PWA** (erledigt 2026-11-02, PR #16, siehe
+   [[projects/tages-dashboard/docs/plaene/2026-11-02-pwa|Plan]]): Manifest, Symbol, Vollbild und „Zum Home-Bildschirm“ auf iPhone und iPad, „Zum Dock hinzufügen“ auf
    dem Mac. Auf allen drei Geräten prüfen, ob Vollbild und Login in der installierten App erhalten bleiben. Kurzer
    Name unter dem Symbol: „Heute“. Symbol: Kachel-Raster in Orange auf dunklem Grund, erst als SVG zur Freigabe,
    dann als PNG (180, 192, 512 px).

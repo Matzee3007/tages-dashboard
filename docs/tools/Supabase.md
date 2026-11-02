@@ -71,8 +71,8 @@ Aus dem `/code-review` von PR #12, bewusst nicht behoben:
   Sitzung auf dem Server gültig, oder man landet ohne Meldung wieder auf der Startseite. Dann später noch einmal drücken.
 - **Ausfall sieht aus wie abgemeldet:** `proxy.ts` wertet den Fehler von `getClaims()` nicht aus, jede Seite leitet zu
   `/login`. Die Seite bleibt zu, die Ursache zeigt erst der Anmeldeversuch.
-- **Falsches Passwort leert die Felder:** React setzt das Formular nach der Action zurück. In Fahrplan-Schritt 3 auf dem
-  iPhone prüfen, ob das stört.
+- **Falsches Passwort leert die Felder:** React setzt das Formular nach der Action zurück. Beim Gerätetest am 2026-11-02
+  auf iPhone, iPad und Mac ohne Beanstandung.
 - **Limit je IP-Adresse:** Die Anmeldung läuft über den Server, Supabase zählt also dessen Adresse. Viele fremde Versuche
   könnten die eigene Anmeldung zeitweise blockieren (Fehler 429). Beim Security Audit am Ende von Phase 1 ansehen.
 - **`secure` hängt an `NODE_ENV`:** Ein Produktions-Build über `http://` (`npm start`, auch im Heimnetz vom iPhone) setzt
