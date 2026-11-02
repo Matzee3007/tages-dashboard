@@ -22,6 +22,8 @@ installierte Web-App auf dem iPhone, die eigene Cookies hat, getrennt von Safari
 - **Cookies `HttpOnly`,** weil JavaScript im Browser sie nie lesen muss.
 - **Der Proxy schützt alle Adressen außer `/login` und Statischem,** sodass neue Seiten und Schnittstellen von selbst
   geschützt sind.
+- **Ausnahmen für die PWA:** `/manifest.webmanifest` und PNG-Dateien direkt in `/icons/` sind ohne Anmeldung erreichbar,
+  weil der Browser sie ohne Cookies abruft und die installierte App sonst kein Symbol bekäme. Sie enthalten nichts Privates.
 - **Der Proxy lässt nur das eine Konto durch:** Er vergleicht die Nutzer-ID aus dem Token mit `BESITZER_ID` in
   `lib/besitzer.ts`. Ein gültiges fremdes Konto kommt nicht hinein, auch wenn ein Schalter bei Supabase falsch steht.
 - **Jede private Server Action prüft die Anmeldung selbst.** Eine Action ist nur ein POST an eine Seite, und `/login`

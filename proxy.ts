@@ -63,6 +63,6 @@ export const config = {
   // Nur Statisches auslassen, damit jede neue Seite und Schnittstelle von selbst geschützt ist.
   // Manifest und Symbole holt der Browser ohne Cookies, sonst bekäme die installierte App kein Symbol.
   matcher: [
-    "/((?!_next/static/|_next/image(?:/|$)|favicon\\.ico$|manifest\\.webmanifest$|icons/).*)",
+    "/((?!_next/static/|_next/image(?:/|$)|favicon\\.ico$|manifest\\.webmanifest$|icons/[^/]+\\.png$).*)",
   ],
 };

@@ -160,6 +160,11 @@ describe("matcher", () => {
     "/icons",
     "/icons-alt",
     "/icons-alt/a.png",
+    "/icons/",
+    "/icons/seite",
+    "/icons/a.svg",
+    "/icons/unter/a.png",
+    "/icons/a.png/x",
   ])("prüft %s", (pfad) => {
     expect(muster.test(pfad)).toBe(true);
   });
@@ -171,6 +176,7 @@ describe("matcher", () => {
     "/manifest.webmanifest",
     "/icons/icon-180.png",
     "/icons/icon-512.png",
+    "/icons/favicon-32.png",
   ])("lässt %s aus", (pfad) => {
     expect(muster.test(pfad)).toBe(false);
   });

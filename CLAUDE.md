@@ -27,8 +27,9 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 ## Architekturprinzipien
 
 1. **Kontext liegt in Dateien** (`CLAUDE.md`, `docs/`), nicht im Chatverlauf.
-2. **Nur für mich:** genau ein Nutzer, jede Seite und jede Schnittstelle hinter dem Login. Ausnahme: der Eingang
-   für den Kurzbefehl, der mit einem eigenen geheimen Schlüssel geschützt ist.
+2. **Nur für mich:** genau ein Nutzer, jede Seite und jede Schnittstelle hinter dem Login. Ausnahmen: der Eingang
+   für den Kurzbefehl, der mit einem eigenen geheimen Schlüssel geschützt ist, sowie Manifest und Symbole der PWA
+   (ADR 0002).
 3. **Kacheln:** Jede Kachel (je Wettbewerb, Schritte, KI-News …) ist eigenständig, mit eigener Art von Datenquelle,
    und besteht aus Abschnitten. Eine neue Kachel kommt dazu, ohne die anderen zu ändern. Begriffe: `docs/Glossar.md`.
 4. **Daten holt der Server**, nicht der Browser: API-Schlüssel bleiben auf dem Server, Antworten werden kurz
@@ -42,6 +43,7 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 ```
 tages-dashboard/
 ├── app/          Next.js-Seiten und Layout
+├── assets/       Quellen, die nicht ausgeliefert werden (z. B. SVG der Symbole)
 ├── lib/          Code ohne Seite (z. B. Supabase-Client)
 ├── proxy.ts      Login-Prüfung vor jeder Anfrage
 ├── __tests__/    Tests (Vitest)
