@@ -61,5 +61,8 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   // Nur Statisches auslassen, damit jede neue Seite und Schnittstelle von selbst geschützt ist.
-  matcher: ["/((?!_next/static/|_next/image(?:/|$)|favicon\\.ico$).*)"],
+  // Manifest und Symbole holt der Browser ohne Cookies, sonst bekäme die installierte App kein Symbol.
+  matcher: [
+    "/((?!_next/static/|_next/image(?:/|$)|favicon\\.ico$|manifest\\.webmanifest$|icons/).*)",
+  ],
 };

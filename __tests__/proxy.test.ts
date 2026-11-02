@@ -155,14 +155,23 @@ describe("matcher", () => {
     "/_next/static-alt",
     "/_next/image-x",
     "/_next/imagex/y",
+    "/manifest.webmanifest/x",
+    "/manifest.webmanifest-alt",
+    "/icons",
+    "/icons-alt",
+    "/icons-alt/a.png",
   ])("prüft %s", (pfad) => {
     expect(muster.test(pfad)).toBe(true);
   });
 
-  test.each(["/_next/static/a.js", "/_next/image", "/favicon.ico"])(
-    "lässt %s aus",
-    (pfad) => {
-      expect(muster.test(pfad)).toBe(false);
-    },
-  );
+  test.each([
+    "/_next/static/a.js",
+    "/_next/image",
+    "/favicon.ico",
+    "/manifest.webmanifest",
+    "/icons/icon-180.png",
+    "/icons/icon-512.png",
+  ])("lässt %s aus", (pfad) => {
+    expect(muster.test(pfad)).toBe(false);
+  });
 });
