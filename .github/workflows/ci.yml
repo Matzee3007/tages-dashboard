@@ -21,7 +21,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    # Ein normaler Lauf dauert unter einer Minute, ein hängender bricht nach 10 ab statt nach 6 Stunden
+    # Ein normaler Lauf dauert 1 bis 2 Minuten, ein hängender bricht nach 10 ab statt nach 6 Stunden
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
