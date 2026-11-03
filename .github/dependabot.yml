@@ -6,24 +6,41 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    # Ein Paket landet in der ersten Gruppe, die passt. Familien, die nur zusammen gehen, kommen
-    # auch bei großen Updates (major) in einem PR. Sonst: kleine Updates (minor, patch) gesammelt, große einzeln.
+    # Neue Versionen erst nach 7 Tagen vorschlagen: Manipulierte fallen oft in den ersten Tagen auf.
+    # Gilt nicht für Sicherheits-Updates.
+    cooldown:
+      default-days: 7
+    # Familien, die nur zusammen gehen, kommen auch bei großen Updates (major) in einem PR.
+    # Sonst: kleine Updates (minor, patch) gesammelt, große einzeln.
     groups:
       next:
         patterns: [next, eslint-config-next]
       react:
         patterns: [react, react-dom, "@types/react", "@types/react-dom"]
+      # Ausschluss, weil React in musik-app trotz eigener Gruppe im Sammel-PR landete
       npm-klein:
         update-types: [minor, patch]
+        exclude-patterns:
+          - next
+          - eslint-config-next
+          - react
+          - react-dom
+          - "@types/react"
+          - "@types/react-dom"
     ignore:
       # Die Typen folgen der Laufzeit Node 24 (engines in package.json), nicht der neuesten Node-Version
       - dependency-name: "@types/node"
-        update-types: [version-update:semver-major]
+        update-types: ["version-update:semver-major"]
+      # typescript-eslint verlangt TypeScript unter 6.1, ein PR auf TypeScript 7 könnte nicht grün werden
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     groups:
       actions:
         patterns: ["*"]
