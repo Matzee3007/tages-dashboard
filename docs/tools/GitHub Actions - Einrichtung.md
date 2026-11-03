@@ -23,13 +23,15 @@ Workflow `.github/workflows/ci.yml`, Job `check`, bei jedem Pull Request und jed
 4. `npm run build`: Produktionsfassung bauen.
 
 Die CI benutzt nur die npm-Skripte aus `package.json`, lokal und in der CI läuft also dasselbe. Ein Lauf dauert
-etwa 40 Sekunden. Dass `npm run build` die Typen ein zweites Mal prüft, ist Absicht: So bleibt `npm run check`
+1 bis 2 Minuten. Dass `npm run build` die Typen ein zweites Mal prüft, ist Absicht: So bleibt `npm run check`
 in CI und lokal gleich.
 
 Schutz nach dem `/code-review` von PR #4:
 
 - `timeout-minutes: 10`: Ein hängender Lauf bricht nach 10 Minuten ab, nicht erst nach 6 Stunden.
-- `concurrency` mit `cancel-in-progress`: Ein neuer Push bricht den alten Lauf desselben Branches ab.
+- `concurrency` mit `cancel-in-progress`: Ein neuer Push in einen PR bricht dessen noch laufenden Lauf ab. Bei einem PR ist
+  die Gruppe seine Nummer. Auf `main` hat jeder Commit eine eigene Gruppe (`github.sha`) und nichts bricht ab: In einer Gruppe
+  läuft höchstens ein Lauf und einer wartet, ein neuer wartender Lauf verdrängt den alten, auch ohne `cancel-in-progress`.
 - `permissions: contents: read`: Der Token der CI darf nur lesen.
 
 ## Wie haben wir es eingerichtet?
@@ -38,13 +40,15 @@ Schutz nach dem `/code-review` von PR #4:
    [[projects/tages-dashboard/docs/plaene/2026-10-25-ci|Plan: CI mit GitHub Actions]]. Zuerst mit einer absichtlich
    falsch formatierten Probedatei `app/ci-probe.ts`: Die CI wurde rot. Nach dem Löschen wurde sie grün. Damit ist
    belegt, dass sie Fehler findet. `npm ci` lief auf Linux mit der `package-lock.json` vom Mac ohne Probleme.
+2. **2026-11-03, Phase 1:** `concurrency` umgestellt, nach dem Fund in musik-app (dort PR #61): Mit einer Gruppe je Branch
+   konnten zwei schnelle Merges einen Merge-Commit auf `main` ungeprüft lassen.
 
 ## Regeln
 
 - **Vor jedem Merge `gh pr checks <nr>`: Die CI muss grün sein.** Das Repo ist privat und läuft mit GitHub Free.
   Dort gibt es keinen Branch-Schutz, GitHub verhindert einen Merge bei roter CI also nicht.
-- Private Repos haben bei GitHub Free ein Kontingent an Freiminuten pro Monat (Stand: 2000 Minuten). Bei rund
-  40 Sekunden pro Lauf reicht das weit.
+- Private Repos haben bei GitHub Free ein Kontingent an Freiminuten pro Monat (Stand: 2000 Minuten). Bei 1 bis 2
+  Minuten pro Lauf reicht das weit.
 
 ## Befehle
 
@@ -61,3 +65,10 @@ gh run view <id> --log-failed  # nur die Log-Zeilen der fehlgeschlagenen Schritt
 
 - Ursache: Die Datei war nicht nach Prettier formatiert, `prettier . --check` in `npm run format:check` schlägt fehl.
 - Lösung: lokal `npm run format`, dann committen.
+
+**Lauf auf `main` endet als `cancelled`, der Merge-Commit bleibt ungeprüft** (in musik-app aufgetreten, hier vorbeugend
+behoben am 2026-11-03):
+
+- Ursache: Alle Läufe von `main` lagen in einer `concurrency`-Gruppe. Bei schnellen Merges verdrängte ein neuer wartender
+  Lauf den alten.
+- Lösung: Auf `main` eine Gruppe je Commit (`github.sha`), siehe „Schutz“ oben.
