@@ -29,7 +29,9 @@ in CI und lokal gleich.
 Schutz nach dem `/code-review` von PR #4:
 
 - `timeout-minutes: 10`: Ein hängender Lauf bricht nach 10 Minuten ab, nicht erst nach 6 Stunden.
-- `concurrency` mit `cancel-in-progress`: Ein neuer Push bricht den alten Lauf desselben Branches ab.
+- `concurrency` mit `cancel-in-progress`: Ein neuer Push in einen PR bricht dessen noch laufenden Lauf ab. Bei einem PR ist
+  die Gruppe seine Nummer. Auf `main` hat jeder Commit eine eigene Gruppe (`github.sha`) und nichts bricht ab: In einer Gruppe
+  läuft höchstens ein Lauf und einer wartet, ein neuer wartender Lauf verdrängt den alten, auch ohne `cancel-in-progress`.
 - `permissions: contents: read`: Der Token der CI darf nur lesen.
 
 ## Wie haben wir es eingerichtet?
@@ -38,6 +40,8 @@ Schutz nach dem `/code-review` von PR #4:
    [[projects/tages-dashboard/docs/plaene/2026-10-25-ci|Plan: CI mit GitHub Actions]]. Zuerst mit einer absichtlich
    falsch formatierten Probedatei `app/ci-probe.ts`: Die CI wurde rot. Nach dem Löschen wurde sie grün. Damit ist
    belegt, dass sie Fehler findet. `npm ci` lief auf Linux mit der `package-lock.json` vom Mac ohne Probleme.
+2. **2026-11-03, Phase 1:** `concurrency` umgestellt, nach dem Fund in musik-app (dort PR #61): Mit einer Gruppe je Branch
+   konnten zwei schnelle Merges einen Merge-Commit auf `main` ungeprüft lassen.
 
 ## Regeln
 

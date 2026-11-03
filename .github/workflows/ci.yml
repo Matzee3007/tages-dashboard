@@ -7,10 +7,12 @@ on:
   push:
     branches: [main]
 
-# Ein neuer Push bricht den noch laufenden Lauf desselben Branches ab, spart Freiminuten
+# Ein neuer Push in einen PR bricht dessen noch laufenden Lauf ab, spart Freiminuten.
+# Auf main hat jeder Commit eine eigene Gruppe und nichts bricht ab: In einer Gruppe verdrängt ein neuer
+# wartender Lauf den alten, auch ohne cancel-in-progress, und ein Merge-Commit bliebe ungeprüft.
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 # Die CI liest nur, ein manipuliertes npm-Paket bekommt so keinen Schreibzugriff aufs Repo
 permissions:
