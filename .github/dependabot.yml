@@ -34,7 +34,7 @@ updates:
       # typescript-eslint verlangt TypeScript unter 6.1, ein PR auf TypeScript 7 könnte nicht grün werden
       - dependency-name: typescript
         update-types: ["version-update:semver-major"]
-      # Die ESLint-Plugins von eslint-config-next erlauben nur ESLint bis 9
+      # eslint-plugin-react, -import und -jsx-a11y erlauben nur ESLint bis 9, auch wenn die CI mit 10 grün war
       - dependency-name: eslint
         update-types: ["version-update:semver-major"]
 
