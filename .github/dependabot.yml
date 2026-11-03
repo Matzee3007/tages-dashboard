@@ -1,0 +1,29 @@
+# Dependabot öffnet PRs, wenn Pakete oder Actions eine neue Version haben. Jeder PR läuft durch die CI.
+# Einrichtung und Ablauf: docs/tools/Dependabot - Einrichtung.md
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # Ein Paket landet in der ersten Gruppe, die passt. Familien, die nur zusammen gehen, kommen
+    # auch bei großen Updates (major) in einem PR. Sonst: kleine Updates (minor, patch) gesammelt, große einzeln.
+    groups:
+      next:
+        patterns: [next, eslint-config-next]
+      react:
+        patterns: [react, react-dom, "@types/react", "@types/react-dom"]
+      npm-klein:
+        update-types: [minor, patch]
+    ignore:
+      # Die Typen folgen der Laufzeit Node 24 (engines in package.json), nicht der neuesten Node-Version
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
