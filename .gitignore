@@ -24,3 +24,7 @@ npm-debug.log*
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# Tauri: Build-Ergebnisse (hier statt nur in src-tauri/.gitignore, weil Prettier nur diese Datei liest)
+/src-tauri/target
+/src-tauri/gen
