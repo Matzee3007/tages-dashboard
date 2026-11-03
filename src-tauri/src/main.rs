@@ -2,7 +2,7 @@ mod klick;
 
 use klick::{KlickAktion, klick_aktion};
 use tauri::{
-    AppHandle, Manager,
+    AppHandle, Manager, RunEvent, WindowEvent,
     image::Image,
     menu::{Menu, MenuItem, PredefinedMenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
@@ -78,6 +78,20 @@ fn main() {
             menueleiste_einrichten(app.handle())?;
             Ok(())
         })
-        .run(tauri::generate_context!())
-        .expect("Tauri-App konnte nicht starten");
+        // Roter Knopf und Cmd+W blenden nur aus, die App läuft in der Menüleiste weiter
+        .on_window_event(|fenster, ereignis| {
+            if let WindowEvent::CloseRequested { api, .. } = ereignis {
+                api.prevent_close();
+                let _ = fenster.hide();
+            }
+        })
+        .build(tauri::generate_context!())
+        .expect("Tauri-App konnte nicht starten")
+        .run(|app, ereignis| {
+            // Klick aufs Dock-Symbol holt das ausgeblendete Fenster zurück
+            #[cfg(target_os = "macos")]
+            if let RunEvent::Reopen { .. } = ereignis {
+                nach_vorn(app);
+            }
+        });
 }
