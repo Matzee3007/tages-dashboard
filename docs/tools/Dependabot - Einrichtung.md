@@ -24,11 +24,13 @@ von selbst PRs öffnet, wenn ein Paket eine neue Version hat (**Versions-Updates
    - Große Updates von `@types/node` ignoriert Dependabot: Die Typen sollen zu Node 24 passen, auf dem die App läuft.
    - Große Updates von `typescript` ebenso: `typescript-eslint` verlangt eine Fassung unter 6.1, ein PR auf TypeScript 7
      könnte nicht grün werden (musik-app #59). Prüfen, sobald `typescript-eslint` mehr erlaubt.
+   - Große Updates von `eslint` ebenso: `eslint-plugin-react`, `-import` und `-jsx-a11y` erlauben nur ESLint bis 9. Der PR
+     auf ESLint 10 (#22) war trotzdem grün, wir haben ihn geschlossen. Prüfen, sobald die Plugins mehr erlauben.
    - `cooldown`: Neue Versionen kommen erst nach 7 Tagen, weil manipulierte Fassungen oft in den ersten Tagen auffallen.
    - `github-actions`: einmal pro Woche, alle Actions in einem PR (Gruppe `actions`).
 
 Die Versions-Updates regelt die Datei. Die Warnungen und Sicherheits-Updates sind eine Einstellung des Repos
-(GitHub → Settings → Code security), siehe Befehle.
+(GitHub → Settings → Code security), eingeschaltet am 2026-11-03 nach dem Merge der Datei, siehe Befehle.
 
 Für Sicherheits-Updates gelten Gruppen und `cooldown` nicht: Sie kommen sofort und ohne Gruppe. Bei einer Lücke in `next`
 steigt `eslint-config-next` also erst mit dem nächsten Wochenlauf nach.
@@ -58,8 +60,8 @@ Stand 2026-11-03: 17 mittlere Meldungen, mit `npm audit --omit=dev` (nur was die
   seinen Plugins nutzen ein älteres `minimatch`, und `minimatch` steht nicht in unserer `package.json`.
 - **Nicht `npm audit fix --force`:** Das schlägt eine sehr alte Fassung von `eslint` vor (4.0.0) und würde den Linter
   zerlegen.
-- **Warnung auf GitHub:** Nach dem Einschalten erscheint sie vermutlich auch dort, dann mit Begründung „Risiko akzeptiert“
-  schließen. Bei jedem großen Update von `eslint` erneut nachsehen.
+- **Warnung auf GitHub:** Warnung #1 kam nach dem Einschalten, der Sicherheits-Lauf endete rot mit
+  `security_update_not_possible`. Am 2026-11-03 als `tolerable_risk` geschlossen. Beim Wechsel auf ESLint 10 erneut nachsehen.
 
 ## Befehle
 

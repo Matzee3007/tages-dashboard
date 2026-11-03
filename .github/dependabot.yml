@@ -34,6 +34,9 @@ updates:
       # typescript-eslint verlangt TypeScript unter 6.1, ein PR auf TypeScript 7 könnte nicht grün werden
       - dependency-name: typescript
         update-types: ["version-update:semver-major"]
+      # Die ESLint-Plugins von eslint-config-next erlauben nur ESLint bis 9
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
