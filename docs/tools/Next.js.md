@@ -44,7 +44,7 @@ Gerätetest vom 2026-11-02, Installieren über Safari:
 | iPad | bestanden |
 | Mac („Zum Dock hinzufügen“) | bestanden |
 
-Offen: ob die Anmeldung auch am nächsten Tag noch hält.
+Am 2026-11-03 nachgeprüft: Die Anmeldung hält auch am nächsten Tag.
 
 ## Befehle
 
