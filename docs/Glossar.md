@@ -43,9 +43,13 @@ _Nicht verwenden_: Matchday, Runde, heute
 ## KI-News
 
 **Absender**:
-Eine Person oder Organisation, deren Meldungen einen eigenen Abschnitt bekommen, z. B. Anthropic oder Andrej
-Karpathy. Ein Absender kann mehrere Feeds haben (Blog, YouTube, Newsletter).
-_Nicht verwenden_: Quelle, Feed, Kanal
+Eine Person, Organisation oder ein Produkt, deren Meldungen einen eigenen Abschnitt bekommen, z. B. Anthropic, Andrej
+Karpathy oder Claude Updates. Ein Absender kann mehrere Kanäle haben.
+_Nicht verwenden_: Quelle, Feed
+
+**Kanal**:
+Ein Ort, an dem ein Absender regelmäßig veröffentlicht, z. B. ein Feed oder eine News-Seite.
+_Nicht verwenden_: Quelle, Plattform
 
 **Meldung**:
 Ein einzelner Eintrag eines Absenders mit Titel, Alter und Link zum Original.
