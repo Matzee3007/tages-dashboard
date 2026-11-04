@@ -1,19 +1,99 @@
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, expect, test, vi } from "vitest";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import Page from "@/app/page";
+import { holeDashboard } from "@/lib/kacheln/abruf";
+import type { DashboardAntwort } from "@/lib/kacheln/typen";
 
 vi.mock("@/app/login/actions", () => ({ abmelden: vi.fn() }));
+vi.mock("@/lib/kacheln/abruf", () => ({ holeDashboard: vi.fn() }));
+const push = vi.hoisted(() => vi.fn());
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
+
+const ZEIT = "2026-11-08T13:32:07.000Z";
+const OK: DashboardAntwort = {
+  zeit: ZEIT,
+  kacheln: [
+    {
+      id: "test",
+      titel: "Testkachel",
+      status: "ok",
+      zusatz: "Server",
+      daten: { art: "test", uhrzeit: "14:32:07" },
+      stand: ZEIT,
+    },
+  ],
+};
+
+beforeEach(() => {
+  vi.mocked(holeDashboard).mockReset();
+});
 
 afterEach(cleanup);
 
-test("Startseite zeigt den Namen der App als Überschrift", () => {
+test("zeigt Datum, Zeit der Aktualisierung, Kachel und Abmelden", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue(OK);
   render(<Page />);
+
   expect(
-    screen.getByRole("heading", { level: 1, name: "Tages-Dashboard" }),
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Sonntag, 8. November",
+    }),
   ).toBeDefined();
+  expect(screen.getByText("Aktualisiert 14:32")).toBeDefined();
+  expect(
+    screen.getByRole("heading", { level: 2, name: "Testkachel" }),
+  ).toBeDefined();
+  expect(screen.getByText("14:32:07")).toBeDefined();
+  expect(screen.getByRole("button", { name: "Abmelden" })).toBeDefined();
 });
 
-test("Startseite zeigt den Knopf zum Abmelden", () => {
+test("zeigt vor der ersten Antwort, dass geladen wird", () => {
+  vi.mocked(holeDashboard).mockReturnValue(new Promise(() => {}));
   render(<Page />);
-  expect(screen.getByRole("button", { name: "Abmelden" })).toBeDefined();
+  expect(screen.getByText("Lädt …")).toBeDefined();
+});
+
+test("wechselt zum Login, wenn die Sitzung abgelaufen ist", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue("abgemeldet");
+  render(<Page />);
+
+  await waitFor(() => expect(push).toHaveBeenCalledWith("/login"));
+});
+
+test("ein gescheiterter erster Abruf zeigt den Hinweis statt einer leeren Seite", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue(null);
+  render(<Page />);
+
+  expect(await screen.findByText("Neuer Versuch in 1 Minute.")).toBeDefined();
+  expect(screen.queryByText("Lädt …")).toBeNull();
+});
+
+test("nach erneutem Versuch verschwindet der Hinweis", async () => {
+  vi.mocked(holeDashboard).mockResolvedValueOnce(null).mockResolvedValue(OK);
+  render(<Page />);
+
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Jetzt erneut versuchen" }),
+  );
+
+  expect(await screen.findByText("14:32:07")).toBeDefined();
+  expect(screen.queryByText("Daten gerade nicht erreichbar.")).toBeNull();
+});
+
+test("wenn alle Kacheln scheitern, behauptet der Kopf keine Aktualisierung", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [{ id: "test", titel: "Testkachel", status: "fehler" }],
+  });
+  render(<Page />);
+
+  expect(await screen.findByText("Neuer Versuch in 1 Minute.")).toBeDefined();
+  expect(screen.queryByText("Aktualisiert 14:32")).toBeNull();
 });
