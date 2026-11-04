@@ -33,7 +33,8 @@ drauf, die Oberfläche muss also auch dort laufen. Es darf nichts kosten. Grundl
 ## Konsequenzen
 
 - Der Rechner braucht zusätzlich Rust, aber erst ab diesem Schritt.
-- Die App startet nicht ohne Internet, wie die PWA auch: Offline-Daten sind nicht geplant.
+- Ohne Internet zeigt die App nur eine Fehlerseite, nach „Neu laden“ mit Internet ist die Seite da (geprüft 2026-11-03). Wie bei
+  der PWA sind Offline-Daten nicht geplant.
 - Ohne Bezahlkonto bei Apple lässt sich die App nicht ohne Warnung an andere weitergeben. Das ist nicht nötig, sie ist nur
   für mich.
 - Die Anmeldung in der Mac-App hält über einen Neustart der App (geprüft 2026-11-03, siehe

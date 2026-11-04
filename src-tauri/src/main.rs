@@ -11,6 +11,7 @@ use tauri::{
 const FENSTER: &str = "main";
 
 fn nach_vorn(app: &AppHandle) {
+    let _ = app.show();
     if let Some(fenster) = app.get_webview_window(FENSTER) {
         let _ = fenster.unminimize();
         let _ = fenster.show();
@@ -25,8 +26,10 @@ fn linksklick(app: &AppHandle) {
     let sichtbar = fenster.is_visible().unwrap_or(false);
     let fokussiert = fenster.is_focused().unwrap_or(false);
     match klick_aktion(sichtbar, fokussiert) {
+        // Die ganze App ausblenden, nicht nur das Fenster: Dann bekommt das vorherige Programm den Fokus zurück,
+        // und im Vollbild bleibt keine leere Fläche stehen
         KlickAktion::Ausblenden => {
-            let _ = fenster.hide();
+            let _ = app.hide();
         }
         KlickAktion::NachVorn => nach_vorn(app),
     }
@@ -82,7 +85,7 @@ fn main() {
         .on_window_event(|fenster, ereignis| {
             if let WindowEvent::CloseRequested { api, .. } = ereignis {
                 api.prevent_close();
-                let _ = fenster.hide();
+                let _ = fenster.app_handle().hide();
             }
         })
         .build(tauri::generate_context!())

@@ -35,9 +35,9 @@ Hülle wird selten geändert).
 
 | Handlung | Wirkung |
 |---|---|
-| Linksklick aufs Leisten-Symbol | Fenster vorn: ausblenden, sonst nach vorn holen |
+| Linksklick aufs Leisten-Symbol | Fenster vorn: App ausblenden, sonst nach vorn holen |
 | Rechtsklick (auf dem Trackpad mit zwei Fingern) | Menü: „Heute öffnen“, „Neu laden“, „Beenden“ |
-| Roter Knopf, `Cmd+W` | Fenster ausblenden, die App läuft weiter |
+| Roter Knopf, `Cmd+W` | App ausblenden, sie läuft in der Menüleiste weiter |
 | Klick aufs Dock-Symbol | Fenster zurückholen |
 | `Cmd+Q`, „Beenden“ | App ganz beenden |
 
@@ -54,6 +54,9 @@ Am 2026-11-03 mit der fertigen App aus `/Applications`:
 | Abmelden | bestanden |
 | Start ohne Internet, danach „Neu laden“ | bestanden |
 | Symbole in Dock und Menüleiste | bestanden |
+| Ausblenden: Fokus geht ans vorherige Programm zurück, im Vollbild keine leere Fläche | bestanden |
+| Minimiert und anderes Programm vorn, dann Linksklick: Fenster kommt mit Fokus | bestanden |
+| Start dunkel statt weiß | bestanden |
 
 Offen: ob die Anmeldung auch am nächsten Tag noch hält.
 
@@ -64,13 +67,17 @@ Der Start ohne Warnung gilt für diesen Mac, auf dem die App gebaut wurde. Für 
 ```bash
 npm run tauri -- dev                       # App zum Entwickeln starten, baut bei Änderungen in src-tauri neu
 npm run tauri -- build                     # fertige App bauen, liegt in src-tauri/target/release/bundle/macos/
-cp -R src-tauri/target/release/bundle/macos/Heute.app /Applications/   # App installieren (vorher beenden)
+rm -rf /Applications/Heute.app             # alte App entfernen (vorher beenden), siehe Hinweis unten
+cp -R src-tauri/target/release/bundle/macos/Heute.app /Applications/   # App installieren
 cargo test --manifest-path src-tauri/Cargo.toml   # Tests der Hülle
 codesign -dv /Applications/Heute.app       # Signatur ansehen, erwartet: Signature=adhoc
 ```
 
 Änderungen an der Website brauchen keinen neuen Bau, die App lädt immer die Live-Adresse. Neu bauen nur, wenn sich `src-tauri/`
 ändert.
+
+Die alte App vor dem Kopieren entfernen: `cp` überschreibt sonst die Programmdatei an Ort und Stelle und lässt alte Dateien liegen.
+Das kann auf Apple Silicon die Signatur brechen (aus dem `/code-review` von PR #25, nicht selbst nachgestellt).
 
 ## Fehler
 
@@ -88,4 +95,6 @@ codesign -dv /Applications/Heute.app       # Signatur ansehen, erwartet: Signatu
 **Rechtsklick auf das Symbol zeigt kein Menü, das Fenster springt stattdessen um** (2026-11-03):
 
 - Ursache: Kein Fehler der App. Option + Klick ist auf dem Mac kein Rechtsklick und kommt als Linksklick an.
-- Lösung: Auf dem Trackpad mit zwei Fingern klicken. `Ctrl` + Klick war hier nicht eindeutig geprüft.
+- Lösung: Auf dem Trackpad mit zwei Fingern klicken.
+- Bekannte Grenze: Auch `Ctrl` + Klick zählt als Linksklick, weil `tray-icon` die Taste nicht auswertet (aus dem Quellcode, nicht
+  am Gerät geprüft). Eine einfache Lösung über dieses Ereignis gibt es nicht.

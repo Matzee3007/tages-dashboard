@@ -13,7 +13,8 @@
         "label": "main",
         "title": "Heute",
         "width": 1200,
-        "height": 800
+        "height": 800,
+        "backgroundColor": "#0E1013"
       }
     ],
     "security": {
