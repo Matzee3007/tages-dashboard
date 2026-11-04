@@ -1,6 +1,6 @@
 ---
 titel: "Plan: Feeds lesen"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-04
 tags: [plan, ki-news, phase-2]
 ---
@@ -297,14 +297,14 @@ git commit -m "Add a time limit per tile"
 - Neu: `docs/tools/fast-xml-parser.md`
 - Ändern: `docs/tools/Tools Übersicht.md`, `docs/adr/0004-kacheln-ueber-schnittstelle.md`, `docs/Projektvision.md`, dieser Plan
 
-- [ ] **Schritt 1: Doku schreiben**
+- [x] **Schritt 1: Doku schreiben**
 
 - Tool-Notiz: wozu, die gewählten Parser-Optionen mit Grund, die Falle mit doppelt kodierten Titeln. Eintrag in der Übersicht.
 - ADR 0004, Konsequenzen: Der Satz „Mit den ersten echten Quellen in Phase 2 kommt ein Zeitlimit je Kachel dazu“ wird zu „Das Zeitlimit je Kachel beträgt 8 Sekunden“.
 - Projektvision: Schritt 1 im Fahrplan als erledigt mit PR-Nummer und Link auf diesen Plan.
 - Dieser Plan: `status: abgeschlossen`.
 
-- [ ] **Schritt 2: Prüfen und committen**
+- [x] **Schritt 2: Prüfen und committen**
 
 ```bash
 npm run check

@@ -42,5 +42,5 @@ iPhone ist ein Netzausfall normal. Die Reihenfolge der Kacheln steht in `lib/ein
   Daten in `KachelDaten`. Andere Kacheln bleiben unberührt.
 - Die Ansichten laufen als Client Components. Geheimnisse gehören deshalb nur in die Ladefunktionen.
 - Nach einem Neuladen der Seite ist der letzte Stand weg, weil es keine Offline-Daten gibt.
-- Die Antwort ist so langsam wie die langsamste Kachel. Mit den ersten echten Quellen in Phase 2 kommt ein Zeitlimit je Kachel dazu.
+- Die Antwort ist so langsam wie die langsamste Kachel. Das Zeitlimit je Kachel beträgt 8 Sekunden.
 - Im Raster bleiben unter kurzen Kacheln Lücken.

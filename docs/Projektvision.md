@@ -160,7 +160,7 @@ Entscheidungen aus der Befragung vom 2026-10-25:
 
 Stand 2026-11-04, nach der Befragung mit `/grill-with-docs`.
 
-1. **Feeds lesen:** Der Server liest RSS- und Atom-Feeds, fasst die Kanäle eines Absenders zusammen und speichert kurz
+1. **Feeds lesen** (erledigt 2026-11-04, PR #30, siehe [[projects/tages-dashboard/docs/plaene/2026-11-04-feeds-lesen|Plan]]): Der Server liest RSS- und Atom-Feeds, fasst die Kanäle eines Absenders zusammen und speichert kurz
    zwischen. Fällt ein Kanal aus, laufen die anderen weiter. Alle Absender mit Feed kommen in die Einstellungsdatei.
 2. **Links in der Mac-App:** Fremde Adressen gehen im Standardbrowser auf, die Hülle wird neu gebaut. Auf iPhone und
    iPad prüfen, wie die installierte App solche Links öffnet.
