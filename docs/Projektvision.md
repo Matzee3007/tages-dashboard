@@ -15,8 +15,8 @@ auf einen Blick, was heute wichtig ist, in Kacheln, die sich später erweitern l
 - **Sport live:** Bundesliga (FC Bayern), Premier League (Arsenal), Champions League, NFL (Seattle Seahawks),
   Formel 1
 - **Schritte:** aus Apple Health, per iPhone-Kurzbefehl an die App geschickt
-- **KI-News:** per RSS von Anthropic, OpenAI, Google DeepMind, Fachseiten sowie Andrej Karpathy und Matt Pocock
-  über ihre eigenen Feeds (Blog, Newsletter, YouTube)
+- **KI-News:** von Anthropic, Claude Updates, OpenAI, Google DeepMind, Andrej Karpathy, Matt Pocock und Fachseiten, über
+  RSS-Feeds und selbst ausgelesene Seiten
 
 Problem: Die Infos liegen in vielen Apps und Seiten verstreut. Das Dashboard bündelt sie.
 
@@ -61,7 +61,7 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 | Hosting | Vercel (kostenloser Tarif) |
 | Tests und Qualität | Vitest, Testing Library, ESLint, Prettier |
 | Sportdaten | OpenLigaDB, football-data.org, ESPN (inoffiziell), Jolpica, OpenF1 |
-| News | RSS-Feeds |
+| News | RSS- und Atom-Feeds (`fast-xml-parser`), selbst ausgelesene Seiten |
 | Schritte | iPhone-Kurzbefehl → eigene Schnittstelle der App |
 
 ## Architekturentscheidungen
@@ -79,9 +79,11 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 
 ## Inhalt der Kacheln
 
-- **KI-News:** eine Kachel, darin ein Abschnitt pro Absender (ein Absender kann mehrere Feeds haben). Jeder
+- **KI-News:** eine Kachel, darin ein Abschnitt pro Absender (ein Absender kann mehrere Kanäle haben). Jeder
   Abschnitt zeigt die neuesten 3 Meldungen der letzten 7 Tage mit Titel und Alter, ein Tipp öffnet das Original.
-  Ohne neue Meldung schrumpft der Abschnitt auf eine Zeile. Der Abschnitt mit der neuesten Meldung steht oben.
+  Ohne neue Meldung schrumpft der Abschnitt auf eine Zeile mit dem Alter der letzten Meldung
+  (`Anthropic · zuletzt vor 23 Tagen`). Der Abschnitt mit der neuesten Meldung steht oben. Titel bleiben in der
+  Originalsprache, ohne Übersetzung und Zusammenfassung.
 - **Sport:** eine Kachel pro Wettbewerb mit den Abschnitten Spieltag und Tabelle (Formel 1: Rennwochenende und
   WM-Wertung). Gezeigt wird der aktuelle Spieltag, nicht nur heute. Mein Team ist hervorgehoben und steht oben.
   Uhrzeiten in deutscher Zeit.
@@ -99,8 +101,8 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
   Projektvision mit `/grill-with-docs` geschärft, Phasen 1 bis 3 geplant
 - [x] **Phase 1 – Grundgerüst:** Login, PWA (Symbol, Vollbild auf iPhone und iPad), Mac-App mit Tauri, Kachel-System mit
   einer Beispielkachel, online auf Vercel
-- [ ] **Phase 2 – KI-News:** RSS-Feeds von Anthropic, OpenAI, Google DeepMind, Fachseiten, Karpathy und Matt Pocock
-  in einer Kachel mit einem Abschnitt pro Absender
+- [ ] **Phase 2 – KI-News:** Feeds und selbst ausgelesene Seiten von Anthropic, Claude Updates, OpenAI, Google DeepMind,
+  Karpathy, Matt Pocock und Fachseiten in einer Kachel mit einem Abschnitt pro Absender
 - [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (OpenLigaDB), Premier League und Champions League
   (football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
 - [ ] **Phase 4 – Schritte:** iPhone-Kurzbefehl schickt die Schritte aus Apple Health an die App, Kachel mit
@@ -156,12 +158,49 @@ Entscheidungen aus der Befragung vom 2026-10-25:
 
 **Phase 2 – KI-News**
 
-1. **Feeds heraussuchen:** Absender, Fachseiten und ihre Feeds (Blog, YouTube, Newsletter, Bluesky) prüfen und
-   in die Einstellungsdatei eintragen.
-2. **Feeds lesen:** Der Server liest RSS- und Atom-Feeds, fasst die Feeds eines Absenders zusammen und speichert
-   kurz zwischen. Fällt ein Feed aus, laufen die anderen weiter.
-3. **KI-News-Kachel:** ein Abschnitt pro Absender, die neuesten 3 Meldungen der letzten 7 Tage, die neueste
-   oben, ohne neue Meldung nur eine Zeile.
+Stand 2026-11-04, nach der Befragung mit `/grill-with-docs`.
+
+1. **Feeds lesen:** Der Server liest RSS- und Atom-Feeds, fasst die Kanäle eines Absenders zusammen und speichert kurz
+   zwischen. Fällt ein Kanal aus, laufen die anderen weiter. Alle Absender mit Feed kommen in die Einstellungsdatei.
+2. **Links in der Mac-App:** Fremde Adressen gehen im Standardbrowser auf, die Hülle wird neu gebaut. Auf iPhone und
+   iPad prüfen, wie die installierte App solche Links öffnet.
+3. **KI-News-Kachel:** ersetzt die Testkachel. Ein Abschnitt pro Absender, die neuesten 3 Meldungen der letzten 7 Tage,
+   die neueste oben, ohne neue Meldung nur eine Zeile. Beim ersten Deploy die offene App einmal neu laden.
+4. **Seiten auslesen:** die Kanäle ohne Feed. Das kommt zuletzt, weil es am anfälligsten ist und die Kachel dann schon läuft.
+
+Absender und Kanäle (am 2026-11-04 von diesem Rechner aus abgerufen, außer `claude.com/blog` nur grob geprüft):
+
+| Absender | Feeds | Seiten zum Auslesen |
+|---|---|---|
+| Anthropic | YouTube `UCrDwWp7EBBv4NwvScIpBDOA`, `transformer-circuits.pub/feed.xml` | `anthropic.com/news`, `/research`, `/engineering`, `claude.com/blog`, `red.anthropic.com` |
+| Claude Updates | `platform.claude.com/docs/en/release-notes/feed.xml` | `support.claude.com/en/articles/12138966-release-notes` |
+| OpenAI | `openai.com/news/rss.xml` | |
+| Google DeepMind | `deepmind.google/blog/rss.xml` | |
+| Andrej Karpathy | `karpathy.bearblog.dev/feed/`, `karpathy.github.io/feed.xml`, YouTube `UCXUPKJO5MZQN11PqgIvyuvQ` | |
+| Matt Pocock | YouTube `UCswG6FSbgZjbWtdf_hMLaow`, `aihero.dev/rss.xml` | |
+| The Decoder | `the-decoder.de/feed/` | |
+| The Verge | `theverge.com/rss/ai-artificial-intelligence/index.xml` | |
+| Hacker News | `hnrss.org/newest?q=AI&points=100` | |
+
+YouTube-Feeds haben die Form `youtube.com/feeds/videos.xml?channel_id=<ID>`.
+
+Entscheidungen aus der Befragung vom 2026-11-04:
+
+- **Anthropic liest seine Seiten selbst aus,** weil es keinen eigenen Feed anbietet. Der Fremd-Feed `Olshansk/rss-feeds` wurde
+  verworfen. `robots.txt` erlaubt das Auslesen. Findet das Programm auf einer Seite nichts mehr, zählt das als Ausfall des Kanals.
+- **Claude Updates ist ein eigener Absender:** Die Versionshinweise kommen fast täglich und würden sonst die Meldungen von Anthropic
+  aus den 3 Zeilen verdrängen.
+- **Nicht aufgenommen:** X (bezahlt), LinkedIn (Zugang ungeklärt), Alignment-Blog (nennt nur den Monat, die 7-Tage-Regel griffe nicht),
+  Claude-Code-Versionen, Statusseite, GitHub-Aktivität, Bluesky und Total TypeScript (seit 2025 oder länger still), heise (auch
+  Themen außerhalb von KI), Ars Technica (überschneidet sich mit The Verge). Simon Willison ist der erste Nachrücker.
+- **Doppelte Meldungen:** Gleicher Link innerhalb eines Absenders erscheint einmal. Zwischen Absendern bleiben Dopplungen stehen.
+- **Ausfälle:** Ein Kanal von mehreren fällt aus: Der Abschnitt zeigt still den Rest, der Fehler steht im Server-Log. Alle Kanäle eines
+  Absenders fallen aus: eine Zeile `Anthropic · gerade nicht erreichbar`. Alle Absender fallen aus: Fehlerzustand der Kachel, der letzte
+  Stand bleibt stehen.
+- **Zwischenspeicher und Zeitlimits:** 15 Minuten je Kanal, 5 Sekunden je Kanal, 8 Sekunden je Kachel. Das Limit je Kachel steht zentral
+  in `lib/kacheln/laden.ts` und gilt auch für die Sport-Kacheln.
+- **`fast-xml-parser` statt `rss-parser`:** Es wird gepflegt, `rss-parser` zuletzt im April 2023. Die Umwandlung von RSS und Atom
+  schreiben wir selbst.
 
 **Phase 3 – Sport**
 
@@ -181,13 +220,16 @@ Entscheidungen aus der Befragung vom 2026-10-25:
   Ein Testabruf am 2026-10-24 wurde mit 403 abgewiesen, das ist in Phase 3 zu klären.
 - **Formel 1 live kostet:** OpenF1 gibt Live-Daten während der Sessions nur für 9,90 € im Monat, Ergebnisse
   danach sind gratis.
-- **X-API kostet** ab etwa 200 $ im Monat, deshalb zum Start RSS.
+- **X-API kostet:** 0,005 $ je gelesenem Post, derselbe Post zählt pro Tag nur einmal (X-Doku, Stand 2026-11-04). Für vier Konten wären
+  das geschätzt 3 $ im Monat. Am 2026-11-04 abgelehnt, weil das Dashboard nichts kosten soll. Auslesen ohne API verbieten die Regeln von X
+  laut Berichten.
+- **Ausgelesene Seiten:** Sie können ohne Vorwarnung brechen, sobald der Anbieter ihren Aufbau ändert.
+- **Abruf vom Server:** Die Feeds wurden bisher nur vom Mac aus abgerufen. Ob Anbieter wie YouTube Server-Adressen von Vercel gleich
+  behandeln, zeigt erst der erste Deploy.
 - **Kurzbefehl-Automationen:** Ob sie auf dem iPhone zuverlässig ohne Nachfrage laufen, ist in Phase 4 zu prüfen.
 - **Sicherheit:** Die App ist öffentlich erreichbar. Login und der geheime Schlüssel für den Kurzbefehl sind Pflicht.
 
 ## Offene Fragen
 
-- Sind Karpathy und Matt Pocock auf Bluesky aktiv (kostenloses RSS)? Welche Feeds haben sie?
-- Welche Fachseiten genau (z. B. heise, The Verge, Hacker News)?
 - Antwortet die ESPN-Schnittstelle von einem Server aus (Testabruf ergab 403)?
 - Lohnen sich später Live-Daten für Arsenal (12 €/Monat) oder Formel 1 (9,90 €/Monat)?
