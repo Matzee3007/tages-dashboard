@@ -32,7 +32,6 @@ Mit fester Version, wie die anderen Pakete, die zur Laufzeit gebraucht werden. D
 | Option | Grund |
 |---|---|
 | `ignoreAttributes: false` | Atom-Links stehen im Attribut `href` |
-| `removeNSPrefix: true` | aus `dc:date` wird `date` |
 | `parseTagValue: false` | Der Titel `2026` bleibt Text und wird keine Zahl |
 | `htmlEntities: true` | versteht auch Zeichen wie `&#8217;` |
 | `isArray` für `item`, `entry`, `link` | Ein einzelner Eintrag käme sonst nicht als Liste an |
@@ -52,3 +51,5 @@ npm install --save-exact fast-xml-parser@5.12.0   # Paket mit genau dieser Versi
 
 - **Titel zeigt `AT&#038;T`:** The Verge kodiert doppelt (`&amp;#038;`), der Parser löst nur die erste Stufe auf. Lösung: `feed.ts` dekodiert den
   Titel danach noch einmal.
+- **Falscher Titel mit `removeNSPrefix`:** Die Option lässt `media:title` und `title` zusammenfallen, gefunden im `/code-review` von PR #30. Lösung: Option
+  weglassen und `dc:date` ausdrücklich lesen.

@@ -8,6 +8,8 @@ import {
 
 const FEED = `<rss><channel><item><title>Eins</title><link>https://example.org/1</link><pubDate>Tue, 03 Nov 2026 17:01:49 +0000</pubDate></item></channel></rss>`;
 
+const JETZT = new Date("2026-11-08T12:00:00Z");
+
 const fetchMock = vi.fn();
 
 beforeEach(() => {
@@ -24,7 +26,7 @@ afterEach(() => {
 test("ruft mit Zwischenspeicher, Zeitlimit und eigenem Namen ab", async () => {
   const zeitlimit = vi.spyOn(AbortSignal, "timeout");
 
-  const meldungen = await ladeKanal("https://example.org/feed");
+  const meldungen = await ladeKanal("https://example.org/feed", JETZT);
 
   const [url, optionen] = fetchMock.mock.calls[0];
   expect(url).toBe("https://example.org/feed");
@@ -35,26 +37,46 @@ test("ruft mit Zwischenspeicher, Zeitlimit und eigenem Namen ab", async () => {
   expect(meldungen).toHaveLength(1);
 });
 
+test("eine gespeicherte Antwort darf höchstens 1 Stunde alt sein", async () => {
+  const mitDatum = (datum: string) =>
+    new Response(FEED, { headers: { Date: new Date(datum).toUTCString() } });
+
+  fetchMock.mockResolvedValue(mitDatum("2026-11-08T11:00:00Z"));
+  await expect(
+    ladeKanal("https://example.org/feed", JETZT),
+  ).resolves.toHaveLength(1);
+
+  fetchMock.mockResolvedValue(mitDatum("2026-11-08T10:59:59Z"));
+  await expect(ladeKanal("https://example.org/feed", JETZT)).rejects.toThrow();
+});
+
+test("eine Antwort ohne lesbare Date-Zeile gilt als frisch", async () => {
+  fetchMock.mockResolvedValue(
+    new Response(FEED, { headers: { Date: "kaputt" } }),
+  );
+  await expect(
+    ladeKanal("https://example.org/feed", JETZT),
+  ).resolves.toHaveLength(1);
+});
+
 test("wirft bei Status 404", async () => {
   fetchMock.mockResolvedValue(new Response("weg", { status: 404 }));
-  await expect(ladeKanal("https://example.org/feed")).rejects.toThrow();
+  await expect(ladeKanal("https://example.org/feed", JETZT)).rejects.toThrow();
 });
 
 test("wirft bei Status 200 mit HTML", async () => {
   fetchMock.mockResolvedValue(
     new Response("<!doctype html><html><body>Hallo</body></html>"),
   );
-  await expect(ladeKanal("https://example.org/feed")).rejects.toThrow();
+  await expect(ladeKanal("https://example.org/feed", JETZT)).rejects.toThrow();
 });
 
 test("wirft, wenn fetch fehlschlägt", async () => {
   fetchMock.mockRejectedValue(new Error("kein Netz"));
-  await expect(ladeKanal("https://example.org/feed")).rejects.toThrow(
+  await expect(ladeKanal("https://example.org/feed", JETZT)).rejects.toThrow(
     "kein Netz",
   );
 });
-
-const JETZT = new Date("2026-11-08T12:00:00Z");
 
 type Eintrag = [titel: string, zeit: string, link?: string];
 
@@ -189,6 +211,19 @@ test("ein hängender Kanal fällt nach dem Zeitlimit aus, die anderen laufen wei
 
   expect(stand.erreichbar).toBe(true);
   expect(titel(stand.meldungen)).toEqual(["da"]);
+});
+
+test("ist die gespeicherte Antwort zu alt, zeigt der Absender den Ausfall", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  fetchMock.mockResolvedValue(
+    new Response(FEED, {
+      headers: { Date: new Date("2026-11-08T09:00:00Z").toUTCString() },
+    }),
+  );
+
+  const stand = await ladeAbsender({ name: "X", feeds: ["a"] }, JETZT);
+
+  expect(stand.erreichbar).toBe(false);
 });
 
 test("fallen alle Kanäle aus, ist der Absender nicht erreichbar", async () => {

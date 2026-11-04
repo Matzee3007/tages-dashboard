@@ -320,3 +320,12 @@ Hier noch nicht prüfbar, weil es erst mit der Kachel auf Vercel läuft:
 - Greift der Zwischenspeicher mit `next.revalidate` auf Vercel wirklich, auch in der Schnittstelle mit `connection()`?
 - Antworten alle Anbieter auch den Server-Adressen von Vercel?
 - Passt der OpenAI-Feed (825 KB) in den Zwischenspeicher? Eine Größengrenze habe ich nicht nachgelesen.
+
+## Nach dem Review
+
+Aus dem `/code-review` von PR #30, mit dem Entwickler am 2026-11-04 durchgegangen:
+
+- **Behoben:** Ausfall bleibt im Zwischenspeicher unsichtbar (höchstens 1 Stunde alt, [[projects/tages-dashboard/docs/adr/0005-feeds-im-fetch-speicher|ADR 0005]]),
+  erstes gültiges Datumsfeld, Feed ohne lesbaren Eintrag zählt als Ausfall, `media:title`.
+- **Hingenommen:** Eine HTML-Seite mit Status 200 wird mitgespeichert, das heilt sich selbst.
+- **Verschoben:** `stand`, Rechenzeit und `&ouml;` in Titeln nach Schritt 3, Abbruchsignal für Lader nach Phase 3 (Projektvision).

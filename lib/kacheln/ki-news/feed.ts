@@ -6,7 +6,6 @@ type Knoten = Record<string, unknown>;
 
 const parser = new XMLParser({
   ignoreAttributes: false,
-  removeNSPrefix: true,
   parseTagValue: false,
   htmlEntities: true,
   isArray: (name) => ["item", "entry", "link"].includes(name),
@@ -32,9 +31,8 @@ function dekodiere(text: string): string {
   );
 }
 
-// Ein Wert kommt als Text, mit Attributen als Objekt oder mehrfach als Liste an.
+// Ein Wert kommt als Text oder mit Attributen als Objekt an.
 function alsText(wert: unknown): string | null {
-  if (Array.isArray(wert)) return alsText(wert[0]);
   if (typeof wert === "string") return wert.trim() || null;
   if (wert && typeof wert === "object") {
     return alsText((wert as Knoten)["#text"]);
@@ -63,18 +61,21 @@ function findeLink(links: unknown): string | null {
   return null;
 }
 
+function findeZeit(eintrag: Knoten): string | null {
+  for (const feld of ["published", "pubDate", "dc:date", "updated"]) {
+    const zeit = new Date(alsText(eintrag[feld]) ?? "");
+    if (!Number.isNaN(zeit.getTime())) return zeit.toISOString();
+  }
+  return null;
+}
+
 function alsMeldung(eintrag: Knoten): Meldung | null {
   const titel = alsText(eintrag.title);
   const link = findeLink(eintrag.link);
-  const datum = alsText(
-    eintrag.published ?? eintrag.pubDate ?? eintrag.date ?? eintrag.updated,
-  );
-  if (!titel || !link || !datum) return null;
+  const zeit = findeZeit(eintrag);
+  if (!titel || !link || !zeit) return null;
 
-  const zeit = new Date(datum);
-  if (Number.isNaN(zeit.getTime())) return null;
-
-  return { titel: dekodiere(titel), link, zeit: zeit.toISOString() };
+  return { titel: dekodiere(titel), link, zeit };
 }
 
 export function leseFeed(text: string): Meldung[] {
@@ -86,5 +87,9 @@ export function leseFeed(text: string): Meldung[] {
     throw new Error("Der Text ist weder RSS noch Atom");
   }
   const eintraege = wurzel.rss?.channel?.item ?? wurzel.feed?.entry ?? [];
-  return eintraege.flatMap((eintrag) => alsMeldung(eintrag) ?? []);
+  const meldungen = eintraege.flatMap((eintrag) => alsMeldung(eintrag) ?? []);
+  if (eintraege.length > 0 && meldungen.length === 0) {
+    throw new Error("Kein Eintrag des Feeds ist lesbar");
+  }
+  return meldungen;
 }

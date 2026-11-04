@@ -101,6 +101,7 @@ test("dekodiert auch doppelt kodierte Zeichen", () => {
 test("lässt Einträge ohne Titel, ohne gültiges Datum oder ohne http-Link weg", () => {
   const datum = "<pubDate>Tue, 03 Nov 2026 17:01:49 +0000</pubDate>";
   const text = rss(`
+    ${RSS_EINTRAG}
     <item><link>https://example.org/1</link>${datum}</item>
     <item><title>   </title><link>https://example.org/2</link>${datum}</item>
     <item><title>Kein Datum</title><link>https://example.org/3</link></item>
@@ -108,7 +109,37 @@ test("lässt Einträge ohne Titel, ohne gültiges Datum oder ohne http-Link weg"
     <item><title>Kein Link</title>${datum}</item>
     <item><title>Böser Link</title><link>javascript:alert(1)</link>${datum}</item>
     <item><title>Relativer Link</title><link>/artikel</link>${datum}</item>`);
-  expect(leseFeed(text)).toEqual([]);
+  expect(leseFeed(text).map((meldung) => meldung.titel)).toEqual(["Eins"]);
+});
+
+test("wirft, wenn ein Feed Einträge hat, aber keiner lesbar ist", () => {
+  const text = rss(
+    `<item><title>Kein Datum</title><link>https://example.org/1</link></item>`,
+  );
+  expect(() => leseFeed(text)).toThrow();
+});
+
+test("nimmt das erste gültige Datum, auch wenn ein Feld davor leer oder kaputt ist", () => {
+  const text = atom(`
+    <entry><title>A</title><link href="https://example.org/a"/><published></published><updated>2026-11-03T10:00:00Z</updated></entry>
+    <entry><title>B</title><link href="https://example.org/b"/><published>irgendwann</published><updated>2026-11-04T10:00:00Z</updated></entry>`);
+  expect(leseFeed(text).map((meldung) => meldung.zeit)).toEqual([
+    "2026-11-03T10:00:00.000Z",
+    "2026-11-04T10:00:00.000Z",
+  ]);
+});
+
+test("verwechselt media:title nicht mit dem Titel", () => {
+  const datum = "<pubDate>Tue, 03 Nov 2026 17:01:49 +0000</pubDate>";
+  const text = `<rss xmlns:media="http://search.yahoo.com/mrss/"><channel>
+    <item><media:title>Media</media:title><title>Echt</title><link>https://example.org/1</link>${datum}</item>
+    <item><title></title><media:title>Media</media:title><link>https://example.org/2</link>${datum}</item>
+    <item><title>Zwei</title><link>https://example.org/3</link>${datum}</item>
+  </channel></rss>`;
+  expect(leseFeed(text).map((meldung) => meldung.titel)).toEqual([
+    "Echt",
+    "Zwei",
+  ]);
 });
 
 test("ein leerer Feed ist kein Fehler", () => {

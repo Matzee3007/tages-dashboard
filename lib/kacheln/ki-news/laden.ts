@@ -5,6 +5,7 @@ const ZWISCHENSPEICHER_SEKUNDEN = 900;
 const KANAL_ZEITLIMIT_MS = 5000;
 const MELDUNGEN_JE_ABSENDER = 3;
 const SIEBEN_TAGE_MS = 7 * 24 * 60 * 60 * 1000;
+const SPEICHER_HOECHSTALTER_MS = 60 * 60 * 1000;
 
 export type AbsenderStand = {
   name: string;
@@ -13,7 +14,7 @@ export type AbsenderStand = {
   erreichbar: boolean;
 };
 
-export async function ladeKanal(url: string): Promise<Meldung[]> {
+export async function ladeKanal(url: string, jetzt: Date): Promise<Meldung[]> {
   const antwort = await fetch(url, {
     headers: { "User-Agent": "Tages-Dashboard" },
     next: { revalidate: ZWISCHENSPEICHER_SEKUNDEN },
@@ -22,6 +23,11 @@ export async function ladeKanal(url: string): Promise<Meldung[]> {
   if (!antwort.ok) {
     throw new Error(`Status ${antwort.status}`);
   }
+  // Next.js liefert bei einem Ausfall still den alten Stand. Die aufgehobene Date-Zeile verrät ihn.
+  const abgerufen = Date.parse(antwort.headers.get("Date") ?? "");
+  if (jetzt.getTime() - abgerufen > SPEICHER_HOECHSTALTER_MS) {
+    throw new Error(`Gespeicherte Antwort von ${antwort.headers.get("Date")}`);
+  }
   return leseFeed(await antwort.text());
 }
 
@@ -29,7 +35,9 @@ export async function ladeAbsender(
   absender: AbsenderEinstellung,
   jetzt: Date,
 ): Promise<AbsenderStand> {
-  const ergebnisse = await Promise.allSettled(absender.feeds.map(ladeKanal));
+  const ergebnisse = await Promise.allSettled(
+    absender.feeds.map((url) => ladeKanal(url, jetzt)),
+  );
 
   const geladen: Meldung[] = [];
   ergebnisse.forEach((ergebnis, index) => {
