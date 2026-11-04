@@ -8,15 +8,14 @@ tags: [session, übergabe]
 # Nächste Session
 
 Stand vom 2026-11-04. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
-[[projects/tages-dashboard/docs/journal/Lernjournal Phase 1 - Dependabot und Mac-App|Lernjournal Phase 1 - Dependabot und Mac-App]].
+[[projects/tages-dashboard/docs/journal/Lernjournal Phase 2 - Feeds lesen|Lernjournal Phase 2 - Feeds lesen]].
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge von PR #28)
+- **Branch:** `main` (nach dem Merge von PR #31)
 - **Offene PRs:** keine
 - **Nicht committet:** nichts
-- **Live:** https://tages-dashboard-iota.vercel.app mit Login und Kachel-Gerüst, zeigt die Testkachel. Als PWA „Heute“ auf iPhone und
-  iPad, als Mac-App `Heute.app` in `/Applications`.
+- **Live:** https://tages-dashboard-iota.vercel.app zeigt weiter die Testkachel. Das Lesen der Feeds ist im Code fertig, aber noch nicht angeschlossen.
 
 ## Vor dem Start
 
@@ -35,14 +34,27 @@ Stand vom 2026-11-04. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 
    Ablauf: [[projects/tages-dashboard/docs/tools/Dependabot - Einrichtung|Dependabot - Einrichtung]].
 
-3. `.env.local` liegt nur auf diesem Rechner, nicht im Repo. Auf einem anderen Rechner die Werte aus dem Supabase-Dashboard holen,
-   Vorlage ist `.env.example`.
-
 ## Womit es weitergeht
 
-**Phase 1 – Grundgerüst ist abgeschlossen.** Die nächste Session beginnt mit **Phase 2 – KI-News**. Claude fragt vorher, ob zuerst etwas
-anderes ansteht (neue Ideen, Skills, Tools, Restpunkte), und prüft die Tools für später für die neue Phase. Danach zuerst
-`/grill-with-docs` für die offenen Fragen der Phase, dann Fahrplan-Schritt 1 (Feeds heraussuchen).
+**Phase 2 – KI-News läuft, Schritt 1 von 4 ist fertig** (PR #30). Der Fahrplan mit allen Absendern und Entscheidungen steht in der
+[[projects/tages-dashboard/docs/Projektvision|Projektvision]].
+
+**Als Nächstes: Schritt 2, Links in der Mac-App.** Fremde Adressen sollen im Standardbrowser aufgehen, sonst ersetzt ein Link das Dashboard im einzigen Fenster
+ohne Weg zurück. Im Plan klären, ob dafür ein Tauri-Plugin nötig ist. Die Vorgabe „keine Plugins“ steht in
+[[projects/tages-dashboard/docs/adr/0003-mac-app-mit-tauri|ADR 0003]] und ist dafür zu überdenken, die Hülle wird danach neu gebaut.
+
+Der Schritt ist klein und passt deshalb als erster echter Test für `/goal`. Der Entwickler tippt den Befehl selbst, ohne Leerzeichen am Anfang, nachdem er im `/`-Menü nachgesehen hat, ob
+es ihn gibt. Am 2026-11-04 kam er mit Leerzeichen an und wurde wie normaler Text behandelt.
+
+**Danach Schritt 3, KI-News-Kachel.** Dort ist ein Mock nötig (neue Oberfläche), und diese Punkte stehen an:
+
+- Greift der Zwischenspeicher auf Vercel, antworten alle Anbieter den Servern, passt der OpenAI-Feed (825 KB) hinein? Siehe „In Schritt 3 prüfen“ im
+  [[projects/tages-dashboard/docs/plaene/2026-11-04-feeds-lesen|Plan]] und [[projects/tages-dashboard/docs/adr/0005-feeds-im-fetch-speicher|ADR 0005]].
+- Offene Funde aus dem `/code-review` von PR #30: `stand` nennt die Abrufzeit statt des Alters der Daten, Rechenzeit für rund 2,4 MB XML je Minute messen, Rohtext wie `&ouml;` in Titeln prüfen.
+- Eine lange offene App kennt die neue `art` nicht und zeigt nur den Titel: beim ersten Deploy einmal neu laden.
+- Eine leere Kachelliste zeigt den Fehlerhinweis (Fund aus PR #27). Beim Entfernen der Testkachel darauf achten.
+
+**Zuletzt Schritt 4, Seiten auslesen.** `claude.com/blog` ist anders gebaut als `anthropic.com`. Ist es nicht sauber auslesbar, den Entwickler fragen, statt es still wegzulassen.
 
 Restpunkte als Vorschläge:
 
@@ -55,24 +67,13 @@ Restpunkte als Vorschläge:
 3. **Sichtbarkeit der Mac-App (Fund 7 aus PR #25):** Die Abfragen ruhen im Code, sobald die Seite verborgen ist, und beim Einblenden kommt
    sofort eine neue. In den Vercel-Logs ist aber nicht geprüft, ob bei ausgeblendeter App wirklich keine Abfragen ankommen. Falls doch: Die
    Hülle meldet die Sichtbarkeit nicht.
-4. **Offene Funde aus dem `/code-review` von PR #27,** bewusst nicht behoben:
+4. **Weitere offene Funde aus dem `/code-review` von PR #27,** bewusst nicht behoben:
    - Abmelden ohne Netz zeigt die Fehlerseite von Next.js, es gibt keine eigene Fehlergrenze.
    - **Vor Phase 4 ansehen:** Der Stand der Kacheln bleibt nach dem Abmelden im Speicher der Seite und könnte nach „Zurück“ ohne Netz wieder
-     erscheinen. Heute betrifft das nur die Uhrzeit.
+     erscheinen. Mit den KI-News betrifft das öffentliche Meldungen, private Daten erst ab Phase 4.
    - iOS friert einen laufenden Abruf ein: Beim Zurückkommen entfällt dann der sofortige Abruf, bis zu 60 Sekunden steht ein falscher Hinweis.
-   - Eine leere Kachelliste zeigt den Fehlerhinweis. Tritt nur auf, wenn `KACHELN` leer ist, also beim Umbau in Phase 2 darauf achten.
 5. **Warnung von Dependabot, `glib` in `src-tauri/Cargo.lock`:** mittlere Schwere, behoben ab 0.20.0, bisher nicht bearbeitet. Prüfen, ob die
-   Mac-App das Paket überhaupt nutzt. Es gehört vermutlich zum Linux-Teil von Tauri, das ist aber nicht belegt.
-
-Für Phase 2 einplanen:
-
-- **Zeitlimit je Kachel:** Die Antwort von `/api/kacheln` ist so langsam wie die langsamste Kachel
-  ([[projects/tages-dashboard/docs/adr/0004-kacheln-ueber-schnittstelle|ADR 0004]]).
-- **Neue Art von Kachel und alte, offene App:** Eine lange offene App kennt eine neue `art` nicht, die Kachel zeigt dann nur ihren Titel. Beim
-  ersten Deploy der KI-News die App einmal neu laden.
-- **Externe Links in der Mac-App (Fund 4 aus PR #25):** Die Mac-App hat keine Regel dafür. Ein Link aus den KI-News würde das Dashboard im einzigen
-  Fenster ersetzen, ohne Weg zurück. Fremde Adressen an den Standardbrowser geben, dafür die Vorgabe „keine Plugins“ überdenken. Die Hülle muss
-  dann neu gebaut werden.
+   Mac-App das Paket überhaupt nutzt. Es gehört vermutlich zum Linux-Teil von Tauri, das ist aber nicht belegt. Passt zu Schritt 2, weil dort die Hülle ohnehin neu gebaut wird.
 
 Gelegentlich:
 
@@ -80,11 +81,10 @@ Gelegentlich:
   `maintenance`. Aufheben, sobald `eslint-plugin-react`, `-import` und `-jsx-a11y` ESLint 10 erlauben und `typescript-eslint` TypeScript 7 erlaubt.
 - Klein, nur wenn es stört: Der Schlüsselbund bietet das Passwort in der Mac-App nicht an (nicht untersucht).
 
-Punkte für andere Orte stehen in deren Übergaben: Der Folge-PR zu PR #118 (`/goal`) steht in der Übergabe des Ecosystems. Er sollte vor dem
-nächsten Plan kommen, der Entwickler hat ihn am 2026-11-04 hinter das Kachel-Gerüst gelegt. Er ist also jetzt fällig, vor dem ersten Plan von Phase 2.
+Punkte fürs Ecosystem: siehe dessen Übergabe, dort steht auch der Punkt „`/goal` testen“.
 
 ## Passende Skills
 
-- `grill-with-docs`: offene Fragen von Phase 2 klären
-- `plan-schreiben`: Plan für den ersten Fahrplan-Schritt
-- `tdd`: Feeds lesen und KI-News-Kachel bauen
+- `plan-schreiben`: Plan für Schritt 2
+- `tdd`: Umsetzung, auch der Regel für fremde Links
+- `fertig-pruefen`: vor dem Merge, die Hülle lässt sich nur am echten Mac prüfen
