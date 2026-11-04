@@ -33,9 +33,11 @@ drauf, die Oberfläche muss also auch dort laufen. Es darf nichts kosten. Grundl
 ## Konsequenzen
 
 - Der Rechner braucht zusätzlich Rust, aber erst ab diesem Schritt.
-- Die App startet nicht ohne Internet, wie die PWA auch: Offline-Daten sind nicht geplant.
+- Ohne Internet zeigt die App nur eine Fehlerseite, nach „Neu laden“ mit Internet ist die Seite da (geprüft 2026-11-03). Wie bei
+  der PWA sind Offline-Daten nicht geplant.
 - Ohne Bezahlkonto bei Apple lässt sich die App nicht ohne Warnung an andere weitergeben. Das ist nicht nötig, sie ist nur
   für mich.
-- Ob die Anmeldung in der Mac-App hält, ist noch offen und wird im Fahrplan-Schritt geprüft.
+- Die Anmeldung in der Mac-App hält über einen Neustart der App (geprüft 2026-11-03, siehe
+  [[projects/tages-dashboard/docs/tools/Tauri|Tauri]]). Der Schlüsselbund bietet das Passwort dort aber nicht an.
 - Änderungen an der Website erreichen die Mac-App ohne neuen Bau, weil sie die Vercel-Adresse lädt. Neu bauen muss ich nur,
   wenn sich die Hülle selbst ändert.

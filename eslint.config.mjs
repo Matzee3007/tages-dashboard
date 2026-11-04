@@ -13,6 +13,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Build-Ergebnisse der Mac-App
+    "src-tauri/target/**",
+    "src-tauri/gen/**",
   ]),
   prettier,
 ]);

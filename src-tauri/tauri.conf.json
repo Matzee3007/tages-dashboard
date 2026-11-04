@@ -1,0 +1,37 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Heute",
+  "version": "0.1.0",
+  "identifier": "com.matzee3007.heute",
+  "build": {
+    "frontendDist": "https://tages-dashboard-iota.vercel.app",
+    "devUrl": "https://tages-dashboard-iota.vercel.app"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Heute",
+        "width": 1200,
+        "height": 800,
+        "backgroundColor": "#0E1013"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns"
+    ],
+    "macOS": {
+      "signingIdentity": "-"
+    }
+  }
+}

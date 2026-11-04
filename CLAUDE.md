@@ -46,6 +46,7 @@ tages-dashboard/
 ├── assets/       Quellen, die nicht ausgeliefert werden (z. B. SVG der Symbole)
 ├── lib/          Code ohne Seite (z. B. Supabase-Client)
 ├── proxy.ts      Login-Prüfung vor jeder Anfrage
+├── src-tauri/    Hülle der Mac-App (Rust), lädt die Vercel-Adresse
 ├── __tests__/    Tests (Vitest)
 ├── docs/         Doku, zugleich Obsidian-Vault
 ├── CLAUDE.md     Projektkontext für Claude Code
@@ -62,6 +63,9 @@ npm run format         # Prettier: alles formatieren
 npm run typecheck      # TypeScript prüfen
 npm test               # Tests (Vitest)
 npm run check          # alles zusammen, vor jedem Commit
+npm run tauri -- dev   # Mac-App zum Entwickeln starten
+npm run tauri -- build # fertige Mac-App bauen
+cargo test --manifest-path src-tauri/Cargo.toml   # Tests der Mac-App
 ```
 
 Vor jedem Commit: `npm run check` (Linter, Formatierung, Typen, Tests).

@@ -27,9 +27,4 @@ alle benutzten Befehle, Fehler.
 | [[projects/tages-dashboard/docs/tools/Dependabot - Einrichtung\|Dependabot]] | 2026-11-03 | schlägt per PR neue Versionen von Paketen und Actions vor |
 | [[projects/tages-dashboard/docs/tools/Vercel\|Vercel]] | 2026-10-26 | bringt die App ins Netz, Vorschau je PR |
 | [[projects/tages-dashboard/docs/tools/Supabase\|Supabase]] | 2026-11-01 | Login für genau einen Nutzer, später Datenbank |
-
-## Geplant
-
-| Werkzeug | Phase | Wofür in einem Satz |
-|---|---|---|
-| [[projects/tages-dashboard/docs/tools/Tauri\|Tauri]] | 1 | zeigt das Dashboard als eigene Mac-App |
+| [[projects/tages-dashboard/docs/tools/Tauri\|Tauri]] | 2026-11-03 | zeigt das Dashboard als eigene Mac-App mit Symbol in der Menüleiste |

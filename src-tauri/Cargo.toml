@@ -1,0 +1,12 @@
+[package]
+name = "heute"
+version = "0.1.0"
+description = "Mac-App des Tages-Dashboards"
+edition = "2024"
+rust-version = "1.90"
+
+[build-dependencies]
+tauri-build = { version = "2.7.4", features = [] }
+
+[dependencies]
+tauri = { version = "2.12.5", features = ["tray-icon", "image-png"] }
