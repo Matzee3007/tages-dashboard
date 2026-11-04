@@ -76,13 +76,13 @@ letzten Stand merken.
 
 **Schnittstellen:** Liefert die Tailwind-Klassen `bg-grund`, `text-gedaempft`, `font-titel` (Barlow Condensed) usw.
 
-- [ ] **Schritt 1: Test** „globals.css legt die Design-Token fest“ liest die Datei und prüft
+- [x] **Schritt 1: Test** „globals.css legt die Design-Token fest“ liest die Datei und prüft
       `--color-grund: #0e1013` und `--color-akzent: #ff8a3d`. Im Mock von `next/font/google` Barlow und Barlow_Condensed statt Geist.
-- [ ] **Schritt 2:** `npx vitest run __tests__/layout.test.ts`. Erwartet: FAIL beim neuen Test.
-- [ ] **Schritt 3: Umsetzen.** Token nach „Feste Vorgaben“, nur dunkel, `prefers-color-scheme` und Geist entfernen. Das Login
+- [x] **Schritt 2:** `npx vitest run __tests__/layout.test.ts`. Erwartet: FAIL beim neuen Test.
+- [x] **Schritt 3: Umsetzen.** Token nach „Feste Vorgaben“, nur dunkel, `prefers-color-scheme` und Geist entfernen. Das Login
       von `zinc`- und `dark:`-Klassen auf Token umstellen, sonst ist es auf hell eingestellten Geräten schlecht lesbar.
-- [ ] **Schritt 4:** Test erneut. Erwartet: PASS.
-- [ ] **Schritt 5:** `npm run check`, committen: `Add design tokens and Barlow fonts`.
+- [x] **Schritt 4:** Test erneut. Erwartet: PASS.
+- [x] **Schritt 5:** `npm run check`, committen: `Add design tokens and Barlow fonts`.
 
 ### Aufgabe 2: Einstellungen und Laden auf dem Server
 
@@ -118,18 +118,19 @@ ladeTestkachel(einstellung: KachelEinstellung, jetzt: Date):
 ladeDashboard(einstellungen?: KachelEinstellung[], jetzt?: Date): Promise<DashboardAntwort>;
 ```
 
-- [ ] **Schritt 1: Tests.**
+- [x] **Schritt 1: Tests.**
   - `uhrzeitMitSekunden("2026-11-08T13:32:07Z")` ist `"14:32:07"`, im Sommer `uhrzeit("2026-07-01T12:00:00Z")` ist `"14:00"`
   - kurz nach Mitternacht: `uhrzeit("2026-11-07T23:05:00Z")` ist `"00:05"` (nicht `"24:05"`) und `datum(…)` ist `"Sonntag, 8. November"`
   - `ladeDashboard` mit zwei Kacheln, die erste mit `fehlerAusloesen: true`: erste hat `status: "fehler"`, zweite `status: "ok"`
     mit `uhrzeit`, Reihenfolge wie in den Einstellungen
   - das Ergebnis enthält den Fehlertext nicht (`JSON.stringify` enthält weder „Testfehler“ noch `stack`)
-- [ ] **Schritt 2:** `npx vitest run __tests__/zeit.test.ts __tests__/kacheln-laden.test.ts`. Erwartet: FAIL, Module fehlen.
-- [ ] **Schritt 3: Umsetzen.** `ladeDashboard` nimmt `Promise.allSettled`, die Zuordnung von `art` zur Ladefunktion steht als
+- [x] **Schritt 2:** `npx vitest run __tests__/zeit.test.ts __tests__/kacheln-laden.test.ts`. Erwartet: FAIL, Module fehlen.
+- [x] **Schritt 3: Umsetzen.** `ladeDashboard` nimmt `Promise.all`, jede Kachel fängt ihren Fehler selbst ab (gleiche Wirkung wie
+      das zuerst geplante `Promise.allSettled`, aber mit Zugriff auf die Einstellung), die Zuordnung von `art` zur Ladefunktion steht als
       Objekt in `laden.ts`. Fehler landen mit `console.error` im Server-Log. `ladeTestkachel` wirft „Testfehler“ bei
       `fehlerAusloesen`. `Intl.DateTimeFormat` mit `hourCycle: "h23"`.
-- [ ] **Schritt 4:** Tests erneut. Erwartet: PASS.
-- [ ] **Schritt 5:** `npm run check`, committen: `Load tiles on the server with isolated errors`.
+- [x] **Schritt 4:** Tests erneut. Erwartet: PASS.
+- [x] **Schritt 5:** `npm run check`, committen: `Load tiles on the server with isolated errors`.
 
 ### Aufgabe 3: Schnittstelle `GET /api/kacheln`
 
@@ -137,13 +138,13 @@ ladeDashboard(einstellungen?: KachelEinstellung[], jetzt?: Date): Promise<Dashbo
 
 **Schnittstellen:** Nutzt `ladeDashboard()`. Liefert JSON vom Typ `DashboardAntwort`.
 
-- [ ] **Schritt 1: Tests** (`connection` aus `next/server` als Attrappe): Status 200 mit `kacheln` als Liste, Header
+- [x] **Schritt 1: Tests** (`connection` aus `next/server` als Attrappe): Status 200 mit `kacheln` als Liste, Header
       `Cache-Control: no-store`, und mit einer fehlerhaften Kachel (Attrappe von `@/lib/einstellungen`) trotzdem Status 200.
-- [ ] **Schritt 2:** `npx vitest run __tests__/api-kacheln.test.ts`. Erwartet: FAIL.
-- [ ] **Schritt 3: `export async function GET(): Promise<Response>`.** Beginnt mit `await connection()`: Mit `cacheComponents`
+- [x] **Schritt 2:** `npx vitest run __tests__/api-kacheln.test.ts`. Erwartet: FAIL.
+- [x] **Schritt 3: `export async function GET(): Promise<Response>`.** Beginnt mit `await connection()`: Mit `cacheComponents`
       entstünde die Antwort sonst schon beim Bauen, und die Uhrzeit bliebe stehen.
-- [ ] **Schritt 4:** Test erneut. Erwartet: PASS.
-- [ ] **Schritt 5:** `npm run check`, committen: `Add tiles endpoint`.
+- [x] **Schritt 4:** Test erneut. Erwartet: PASS.
+- [x] **Schritt 5:** `npm run check`, committen: `Add tiles endpoint`.
 
 ### Aufgabe 4: Letzten Stand merken
 
@@ -152,17 +153,17 @@ ladeDashboard(einstellungen?: KachelEinstellung[], jetzt?: Date): Promise<Dashbo
 **Schnittstellen:** Liefert `neuerStand(bisher: KachelAnzeige[], antwort: DashboardAntwort | null): KachelAnzeige[]`.
 `null` heißt: Abruf gescheitert.
 
-- [ ] **Schritt 1: Tests.**
+- [x] **Schritt 1: Tests.**
   - `status: "ok"` ersetzt die Daten und setzt `fehler: false`
   - `status: "fehler"` behält `daten`, `zusatz` und `stand` und setzt `fehler: true`, andere Kacheln bleiben unberührt
   - `status: "fehler"` ohne bisherigen Stand: `daten: null`, `stand: null`, `fehler: true`
   - `null` setzt alle auf `fehler: true` und behält die Daten
   - `ok` nach `fehler`: Hinweis weg, neue Daten
   - eine Kachel, die nicht mehr in der Antwort steht, verschwindet; die Reihenfolge folgt der Antwort
-- [ ] **Schritt 2:** `npx vitest run __tests__/kacheln-stand.test.ts`. Erwartet: FAIL.
-- [ ] **Schritt 3:** Reine Funktion ohne React umsetzen.
-- [ ] **Schritt 4:** Test erneut. Erwartet: PASS.
-- [ ] **Schritt 5:** `npm run check`, committen: `Keep last good state per tile`.
+- [x] **Schritt 2:** `npx vitest run __tests__/kacheln-stand.test.ts`. Erwartet: FAIL.
+- [x] **Schritt 3:** Reine Funktion ohne React umsetzen.
+- [x] **Schritt 4:** Test erneut. Erwartet: PASS.
+- [x] **Schritt 5:** `npm run check`, committen: `Keep last good state per tile`.
 
 ### Aufgabe 5: Abruf im Browser
 
@@ -170,13 +171,13 @@ ladeDashboard(einstellungen?: KachelEinstellung[], jetzt?: Date): Promise<Dashbo
 
 **Schnittstellen:** Liefert `holeDashboard(): Promise<DashboardAntwort | "abgemeldet" | null>`.
 
-- [ ] **Schritt 1: Tests** mit Attrappe von `fetch`: Status 200 liefert die Daten; `redirected: true` liefert `"abgemeldet"`
+- [x] **Schritt 1: Tests** mit Attrappe von `fetch`: Status 200 liefert die Daten; `redirected: true` liefert `"abgemeldet"`
       (der Proxy leitet ohne Sitzung zum Login, `fetch` folgt und bekäme HTML); Status 500, kein JSON und ein abgelehntes `fetch`
       liefern `null`, ohne zu werfen.
-- [ ] **Schritt 2:** `npx vitest run __tests__/kacheln-abruf.test.ts`. Erwartet: FAIL.
-- [ ] **Schritt 3:** `fetch("/api/kacheln", { cache: "no-store", signal: AbortSignal.timeout(20_000) })`.
-- [ ] **Schritt 4:** Test erneut. Erwartet: PASS.
-- [ ] **Schritt 5:** `npm run check`, committen: `Fetch tiles from the browser`.
+- [x] **Schritt 2:** `npx vitest run __tests__/kacheln-abruf.test.ts`. Erwartet: FAIL.
+- [x] **Schritt 3:** `fetch("/api/kacheln", { cache: "no-store", signal: AbortSignal.timeout(20_000) })`.
+- [x] **Schritt 4:** Test erneut. Erwartet: PASS.
+- [x] **Schritt 5:** `npm run check`, committen: `Fetch tiles from the browser`.
 
 ### Aufgabe 6: Takt und Sichtbarkeit
 
@@ -184,17 +185,17 @@ ladeDashboard(einstellungen?: KachelEinstellung[], jetzt?: Date): Promise<Dashbo
 
 **Schnittstellen:** Liefert `useAktualisierung(abrufen: () => void): void`, Takt 60 000 ms.
 
-- [ ] **Schritt 1: Tests** mit `renderHook`, künstlicher Uhr und `vi.spyOn(document, "visibilityState", "get")`:
+- [x] **Schritt 1: Tests** mit `renderHook`, künstlicher Uhr und `vi.spyOn(document, "visibilityState", "get")`:
   - ruft beim Start einmal und nach 60 s erneut ab
   - verborgen: keine Abfrage
   - wieder sichtbar nach 5 Minuten: sofort eine Abfrage
   - wieder sichtbar nach 10 s: keine zusätzliche Abfrage
   - nach dem Entfernen der Komponente: keine Abfrage mehr
-- [ ] **Schritt 2:** `npx vitest run __tests__/use-aktualisierung.test.tsx`. Erwartet: FAIL.
-- [ ] **Schritt 3: Umsetzen.** Der Takt fragt immer ab, wenn die Seite sichtbar ist, ohne Prüfung der vergangenen Zeit: Sonst
+- [x] **Schritt 2:** `npx vitest run __tests__/use-aktualisierung.test.tsx`. Erwartet: FAIL.
+- [x] **Schritt 3: Umsetzen.** Der Takt fragt immer ab, wenn die Seite sichtbar ist, ohne Prüfung der vergangenen Zeit: Sonst
       entfiele durch kleine Zeitabweichungen jede zweite Abfrage. Nur `visibilitychange` prüft, ob 60 s vergangen sind.
-- [ ] **Schritt 4:** Test erneut. Erwartet: PASS.
-- [ ] **Schritt 5:** `npm run check`, committen: `Refresh tiles every minute while visible`.
+- [x] **Schritt 4:** Test erneut. Erwartet: PASS.
+- [x] **Schritt 5:** `npm run check`, committen: `Refresh tiles every minute while visible`.
 
 ### Aufgabe 7: Kachel, Testkachel und Startseite
 
@@ -211,34 +212,36 @@ TestAnsicht(props: { daten: KachelDaten });   // Abschnitte „Server-Uhrzeit“
 Dashboard();                                   // ohne Props, Client Component
 ```
 
-- [ ] **Schritt 1: Tests.**
+- [x] **Schritt 1: Tests.**
   - `Kachel` ohne Fehler zeigt Titel und Inhalt, aber keinen Hinweis
   - mit Fehler und Stand zeigt sie Inhalt und „Daten gerade nicht erreichbar. Letzter Stand von 14:31, neuer Versuch in 1 Minute.“
   - mit Fehler ohne Stand: „Daten gerade nicht erreichbar. Neuer Versuch in 1 Minute.“
   - „Jetzt erneut versuchen“ ruft `erneutVersuchen`
   - Startseite (`holeDashboard` als Attrappe): zeigt `heading` Stufe 1 mit dem Datum, „Aktualisiert 14:32“, „Testkachel“, „Abmelden“
-  - Antwort `"abgemeldet"`: Wechsel zu `/login`
+  - Antwort `"abgemeldet"`: `router.push("/login")`
   - erster Abruf scheitert: `FehlerHinweis` ohne Stand statt leerer Seite
-- [ ] **Schritt 2:** `npx vitest run __tests__/kachel.test.tsx __tests__/page.test.tsx`. Erwartet: FAIL.
-- [ ] **Schritt 3: Umsetzen.** `Dashboard` hält den Stand mit `neuerStand`, ruft über `useAktualisierung` ab und überspringt einen
+  - nach erneutem Versuch verschwindet der Hinweis
+  - scheitern alle Kacheln, nennt der Kopf keine neue Aktualisierung
+- [x] **Schritt 2:** `npx vitest run __tests__/kachel.test.tsx __tests__/page.test.tsx`. Erwartet: FAIL.
+- [x] **Schritt 3: Umsetzen.** `Dashboard` hält den Stand mit `neuerStand`, ruft über `useAktualisierung` ab und überspringt einen
       Abruf, solange der vorige läuft. „Aktualisiert“ und Datum stammen aus `zeit` der letzten erfolgreichen Antwort. Vor dem ersten
       Abruf steht „Lädt …“. Die Wahl der Ansicht ist ein `switch` über `daten.art`. `app/page.tsx` rendert nur `<Dashboard />`.
-- [ ] **Schritt 4:** Tests erneut. Erwartet: PASS.
-- [ ] **Schritt 5:** `npm run check`, committen: `Show tiles in a grid on the home page`.
+- [x] **Schritt 4:** Tests erneut. Erwartet: PASS.
+- [x] **Schritt 5:** `npm run check`, committen: `Show tiles in a grid on the home page`.
 
 ### Aufgabe 8: Im Browser prüfen und dokumentieren
 
 **Dateien:** Neu `docs/adr/0004-kacheln-ueber-schnittstelle.md`; Ändern `docs/tools/Next.js.md`, `docs/Projektvision.md`, dieser Plan
 
-- [ ] **Schritt 1: Mit `npm run dev` und angemeldet prüfen:**
+- [x] **Schritt 1: Mit `npm run dev` und angemeldet prüfen:**
   - Breite 390 und 1280 px sehen aus wie der Mock
   - Uhrzeit springt nach einer Minute
   - `fehlerAusloesen` auf `true` und zurück: Hinweis erscheint mit letztem Stand und verschwindet
   - Netz in den Entwicklerwerkzeugen aus: Seite bleibt stehen, Daten bleiben
-- [ ] **Schritt 2: `npm run build`.** Erwartet: fehlerfrei, `/api/kacheln` als dynamisch markiert.
-- [ ] **Schritt 3: Doku.** ADR 0004 (Schnittstelle gegen `router.refresh()`, Grid gegen CSS-Spalten), die Falle mit
+- [x] **Schritt 2: `npm run build`.** Erwartet: fehlerfrei, `/api/kacheln` als dynamisch markiert.
+- [x] **Schritt 3: Doku.** ADR 0004 (Schnittstelle gegen `router.refresh()`, Grid gegen CSS-Spalten), die Falle mit
       `cacheComponents` in `Next.js.md`, Schritt 5 im Fahrplan als erledigt markieren.
-- [ ] **Schritt 4:** `npm run check` und Agent `plan-pruefer`, dann committen: `Document tile scaffold` und PR öffnen. Vor dem Merge `/code-review`.
+- [x] **Schritt 4:** `npm run check` und Agent `plan-pruefer`, dann committen: `Document tile scaffold` und PR öffnen. Vor dem Merge `/code-review`.
 
 ### Aufgabe 9: Prüfung auf den Geräten (nach dem Merge)
 
