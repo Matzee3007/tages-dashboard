@@ -187,7 +187,7 @@ git commit -m "Fetch a news channel with cache and timeout"
   - `ladeAbsender(absender: AbsenderEinstellung, jetzt: Date): Promise<AbsenderStand>`
   - `ladeKiNews(absender: AbsenderEinstellung[], jetzt: Date): Promise<AbsenderStand[]>`
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 `JETZT = new Date("2026-11-08T12:00:00Z")`. `fetch` liefert je URL einen kleinen Feed oder schlägt fehl.
 
@@ -212,28 +212,28 @@ test("ladeKiNews wirft, wenn kein Absender erreichbar ist", async () => {});
 test("ladeKiNews läuft weiter, wenn nur ein Absender ausfällt", async () => {});
 ```
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
 
 `npx vitest run __tests__/ki-news-laden.test.ts`
 Erwartet: FAIL, weil `ladeAbsender` und `ladeKiNews` fehlen.
 
-- [ ] **Schritt 3: `ABSENDER` und die beiden Funktionen schreiben**
+- [x] **Schritt 3: `ABSENDER` und die beiden Funktionen schreiben**
 
 `Promise.allSettled` für die Kanäle. Anthropic bekommt hier nur seine beiden Feeds, die Seiten folgen in Schritt 4 des Fahrplans. YouTube-Feeds
 ausgeschrieben als `https://www.youtube.com/feeds/videos.xml?channel_id=<ID>`.
 
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
 
 `npx vitest run __tests__/ki-news-laden.test.ts`
 Erwartet: PASS
 
-- [ ] **Schritt 5: Probe gegen die echten Feeds**
+- [x] **Schritt 5: Probe gegen die echten Feeds**
 
 Temporär `__tests__/live.tmp.test.ts` anlegen, das `ladeKiNews(ABSENDER, new Date())` aufruft und das Ergebnis ausgibt, einmal laufen lassen, Datei
 wieder löschen.
 Erwartet: jeder Absender mit `erreichbar: true`, Titel ohne `&#`, Hacker News mit 3 Meldungen. Abweichungen im Bericht nennen.
 
-- [ ] **Schritt 6: Prüfen und committen**
+- [x] **Schritt 6: Prüfen und committen**
 
 ```bash
 npm run check
