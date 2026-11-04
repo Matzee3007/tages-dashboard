@@ -12,8 +12,8 @@ import type { DashboardAntwort } from "@/lib/kacheln/typen";
 
 vi.mock("@/app/login/actions", () => ({ abmelden: vi.fn() }));
 vi.mock("@/lib/kacheln/abruf", () => ({ holeDashboard: vi.fn() }));
-const push = vi.hoisted(() => vi.fn());
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
+const replace = vi.hoisted(() => vi.fn());
+vi.mock("next/navigation", () => ({ useRouter: () => ({ replace }) }));
 
 const ZEIT = "2026-11-08T13:32:07.000Z";
 const OK: DashboardAntwort = {
@@ -64,7 +64,7 @@ test("wechselt zum Login, wenn die Sitzung abgelaufen ist", async () => {
   vi.mocked(holeDashboard).mockResolvedValue("abgemeldet");
   render(<Page />);
 
-  await waitFor(() => expect(push).toHaveBeenCalledWith("/login"));
+  await waitFor(() => expect(replace).toHaveBeenCalledWith("/login"));
 });
 
 test("ein gescheiterter erster Abruf zeigt den Hinweis statt einer leeren Seite", async () => {
@@ -85,6 +85,20 @@ test("nach erneutem Versuch verschwindet der Hinweis", async () => {
 
   expect(await screen.findByText("14:32:07")).toBeDefined();
   expect(screen.queryByText("Daten gerade nicht erreichbar.")).toBeNull();
+});
+
+test("während des erneuten Versuchs ist der Knopf gesperrt und sagt das", async () => {
+  vi.mocked(holeDashboard)
+    .mockResolvedValueOnce(null)
+    .mockReturnValueOnce(new Promise(() => {}));
+  render(<Page />);
+
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Jetzt erneut versuchen" }),
+  );
+
+  const knopf = await screen.findByRole("button", { name: "Wird versucht …" });
+  expect((knopf as HTMLButtonElement).disabled).toBe(true);
 });
 
 test("wenn alle Kacheln scheitern, behauptet der Kopf keine Aktualisierung", async () => {

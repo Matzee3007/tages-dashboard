@@ -9,10 +9,12 @@ export async function holeDashboard(): Promise<
       cache: "no-store",
       signal: AbortSignal.timeout(20_000),
     });
-    // Ohne Sitzung leitet der Proxy zum Login, fetch folgt ihm und bekommt die Seite als HTML.
-    if (antwort.redirected) return "abgemeldet";
+    // Nur 401 heißt abgemeldet. 503 meldet der Proxy bei einem kurzen Ausfall von Supabase.
+    if (antwort.status === 401) return "abgemeldet";
     if (!antwort.ok) return null;
-    return (await antwort.json()) as DashboardAntwort;
+    const daten = (await antwort.json()) as DashboardAntwort;
+    // Eine lange offene App kann nach einem Deploy auf eine neue Form der Antwort treffen.
+    return Array.isArray(daten?.kacheln) ? daten : null;
   } catch {
     return null;
   }

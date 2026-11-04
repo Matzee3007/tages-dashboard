@@ -29,6 +29,9 @@ installierte Web-App auf dem iPhone, die eigene Cookies hat, getrennt von Safari
 - **Jede private Server Action prüft die Anmeldung selbst.** Eine Action ist nur ein POST an eine Seite, und `/login`
   lässt der Proxy ohne Sitzung durch. Der Proxy schützt also Adressen, nicht Actions. Heute gibt es nur `anmelden` und
   `abmelden`, beide brauchen keine Prüfung. Die erste private Action bringt die gemeinsame Prüfung mit.
+- **Schnittstellen unter `/api/` leiten nicht weiter:** Ohne Sitzung antworten sie mit 401, bei einem kurzen Ausfall von Supabase
+  (`AuthRetryableFetchError`) mit 503. Seiten leiten weiter zum Login. Ergänzt am 2026-11-04,
+  [[projects/tages-dashboard/docs/adr/0004-kacheln-ueber-schnittstelle|ADR 0004]].
 - **Fehlende Variablen führen zu Fehler 500,** nie zu einer offenen Seite.
 
 ## Alternativen

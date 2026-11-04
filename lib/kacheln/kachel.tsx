@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { KachelAnzeige } from "@/lib/kacheln/typen";
-import { uhrzeit } from "@/lib/zeit";
+import { standText } from "@/lib/zeit";
 
 export function Abschnitt({
   titel,
@@ -22,9 +22,11 @@ export function Abschnitt({
 export function FehlerHinweis({
   stand,
   erneutVersuchen,
+  laedt = false,
 }: {
   stand: string | null;
   erneutVersuchen: () => void;
+  laedt?: boolean;
 }) {
   return (
     <div
@@ -34,15 +36,16 @@ export function FehlerHinweis({
       <span className="font-semibold">Daten gerade nicht erreichbar.</span>
       <span className="text-[13px] text-gedaempft">
         {stand
-          ? `Letzter Stand von ${uhrzeit(stand)}, neuer Versuch in 1 Minute.`
+          ? `Letzter Stand von ${standText(stand)}, neuer Versuch in 1 Minute.`
           : "Neuer Versuch in 1 Minute."}
       </span>
       <button
         type="button"
         onClick={erneutVersuchen}
-        className="min-h-11 cursor-pointer self-start rounded-[10px] border border-rand-stark bg-knopf px-4 text-sm"
+        disabled={laedt}
+        className="min-h-11 cursor-pointer self-start rounded-[10px] border border-rand-stark bg-knopf px-4 text-sm disabled:cursor-default disabled:opacity-50"
       >
-        Jetzt erneut versuchen
+        {laedt ? "Wird versucht …" : "Jetzt erneut versuchen"}
       </button>
     </div>
   );
@@ -51,10 +54,12 @@ export function FehlerHinweis({
 export function Kachel({
   kachel,
   erneutVersuchen,
+  laedt = false,
   children,
 }: {
   kachel: KachelAnzeige;
   erneutVersuchen: () => void;
+  laedt?: boolean;
   children?: ReactNode;
 }) {
   return (
@@ -71,7 +76,11 @@ export function Kachel({
         )}
       </div>
       {kachel.fehler && (
-        <FehlerHinweis stand={kachel.stand} erneutVersuchen={erneutVersuchen} />
+        <FehlerHinweis
+          stand={kachel.stand}
+          erneutVersuchen={erneutVersuchen}
+          laedt={laedt}
+        />
       )}
       {children}
     </section>

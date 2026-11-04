@@ -229,6 +229,20 @@ Dashboard();                                   // ohne Props, Client Component
 - [x] **Schritt 4:** Tests erneut. Erwartet: PASS.
 - [x] **Schritt 5:** `npm run check`, committen: `Show tiles in a grid on the home page`.
 
+### Nachtrag: Funde aus dem `/code-review` von PR #27
+
+Mit dem Entwickler am 2026-11-04 durchgegangen. Behoben:
+
+- `proxy.ts` antwortet bei `/api/*` mit 401 oder 503 statt weiterzuleiten, `holeDashboard` wertet nur 401 als abgemeldet (ersetzt `redirected`)
+- `router.replace` statt `router.push`, damit „Zurück“ nicht in einer Schleife endet
+- „Jetzt erneut versuchen“ ist während des Abrufs gesperrt und zeigt „Wird versucht …“
+- Der letzte Stand nennt das Datum, wenn er von einem anderen Tag ist
+- Die Testkachel zeigt statt des festen „Fehler auslösen: aus“ die Zeitzone
+- `holeDashboard` prüft die Form der Antwort
+
+Bleiben offen und kommen in die Übergabe: Abmelden ohne Netz (Fehlerseite), Stand nach dem Abmelden im Speicher (vor Phase 4 ansehen),
+eingefrorener Abruf auf iOS (beim Gerätetest beobachten), leere Kachelliste zeigt den Fehlerhinweis.
+
 ### Aufgabe 8: Im Browser prüfen und dokumentieren
 
 **Dateien:** Neu `docs/adr/0004-kacheln-ueber-schnittstelle.md`; Ändern `docs/tools/Next.js.md`, `docs/Projektvision.md`, dieser Plan
@@ -243,7 +257,7 @@ Dashboard();                                   // ohne Props, Client Component
 - [x] **Schritt 3: Doku.** ADR 0004 (Schnittstelle gegen `router.refresh()`, Grid gegen CSS-Spalten), die Falle mit
       `cacheComponents` in `Next.js.md`, Schritt 5 im Fahrplan als „Code fertig, Gerätetest steht aus“ vermerken. „Erledigt“ folgt
       nach Aufgabe 9.
-- [ ] **Schritt 4:** `npm run check` und Agent `plan-pruefer`, committen: `Document tile scaffold` und PR öffnen. Vor dem Merge
+- [x] **Schritt 4:** `npm run check` und Agent `plan-pruefer`, committen: `Document tile scaffold` und PR öffnen. Vor dem Merge
       `/code-review`. Der Commit entstand vor der Prüfung, ihre Funde kamen in einem Folge-Commit dazu.
 
 ### Aufgabe 9: Prüfung auf den Geräten (nach dem Merge)

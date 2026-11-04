@@ -9,10 +9,10 @@ export function TestAnsicht({ daten }: { daten: KachelDaten }) {
           {daten.uhrzeit}
         </span>
       </Abschnitt>
-      <Abschnitt titel="Einstellungen">
+      <Abschnitt titel="Anzeige">
         <div className="flex justify-between gap-3">
-          <span>Fehler auslösen</span>
-          <span className="text-gedaempft">aus</span>
+          <span>Zeitzone</span>
+          <span className="text-gedaempft">Europe/Berlin</span>
         </div>
       </Abschnitt>
     </>

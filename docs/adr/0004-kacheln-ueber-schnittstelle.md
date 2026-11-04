@@ -18,6 +18,8 @@ iPhone ist ein Netzausfall normal. Die Reihenfolge der Kacheln steht in `lib/ein
 - **Der Browser fragt `GET /api/kacheln` ab und führt die Antwort mit dem bisherigen Stand zusammen.** Der Stand liegt nur im
   Speicher der offenen Seite. Der Proxy schützt die Adresse wie jede andere
   ([[projects/tages-dashboard/docs/adr/0002-login-nur-auf-dem-server|ADR 0002]]).
+- **Nur Status 401 heißt abgemeldet:** Der Proxy antwortet bei `/api/*` mit 401 oder bei einem kurzen Ausfall von Supabase mit 503,
+  statt weiterzuleiten. Sonst flöge die offene Seite bei jedem Aussetzer zum Login, und der letzte Stand wäre weg.
 - **Eine Abfrage für alle Kacheln:** Der Server lädt sie getrennt, ein Fehler trifft nur die eine Kachel. Das ist eine Abfrage pro
   Minute, egal wie viele Kacheln es gibt.
 - **CSS-Grid statt CSS-Spalten:** Die Reihenfolge läuft zeilenweise, und keine Kachel wechselt die Spalte, wenn sich die Höhe einer

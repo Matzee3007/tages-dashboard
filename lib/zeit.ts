@@ -34,3 +34,10 @@ export function uhrzeitMitSekunden(iso: string): string {
 export function datum(iso: string): string {
   return DATUM.format(new Date(iso));
 }
+
+// Bei einem Stand von einem anderen Tag gehört das Datum dazu, sonst sieht er aus wie von heute.
+export function standText(iso: string, jetzt: Date = new Date()): string {
+  return datum(iso) === datum(jetzt.toISOString())
+    ? uhrzeit(iso)
+    : `${datum(iso)}, ${uhrzeit(iso)}`;
+}

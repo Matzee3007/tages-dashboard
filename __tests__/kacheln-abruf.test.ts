@@ -19,7 +19,7 @@ afterEach(() => {
 test("eine gute Antwort liefert die Daten und umgeht jeden Zwischenspeicher", async () => {
   const attrappe = fetchAttrappe({
     ok: true,
-    redirected: false,
+    status: 200,
     json: async () => DATEN,
   });
 
@@ -30,20 +30,31 @@ test("eine gute Antwort liefert die Daten und umgeht jeden Zwischenspeicher", as
   );
 });
 
-test("eine Weiterleitung zum Login heißt abgemeldet", async () => {
-  fetchAttrappe({ ok: true, redirected: true });
+test("Status 401 heißt abgemeldet", async () => {
+  fetchAttrappe({ ok: false, status: 401 });
   await expect(holeDashboard()).resolves.toBe("abgemeldet");
 });
 
-test("Status 500 liefert null", async () => {
-  fetchAttrappe({ ok: false, redirected: false });
-  await expect(holeDashboard()).resolves.toBeNull();
-});
+test.each([500, 503])(
+  "Status %i ist ein vorübergehender Fehler, nicht abgemeldet",
+  async (status) => {
+    fetchAttrappe({ ok: false, status });
+    await expect(holeDashboard()).resolves.toBeNull();
+  },
+);
+
+test.each([[{}], [{ kacheln: "kaputt" }], [null]])(
+  "eine Antwort in falscher Form (%j) liefert null",
+  async (daten) => {
+    fetchAttrappe({ ok: true, status: 200, json: async () => daten });
+    await expect(holeDashboard()).resolves.toBeNull();
+  },
+);
 
 test("eine Antwort ohne JSON liefert null", async () => {
   fetchAttrappe({
     ok: true,
-    redirected: false,
+    status: 200,
     json: async () => {
       throw new SyntaxError("kein JSON");
     },

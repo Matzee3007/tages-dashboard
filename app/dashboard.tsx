@@ -22,17 +22,20 @@ export function Dashboard() {
   const [kacheln, setKacheln] = useState<KachelAnzeige[]>([]);
   const [zeit, setZeit] = useState<string | null>(null);
   const [geladen, setGeladen] = useState(false);
+  const [laedt, setLaedt] = useState(false);
   const laeuft = useRef(false);
   const router = useRouter();
 
   const abrufen = useCallback(async () => {
     if (laeuft.current) return;
     laeuft.current = true;
+    setLaedt(true);
     const antwort = await holeDashboard();
     laeuft.current = false;
+    setLaedt(false);
 
     if (antwort === "abgemeldet") {
-      router.push("/login");
+      router.replace("/login");
       return;
     }
     setKacheln((bisher) => neuerStand(bisher, antwort));
@@ -77,11 +80,16 @@ export function Dashboard() {
       <main className="flex flex-col gap-4">
         {!geladen && <p className="text-gedaempft">Lädt …</p>}
         {geladen && kacheln.length === 0 && (
-          <FehlerHinweis stand={null} erneutVersuchen={abrufen} />
+          <FehlerHinweis stand={null} erneutVersuchen={abrufen} laedt={laedt} />
         )}
         <div className="grid grid-cols-[repeat(auto-fill,minmax(min(320px,100%),1fr))] items-start gap-4">
           {kacheln.map((kachel) => (
-            <Kachel key={kachel.id} kachel={kachel} erneutVersuchen={abrufen}>
+            <Kachel
+              key={kachel.id}
+              kachel={kachel}
+              erneutVersuchen={abrufen}
+              laedt={laedt}
+            >
               {kachel.daten && <KachelInhalt daten={kachel.daten} />}
             </Kachel>
           ))}

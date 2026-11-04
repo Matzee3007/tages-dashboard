@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { Kachel } from "@/lib/kacheln/kachel";
 import type { KachelAnzeige } from "@/lib/kacheln/typen";
 
@@ -12,7 +12,14 @@ const KACHEL: KachelAnzeige = {
   fehler: false,
 };
 
-afterEach(cleanup);
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date("2026-11-08T14:00:00Z") });
+});
+
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 test("ohne Fehler zeigt die Kachel Titel und Inhalt, aber keinen Hinweis", () => {
   render(
@@ -49,6 +56,20 @@ test("ein Fehler ohne bisherigen Stand nennt keine Uhrzeit", () => {
     />,
   );
   expect(screen.getByText("Neuer Versuch in 1 Minute.")).toBeDefined();
+});
+
+test("ein Stand von einem anderen Tag nennt das Datum", () => {
+  render(
+    <Kachel
+      kachel={{ ...KACHEL, stand: "2026-11-07T22:58:00.000Z", fehler: true }}
+      erneutVersuchen={() => {}}
+    />,
+  );
+  expect(
+    screen.getByText(
+      "Letzter Stand von Samstag, 7. November, 23:58, neuer Versuch in 1 Minute.",
+    ),
+  ).toBeDefined();
 });
 
 test("der Knopf versucht es erneut", () => {
