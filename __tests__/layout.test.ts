@@ -4,9 +4,15 @@ import { expect, test, vi } from "vitest";
 import { metadata, viewport } from "@/app/layout";
 
 vi.mock("next/font/google", () => ({
-  Geist: () => ({ variable: "" }),
-  Geist_Mono: () => ({ variable: "" }),
+  Barlow: () => ({ variable: "" }),
+  Barlow_Condensed: () => ({ variable: "" }),
 }));
+
+test("globals.css legt die Design-Token fest", () => {
+  const css = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
+  expect(css).toContain("--color-grund: #0e1013");
+  expect(css).toContain("--color-akzent: #ff8a3d");
+});
 
 test("meldet die App bei Apple-Geräten an", () => {
   expect(metadata.appleWebApp).toEqual({
