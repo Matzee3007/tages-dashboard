@@ -58,7 +58,7 @@ Am 2026-11-03 mit der fertigen App aus `/Applications`:
 | Minimiert und anderes Programm vorn, dann Linksklick: Fenster kommt mit Fokus | bestanden |
 | Start dunkel statt weiß | bestanden |
 
-Offen: ob die Anmeldung auch am nächsten Tag noch hält.
+Am 2026-11-04 nachgeprüft: Die Anmeldung hält auch am nächsten Tag.
 
 Der Start ohne Warnung gilt für diesen Mac, auf dem die App gebaut wurde. Für die Weitergabe an andere ist sie nicht gedacht.
 
