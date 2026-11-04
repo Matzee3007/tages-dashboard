@@ -12,15 +12,11 @@ export const KACHELN: KachelEinstellung[] = [
 
 export type AbsenderEinstellung = { name: string; feeds: string[] };
 
-function youtube(kanalId: string): string {
-  return `https://www.youtube.com/feeds/videos.xml?channel_id=${kanalId}`;
-}
-
 export const ABSENDER: AbsenderEinstellung[] = [
   {
     name: "Anthropic",
     feeds: [
-      youtube("UCrDwWp7EBBv4NwvScIpBDOA"),
+      "https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA",
       "https://transformer-circuits.pub/feed.xml",
     ],
   },
@@ -35,13 +31,13 @@ export const ABSENDER: AbsenderEinstellung[] = [
     feeds: [
       "https://karpathy.bearblog.dev/feed/",
       "https://karpathy.github.io/feed.xml",
-      youtube("UCXUPKJO5MZQN11PqgIvyuvQ"),
+      "https://www.youtube.com/feeds/videos.xml?channel_id=UCXUPKJO5MZQN11PqgIvyuvQ",
     ],
   },
   {
     name: "Matt Pocock",
     feeds: [
-      youtube("UCswG6FSbgZjbWtdf_hMLaow"),
+      "https://www.youtube.com/feeds/videos.xml?channel_id=UCswG6FSbgZjbWtdf_hMLaow",
       "https://www.aihero.dev/rss.xml",
     ],
   },

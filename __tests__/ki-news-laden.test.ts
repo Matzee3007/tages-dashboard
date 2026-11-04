@@ -149,14 +149,46 @@ test("eine Meldung aus der Zukunft zählt nicht", async () => {
 
 test("fällt ein Kanal aus, zeigt der Absender still den Rest", async () => {
   const log = vi.spyOn(console, "error").mockImplementation(() => {});
+  const ausgefallen = "https://example.org/ausgefallen";
   feedsAntworten({ b: [["da", "2026-11-07T12:00:00Z"]] });
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a", "b"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: [ausgefallen, "b"] },
+    JETZT,
+  );
 
   expect(stand.erreichbar).toBe(true);
   expect(titel(stand.meldungen)).toEqual(["da"]);
   expect(log).toHaveBeenCalledTimes(1);
-  expect(log.mock.calls[0][0]).toContain("a");
+  expect(log.mock.calls[0][0]).toContain(ausgefallen);
+});
+
+test("ein hängender Kanal fällt nach dem Zeitlimit aus, die anderen laufen weiter", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  const echtesZeitlimit = AbortSignal.timeout.bind(AbortSignal);
+  vi.spyOn(AbortSignal, "timeout").mockImplementation(() =>
+    echtesZeitlimit(10),
+  );
+  fetchMock.mockImplementation((url: string, optionen: RequestInit) => {
+    if (url === "b") {
+      return Promise.resolve(
+        new Response(feed([["da", "2026-11-07T12:00:00Z"]])),
+      );
+    }
+    return new Promise((_, abbrechen) => {
+      optionen.signal?.addEventListener("abort", () =>
+        abbrechen(new Error("Zeitlimit")),
+      );
+    });
+  });
+
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["haengt", "b"] },
+    JETZT,
+  );
+
+  expect(stand.erreichbar).toBe(true);
+  expect(titel(stand.meldungen)).toEqual(["da"]);
 });
 
 test("fallen alle Kanäle aus, ist der Absender nicht erreichbar", async () => {

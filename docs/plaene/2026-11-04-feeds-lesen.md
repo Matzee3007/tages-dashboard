@@ -204,6 +204,7 @@ test("eine Meldung aus der Zukunft zählt nicht", async () => { /* weder meldung
 test("fällt ein Kanal aus, zeigt der Absender still den Rest", async () => {
   // erreichbar: true, Meldungen des zweiten Feeds, console.error mit der URL des ersten
 });
+test("ein hängender Kanal fällt nach dem Zeitlimit aus, die anderen laufen weiter", async () => {});
 test("fallen alle Kanäle aus, ist der Absender nicht erreichbar", async () => {
   // meldungen: [], letzteMeldung: null, erreichbar: false
 });
