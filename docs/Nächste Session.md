@@ -12,7 +12,7 @@ Stand vom 2026-11-04. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge von PR #31)
+- **Branch:** `main` (nach dem Merge von PR #32)
 - **Offene PRs:** keine
 - **Nicht committet:** nichts
 - **Live:** https://tages-dashboard-iota.vercel.app zeigt weiter die Testkachel. Das Lesen der Feeds ist im Code fertig, aber noch nicht angeschlossen.
@@ -40,8 +40,8 @@ Stand vom 2026-11-04. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 [[projects/tages-dashboard/docs/Projektvision|Projektvision]].
 
 **Als Nächstes: Schritt 2, Links in der Mac-App.** Fremde Adressen sollen im Standardbrowser aufgehen, sonst ersetzt ein Link das Dashboard im einzigen Fenster
-ohne Weg zurück. Im Plan klären, ob dafür ein Tauri-Plugin nötig ist. Die Vorgabe „keine Plugins“ steht in
-[[projects/tages-dashboard/docs/adr/0003-mac-app-mit-tauri|ADR 0003]] und ist dafür zu überdenken, die Hülle wird danach neu gebaut.
+ohne Weg zurück. Im Plan klären, ob dafür ein Tauri-Plugin nötig ist. Die Vorgabe „keine Plugins“ steht im
+[[projects/tages-dashboard/docs/plaene/2026-11-03-mac-app|Plan zur Mac-App]] und ist dafür zu überdenken, die Hülle wird danach neu gebaut.
 
 Der Schritt ist klein und passt deshalb als erster echter Test für `/goal`. Der Entwickler tippt den Befehl selbst, ohne Leerzeichen am Anfang, nachdem er im `/`-Menü nachgesehen hat, ob
 es ihn gibt. Am 2026-11-04 kam er mit Leerzeichen an und wurde wie normaler Text behandelt.
