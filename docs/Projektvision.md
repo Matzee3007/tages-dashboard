@@ -160,12 +160,14 @@ Entscheidungen aus der Befragung vom 2026-10-25:
 
 Stand 2026-11-04, nach der Befragung mit `/grill-with-docs`.
 
-1. **Feeds lesen:** Der Server liest RSS- und Atom-Feeds, fasst die Kanäle eines Absenders zusammen und speichert kurz
+1. **Feeds lesen** (erledigt 2026-11-04, PR #30, siehe [[projects/tages-dashboard/docs/plaene/2026-11-04-feeds-lesen|Plan]]): Der Server liest RSS- und Atom-Feeds, fasst die Kanäle eines Absenders zusammen und speichert kurz
    zwischen. Fällt ein Kanal aus, laufen die anderen weiter. Alle Absender mit Feed kommen in die Einstellungsdatei.
 2. **Links in der Mac-App:** Fremde Adressen gehen im Standardbrowser auf, die Hülle wird neu gebaut. Auf iPhone und
    iPad prüfen, wie die installierte App solche Links öffnet.
 3. **KI-News-Kachel:** ersetzt die Testkachel. Ein Abschnitt pro Absender, die neuesten 3 Meldungen der letzten 7 Tage,
-   die neueste oben, ohne neue Meldung nur eine Zeile. Beim ersten Deploy die offene App einmal neu laden.
+   die neueste oben, ohne neue Meldung nur eine Zeile. Beim ersten Deploy die offene App einmal neu laden. Offen aus dem `/code-review` von PR #30:
+   `stand` nennt die Abrufzeit statt des Alters der Daten, Rechenzeit für rund 2,4 MB XML je Minute auf Vercel messen, Rohtext wie `&ouml;` in Titeln
+   an der echten Anzeige prüfen.
 4. **Seiten auslesen:** die Kanäle ohne Feed. Das kommt zuletzt, weil es am anfälligsten ist und die Kachel dann schon läuft.
 
 Absender und Kanäle (am 2026-11-04 von diesem Rechner aus abgerufen, außer `claude.com/blog` nur grob geprüft):
@@ -196,9 +198,11 @@ Entscheidungen aus der Befragung vom 2026-11-04:
 - **Doppelte Meldungen:** Gleicher Link innerhalb eines Absenders erscheint einmal. Zwischen Absendern bleiben Dopplungen stehen.
 - **Ausfälle:** Ein Kanal von mehreren fällt aus: Der Abschnitt zeigt still den Rest, der Fehler steht im Server-Log. Alle Kanäle eines
   Absenders fallen aus: eine Zeile `Anthropic · gerade nicht erreichbar`. Alle Absender fallen aus: Fehlerzustand der Kachel, der letzte
-  Stand bleibt stehen.
+  Stand bleibt stehen. Sichtbar wird ein Ausfall nach bis zu rund 1 Stunde
+  ([[projects/tages-dashboard/docs/adr/0005-feeds-im-fetch-speicher|ADR 0005]]).
 - **Zwischenspeicher und Zeitlimits:** 15 Minuten je Kanal, 5 Sekunden je Kanal, 8 Sekunden je Kachel. Das Limit je Kachel steht zentral
-  in `lib/kacheln/laden.ts` und gilt auch für die Sport-Kacheln.
+  in `lib/kacheln/laden.ts` und gilt auch für die Sport-Kacheln. Es beendet nur das Warten, nicht den Abruf: In Phase 3 prüfen, ob das Abrufe der Anbieter
+  mit Gratis-Grenzen verbraucht, und dann ein Abbruchsignal an die Lader geben.
 - **`fast-xml-parser` statt `rss-parser`:** Es wird gepflegt, `rss-parser` zuletzt im April 2023. Die Umwandlung von RSS und Atom
   schreiben wir selbst.
 
