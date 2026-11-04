@@ -137,7 +137,7 @@ dürfen den Fahrplan ändern, wenn frühere Neues zeigen.
    [[projects/tages-dashboard/docs/plaene/2026-11-03-mac-app|Plan]] und
    [[projects/tages-dashboard/docs/adr/0003-mac-app-mit-tauri|ADR 0003]]): eine kleine
    Mac-App, die die Vercel-Adresse in einem eigenen Fenster zeigt, selbst gebaut und nur auf dem eigenen Mac installiert, dazu
-   ein Symbol in der Menüleiste. Die App startet ohne Bezahlkonto bei Apple, die Anmeldung hält über einen Neustart der App.
+   ein Symbol in der Menüleiste. Die App startet ohne Bezahlkonto bei Apple, die Anmeldung hält über einen Neustart und bis zum nächsten Tag.
 5. **Kachel-Gerüst:** Einstellungsdatei, Kachel aus Abschnitten, eine Spalte auf dem iPhone und mehrere auf Mac
    und iPad, Aktualisierung jede Minute, eigener Fehlerzustand je Kachel. Aussehen aus dem
    [Entwurf](https://claude.ai/artifact/VeWhiFgrVYtqnrivy3hFKt) (dunkel, Barlow und Barlow Condensed, Orange für

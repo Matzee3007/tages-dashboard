@@ -37,7 +37,7 @@ drauf, die Oberfläche muss also auch dort laufen. Es darf nichts kosten. Grundl
   der PWA sind Offline-Daten nicht geplant.
 - Ohne Bezahlkonto bei Apple lässt sich die App nicht ohne Warnung an andere weitergeben. Das ist nicht nötig, sie ist nur
   für mich.
-- Die Anmeldung in der Mac-App hält über einen Neustart der App (geprüft 2026-11-03, siehe
+- Die Anmeldung in der Mac-App hält über einen Neustart und bis zum nächsten Tag (geprüft 2026-11-03 und 2026-11-04, siehe
   [[projects/tages-dashboard/docs/tools/Tauri|Tauri]]). Der Schlüsselbund bietet das Passwort dort aber nicht an.
 - Änderungen an der Website erreichen die Mac-App ohne neuen Bau, weil sie die Vercel-Adresse lädt. Neu bauen muss ich nur,
   wenn sich die Hülle selbst ändert.
