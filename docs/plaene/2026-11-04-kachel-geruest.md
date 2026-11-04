@@ -26,7 +26,7 @@ letzten Stand merken.
 - Keine neue Abhängigkeit. Keine Server Action, keine Datenbank, keine Offline-Speicherung: Der letzte Stand liegt nur im
   Speicher der offenen Seite.
 - Farben als Design-Token in `@theme`: `grund` #0E1013, `flaeche` #171A1F, `rand` #262A31, `rand-stark` #434956, `knopf`
-  #22262D, `text` #ECEEF1, `gedaempft` #9AA3AE, `akzent` #FF8A3D, `info` #6CB2FF. Schriften: Barlow (400, 500, 600) und
+  #22262D, `text` #ECEEF1, `gedaempft` #9AA3AE, `akzent` #FF8A3D, `info` #6CB2FF, `fehler` #F87171 (für den Fehlertext des Logins). Schriften: Barlow (400, 500, 600) und
   Barlow Condensed (600, 700).
 - Maße wie im Mock: Inhalt max. 1320 px, Kachel `rounded-2xl`, Innenabstand 16 px, Abstand 14 px, Knöpfe mind. 44 px hoch.
 - Raster: `grid-cols-[repeat(auto-fill,minmax(min(320px,100%),1fr))] gap-4 items-start`. `min(…,100%)` verhindert auf
@@ -233,22 +233,26 @@ Dashboard();                                   // ohne Props, Client Component
 
 **Dateien:** Neu `docs/adr/0004-kacheln-ueber-schnittstelle.md`; Ändern `docs/tools/Next.js.md`, `docs/Projektvision.md`, dieser Plan
 
-- [x] **Schritt 1: Mit `npm run dev` und angemeldet prüfen:**
-  - Breite 390 und 1280 px sehen aus wie der Mock
+- [x] **Schritt 1: Mit `npm run dev` prüfen.** Abweichung: lief ohne Login, weil das Passwort Claude nicht vorliegt, mit vorübergehend
+      entferntem `proxy.ts` auf `127.0.0.1` und Chrome. Die Prüfung mit echter Sitzung und Proxy folgt in Aufgabe 9, Schritt 1.
+  - Breite 390 und 1280 px sehen aus wie der Mock (Screenshots angesehen, kein Vergleich Bild an Bild)
   - Uhrzeit springt nach einer Minute
   - `fehlerAusloesen` auf `true` und zurück: Hinweis erscheint mit letztem Stand und verschwindet
   - Netz in den Entwicklerwerkzeugen aus: Seite bleibt stehen, Daten bleiben
 - [x] **Schritt 2: `npm run build`.** Erwartet: fehlerfrei, `/api/kacheln` als dynamisch markiert.
 - [x] **Schritt 3: Doku.** ADR 0004 (Schnittstelle gegen `router.refresh()`, Grid gegen CSS-Spalten), die Falle mit
-      `cacheComponents` in `Next.js.md`, Schritt 5 im Fahrplan als erledigt markieren.
-- [x] **Schritt 4:** `npm run check` und Agent `plan-pruefer`, dann committen: `Document tile scaffold` und PR öffnen. Vor dem Merge `/code-review`.
+      `cacheComponents` in `Next.js.md`, Schritt 5 im Fahrplan als „Code fertig, Gerätetest steht aus“ vermerken. „Erledigt“ folgt
+      nach Aufgabe 9.
+- [ ] **Schritt 4:** `npm run check` und Agent `plan-pruefer`, committen: `Document tile scaffold` und PR öffnen. Vor dem Merge
+      `/code-review`. Der Commit entstand vor der Prüfung, ihre Funde kamen in einem Folge-Commit dazu.
 
 ### Aufgabe 9: Prüfung auf den Geräten (nach dem Merge)
 
 Vorschauen liegen hinter dem Vercel-Login, deshalb erst auf der echten Adresse.
 
-- [ ] **Schritt 1:** iPhone und iPad: Spaltenzahl stimmt (WebKit, im Mock nur Chrome geprüft). App in den Hintergrund und nach über
-      einer Minute zurück: Uhrzeit sofort neu.
+- [ ] **Schritt 1:** iPhone und iPad, angemeldet: Die Testkachel lädt mit echter Sitzung und Proxy, die Spaltenzahl stimmt (WebKit, im Mock nur
+      Chrome geprüft). App in den Hintergrund und nach über einer Minute zurück: Uhrzeit sofort neu. Im Browser abmelden, während
+      ein zweites Fenster offen bleibt: Dieses wechselt spätestens nach einer Minute zum Login (Prüf-Schwerpunkt 3 im echten Ablauf).
 - [ ] **Schritt 2:** Mac-App ausblenden, nach über einer Minute einblenden: Uhrzeit sofort neu. In den Vercel-Logs prüfen, dass
       ausgeblendet keine Abfragen ankommen. Falls doch: Die Hülle meldet die Sichtbarkeit nicht, Fund 7 aus PR #25 bleibt dann offen
       und kommt in die Übergabe.

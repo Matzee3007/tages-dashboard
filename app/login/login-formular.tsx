@@ -32,7 +32,7 @@ export function LoginFormular() {
         />
       </label>
       {status.fehler && (
-        <p role="alert" className="text-red-400">
+        <p role="alert" className="text-fehler">
           {status.fehler}
         </p>
       )}

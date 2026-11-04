@@ -11,6 +11,7 @@
   --color-gedaempft: #9aa3ae;
   --color-akzent: #ff8a3d;
   --color-info: #6cb2ff;
+  --color-fehler: #f87171;
   --font-sans: var(--font-barlow);
   --font-titel: var(--font-barlow-condensed);
 }
