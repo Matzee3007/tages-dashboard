@@ -132,7 +132,7 @@ git commit -m "Add RSS and Atom feed parser"
 - Liefert: `ladeKanal(url: string): Promise<Meldung[]>`. Wirft bei Netzfehler, Zeitlimit, Status außerhalb 200–299 und bei einem Text, der
   kein Feed ist.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 `fetch` mit `vi.stubGlobal` ersetzen, Kopfzeile `// @vitest-environment node`.
 
@@ -152,19 +152,19 @@ test("wirft bei Status 200 mit HTML", async () => { /* rejects.toThrow() */ });
 test("wirft, wenn fetch fehlschlägt", async () => { /* rejects.toThrow() */ });
 ```
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
 
 `npx vitest run __tests__/ki-news-laden.test.ts`
 Erwartet: FAIL, weil `@/lib/kacheln/ki-news/laden` fehlt.
 
-- [ ] **Schritt 3: `ladeKanal(url: string): Promise<Meldung[]>` in `lib/kacheln/ki-news/laden.ts`**
+- [x] **Schritt 3: `ladeKanal(url: string): Promise<Meldung[]>` in `lib/kacheln/ki-news/laden.ts`**
 
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
 
 `npx vitest run __tests__/ki-news-laden.test.ts`
 Erwartet: PASS
 
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 5: Prüfen und committen**
 
 ```bash
 npm run check
