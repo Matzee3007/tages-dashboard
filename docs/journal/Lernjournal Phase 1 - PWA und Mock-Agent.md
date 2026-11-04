@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 1 - PWA und Mock-Agent
-status: aktiv
+status: abgeschlossen
 phase: 1
 erstellt: 2026-11-02
 tags: [lernjournal, phase-1, pwa, manifest, tauri, proxy, mock-bauer, tdd, code-review]

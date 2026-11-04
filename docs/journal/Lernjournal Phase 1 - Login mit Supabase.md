@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 1 - Login mit Supabase
-status: aktiv
+status: abgeschlossen
 phase: 1
 erstellt: 2026-11-01
 tags: [lernjournal, phase-1, supabase, login, proxy, tdd, code-review, assistent-bauen]
