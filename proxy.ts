@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { BESITZER_ID } from "@/lib/besitzer";
 import { SUPABASE_COOKIE_OPTIONEN } from "@/lib/supabase/cookies";
@@ -37,23 +38,30 @@ export async function proxy(request: NextRequest) {
   );
 
   // Kein Code zwischen createServerClient und getClaims: sonst drohen zufällige Abmeldungen (Doku von Supabase).
-  const { data } = await supabase.auth.getClaims();
+  const { data, error } = await supabase.auth.getClaims();
   // Nur das eine Konto zählt: Ein gültiges fremdes Konto (Schalter bei Supabase falsch) kommt nicht hinein.
   const angemeldet = data?.claims?.sub === BESITZER_ID;
   const aufLogin = request.nextUrl.pathname === "/login";
 
+  // Erneuerte Cookies müssen auf jeder eigenen Antwort landen, sonst fliegt man später heraus.
+  const mitErneuerung = (eigene: NextResponse) => {
+    antwort.cookies.getAll().forEach((cookie) => eigene.cookies.set(cookie));
+    Object.entries(cacheHeader).forEach(([name, wert]) =>
+      eigene.headers.set(name, wert),
+    );
+    return eigene;
+  };
+
+  // Schnittstellen unterscheiden „abgemeldet“ von einem kurzen Ausfall bei Supabase, sonst flöge die offene Seite zum Login.
+  if (!angemeldet && request.nextUrl.pathname.startsWith("/api/")) {
+    const status = isAuthRetryableFetchError(error) ? 503 : 401;
+    return mitErneuerung(new NextResponse(null, { status }));
+  }
+
   if (angemeldet === aufLogin) {
     const ziel = request.nextUrl.clone();
     ziel.pathname = angemeldet ? "/" : "/login";
-    const weiterleitung = NextResponse.redirect(ziel);
-    // Erneuerte Cookies müssen auch auf der Weiterleitung landen, sonst fliegt man später heraus.
-    antwort.cookies
-      .getAll()
-      .forEach((cookie) => weiterleitung.cookies.set(cookie));
-    Object.entries(cacheHeader).forEach(([name, wert]) =>
-      weiterleitung.headers.set(name, wert),
-    );
-    return weiterleitung;
+    return mitErneuerung(NextResponse.redirect(ziel));
   }
 
   return antwort;

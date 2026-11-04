@@ -46,6 +46,15 @@ Gerätetest vom 2026-11-02, Installieren über Safari:
 
 Am 2026-11-03 nachgeprüft: Die Anmeldung hält auch am nächsten Tag.
 
+## Fallen
+
+- **Route Handler friert ein (`cacheComponents: true`):** Ein `GET` ohne Laufzeitdaten wird schon beim Bauen vorgerendert, eine
+  Uhrzeit bliebe dann stehen. Lösung: `await connection()` aus `next/server` am Anfang. Prüfen: `npm run build` markiert die Route
+  mit `ƒ` als dynamisch.
+- **`router.refresh()` lädt bei Fehlern die ganze Seite neu:** Ursache: Bei Netzfehler oder Status 500 wechselt Next.js zur normalen
+  Navigation, der Zustand im Browser ist weg. Lösung für die Kacheln: eigene Schnittstelle, siehe
+  [[projects/tages-dashboard/docs/adr/0004-kacheln-ueber-schnittstelle|ADR 0004]].
+
 ## Befehle
 
 Siehe `CLAUDE.md`, Abschnitt „Befehle“. Vor jedem Commit `npm run check`.

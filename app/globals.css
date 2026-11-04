@@ -1,26 +1,24 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Design-Token: Farben und Schriften nur hier ändern. Das Dashboard ist immer dunkel. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-grund: #0e1013;
+  --color-flaeche: #171a1f;
+  --color-rand: #262a31;
+  --color-rand-stark: #434956;
+  --color-knopf: #22262d;
+  --color-text: #eceef1;
+  --color-gedaempft: #9aa3ae;
+  --color-akzent: #ff8a3d;
+  --color-info: #6cb2ff;
+  --color-fehler: #f87171;
+  --font-sans: var(--font-barlow);
+  --font-titel: var(--font-barlow-condensed);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-grund);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.35;
 }

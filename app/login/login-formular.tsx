@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { anmelden } from "./actions";
 
 const feldStil =
-  "mt-1 w-full rounded border border-zinc-300 bg-transparent px-3 py-2 dark:border-zinc-700";
+  "mt-1 min-h-11 w-full rounded-[10px] border border-rand-stark bg-transparent px-3 py-2";
 
 export function LoginFormular() {
   const [status, aktion, laeuft] = useActionState(anmelden, { fehler: null });
@@ -32,14 +32,14 @@ export function LoginFormular() {
         />
       </label>
       {status.fehler && (
-        <p role="alert" className="text-red-600 dark:text-red-400">
+        <p role="alert" className="text-fehler">
           {status.fehler}
         </p>
       )}
       <button
         type="submit"
         disabled={laeuft}
-        className="rounded bg-zinc-900 px-3 py-2 text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+        className="min-h-11 rounded-[10px] border border-rand-stark bg-knopf px-3 py-2 disabled:opacity-50"
       >
         Anmelden
       </button>

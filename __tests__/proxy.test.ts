@@ -1,5 +1,9 @@
 // @vitest-environment node
 import { createServerClient } from "@supabase/ssr";
+import {
+  AuthInvalidJwtError,
+  AuthRetryableFetchError,
+} from "@supabase/supabase-js";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { config, proxy } from "@/proxy";
@@ -13,7 +17,11 @@ type Erneuerung = {
 };
 
 // Attrappe von Supabase: meldet die Sitzung eines Kontos oder keine und kann beim Prüfen Cookies erneuern.
-function attrappe(konto: boolean | string, erneuerung?: Erneuerung) {
+function attrappe(
+  konto: boolean | string,
+  erneuerung?: Erneuerung,
+  fehler: Error | null = null,
+) {
   const sub = konto === true ? "meine-id" : konto;
   vi.mocked(createServerClient).mockImplementation(((
     _url: string,
@@ -34,7 +42,7 @@ function attrappe(konto: boolean | string, erneuerung?: Erneuerung) {
         }
         return {
           data: sub ? { claims: { sub } } : null,
-          error: null,
+          error: fehler,
         };
       },
     },
@@ -54,7 +62,7 @@ beforeEach(() => {
 });
 
 describe("ohne Sitzung", () => {
-  test.each(["/", "/kacheln", "/api/x"])("%s führt zum Login", async (pfad) => {
+  test.each(["/", "/kacheln"])("%s führt zum Login", async (pfad) => {
     attrappe(false);
     const antwort = await proxy(anfrage(pfad));
     expect(antwort.status).toBe(307);
@@ -109,6 +117,62 @@ describe("mit fremdem Konto", () => {
     expect(antwort.headers.get("location")).toBeNull();
     expect(antwort.status).toBe(200);
   });
+});
+
+describe("Schnittstellen unter /api/", () => {
+  test("ohne Sitzung antworten sie mit 401 statt einer Weiterleitung", async () => {
+    attrappe(false);
+    const antwort = await proxy(anfrage("/api/kacheln"));
+    expect(antwort.status).toBe(401);
+    expect(antwort.headers.get("location")).toBeNull();
+  });
+
+  test("ein fremdes Konto bekommt 401", async () => {
+    attrappe("fremde-id");
+    const antwort = await proxy(anfrage("/api/kacheln"));
+    expect(antwort.status).toBe(401);
+  });
+
+  test("eine ungültige Sitzung bekommt 401", async () => {
+    attrappe(false, undefined, new AuthInvalidJwtError("ungültig"));
+    const antwort = await proxy(anfrage("/api/kacheln"));
+    expect(antwort.status).toBe(401);
+  });
+
+  test("ein vorübergehender Fehler von Supabase ergibt 503", async () => {
+    attrappe(false, undefined, new AuthRetryableFetchError("Ausfall", 503));
+    const antwort = await proxy(anfrage("/api/kacheln"));
+    expect(antwort.status).toBe(503);
+    expect(antwort.headers.get("location")).toBeNull();
+  });
+
+  test("mit Sitzung sind sie erreichbar", async () => {
+    attrappe(true);
+    const antwort = await proxy(anfrage("/api/kacheln"));
+    expect(antwort.status).toBe(200);
+  });
+
+  test("ähnlich benannte Seiten leiten weiter zum Login", async () => {
+    attrappe(false);
+    const antwort = await proxy(anfrage("/api-alt"));
+    expect(antwort.status).toBe(307);
+  });
+
+  test("erneuerte Cookies gehen auch mit 401 zurück", async () => {
+    attrappe(false, {
+      cookies: [{ name: "sb-token", value: "neu", options: { path: "/" } }],
+      headers: { "Cache-Control": "no-store" },
+    });
+    const antwort = await proxy(anfrage("/api/kacheln"));
+    expect(antwort.cookies.get("sb-token")?.value).toBe("neu");
+    expect(antwort.headers.get("cache-control")).toBe("no-store");
+  });
+});
+
+test("Seiten leiten auch bei einem vorübergehenden Fehler zum Login", async () => {
+  attrappe(false, undefined, new AuthRetryableFetchError("Ausfall", 503));
+  const antwort = await proxy(anfrage("/"));
+  expect(antwort.status).toBe(307);
 });
 
 describe("erneuerte Cookies und Cache-Header bleiben erhalten", () => {

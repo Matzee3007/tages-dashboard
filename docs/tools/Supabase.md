@@ -69,8 +69,9 @@ Aus dem `/code-review` von PR #12, bewusst nicht behoben:
 
 - **Abmelden bei einem Ausfall:** `abmelden` wertet das Ergebnis von `signOut()` nicht aus. Je nach Fehler bleibt die
   Sitzung auf dem Server gültig, oder man landet ohne Meldung wieder auf der Startseite. Dann später noch einmal drücken.
-- **Ausfall sieht aus wie abgemeldet:** `proxy.ts` wertet den Fehler von `getClaims()` nicht aus, jede Seite leitet zu
-  `/login`. Die Seite bleibt zu, die Ursache zeigt erst der Anmeldeversuch.
+- **Ausfall sieht aus wie abgemeldet (nur noch bei Seiten):** Beim Aufruf einer Seite leitet `proxy.ts` auch bei einem Fehler von
+  `getClaims()` zu `/login`. Die Seite bleibt zu, die Ursache zeigt erst der Anmeldeversuch. Schnittstellen unter `/api/` antworten
+  seit PR #27 bei einem kurzen Ausfall mit 503, eine offene Seite bleibt also stehen.
 - **Falsches Passwort leert die Felder:** React setzt das Formular nach der Action zurück. Beim Gerätetest am 2026-11-02
   auf iPhone, iPad und Mac ohne Beanstandung.
 - **Limit je IP-Adresse:** Die Anmeldung läuft über den Server, Supabase zählt also dessen Adresse. Viele fremde Versuche
