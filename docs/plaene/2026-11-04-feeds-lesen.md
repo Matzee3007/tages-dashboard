@@ -250,7 +250,7 @@ git commit -m "Merge news channels per sender"
 **Schnittstellen:**
 - Ändert nur das Verhalten von `ladeKachel`, die Signatur von `ladeDashboard` bleibt.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 `@/lib/kacheln/test/laden` mit `vi.mock` ersetzen, `vi.useFakeTimers()`.
 
@@ -271,19 +271,19 @@ test("eine schnelle Kachel lässt keinen Timer zurück", async () => {
 });
 ```
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
 
 `npx vitest run __tests__/kacheln-zeitlimit.test.ts`
 Erwartet: FAIL, die hängende Kachel läuft in das Zeitlimit des Tests.
 
-- [ ] **Schritt 3: In `ladeKachel` den Lader mit `Promise.race` gegen ein Zeitlimit von 8000 ms laufen lassen, den Timer danach löschen**
+- [x] **Schritt 3: In `ladeKachel` den Lader mit `Promise.race` gegen ein Zeitlimit von 8000 ms laufen lassen, den Timer danach löschen**
 
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
 
 `npx vitest run __tests__/kacheln-zeitlimit.test.ts __tests__/kacheln-laden.test.ts __tests__/api-kacheln.test.ts`
 Erwartet: PASS
 
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 5: Prüfen und committen**
 
 ```bash
 npm run check
