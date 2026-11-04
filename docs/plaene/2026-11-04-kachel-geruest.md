@@ -1,6 +1,6 @@
 ---
 titel: "Plan: Kachel-Gerüst"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-04
 tags: [plan, kacheln, phase-1]
 ---
@@ -264,10 +264,12 @@ eingefrorener Abruf auf iOS (beim Gerätetest beobachten), leere Kachelliste zei
 
 Vorschauen liegen hinter dem Vercel-Login, deshalb erst auf der echten Adresse.
 
-- [ ] **Schritt 1:** iPhone und iPad, angemeldet: Die Testkachel lädt mit echter Sitzung und Proxy, die Spaltenzahl stimmt (WebKit, im Mock nur
+- [x] **Schritt 1:** iPhone und iPad, angemeldet: Die Testkachel lädt mit echter Sitzung und Proxy, die Spaltenzahl stimmt (WebKit, im Mock nur
       Chrome geprüft). App in den Hintergrund und nach über einer Minute zurück: Uhrzeit sofort neu. Im Browser abmelden, während
       ein zweites Fenster offen bleibt: Dieses wechselt spätestens nach einer Minute zum Login (Prüf-Schwerpunkt 3 im echten Ablauf).
-- [ ] **Schritt 2:** Mac-App ausblenden, nach über einer Minute einblenden: Uhrzeit sofort neu. In den Vercel-Logs prüfen, dass
+- [x] **Schritt 2:** Mac-App ausblenden, nach über einer Minute einblenden: Uhrzeit sofort neu. In den Vercel-Logs prüfen, dass
       ausgeblendet keine Abfragen ankommen. Falls doch: Die Hülle meldet die Sichtbarkeit nicht, Fund 7 aus PR #25 bleibt dann offen
       und kommt in die Übergabe.
-- [ ] **Schritt 3:** Danach Phase 1 abschließen (Regel „Phasenwechsel“), vorher einmal den Cloudflare Security Audit Skill.
+- [x] **Schritt 3:** Danach Phase 1 abschließen (Regel „Phasenwechsel“). Den Cloudflare Security Audit hat der Entwickler in die Übergabe verschoben.
+
+Ergebnis der Schritte 1 und 2 laut Entwickler am 2026-11-04: „ja klappt“. Nicht geprüft: die Vercel-Logs aus Schritt 2, offen auch in der Übergabe.

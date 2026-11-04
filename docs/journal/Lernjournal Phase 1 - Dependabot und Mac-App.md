@@ -1,9 +1,9 @@
 ---
 titel: Lernjournal Phase 1 - Dependabot und Mac-App
-status: aktiv
+status: abgeschlossen
 phase: 1
 erstellt: 2026-11-04
-tags: [lernjournal, phase-1, ci, dependabot, tauri, rust, mock-bauer, code-review]
+tags: [lernjournal, phase-1, ci, dependabot, tauri, rust, mock-bauer, code-review, kacheln, plan-pruefer]
 ---
 
 # Lernjournal Phase 1: Dependabot und Mac-App
@@ -24,6 +24,12 @@ am 2026-11-03 und 2026-11-04.
 - [x] Rust 1.99.1 installiert, Mac-App „Heute“ gebaut und nach `/Applications` installiert (PR #25)
 - [x] Gerätetest am Mac bestanden, auch die Anmeldung am nächsten Tag, Ergebnisse in [[projects/tages-dashboard/docs/tools/Tauri|Tauri]]
 - [ ] Der Schlüsselbund bietet das Passwort in der Mac-App nicht an, es wird von Hand eingegeben
+- [x] Fahrplan-Schritt 5 am 2026-11-04: Mock freigegeben (Variante B, CSS-Grid, letzten Stand merken), Plan
+      `docs/plaene/2026-11-04-kachel-geruest.md` umgesetzt, PR #27 gemergt, [[projects/tages-dashboard/docs/adr/0004-kacheln-ueber-schnittstelle|ADR 0004]]
+- [x] Gerätetest nach dem Merge laut Entwickler bestanden („ja klappt“)
+- [x] **Phase 1 – Grundgerüst abgeschlossen**
+- [ ] Vercel-Logs nicht geprüft: Ob bei ausgeblendeter Mac-App wirklich keine Abfragen ankommen, ist offen
+- [ ] Cloudflare Security Audit nicht gelaufen, vom Entwickler in die Übergabe verschoben
 
 ## Befehle: CI und Dependabot
 
@@ -62,6 +68,22 @@ codesign -dv /Applications/Heute.app
 - `cargo test`: Tests der Rust-Hülle. `--manifest-path` nennt die `Cargo.toml`, weil sie nicht im Wurzelordner liegt.
 - `npm run tauri -- build`: baut die fertige `.app`, signiert sie ad-hoc.
 - `codesign -dv`: zeigt die Signatur, erwartet `Signature=adhoc`.
+
+## Befehle: Kachel-Gerüst
+
+```bash
+npm run build
+/usr/bin/curl -s -o /dev/null -w '%{http_code} -> %{redirect_url}\n' 'https://tages-dashboard-iota.vercel.app/api/kacheln'
+gh pr checks 27 --watch --interval 20
+gh pr view 27 --json mergeable --jq .mergeable
+gh pr merge 27 --merge
+```
+
+- `npm run build`: baut die App für den Betrieb. Die Ausgabe zeigt mit `ƒ`, dass `/api/kacheln` bei jeder Anfrage neu läuft.
+- `/usr/bin/curl … -w`: zeigt nur Statuscode und Weiterleitungsziel, hier als Beleg, dass die Schnittstelle ohne Anmeldung zu ist (401).
+- `gh pr checks --watch`: wartet, bis die Prüfungen des PR durch sind.
+- `gh pr view … mergeable`: sagt, ob GitHub den PR mergen kann.
+- `gh pr merge --merge`: übernimmt den PR in `main`, Vercel veröffentlicht danach von selbst.
 
 ## Neu gelernt
 
@@ -107,6 +129,36 @@ vorherige Programm zurück. Das fiel erst im `/code-review` auf, nicht im ersten
 Option + Klick ist kein Rechtsklick und kommt als Linksklick an. Auf dem Trackpad ist der Rechtsklick ein Klick mit zwei Fingern. Eine
 markierte Ausgabe (`[DEBUG-a4f2]`) je Klick zeigte, was wirklich ankommt, statt zu raten.
 
+### Warum nicht `router.refresh()`
+
+Es wäre der kürzeste Weg, die Seite jede Minute zu erneuern. Im Quellcode von Next.js 16.4.3 steht aber, dass es bei Netzfehler oder Status 500 zum
+vollen Neuladen wechselt. Der gemerkte letzte Stand wäre weg. Deshalb fragt der Browser eine eigene Schnittstelle ab, siehe ADR 0004.
+
+### Route Handler und `connection()`
+
+Ein Route Handler ist eine Adresse, die Daten statt einer Seite liefert. Mit `cacheComponents` würde ein `GET` ohne Laufzeitdaten schon beim Bauen
+vorgerendert, eine Uhrzeit bliebe stehen. `await connection()` am Anfang verschiebt die Arbeit auf die Anfrage.
+
+### 401 und 503 statt Weiterleitung
+
+Leitet der Proxy eine Schnittstelle zum Login weiter, kann der Browser „abgemeldet“ nicht von einem Aussetzer bei Supabase unterscheiden. Jetzt heißt
+401 abgemeldet und 503 vorübergehend gestört. Vorübergehende Fehler erkennt `isAuthRetryableFetchError` aus `@supabase/supabase-js`.
+
+### CSS-Spalten und CSS-Grid
+
+Bei CSS-Spalten bestimmt die Höhe, in welcher Spalte eine Kachel landet, und Kacheln können bei einer Aktualisierung die Spalte wechseln. CSS-Grid hält die
+Reihenfolge fest, dafür bleiben unter kurzen Kacheln Lücken. `minmax(min(320px,100%),1fr)` verhindert auf schmalen iPhones waagerechtes Scrollen.
+
+### `visibilitychange`
+
+Das Ereignis meldet, ob eine Seite sichtbar ist. Der Takt fragt nur bei sichtbarer Seite ab. Nur der Wechsel prüft, ob 60 Sekunden vergangen sind, sonst entfiele
+durch kleine Zeitabweichungen jede zweite Abfrage.
+
+### Mehrere Prüfungen finden Verschiedenes
+
+Der `plan-pruefer` fand zu großzügige Häkchen, vor allem die Browser-Prüfung ohne Login. Das `/code-review` fand danach unter anderem den Sprung zum Login bei einem
+Supabase-Aussetzer. Beide Funde hatten die 87 grünen Tests nicht gezeigt.
+
 ## Fehler und Lösungen
 
 ### `curl: (77) error adding trust anchors from file: /opt/anaconda3/ssl/cacert.pem`
@@ -145,6 +197,20 @@ markierte Ausgabe (`[DEBUG-a4f2]`) je Klick zeigte, was wirklich ankommt, statt 
 - **Lösung:** Wert in Anführungszeichen.
 - **Prüfen:** Die Datei lässt sich einlesen, Dependabot lief danach an.
 
+### `Do not use window.location.assign() to navigate to internal Next.js pages`
+
+- **Wo:** ESLint-Warnung `@next/next/no-location-assign-relative-destination` in `app/dashboard.tsx`.
+- **Ursache:** Der Wechsel zum Login lief zuerst über `window.location.assign`.
+- **Lösung:** `useRouter()` aus `next/navigation`, später `router.replace("/login")`.
+- **Prüfen:** `npm run lint` ohne Warnung.
+
+### Abgelaufene Sitzung ließ „Zurück“ in einer Schleife enden
+
+- **Wo:** Fund 3 im `/code-review` von PR #27, nur gelesen, nicht nachgestellt.
+- **Ursache:** `router.push` legt einen Eintrag im Verlauf an, die alte Seite ruft erneut ab und schickt wieder zum Login.
+- **Lösung:** `router.replace`.
+- **Prüfen:** Test „wechselt zum Login, wenn die Sitzung abgelaufen ist“.
+
 ## Aus dem Chat
 
 -
@@ -153,7 +219,9 @@ markierte Ausgabe (`[DEBUG-a4f2]`) je Klick zeigte, was wirklich ankommt, statt 
 
 - Hält der Ausschluss in `npm-klein` React dauerhaft aus dem Sammel-PR heraus? Das zeigt erst ein Lauf mit Sammel-PR.
 - Warum bietet der Schlüsselbund das Passwort in der Mac-App nicht an? Nicht untersucht.
+- Meldet die Mac-App die Sichtbarkeit, sodass ausgeblendet wirklich keine Abfragen laufen? Vercel-Logs nicht geprüft.
 
 ## Nächste Schritte
 
-1. Fahrplan-Schritt 5: Kachel-Gerüst, zuerst ein Mock.
+1. Fahrplan-Schritt 5: Kachel-Gerüst, zuerst ein Mock. (erledigt, PR #27)
+2. Phase 2 – KI-News, vorher fragen, ob etwas anderes ansteht. Restpunkte stehen in [[projects/tages-dashboard/docs/Nächste Session|Nächste Session]].

@@ -97,7 +97,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 
 - [x] **Phase 0 – Fundament:** Repo und `CLAUDE.md` stehen, Stack eingerichtet, erster Test grün,
   Projektvision mit `/grill-with-docs` geschärft, Phasen 1 bis 3 geplant
-- [ ] **Phase 1 – Grundgerüst:** Login, PWA (Symbol, Vollbild auf iPhone und iPad), Mac-App mit Tauri, Kachel-System mit
+- [x] **Phase 1 – Grundgerüst:** Login, PWA (Symbol, Vollbild auf iPhone und iPad), Mac-App mit Tauri, Kachel-System mit
   einer Beispielkachel, online auf Vercel
 - [ ] **Phase 2 – KI-News:** RSS-Feeds von Anthropic, OpenAI, Google DeepMind, Fachseiten, Karpathy und Matt Pocock
   in einer Kachel mit einem Abschnitt pro Absender
@@ -138,8 +138,8 @@ dürfen den Fahrplan ändern, wenn frühere Neues zeigen.
    [[projects/tages-dashboard/docs/adr/0003-mac-app-mit-tauri|ADR 0003]]): eine kleine
    Mac-App, die die Vercel-Adresse in einem eigenen Fenster zeigt, selbst gebaut und nur auf dem eigenen Mac installiert, dazu
    ein Symbol in der Menüleiste. Die App startet ohne Bezahlkonto bei Apple, die Anmeldung hält über einen Neustart und bis zum nächsten Tag.
-5. **Kachel-Gerüst** (Code fertig 2026-11-04, siehe [[projects/tages-dashboard/docs/plaene/2026-11-04-kachel-geruest|Plan]] und
-   [[projects/tages-dashboard/docs/adr/0004-kacheln-ueber-schnittstelle|ADR 0004]], Gerätetest steht aus): Einstellungsdatei, Kachel aus Abschnitten, eine Spalte auf dem iPhone und mehrere auf Mac
+5. **Kachel-Gerüst** (erledigt 2026-11-04, PR #27, siehe [[projects/tages-dashboard/docs/plaene/2026-11-04-kachel-geruest|Plan]] und
+   [[projects/tages-dashboard/docs/adr/0004-kacheln-ueber-schnittstelle|ADR 0004]]): Einstellungsdatei, Kachel aus Abschnitten, eine Spalte auf dem iPhone und mehrere auf Mac
    und iPad, Aktualisierung jede Minute, eigener Fehlerzustand je Kachel. Aussehen aus dem
    [Entwurf](https://claude.ai/artifact/VeWhiFgrVYtqnrivy3hFKt) (dunkel, Barlow und Barlow Condensed, Orange für
    Mein Team und Live), Farben und Schriften zentral als Design-Token in Tailwind. Als Beispiel eine Testkachel

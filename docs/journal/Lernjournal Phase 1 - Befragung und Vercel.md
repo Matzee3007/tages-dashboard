@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 1 - Befragung und Vercel
-status: aktiv
+status: abgeschlossen
 phase: 1
 erstellt: 2026-10-26
 tags: [lernjournal, phase-1, grill-with-docs, plan-schreiben, assistent-bauen, vercel, artifact]
