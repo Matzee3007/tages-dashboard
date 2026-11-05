@@ -1,4 +1,5 @@
 mod klick;
+mod links;
 
 use klick::{KlickAktion, klick_aktion};
 use tauri::{
