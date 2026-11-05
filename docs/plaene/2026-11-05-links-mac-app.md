@@ -137,16 +137,16 @@ git commit -m "Add link rule for the Mac app"
 
 - Nutzt: `link_ziel`, `im_browser_oeffnen`, `LinkZiel` aus Aufgabe 1
 
-- [ ] **Schritt 1: Fenster in `setup` bauen,** vor `menueleiste_einrichten`, mit `WebviewWindowBuilder::from_config(app.handle(), &app.config().app.windows[0])?`:
+- [x] **Schritt 1: Fenster in `setup` bauen,** vor `menueleiste_einrichten`, mit `WebviewWindowBuilder::from_config(app.handle(), &app.config().app.windows[0])?`:
   - `on_navigation`: `ImFenster` → `true`. `Browser` → `im_browser_oeffnen`, dann `false`. `Blockiert` → `false`.
   - `on_new_window`: `Browser` und `ImFenster` → `im_browser_oeffnen`, `Blockiert` → nichts. Immer `NewWindowResponse::Deny`. Es soll nie ein zweites Fenster entstehen.
 
-- [ ] **Schritt 2: Übersetzen und Tests**
+- [x] **Schritt 2: Übersetzen und Tests**
 
 `~/.cargo/bin/cargo test --manifest-path src-tauri/Cargo.toml`
 Erwartet: 8 Tests bestanden, keine Warnung „never used“ aus `links.rs`.
 
-- [ ] **Schritt 3: Gerätetest, nur der Entwickler kann ihn abnehmen**
+- [x] **Schritt 3: Gerätetest, nur der Entwickler kann ihn abnehmen**
 
 `npm run tauri -- dev`, danach in der App Rechtsklick → „Element untersuchen“ → Konsole. Fremde Links gibt es vor Schritt 3 noch nicht, deshalb legt ein Befehl sie an:
 
@@ -167,7 +167,7 @@ document.body.insertAdjacentHTML(
 | 4 | Klick auf „neues Fenster“ | Standardbrowser zeigt example.org, kein zweites Fenster der App |
 | 5 | Klick auf „Datei“ | nichts passiert |
 
-- [ ] **Schritt 4: Committen**
+- [x] **Schritt 4: Committen**
 
 ```bash
 git add src-tauri/tauri.conf.json src-tauri/src/main.rs
