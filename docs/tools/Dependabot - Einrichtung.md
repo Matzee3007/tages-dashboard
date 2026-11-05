@@ -66,6 +66,8 @@ Stand 2026-11-03: 17 mittlere Meldungen, mit `npm audit --omit=dev` (nur was die
   zerlegen.
 - **Warnung auf GitHub:** Warnung #1 kam nach dem Einschalten, am 2026-11-03 als `tolerable_risk` geschlossen. Erneut nachsehen,
   sobald `eslint` und alle Plugins `minimatch` ab 11.0.1 nutzen. ESLint 10 allein reicht nicht, es nutzt `^10.2.6`.
+- **Warnung #3:** Am 2026-11-04 kam dieselbe Lücke erneut als neue Warnung, Ursache nicht geklärt. Betroffen ist laut Versionsbereich
+  (`>= 7.0.0, < 11.0.1`) nur `minimatch@10.2.6` über `typescript-eslint`. Am 2026-11-05 ebenfalls als `tolerable_risk` geschlossen.
 
 ## Fehler
 
@@ -77,7 +79,8 @@ Stand 2026-11-03: 17 mittlere Meldungen, mit `npm audit --omit=dev` (nur was die
 ## Befehle
 
 ```bash
-gh pr list --author 'app/dependabot'   # offene PRs von Dependabot
+gh pr list --author 'app/dependabot'   # offene PRs von Dependabot, zeigt keine Warnungen
+gh api 'repos/Matzee3007/tages-dashboard/dependabot/alerts?state=open' --jq '.[] | "\(.number) \(.security_advisory.severity) \(.dependency.package.name)"'   # offene Warnungen
 gh pr checkout <nr>                    # Branch eines PRs lokal holen
 gh pr checks <nr>                      # CI-Ergebnis vor dem Merge
 npm audit --omit=dev                   # Sicherheitsmeldungen nur für das, was die App ausliefert
