@@ -26,10 +26,11 @@ Stand vom 2026-11-04. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
    claude
    ```
 
-2. Neue PRs von Dependabot ansehen, er öffnet jede Woche welche:
+2. Neue PRs und offene Warnungen von Dependabot ansehen. Er öffnet jede Woche PRs, Warnungen zeigt `gh pr list` nicht:
 
    ```bash
    gh pr list --author 'app/dependabot'
+   gh api 'repos/Matzee3007/tages-dashboard/dependabot/alerts?state=open' --jq '.[] | "\(.number) \(.security_advisory.severity) \(.dependency.package.name)"'
    ```
 
    Ablauf: [[projects/tages-dashboard/docs/tools/Dependabot - Einrichtung|Dependabot - Einrichtung]].
