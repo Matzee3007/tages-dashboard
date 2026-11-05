@@ -1,6 +1,6 @@
 ---
 titel: "Plan: Links in der Mac-App"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-05
 tags: [plan, tauri, mac, phase-2]
 ---
@@ -178,11 +178,11 @@ git commit -m "Open foreign links in the default browser"
 
 **Dateien:** siehe Tabelle oben, ohne die Dateien aus Aufgabe 1 und 2.
 
-- [ ] **Schritt 1: `npm run tauri -- build`, dann Prüfung 1 und 2 aus dem Gerätetest mit der gebauten App wiederholen.** Das Einfügen der Testlinks entfällt, denn die fertige App hat keine Entwicklerwerkzeuge. Die Regel läuft in beiden Fassungen gleich.
+- [x] **Schritt 1: `npm run tauri -- build`, dann Prüfung 1 und 2 aus dem Gerätetest mit der gebauten App wiederholen.** Das Einfügen der Testlinks entfällt, denn die fertige App hat keine Entwicklerwerkzeuge. Die Regel läuft in beiden Fassungen gleich.
 
-- [ ] **Schritt 2: ADR 0006 schreiben.** Entscheidung: `open` aus der Standardbibliothek. Alternativen: `tauri-plugin-opener` (neue Abhängigkeit für einen einzigen Aufruf, lohnt sich erst bei mehreren Betriebssystemen), Abfangen per JavaScript auf der Website (Website müsste die Hülle kennen, Rechte nötig). Konsequenz: Die Hülle läuft nur auf dem Mac, wie schon in ADR 0003.
+- [x] **Schritt 2: ADR 0006 schreiben.** Entscheidung: `open` aus der Standardbibliothek. Alternativen: `tauri-plugin-opener` (neue Abhängigkeit für einen einzigen Aufruf, lohnt sich erst bei mehreren Betriebssystemen), Abfangen per JavaScript auf der Website (Website müsste die Hülle kennen, Rechte nötig). Konsequenz: Die Hülle läuft nur auf dem Mac, wie schon in ADR 0003.
 
-- [ ] **Schritt 3: Warnung #2 schließen.**
+- [x] **Schritt 3: Warnung #2 schließen.**
 
 ```bash
 gh api -X PATCH repos/Matzee3007/tages-dashboard/dependabot/alerts/2 -f state=dismissed -f dismissed_reason=not_used -f dismissed_comment='glib gehört nur zum Linux-Teil von Tauri, die Hülle wird nur für den Mac gebaut. Siehe docs/tools/Dependabot - Einrichtung.md'
@@ -190,14 +190,14 @@ gh api -X PATCH repos/Matzee3007/tages-dashboard/dependabot/alerts/2 -f state=di
 
 Erwartet: Die Abfrage der offenen Warnungen ist leer.
 
-- [ ] **Schritt 4: Doku.**
+- [x] **Schritt 4: Doku.**
   - `docs/tools/Tauri.md`: Bedienung (Links), `links.rs`, Ergebnisse des Gerätetests, „Keine Rechte“ bleibt wahr.
   - `docs/tools/Dependabot - Einrichtung.md`: Warnung #2 mit Beleg aus `cargo tree`.
   - `docs/Projektvision.md`: Schritt 2 erledigt mit PR-Nummer, die Prüfung auf iPhone und iPad nach Schritt 3.
   - `docs/Nächste Session.md`: Restpunkt 5 (`glib`) streichen, die iPhone-Prüfung zu Schritt 3 schreiben.
   - Dieser Plan: `status: abgeschlossen`.
 
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 5: Prüfen und committen**
 
 ```bash
 npm run check
