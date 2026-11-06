@@ -1,21 +1,21 @@
 ---
 titel: Nächste Session
 status: aktiv
-erstellt: 2026-11-04
+erstellt: 2026-11-06
 tags: [session, übergabe]
 ---
 
 # Nächste Session
 
-Stand vom 2026-11-04. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
-[[projects/tages-dashboard/docs/journal/Lernjournal Phase 2 - Feeds lesen|Lernjournal Phase 2 - Feeds lesen]].
+Stand vom 2026-11-06. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
+[[projects/tages-dashboard/docs/journal/Lernjournal Phase 2 - Links in der Mac-App|Lernjournal Phase 2 - Links in der Mac-App]].
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge von PR #32)
+- **Branch:** `main` (nach dem Merge von PR #36)
 - **Offene PRs:** keine
 - **Nicht committet:** nichts
-- **Live:** https://tages-dashboard-iota.vercel.app zeigt weiter die Testkachel. Das Lesen der Feeds ist im Code fertig, aber noch nicht angeschlossen.
+- **Live:** https://tages-dashboard-iota.vercel.app zeigt weiter die Testkachel. Die installierte Mac-App in `/Applications` hat die neue Link-Regel (PR #34).
 
 ## Vor dem Start
 
@@ -26,7 +26,7 @@ Stand vom 2026-11-04. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
    claude
    ```
 
-2. Neue PRs und offene Warnungen von Dependabot ansehen. Er öffnet jede Woche PRs, Warnungen zeigt `gh pr list` nicht:
+2. Neue PRs und offene Warnungen von Dependabot ansehen. Er öffnet jede Woche PRs, Warnungen zeigt `gh pr list` nicht. Stand 2026-11-06: keine offene Warnung.
 
    ```bash
    gh pr list --author 'app/dependabot'
@@ -37,17 +37,10 @@ Stand vom 2026-11-04. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 
 ## Womit es weitergeht
 
-**Phase 2 – KI-News läuft, Schritt 1 von 4 ist fertig** (PR #30). Der Fahrplan mit allen Absendern und Entscheidungen steht in der
+**Phase 2 – KI-News läuft, Schritte 1 und 2 von 4 sind fertig** (PR #30, #34). Der Fahrplan steht in der
 [[projects/tages-dashboard/docs/Projektvision|Projektvision]].
 
-**Als Nächstes: Schritt 2, Links in der Mac-App.** Fremde Adressen sollen im Standardbrowser aufgehen, sonst ersetzt ein Link das Dashboard im einzigen Fenster
-ohne Weg zurück. Im Plan klären, ob dafür ein Tauri-Plugin nötig ist. Die Vorgabe „keine Plugins“ steht im
-[[projects/tages-dashboard/docs/plaene/2026-11-03-mac-app|Plan zur Mac-App]] und ist dafür zu überdenken, die Hülle wird danach neu gebaut.
-
-Der Schritt ist klein und passt deshalb als erster echter Test für `/goal`. Der Entwickler tippt den Befehl selbst, ohne Leerzeichen am Anfang, nachdem er im `/`-Menü nachgesehen hat, ob
-es ihn gibt. Am 2026-11-04 kam er mit Leerzeichen an und wurde wie normaler Text behandelt.
-
-**Danach Schritt 3, KI-News-Kachel.** Dort ist ein Mock nötig (neue Oberfläche), und diese Punkte stehen an:
+**Als Nächstes: Schritt 3, KI-News-Kachel.** Zuerst ein Mock mit dem Agent `mock-bauer` (neue Oberfläche), erst nach der Freigabe der Plan. Diese Punkte gehören dazu:
 
 - Greift der Zwischenspeicher auf Vercel, antworten alle Anbieter den Servern, passt der OpenAI-Feed (825 KB) hinein? Siehe „In Schritt 3 prüfen“ im
   [[projects/tages-dashboard/docs/plaene/2026-11-04-feeds-lesen|Plan]] und [[projects/tages-dashboard/docs/adr/0005-feeds-im-fetch-speicher|ADR 0005]].
@@ -58,6 +51,10 @@ es ihn gibt. Am 2026-11-04 kam er mit Leerzeichen an und wurde wie normaler Text
 - Eine leere Kachelliste zeigt den Fehlerhinweis (Fund aus PR #27). Beim Entfernen der Testkachel darauf achten.
 
 **Zuletzt Schritt 4, Seiten auslesen.** `claude.com/blog` ist anders gebaut als `anthropic.com`. Ist es nicht sauber auslesbar, den Entwickler fragen, statt es still wegzulassen.
+Auch diese Links müssen durch `istWebLink` in `lib/kacheln/ki-news/feed.ts`, die Mac-App schützt vor `javascript:` nicht nachweislich
+([[projects/tages-dashboard/docs/adr/0006-links-im-standardbrowser|ADR 0006]]).
+
+`/goal` passte in Schritt 2 nicht, weil der Gerätetest nur vom Entwickler abgenommen werden kann. Schritt 3 hat mit dem Mock ebenfalls eine Freigabe, der Test bleibt also offen.
 
 Restpunkte als Vorschläge:
 
@@ -75,17 +72,22 @@ Restpunkte als Vorschläge:
    - **Vor Phase 4 ansehen:** Der Stand der Kacheln bleibt nach dem Abmelden im Speicher der Seite und könnte nach „Zurück“ ohne Netz wieder
      erscheinen. Mit den KI-News betrifft das öffentliche Meldungen, private Daten erst ab Phase 4.
    - iOS friert einen laufenden Abruf ein: Beim Zurückkommen entfällt dann der sofortige Abruf, bis zu 60 Sekunden steht ein falscher Hinweis.
+5. **Offene Funde aus dem `/code-review` von PR #34,** bewusst nicht behoben (Begründung im Journal): fremde `iframe`s öffnen den Browser, der Abgleich der
+   eigenen Adresse prüft `devUrl` nicht, Fehler von `open` werden nicht ausgewertet, `windows[0]` statt Suche nach dem Namen `main`.
 
 Gelegentlich:
 
 - Dependabot ignoriert große Updates von `eslint` und `typescript`, von selbst erinnert niemand daran. ESLint 9 steht bei npm schon auf
   `maintenance`. Aufheben, sobald `eslint-plugin-react`, `-import` und `-jsx-a11y` ESLint 10 erlauben und `typescript-eslint` TypeScript 7 erlaubt.
 - Klein, nur wenn es stört: Der Schlüsselbund bietet das Passwort in der Mac-App nicht an (nicht untersucht).
+- Klein: Ohne Internet zeigt die Mac-App beim Start ein leeres Fenster statt der Fehlerseite, nach „Neu laden“ ist alles da (ADR 0006).
+- Klein: `cargo fmt --check` meldet eine ältere Abweichung in `src-tauri/build.rs`. Und die Shell von Claude Code findet `cargo` nicht, dort
+  `~/.cargo/bin/cargo` nehmen (Journal, Abschnitt „Fehler“).
 
 Punkte fürs Ecosystem: siehe dessen Übergabe, dort steht auch der Punkt „`/goal` testen“.
 
 ## Passende Skills
 
-- `plan-schreiben`: Plan für Schritt 2
-- `tdd`: Umsetzung, auch der Regel für fremde Links
-- `fertig-pruefen`: vor dem Merge, die Hülle lässt sich nur am echten Mac prüfen
+- `plan-schreiben`: Plan für Schritt 3, nach der Freigabe des Mocks
+- `tdd`: Umsetzung der Kachel
+- `fertig-pruefen`: vor dem Merge, dazu die Klicks in der fertigen Mac-App und auf dem iPhone
