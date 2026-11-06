@@ -216,12 +216,12 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
 
 **Dateien:** Ändern `docs/Projektvision.md`, `docs/tools/Vercel.md`, dieser Plan
 
-- [ ] **Schritt 1: Mit `npm run dev` prüfen** (Claude, angemeldet oder wie in Phase 1 ohne Login auf `127.0.0.1`):
+- [x] **Schritt 1: Mit `npm run dev` prüfen** (Claude, angemeldet oder wie in Phase 1 ohne Login auf `127.0.0.1`):
   - Breite 390 und 1280 px sehen aus wie Variante A des Mocks mit Punkt, Screenshots angesehen. Ein langer Titel bricht um, das Alter bleibt rechts.
   - Titel mit Umlauten und Sonderzeichen, z. B. bei The Decoder, stehen sauber da, ohne Rohtext wie `&ouml;` oder `&#8217;` (Fund aus PR #30).
   - Eine Feed-Adresse in `ABSENDER` vorübergehend verfälschen: Nur dieser Absender zeigt „nicht erreichbar“, falls er keinen zweiten Kanal hat.
     Danach zurücksetzen.
-- [ ] **Schritt 2: `npm run build`.** Erwartet: fehlerfrei.
+- [x] **Schritt 2: `npm run build`.** Erwartet: fehlerfrei.
 - [ ] **Schritt 3: PR öffnen, auf der Vorschau von Vercel prüfen** (Entwickler meldet sich an, Claude liest mit):
   - Die Kachel zeigt echte Meldungen, kein Absender ist dauerhaft „nicht erreichbar“. Sonst in den Logs von Vercel nach
     „ließ sich nicht laden“ suchen: Dann sperrt ein Anbieter die Server von Vercel.
@@ -242,4 +242,21 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
 
 ## Ergebnisse
 
-<nach Aufgabe 4 und 5>
+**Aufgabe 4, Schritt 1 und 2 (2026-11-06, lokal ohne Login, `proxy.ts` vorübergehend herausgenommen):**
+
+- Echte Feeds: 7 von 9 Absendern mit Meldungen, Anthropic ohne neue Meldung („zuletzt vor 8 Tagen“). Kein Rohtext wie `&ouml;` in der
+  Antwort, Umlaute bei The Decoder stimmen.
+- 1280 px und 390 px sehen aus wie Variante A mit Punkt. In 390 px ist die Seite genau 390 px breit, lange Titel brechen um, das Alter bleibt rechts.
+- **Falle beim Screenshot:** Chrome ohne Fenster (`--headless --window-size=390,…`) rendert breiter als 390 px und schneidet das Bild nur
+  ab. Das sah aus wie eine zu breite Kachel. Richtig misst das DevTools-Protokoll mit `Emulation.setDeviceMetricsOverride` (Skript mit dem
+  `WebSocket` von Node, ohne Abhängigkeit). Ein `iframe` mit 390 px zeigte nur „Lädt …“.
+- Verfälschte Adresse bei The Decoder: nur dieser Absender „nicht erreichbar“, ganz unten, die anderen normal.
+- `npm run build` fehlerfrei, `/api/kacheln` dynamisch.
+
+**Auffällig, mit dem Entwickler zu klären:**
+
+- The Decoder und Hacker News antworten mal in 1 s, mal in 6 bis 11 s oder gar nicht. Beim ersten Abruf ohne Zwischenspeicher reißen sie
+  das Zeitlimit von 5 s und stehen als „nicht erreichbar“ da, bis ein späterer Abruf gelingt.
+- Claude Updates liefert mehrere Einträge mit demselben Titel („Claude Platform release notes — November 5, 2026“), die Links zeigen auf
+  verschiedene Anker derselben Seite.
+- Fast jede Meldung der aktiven Absender ist jünger als 24 Std. und trägt den Punkt.
