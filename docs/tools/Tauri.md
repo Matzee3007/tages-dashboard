@@ -76,6 +76,9 @@ Am 2026-11-05 die Links geprüft, mit `npm run tauri -- dev` und von Hand eingef
 
 Danach mit der fertigen App aus `/Applications`: Start sowie Abmelden, Anmelden und „Neu laden“ bestanden. Die Testlinks entfallen dort, die fertige App hat keine Konsole.
 
+Am 2026-11-06 nach dem `/code-review` (`/usr/bin/open` mit festem Pfad) neu gebaut. Start ohne Internet: Das Fenster bleibt leer, früher kam eine Fehlerseite. Nach „Neu laden“ mit
+Internet ist das Dashboard da, kein Browser geht auf.
+
 ## Befehle
 
 ```bash

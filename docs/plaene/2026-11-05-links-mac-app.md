@@ -206,3 +206,7 @@ git commit -m "Document link handling and glib alert"
 ```
 
 Danach Agent `plan-pruefer`, `/code-review` (der PR ändert Code) und PR.
+
+## Nach dem Review
+
+Änderungen aus dem `/code-review` von PR #34: `open` läuft mit festem Pfad `/usr/bin/open`. Schwerpunkt 4 ist für `javascript:` nur an der Funktion `link_ziel` belegt, nicht im echten Fenster, siehe [[projects/tages-dashboard/docs/adr/0006-links-im-standardbrowser|ADR 0006]].

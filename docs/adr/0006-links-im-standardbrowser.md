@@ -17,7 +17,7 @@ Die KI-News-Kachel bringt in Schritt 3 viele solcher Links. Grundlage: [[project
 
 - **Die Hülle entscheidet in Rust:** `link_ziel` in `src-tauri/src/links.rs` teilt jede Adresse ein. Der eigene Ursprung bleibt im Fenster, andere `http`- und `https`-Adressen gehen in den
   Browser, alles andere wird blockiert.
-- **Den Browser startet der macOS-Befehl `open`** über `std::process::Command`, ohne Plugin und ohne neue Abhängigkeit.
+- **Den Browser startet der macOS-Befehl `/usr/bin/open`** über `std::process::Command`, ohne Plugin und ohne neue Abhängigkeit. Der feste Pfad verhindert, dass ein anderes Programm namens `open` aus dem `PATH` die Adressen bekommt.
 - **Es entsteht nie ein zweites Fenster.** Auch eine eigene Seite mit `target="_blank"` geht in den Browser.
 
 ## Alternativen
@@ -29,7 +29,11 @@ Die KI-News-Kachel bringt in Schritt 3 viele solcher Links. Grundlage: [[project
 ## Konsequenzen
 
 - Die Regel läuft nur auf dem Mac, wie die Hülle selbst.
-- `mailto:` und andere Schemata tun nichts. Das schützt vor Links aus fremden Feeds, ein solcher Link wirkt aber tot.
+- `mailto:` und `file:` tun nichts, ein solcher Link wirkt aber tot. Für `file:` am Gerät geprüft.
+- **`javascript:` schützt die Hülle nicht nachweislich:** `link_ziel` blockiert es im Test, aber WebKit führt solche Adressen vielleicht aus, ohne `on_navigation` zu fragen (am Gerät nicht geprüft).
+  Den Schutz davor liefert `istWebLink` in `lib/kacheln/ki-news/feed.ts`. Auch Links aus den selbst ausgelesenen Seiten (Schritt 4) müssen diese Prüfung durchlaufen.
 - Scheitert `open`, sieht man nichts: Der Fehler wird nicht ausgewertet.
 - `on_navigation` greift laut Quellcode von `wry` auch für eingebettete Rahmen (`iframe`). Die App hat keine, ein fremder Rahmen würde aber den Browser öffnen.
+- **Start ohne Internet:** Das Fenster bleibt leer, statt die Fehlerseite aus ADR 0003 zu zeigen. Nach „Neu laden“ mit Internet ist die Seite da (am Gerät geprüft
+  2026-11-06). Vermutlich lädt WebKit die Fehlerseite unter einer Adresse, die `link_ziel` blockiert. Das ist nicht untersucht.
 - Ändert sich die Vercel-Adresse, muss `EIGENE_ADRESSE` mit. Ein Test vergleicht sie mit `tauri.conf.json`.

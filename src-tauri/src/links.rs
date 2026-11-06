@@ -29,7 +29,7 @@ pub fn link_ziel(adresse: &Url) -> LinkZiel {
 pub fn im_browser_oeffnen(adresse: &Url) {
     let adresse = adresse.to_string();
     thread::spawn(move || {
-        let _ = Command::new("open").arg(adresse).status();
+        let _ = Command::new("/usr/bin/open").arg(adresse).status();
     });
 }
 

@@ -53,6 +53,7 @@ es ihn gibt. Am 2026-11-04 kam er mit Leerzeichen an und wurde wie normaler Text
   [[projects/tages-dashboard/docs/plaene/2026-11-04-feeds-lesen|Plan]] und [[projects/tages-dashboard/docs/adr/0005-feeds-im-fetch-speicher|ADR 0005]].
 - Offene Funde aus dem `/code-review` von PR #30: `stand` nennt die Abrufzeit statt des Alters der Daten, Rechenzeit für rund 2,4 MB XML je Minute messen, Rohtext wie `&ouml;` in Titeln prüfen.
 - Auf iPhone und iPad prüfen, wie die installierte App fremde Links öffnet. Das kam aus Schritt 2, weil es erst mit der Kachel echte Links gibt.
+- Echte Links auch in der fertigen Mac-App anklicken: Sie hat bisher nur Start und Login gesehen, die Klicks liefen in der Testfassung (Fund aus dem `/code-review` von PR #34).
 - Eine lange offene App kennt die neue `art` nicht und zeigt nur den Titel: beim ersten Deploy einmal neu laden.
 - Eine leere Kachelliste zeigt den Fehlerhinweis (Fund aus PR #27). Beim Entfernen der Testkachel darauf achten.
 
