@@ -25,6 +25,9 @@ export async function ladeKanal(url: string, jetzt: Date): Promise<Meldung[]> {
   }
   // Next.js liefert bei einem Ausfall still den alten Stand. Die aufgehobene Date-Zeile verrät ihn.
   const abgerufen = Date.parse(antwort.headers.get("Date") ?? "");
+  console.log(
+    `[DEBUG-c7e1] ${url} Alter ${Math.round((jetzt.getTime() - abgerufen) / 1000)} s`,
+  );
   if (jetzt.getTime() - abgerufen > SPEICHER_HOECHSTALTER_MS) {
     throw new Error(`Gespeicherte Antwort von ${antwort.headers.get("Date")}`);
   }
@@ -83,9 +86,11 @@ export async function ladeKiNews(
   absender: AbsenderEinstellung[],
   jetzt: Date,
 ): Promise<AbsenderStand[]> {
+  const start = Date.now();
   const staende = await Promise.all(
     absender.map((einzeln) => ladeAbsender(einzeln, jetzt)),
   );
+  console.log(`[DEBUG-c7e1] ladeKiNews ${Date.now() - start} ms`);
   if (!staende.some((stand) => stand.erreichbar)) {
     throw new Error("Kein Absender ist erreichbar");
   }
