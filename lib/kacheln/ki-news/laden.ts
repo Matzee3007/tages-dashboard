@@ -51,13 +51,18 @@ export async function ladeAbsender(
     }
   });
 
+  // Gleicher Titel: Claude Updates verlinkt mehrere Abschnitte einer Seite mit demselben Titel.
   const bekannteLinks = new Set<string>();
+  const bekannteTitel = new Set<string>();
   const neuesteZuerst = geladen
     .filter((meldung) => Date.parse(meldung.zeit) <= jetzt.getTime())
     .sort((a, b) => Date.parse(b.zeit) - Date.parse(a.zeit))
     .filter((meldung) => {
-      if (bekannteLinks.has(meldung.link)) return false;
+      if (bekannteLinks.has(meldung.link) || bekannteTitel.has(meldung.titel)) {
+        return false;
+      }
       bekannteLinks.add(meldung.link);
+      bekannteTitel.add(meldung.titel);
       return true;
     });
 

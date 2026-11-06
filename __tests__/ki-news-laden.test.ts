@@ -147,6 +147,21 @@ test("gleicher Link erscheint nur einmal, die neuere Fassung bleibt", async () =
   expect(titel(stand.meldungen)).toEqual(["neu"]);
 });
 
+test("gleicher Titel erscheint nur einmal, die neueste Meldung bleibt", async () => {
+  feedsAntworten({
+    a: [
+      ["Release notes", "2026-11-07T12:00:00Z", "https://example.org/n#a"],
+      ["Release notes", "2026-11-06T12:00:00Z", "https://example.org/n#b"],
+      ["Anderes", "2026-11-05T12:00:00Z"],
+    ],
+  });
+
+  const stand = await ladeAbsender({ name: "X", feeds: ["a"] }, JETZT);
+
+  expect(titel(stand.meldungen)).toEqual(["Release notes", "Anderes"]);
+  expect(stand.meldungen[0].link).toBe("https://example.org/n#a");
+});
+
 test("ohne neue Meldung bleibt das Alter der letzten", async () => {
   feedsAntworten({ a: [["alt", "2026-10-16T12:00:00Z"]] });
 

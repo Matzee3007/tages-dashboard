@@ -260,3 +260,7 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
 - Claude Updates liefert mehrere Einträge mit demselben Titel („Claude Platform release notes — November 5, 2026“), die Links zeigen auf
   verschiedene Anker derselben Seite.
 - Fast jede Meldung der aktiven Absender ist jünger als 24 Std. und trägt den Punkt.
+
+**Entscheidungen des Entwicklers (2026-11-06):** Zeitlimit erst nach der Vorschau auf Vercel entscheiden. Gleiche Titel je Absender
+zusammenfassen, die neueste Meldung bleibt (`ladeAbsender`, Test „gleicher Titel erscheint nur einmal …“). Der Punkt bleibt bei 24 Std.,
+erst im Alltag ansehen.
