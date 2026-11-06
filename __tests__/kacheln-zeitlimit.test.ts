@@ -2,15 +2,17 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import type { KachelEinstellung } from "@/lib/einstellungen";
 import { ladeDashboard } from "@/lib/kacheln/laden";
-import { ladeTestkachel } from "@/lib/kacheln/test/laden";
+import { ladeKiNewsKachel } from "@/lib/kacheln/ki-news/kachel";
 
-vi.mock("@/lib/kacheln/test/laden", () => ({ ladeTestkachel: vi.fn() }));
+vi.mock("@/lib/kacheln/ki-news/kachel", () => ({
+  ladeKiNewsKachel: vi.fn(),
+}));
 
 const JETZT = new Date("2026-11-08T13:32:07Z");
-const DATEN = { daten: { art: "test" as const, uhrzeit: "14:32:07" } };
+const DATEN = { daten: { art: "ki-news" as const, absender: [] } };
 
 function kachel(id: string): KachelEinstellung {
-  return { id, art: "test", titel: `Kachel ${id}`, fehlerAusloesen: false };
+  return { id, art: "ki-news", titel: `Kachel ${id}` };
 }
 
 beforeEach(() => {
@@ -24,7 +26,7 @@ afterEach(() => {
 });
 
 test("eine hängende Kachel wird nach 8 Sekunden zum Fehler, die andere bleibt", async () => {
-  vi.mocked(ladeTestkachel).mockImplementation(async ({ id }) =>
+  vi.mocked(ladeKiNewsKachel).mockImplementation(async ({ id }) =>
     id === "a" ? new Promise(() => {}) : DATEN,
   );
 
@@ -37,7 +39,7 @@ test("eine hängende Kachel wird nach 8 Sekunden zum Fehler, die andere bleibt",
 });
 
 test("vor 8 Sekunden gibt es keinen Fehler", async () => {
-  vi.mocked(ladeTestkachel).mockImplementation(
+  vi.mocked(ladeKiNewsKachel).mockImplementation(
     () => new Promise((fertig) => setTimeout(() => fertig(DATEN), 7999)),
   );
 
@@ -49,7 +51,7 @@ test("vor 8 Sekunden gibt es keinen Fehler", async () => {
 });
 
 test("eine schnelle Kachel lässt keinen Timer zurück", async () => {
-  vi.mocked(ladeTestkachel).mockResolvedValue(DATEN);
+  vi.mocked(ladeKiNewsKachel).mockResolvedValue(DATEN);
 
   await ladeDashboard([kachel("a")], JETZT);
 

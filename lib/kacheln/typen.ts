@@ -1,4 +1,6 @@
-export type KachelDaten = { art: "test"; uhrzeit: string };
+import type { AbsenderStand } from "@/lib/kacheln/ki-news/laden";
+
+export type KachelDaten = { art: "ki-news"; absender: AbsenderStand[] };
 
 // Eine Kachel in der Antwort des Servers. Der Fehler trägt bewusst keinen Text, der bleibt im Server-Log.
 export type KachelAntwort = { id: string; titel: string } & (

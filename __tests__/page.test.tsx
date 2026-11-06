@@ -8,7 +8,7 @@ import {
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import Page from "@/app/page";
 import { holeDashboard } from "@/lib/kacheln/abruf";
-import type { DashboardAntwort } from "@/lib/kacheln/typen";
+import type { DashboardAntwort, KachelDaten } from "@/lib/kacheln/typen";
 
 vi.mock("@/app/login/actions", () => ({ abmelden: vi.fn() }));
 vi.mock("@/lib/kacheln/abruf", () => ({ holeDashboard: vi.fn() }));
@@ -20,11 +20,26 @@ const OK: DashboardAntwort = {
   zeit: ZEIT,
   kacheln: [
     {
-      id: "test",
-      titel: "Testkachel",
+      id: "ki-news",
+      titel: "KI-News",
       status: "ok",
-      zusatz: "Server",
-      daten: { art: "test", uhrzeit: "14:32:07" },
+      daten: {
+        art: "ki-news",
+        absender: [
+          {
+            name: "Anthropic",
+            meldungen: [
+              {
+                titel: "Introducing Claude",
+                link: "https://www.anthropic.com/news/claude",
+                zeit: "2026-11-08T10:00:00.000Z",
+              },
+            ],
+            letzteMeldung: "2026-11-08T10:00:00.000Z",
+            erreichbar: true,
+          },
+        ],
+      },
       stand: ZEIT,
     },
   ],
@@ -48,9 +63,11 @@ test("zeigt Datum, Zeit der Aktualisierung, Kachel und Abmelden", async () => {
   ).toBeDefined();
   expect(screen.getByText("Aktualisiert 14:32")).toBeDefined();
   expect(
-    screen.getByRole("heading", { level: 2, name: "Testkachel" }),
+    screen.getByRole("heading", { level: 2, name: "KI-News" }),
   ).toBeDefined();
-  expect(screen.getByText("14:32:07")).toBeDefined();
+  expect(
+    screen.getByRole("link", { name: /Introducing Claude/ }),
+  ).toBeDefined();
   expect(screen.getByRole("button", { name: "Abmelden" })).toBeDefined();
 });
 
@@ -83,7 +100,9 @@ test("nach erneutem Versuch verschwindet der Hinweis", async () => {
     await screen.findByRole("button", { name: "Jetzt erneut versuchen" }),
   );
 
-  expect(await screen.findByText("14:32:07")).toBeDefined();
+  expect(
+    await screen.findByRole("heading", { level: 2, name: "KI-News" }),
+  ).toBeDefined();
   expect(screen.queryByText("Daten gerade nicht erreichbar.")).toBeNull();
 });
 
@@ -104,10 +123,30 @@ test("während des erneuten Versuchs ist der Knopf gesperrt und sagt das", async
 test("wenn alle Kacheln scheitern, behauptet der Kopf keine Aktualisierung", async () => {
   vi.mocked(holeDashboard).mockResolvedValue({
     zeit: ZEIT,
-    kacheln: [{ id: "test", titel: "Testkachel", status: "fehler" }],
+    kacheln: [{ id: "ki-news", titel: "KI-News", status: "fehler" }],
   });
   render(<Page />);
 
   expect(await screen.findByText("Neuer Versuch in 1 Minute.")).toBeDefined();
   expect(screen.queryByText("Aktualisiert 14:32")).toBeNull();
+});
+
+test("eine Kachel unbekannter Art bittet ums Neuladen", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      {
+        id: "neu",
+        titel: "Neu",
+        status: "ok",
+        daten: { art: "unbekannt" } as unknown as KachelDaten,
+        stand: ZEIT,
+      },
+    ],
+  });
+  render(<Page />);
+
+  expect(
+    await screen.findByText("Neue Kachel, bitte die Seite neu laden."),
+  ).toBeDefined();
 });

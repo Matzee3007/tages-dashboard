@@ -1,16 +1,27 @@
 import { describe, expect, test } from "vitest";
 import { neuerStand } from "@/lib/kacheln/stand";
-import type { DashboardAntwort, KachelAnzeige } from "@/lib/kacheln/typen";
+import type {
+  DashboardAntwort,
+  KachelAnzeige,
+  KachelDaten,
+} from "@/lib/kacheln/typen";
 
 const ALT = "2026-11-08T13:31:00.000Z";
 const NEU = "2026-11-08T13:32:00.000Z";
 
-function anzeige(id: string, uhrzeit = "14:31:00"): KachelAnzeige {
+function daten(name: string): KachelDaten {
+  return {
+    art: "ki-news",
+    absender: [{ name, meldungen: [], letzteMeldung: null, erreichbar: true }],
+  };
+}
+
+function anzeige(id: string, name = "Alt"): KachelAnzeige {
   return {
     id,
     titel: id,
     zusatz: "Server",
-    daten: { art: "test", uhrzeit },
+    daten: daten(name),
     stand: ALT,
     fehler: false,
   };
@@ -22,7 +33,7 @@ function ok(id: string): DashboardAntwort["kacheln"][number] {
     titel: id,
     status: "ok",
     zusatz: "Server",
-    daten: { art: "test", uhrzeit: "14:32:00" },
+    daten: daten("Neu"),
     stand: NEU,
   };
 }
@@ -37,7 +48,7 @@ describe("neuerStand", () => {
       zeit: NEU,
       kacheln: [ok("a")],
     });
-    expect(kachel.daten).toEqual({ art: "test", uhrzeit: "14:32:00" });
+    expect(kachel.daten).toEqual(daten("Neu"));
     expect(kachel.stand).toBe(NEU);
     expect(kachel.fehler).toBe(false);
   });

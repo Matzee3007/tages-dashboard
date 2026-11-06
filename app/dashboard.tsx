@@ -5,16 +5,23 @@ import { useCallback, useRef, useState } from "react";
 import { abmelden } from "@/app/login/actions";
 import { holeDashboard } from "@/lib/kacheln/abruf";
 import { FehlerHinweis, Kachel } from "@/lib/kacheln/kachel";
+import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
 import { neuerStand } from "@/lib/kacheln/stand";
-import { TestAnsicht } from "@/lib/kacheln/test/ansicht";
 import type { KachelAnzeige, KachelDaten } from "@/lib/kacheln/typen";
 import { useAktualisierung } from "@/lib/kacheln/use-aktualisierung";
 import { datum, uhrzeit } from "@/lib/zeit";
 
 function KachelInhalt({ daten }: { daten: KachelDaten }) {
   switch (daten.art) {
-    case "test":
-      return <TestAnsicht daten={daten} />;
+    case "ki-news":
+      return <KiNewsAnsicht daten={daten} />;
+    // Eine seit dem letzten Deploy offene Seite kennt eine neue Kachel-Art noch nicht.
+    default:
+      return (
+        <p className="text-gedaempft">
+          Neue Kachel, bitte die Seite neu laden.
+        </p>
+      );
   }
 }
 

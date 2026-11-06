@@ -51,13 +51,20 @@ export async function ladeAbsender(
     }
   });
 
+  // Gleicher Titel auf derselben Website: Claude Updates verlinkt mehrere Abschnitte einer Seite
+  // mit demselben Titel. Auf verschiedenen Websites sind es eigene Meldungen, z. B. Video und Blog.
   const bekannteLinks = new Set<string>();
+  const bekannteTitel = new Set<string>();
   const neuesteZuerst = geladen
     .filter((meldung) => Date.parse(meldung.zeit) <= jetzt.getTime())
     .sort((a, b) => Date.parse(b.zeit) - Date.parse(a.zeit))
     .filter((meldung) => {
-      if (bekannteLinks.has(meldung.link)) return false;
+      const titel = `${new URL(meldung.link).host} ${meldung.titel}`;
+      if (bekannteLinks.has(meldung.link) || bekannteTitel.has(titel)) {
+        return false;
+      }
       bekannteLinks.add(meldung.link);
+      bekannteTitel.add(titel);
       return true;
     });
 
