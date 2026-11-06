@@ -1,17 +1,14 @@
 // @vitest-environment node
 import { beforeEach, expect, test, vi } from "vitest";
 import { GET } from "@/app/api/kacheln/route";
-import { KACHELN } from "@/lib/einstellungen";
+import { ladeKiNews } from "@/lib/kacheln/ki-news/laden";
 
 vi.mock("next/server", () => ({ connection: vi.fn(async () => {}) }));
-vi.mock("@/lib/einstellungen", () => ({
-  KACHELN: [
-    { id: "test", art: "test", titel: "Testkachel", fehlerAusloesen: false },
-  ],
-}));
+vi.mock("@/lib/kacheln/ki-news/laden", () => ({ ladeKiNews: vi.fn() }));
 
 beforeEach(() => {
-  KACHELN[0].fehlerAusloesen = false;
+  vi.mocked(ladeKiNews).mockReset();
+  vi.mocked(ladeKiNews).mockResolvedValue([]);
 });
 
 test("liefert die Kacheln und verbietet das Zwischenspeichern", async () => {
@@ -26,7 +23,7 @@ test("liefert die Kacheln und verbietet das Zwischenspeichern", async () => {
 
 test("eine fehlerhafte Kachel ändert den Status der Antwort nicht", async () => {
   vi.spyOn(console, "error").mockImplementation(() => {});
-  KACHELN[0].fehlerAusloesen = true;
+  vi.mocked(ladeKiNews).mockRejectedValue(new Error("Testfehler"));
 
   const antwort = await GET();
 

@@ -20,11 +20,10 @@ const OK: DashboardAntwort = {
   zeit: ZEIT,
   kacheln: [
     {
-      id: "test",
-      titel: "Testkachel",
+      id: "ki-news",
+      titel: "KI-News",
       status: "ok",
-      zusatz: "Server",
-      daten: { art: "test", uhrzeit: "14:32:07" },
+      daten: { art: "ki-news", absender: [] },
       stand: ZEIT,
     },
   ],
@@ -48,9 +47,8 @@ test("zeigt Datum, Zeit der Aktualisierung, Kachel und Abmelden", async () => {
   ).toBeDefined();
   expect(screen.getByText("Aktualisiert 14:32")).toBeDefined();
   expect(
-    screen.getByRole("heading", { level: 2, name: "Testkachel" }),
+    screen.getByRole("heading", { level: 2, name: "KI-News" }),
   ).toBeDefined();
-  expect(screen.getByText("14:32:07")).toBeDefined();
   expect(screen.getByRole("button", { name: "Abmelden" })).toBeDefined();
 });
 
@@ -83,7 +81,9 @@ test("nach erneutem Versuch verschwindet der Hinweis", async () => {
     await screen.findByRole("button", { name: "Jetzt erneut versuchen" }),
   );
 
-  expect(await screen.findByText("14:32:07")).toBeDefined();
+  expect(
+    await screen.findByRole("heading", { level: 2, name: "KI-News" }),
+  ).toBeDefined();
   expect(screen.queryByText("Daten gerade nicht erreichbar.")).toBeNull();
 });
 
@@ -104,7 +104,7 @@ test("während des erneuten Versuchs ist der Knopf gesperrt und sagt das", async
 test("wenn alle Kacheln scheitern, behauptet der Kopf keine Aktualisierung", async () => {
   vi.mocked(holeDashboard).mockResolvedValue({
     zeit: ZEIT,
-    kacheln: [{ id: "test", titel: "Testkachel", status: "fehler" }],
+    kacheln: [{ id: "ki-news", titel: "KI-News", status: "fehler" }],
   });
   render(<Page />);
 

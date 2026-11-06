@@ -1,13 +1,8 @@
-export type KachelEinstellung = {
-  id: string;
-  art: "test";
-  titel: string;
-  fehlerAusloesen: boolean;
-};
+export type KachelEinstellung = { id: string; art: "ki-news"; titel: string };
 
 // Die Reihenfolge hier ist die Reihenfolge auf dem Bildschirm.
 export const KACHELN: KachelEinstellung[] = [
-  { id: "test", art: "test", titel: "Testkachel", fehlerAusloesen: false },
+  { id: "ki-news", art: "ki-news", titel: "KI-News" },
 ];
 
 export type AbsenderEinstellung = { name: string; feeds: string[] };

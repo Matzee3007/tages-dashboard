@@ -1,8 +1,8 @@
 import { KACHELN, type KachelEinstellung } from "@/lib/einstellungen";
-import { ladeTestkachel } from "@/lib/kacheln/test/laden";
+import { ladeKiNewsKachel } from "@/lib/kacheln/ki-news/kachel";
 import type { DashboardAntwort, KachelAntwort } from "@/lib/kacheln/typen";
 
-const LADER = { test: ladeTestkachel };
+const LADER = { "ki-news": ladeKiNewsKachel };
 const KACHEL_ZEITLIMIT_MS = 8000;
 
 async function mitZeitlimit<T>(ladevorgang: Promise<T>): Promise<T> {

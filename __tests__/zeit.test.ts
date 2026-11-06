@@ -1,16 +1,5 @@
 import { expect, test } from "vitest";
-import {
-  alterText,
-  datum,
-  istFrisch,
-  standText,
-  uhrzeit,
-  uhrzeitMitSekunden,
-} from "@/lib/zeit";
-
-test("zeigt die Winterzeit mit Sekunden", () => {
-  expect(uhrzeitMitSekunden("2026-11-08T13:32:07Z")).toBe("14:32:07");
-});
+import { alterText, datum, istFrisch, standText, uhrzeit } from "@/lib/zeit";
 
 test("zeigt die Sommerzeit", () => {
   expect(uhrzeit("2026-07-01T12:00:00Z")).toBe("14:00");

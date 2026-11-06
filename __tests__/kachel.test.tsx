@@ -7,7 +7,7 @@ const KACHEL: KachelAnzeige = {
   id: "test",
   titel: "Testkachel",
   zusatz: "Server",
-  daten: { art: "test", uhrzeit: "14:31:00" },
+  daten: { art: "ki-news", absender: [] },
   stand: "2026-11-08T13:31:00.000Z",
   fehler: false,
 };

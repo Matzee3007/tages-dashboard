@@ -53,7 +53,7 @@ mit dem orangen Punkt aus Variante C. Als frisch gilt eine Meldung, die jünger 
 | `lib/zeit.ts` | neu `alterText`, `istFrisch`; `uhrzeitMitSekunden` entfällt (nur die Testkachel nutzte es) |
 | `lib/kacheln/typen.ts` | `KachelDaten` wird `{ art: "ki-news"; absender: AbsenderStand[] }` |
 | `lib/einstellungen.ts` | `KachelEinstellung` ohne `fehlerAusloesen`, `art: "ki-news"`; `KACHELN` mit der KI-News-Kachel |
-| `lib/kacheln/ki-news/laden.ts` | neu `ladeKiNewsKachel` als Lader für `lib/kacheln/laden.ts` |
+| `lib/kacheln/ki-news/kachel.ts` | neu `ladeKiNewsKachel` als Lader für `lib/kacheln/laden.ts`. Abweichung: eigene Datei statt `ki-news/laden.ts`, weil eine Attrappe ein ganzes Modul ersetzt und `ladeKiNews` sonst im Test nicht austauschbar wäre |
 | `lib/kacheln/laden.ts` | `LADER` mit `"ki-news"` statt `test` |
 | `lib/kacheln/ki-news/ansicht.tsx` | neu `KiNewsAnsicht` |
 | `app/dashboard.tsx` | `KachelInhalt` zeigt `KiNewsAnsicht` |
@@ -70,7 +70,7 @@ mit dem orangen Punkt aus Variante C. Als frisch gilt eine Meldung, die jünger 
 **Schnittstellen:**
 - Liefert: `alterText(iso: string, jetzt: Date = new Date()): string`, `istFrisch(iso: string, jetzt: Date = new Date()): boolean`
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 ```ts
 const JETZT = new Date("2026-11-08T13:32:00Z"); // 14:32 in Berlin
@@ -99,16 +99,17 @@ test("genau 24 Stunden sind nicht mehr frisch", () => {
 });
 ```
 
-- [ ] **Schritt 2: `npx vitest run __tests__/zeit.test.ts`.** Erwartet: FAIL, `alterText` und `istFrisch` gibt es nicht.
-- [ ] **Schritt 3: `alterText` und `istFrisch` in `lib/zeit.ts`.** Kalendertage über einen eigenen `Intl.DateTimeFormat` mit
+- [x] **Schritt 2: `npx vitest run __tests__/zeit.test.ts`.** Erwartet: FAIL, `alterText` und `istFrisch` gibt es nicht.
+- [x] **Schritt 3: `alterText` und `istFrisch` in `lib/zeit.ts`.** Kalendertage über einen eigenen `Intl.DateTimeFormat` mit
       `timeZone: "Europe/Berlin"` und Format `JJJJ-MM-TT` (z. B. `en-CA`), beide Tage als UTC-Mitternacht parsen, Abstand in Tagen runden.
-- [ ] **Schritt 4: `npx vitest run __tests__/zeit.test.ts`.** Erwartet: PASS.
-- [ ] **Schritt 5:** `npm run check`, committen: `Add age text for news items`.
+- [x] **Schritt 4: `npx vitest run __tests__/zeit.test.ts`.** Erwartet: PASS.
+- [x] **Schritt 5:** `npm run check`, committen: `Add age text for news items`.
 
 ### Aufgabe 2: KI-News-Kachel statt Testkachel auf dem Server
 
 **Dateien:**
-- Ändern: `lib/kacheln/typen.ts`, `lib/einstellungen.ts`, `lib/kacheln/laden.ts`, `lib/kacheln/ki-news/laden.ts`, `app/dashboard.tsx`
+- Neu: `lib/kacheln/ki-news/kachel.ts`
+- Ändern: `lib/kacheln/typen.ts`, `lib/einstellungen.ts`, `lib/kacheln/laden.ts`, `app/dashboard.tsx`
   (nur der Zweig `test` fällt weg, damit die Typen passen), `lib/zeit.ts` (`uhrzeitMitSekunden` entfernen)
 - Löschen: `lib/kacheln/test/laden.ts`, `lib/kacheln/test/ansicht.tsx`
 - Test: `__tests__/kacheln-laden.test.ts`, `__tests__/kacheln-zeitlimit.test.ts`, `__tests__/api-kacheln.test.ts`; Daten der Testkachel in
@@ -121,9 +122,9 @@ test("genau 24 Stunden sind nicht mehr frisch", () => {
   `KachelEinstellung = { id: string; art: "ki-news"; titel: string }`,
   `ladeKiNewsKachel(einstellung: KachelEinstellung, jetzt: Date): Promise<{ daten: KachelDaten }>`
 
-- [ ] **Schritt 1: Tests umschreiben.** In `kacheln-laden.test.ts` und `kacheln-zeitlimit.test.ts` ersetzt
+- [x] **Schritt 1: Tests umschreiben.** In `kacheln-laden.test.ts` und `kacheln-zeitlimit.test.ts` ersetzt
       `vi.mock("@/lib/kacheln/ki-news/laden", …)` mit einer Attrappe von `ladeKiNews` den Schalter `fehlerAusloesen`: erster Aufruf
-      `mockRejectedValueOnce(new Error("Testfehler"))`, zweiter liefert Absender. Neu dazu:
+      `mockRejectedValueOnce(new Error("Testfehler"))`, zweiter liefert Absender. `kacheln-zeitlimit.test.ts` ersetzt `ladeKiNewsKachel`. Neu dazu:
 
 ```ts
 test("die KI-News-Kachel liefert die Absender aus den Einstellungen", async () => {
@@ -141,10 +142,10 @@ test("die Einstellungen zeigen genau die KI-News-Kachel", () => {
 });
 ```
 
-- [ ] **Schritt 2: `npm test`.** Erwartet: FAIL, unter anderem fehlt `art: "ki-news"` in den Typen und der Lader.
-- [ ] **Schritt 3: Umstellen** wie unter „Liefert“, `LADER = { "ki-news": ladeKiNewsKachel }`, Testkachel löschen.
-- [ ] **Schritt 4: `npm run check`.** Erwartet: alles grün, `grep -rn 'fehlerAusloesen\|TestAnsicht\|uhrzeitMitSekunden' lib app __tests__` findet nichts.
-- [ ] **Schritt 5:** committen: `Replace test tile with AI news tile`.
+- [x] **Schritt 2: `npm test`.** Erwartet: FAIL, unter anderem fehlt `art: "ki-news"` in den Typen und der Lader.
+- [x] **Schritt 3: Umstellen** wie unter „Liefert“, `LADER = { "ki-news": ladeKiNewsKachel }`, Testkachel löschen.
+- [x] **Schritt 4: `npm run check`.** Erwartet: alles grün, `grep -rn 'fehlerAusloesen\|TestAnsicht\|uhrzeitMitSekunden' lib app __tests__` findet nichts.
+- [x] **Schritt 5:** committen: `Replace test tile with AI news tile`.
 
 ### Aufgabe 3: Ansicht der Kachel
 
