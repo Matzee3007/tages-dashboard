@@ -8,14 +8,15 @@ tags: [session, übergabe]
 # Nächste Session
 
 Stand vom 2026-11-06. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
-[[projects/tages-dashboard/docs/journal/Lernjournal Phase 2 - Links in der Mac-App|Lernjournal Phase 2 - Links in der Mac-App]].
+[[projects/tages-dashboard/docs/journal/Lernjournal Phase 2 - KI-News-Kachel|Lernjournal Phase 2 - KI-News-Kachel]].
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge von PR #36)
+- **Branch:** `main` (nach dem Merge von PR #38)
 - **Offene PRs:** keine
 - **Nicht committet:** nichts
-- **Live:** https://tages-dashboard-iota.vercel.app zeigt weiter die Testkachel. Die installierte Mac-App in `/Applications` hat die neue Link-Regel (PR #34).
+- **Live:** https://tages-dashboard-iota.vercel.app zeigt die KI-News-Kachel (PR #37). Die Vorschauen von PRs haben jetzt auch die
+  Supabase-Variablen, Login und Kachel laufen dort.
 
 ## Vor dem Start
 
@@ -37,24 +38,27 @@ Stand vom 2026-11-06. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 
 ## Womit es weitergeht
 
-**Phase 2 – KI-News läuft, Schritte 1 und 2 von 4 sind fertig** (PR #30, #34). Der Fahrplan steht in der
+**Phase 2 – KI-News läuft, Schritt 3 ist bis auf den Gerätetest fertig** (PR #37). Der Fahrplan steht in der
 [[projects/tages-dashboard/docs/Projektvision|Projektvision]].
 
-**Als Nächstes: Schritt 3, KI-News-Kachel.** Zuerst ein Mock mit dem Agent `mock-bauer` (neue Oberfläche), erst nach der Freigabe der Plan. Diese Punkte gehören dazu:
+**Zuerst: Gerätetest von Schritt 3** ([[projects/tages-dashboard/docs/plaene/2026-11-06-ki-news-kachel|Plan]], Aufgabe 5, nur der Entwickler):
 
-- Greift der Zwischenspeicher auf Vercel, antworten alle Anbieter den Servern, passt der OpenAI-Feed (825 KB) hinein? Siehe „In Schritt 3 prüfen“ im
-  [[projects/tages-dashboard/docs/plaene/2026-11-04-feeds-lesen|Plan]] und [[projects/tages-dashboard/docs/adr/0005-feeds-im-fetch-speicher|ADR 0005]].
-- Offene Funde aus dem `/code-review` von PR #30: `stand` nennt die Abrufzeit statt des Alters der Daten, Rechenzeit für rund 2,4 MB XML je Minute messen, Rohtext wie `&ouml;` in Titeln prüfen.
-- Auf iPhone und iPad prüfen, wie die installierte App fremde Links öffnet. Das kam aus Schritt 2, weil es erst mit der Kachel echte Links gibt.
-- Echte Links auch in der fertigen Mac-App anklicken: Sie hat bisher nur Start und Login gesehen, die Klicks liefen in der Testfassung (Fund aus dem `/code-review` von PR #34).
-- Eine lange offene App kennt die neue `art` nicht und zeigt nur den Titel: beim ersten Deploy einmal neu laden.
-- Eine leere Kachelliste zeigt den Fehlerhinweis (Fund aus PR #27). Beim Entfernen der Testkachel darauf achten.
+1. Jede offene App (Mac, iPhone, iPad) einmal neu laden. Eine lange offene App kennt `art: "ki-news"` nicht und zeigt sonst nur den Titel.
+2. Mac-App aus `/Applications`: eine Meldung anklicken. Erwartet: Sie geht im Standardbrowser auf, das Dashboard bleibt im Fenster.
+3. iPhone und iPad, installierte App: eine Meldung antippen. Notieren: Wo geht sie auf, wie kommt man zurück, ist man danach noch angemeldet?
 
-**Zuletzt Schritt 4, Seiten auslesen.** `claude.com/blog` ist anders gebaut als `anthropic.com`. Ist es nicht sauber auslesbar, den Entwickler fragen, statt es still wegzulassen.
-Auch diese Links müssen durch `istWebLink` in `lib/kacheln/ki-news/feed.ts`, die Mac-App schützt vor `javascript:` nicht nachweislich
-([[projects/tages-dashboard/docs/adr/0006-links-im-standardbrowser|ADR 0006]]).
+Claude trägt die Ergebnisse in den Plan ein, setzt Schritt 3 im Fahrplan auf „erledigt“ und den Plan auf `status: abgeschlossen`.
 
-`/goal` passte in Schritt 2 nicht, weil der Gerätetest nur vom Entwickler abgenommen werden kann. Schritt 3 hat mit dem Mock ebenfalls eine Freigabe, der Test bleibt also offen.
+**Danach Schritt 4, Seiten auslesen.** `claude.com/blog` ist anders gebaut als `anthropic.com`. Ist es nicht sauber auslesbar, den Entwickler fragen,
+statt es still wegzulassen. Auch diese Links müssen durch `istWebLink` in `lib/kacheln/ki-news/feed.ts`, die Mac-App schützt vor `javascript:` nicht
+nachweislich ([[projects/tages-dashboard/docs/adr/0006-links-im-standardbrowser|ADR 0006]]). Das ist der letzte Schritt von Phase 2: Danach wird die Phase
+in derselben Session abgeschlossen.
+
+Neu aus dieser Session, nur beobachten:
+
+- **Punkt für frische Meldungen:** Fast jede Meldung der aktiven Absender ist jünger als 24 Std. Nach ein paar Tagen im Alltag fragen, ob die Grenze kürzer soll.
+- **Wie oft Vercel die Feeds neu holt,** ist nur an einer Abfrage gemessen. Für weitere Messungen braucht es ein neues Vercel-Token, eingetragen über einen
+  Assistenten (Skill `assistent-bauen`), nicht über den Chat. Weg: [[projects/tages-dashboard/docs/tools/Vercel|Vercel]], Abschnitt „Über die REST-API“.
 
 Restpunkte als Vorschläge:
 
@@ -88,6 +92,6 @@ Punkte fürs Ecosystem: siehe dessen Übergabe, dort steht auch der Punkt „`/g
 
 ## Passende Skills
 
-- `plan-schreiben`: Plan für Schritt 3, nach der Freigabe des Mocks
-- `tdd`: Umsetzung der Kachel
-- `fertig-pruefen`: vor dem Merge, dazu die Klicks in der fertigen Mac-App und auf dem iPhone
+- `fertig-pruefen`: Ergebnisse des Gerätetests prüfen, bevor Schritt 3 als erledigt gilt
+- `plan-schreiben`: Plan für Schritt 4
+- `tdd`: Umsetzung von Schritt 4
