@@ -112,7 +112,7 @@ einzeln, daraus baut `Date.UTC` sicher einen Kalendertag.
 - **Wo:** Vorschau von PR #37, jede Seite. Die Live-Seite und die Mac-App liefen.
 - **Ursache:** `NEXT_PUBLIC_SUPABASE_URL` und `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` galten bei Vercel nur für Production. `proxy.ts` warf
   „Error: Your project's URL and Key are required to create a Supabase client!“. Bisher unbemerkt, weil noch nie eine Vorschau mit Login geöffnet wurde.
-- **Lösung:** Settings → Environment Variables, Preview dazunehmen (Ändern ging nicht, der Entwickler hat Preview angehakt), dann **Redeploy**.
+- **Lösung:** Settings → Environment Variables, bei beiden Variablen Preview dazunehmen, dann **Redeploy**. Beim ersten Versuch ließ sich Preview nicht anhaken, beim zweiten klappte es (Weg nicht festgehalten).
 - **Prüfen:** Vorschau zeigt die Login-Seite, nach dem Login die Kachel.
 
 ### The Decoder und Hacker News „nicht erreichbar“ beim ersten Abruf
