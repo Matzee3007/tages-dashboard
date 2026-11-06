@@ -229,7 +229,7 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
     Ungeprüft, ob es diese Ansicht im Gratis-Tarif gibt. Falls nicht, vor Schritt 3 den Weg nachlesen und hier eintragen.
     In den Logs steht keine Warnung, dass ein Eintrag für den Zwischenspeicher zu groß ist (OpenAI-Feed 825 KB).
   - **Rechenzeit:** In den Logs die Dauer von `GET /api/kacheln` ablesen und notieren.
-- [ ] **Schritt 4: Doku.** Ergebnisse von Schritt 3 in `docs/tools/Vercel.md` und hier unter „Ergebnisse“, Schritt 3 im Fahrplan als
+- [x] **Schritt 4: Doku.** Ergebnisse von Schritt 3 in `docs/tools/Vercel.md` und hier unter „Ergebnisse“, Schritt 3 im Fahrplan als
       „Code fertig, Gerätetest steht aus“. `npm run check`, Agent `plan-pruefer`, committen: `Document AI news tile`. Vor dem Merge `/code-review`.
 
 ### Aufgabe 5: Nach dem Merge auf den Geräten (Entwickler)
@@ -262,7 +262,7 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
 - Fast jede Meldung der aktiven Absender ist jünger als 24 Std. und trägt den Punkt.
 
 **Entscheidungen des Entwicklers (2026-11-06):** Zeitlimit erst nach der Vorschau auf Vercel entscheiden. Gleiche Titel je Absender
-zusammenfassen, die neueste Meldung bleibt (`ladeAbsender`, Test „gleicher Titel erscheint nur einmal …“). Der Punkt bleibt bei 24 Std.,
+zusammenfassen (nach dem Review: nur auf derselben Website), die neueste Meldung bleibt (`ladeAbsender`, Test „gleicher Titel erscheint nur einmal …“). Der Punkt bleibt bei 24 Std.,
 erst im Alltag ansehen.
 
 **Aufgabe 4, Schritt 3 (Vorschau von PR #37):**
@@ -275,4 +275,19 @@ erst im Alltag ansehen.
   vorübergehende Log-Zeile (Commit `916373f`, entfernt in `70a4b7a`): alle 13 Feeds aus dem Zwischenspeicher, 66 bis 682 s alt,
   auch OpenAI (825 KB). `ladeKiNews` 563 ms. Nur eine Abfrage erfasst, die Logs-API bricht nach 5 Minuten ab.
 - **Zeitlimit von 5 s bleibt:** Auf Vercel war kein Absender rot, und nach dem ersten Abruf kommen die Feeds aus dem Speicher.
+
+## Nach dem Review
+
+Aus dem `/code-review` von PR #37, mit dem Entwickler am 2026-11-06 durchgegangen:
+
+- **Behoben:**
+  - Gleiche Titel nur auf derselben Website zusammenfassen: Ein Video und ein Blogbeitrag gleichen Namens bleiben beide. Den Vorschlag „Links
+    ohne `#` vergleichen“ verworfen, weil dann alle Einträge von Claude Updates zu einem würden (alle auf derselben Seite).
+  - `kalendertag` über `formatToParts` und `Date.UTC` statt über den Text von `en-CA`, der von den Sprachdaten des Browsers abhängt.
+  - Ein Zeitpunkt je Meldungszeile für Punkt und Alter.
+  - Unbekannte Kachel-Art zeigt „Neue Kachel, bitte die Seite neu laden.“ statt einer leeren Kachel.
+  - Log-Befehle in `Vercel.md` schreiben nach `$TMPDIR`. Erledigte Punkte in der Projektvision nachgetragen.
+  - Test „die Einstellungen zeigen genau die KI-News-Kachel“ gelöscht: Er wäre bei jeder neuen Kachel gescheitert, und TypeScript meldet
+    schon, wenn einer Art der Lader fehlt.
+- **Bewusst behalten:** `zusatz` setzt gerade keine Kachel, gehört aber zum Kachel-Gerüst (z. B. „10. Spieltag“ in Phase 3).
 

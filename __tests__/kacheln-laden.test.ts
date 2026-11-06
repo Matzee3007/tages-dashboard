@@ -1,5 +1,5 @@
 import { afterEach, expect, test, vi } from "vitest";
-import { ABSENDER, KACHELN, type KachelEinstellung } from "@/lib/einstellungen";
+import { ABSENDER, type KachelEinstellung } from "@/lib/einstellungen";
 import type { AbsenderStand } from "@/lib/kacheln/ki-news/laden";
 import { ladeKiNews } from "@/lib/kacheln/ki-news/laden";
 import { ladeDashboard } from "@/lib/kacheln/laden";
@@ -28,12 +28,6 @@ function kachel(id: string): KachelEinstellung {
 afterEach(() => {
   vi.restoreAllMocks();
   vi.mocked(ladeKiNews).mockReset();
-});
-
-test("die Einstellungen zeigen genau die KI-News-Kachel", () => {
-  expect(KACHELN).toEqual([
-    { id: "ki-news", art: "ki-news", titel: "KI-News" },
-  ]);
 });
 
 test("die KI-News-Kachel liefert die Absender aus den Einstellungen", async () => {

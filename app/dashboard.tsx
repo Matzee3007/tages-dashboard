@@ -15,6 +15,13 @@ function KachelInhalt({ daten }: { daten: KachelDaten }) {
   switch (daten.art) {
     case "ki-news":
       return <KiNewsAnsicht daten={daten} />;
+    // Eine seit dem letzten Deploy offene Seite kennt eine neue Kachel-Art noch nicht.
+    default:
+      return (
+        <p className="text-gedaempft">
+          Neue Kachel, bitte die Seite neu laden.
+        </p>
+      );
   }
 }
 

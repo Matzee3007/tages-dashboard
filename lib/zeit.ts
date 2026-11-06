@@ -33,16 +33,18 @@ export function standText(iso: string, jetzt: Date = new Date()): string {
 const STUNDE_MS = 60 * 60 * 1000;
 const TAG_MS = 24 * STUNDE_MS;
 
-// en-CA schreibt JJJJ-MM-TT, das lässt sich als Tag parsen.
-const KALENDERTAG = new Intl.DateTimeFormat("en-CA", {
+const KALENDERTAG = new Intl.DateTimeFormat("de-DE", {
   timeZone: ZEITZONE,
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
 });
 
+// Einzelne Teile statt Text: Das Format eines Datums hängt von den Sprachdaten des Browsers ab.
 function kalendertag(zeit: Date): number {
-  return Date.parse(KALENDERTAG.format(zeit));
+  const teil = (art: string) =>
+    Number(KALENDERTAG.formatToParts(zeit).find((t) => t.type === art)?.value);
+  return Date.UTC(teil("year"), teil("month") - 1, teil("day"));
 }
 
 export function istFrisch(iso: string, jetzt: Date = new Date()): boolean {

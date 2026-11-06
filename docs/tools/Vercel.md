@@ -79,12 +79,13 @@ Chat oder ins Repo, sondern über einen Assistenten (Skill `assistent-bauen`) ei
 # Token in die Umgebung laden, ohne es anzuzeigen
 set -a; source .env.local; set +a
 
-# Neuestes Deployment: Zustand, ID, Commit (Antwort in eine Datei, echo in zsh zerstört \n im JSON)
-/usr/bin/curl -s -o dep.json -H "Authorization: Bearer $VERCEL_TOKEN" \
+# Neuestes Deployment: Zustand, ID, Commit. Antwort in eine Datei, echo in zsh zerstört \n im JSON.
+# $TMPDIR statt Repo-Ordner, damit Logs nicht versehentlich mitcommittet werden.
+/usr/bin/curl -s -o "$TMPDIR/dep.json" -H "Authorization: Bearer $VERCEL_TOKEN" \
   'https://api.vercel.com/v6/deployments?projectId=prj_QWERcypvPrphhPec8RQ40XIRpypr&limit=1'
 
 # Runtime-Logs eines Deployments mitschreiben (Strom, bricht nach 5 Minuten ab)
-/usr/bin/curl -s -N --max-time 300 -H "Authorization: Bearer $VERCEL_TOKEN" -o logs.jsonl \
+/usr/bin/curl -s -N --max-time 300 -H "Authorization: Bearer $VERCEL_TOKEN" -o "$TMPDIR/logs.jsonl" \
   'https://api.vercel.com/v1/projects/prj_QWERcypvPrphhPec8RQ40XIRpypr/deployments/<dpl_…>/runtime-logs'
 ```
 

@@ -162,6 +162,20 @@ test("gleicher Titel erscheint nur einmal, die neueste Meldung bleibt", async ()
   expect(stand.meldungen[0].link).toBe("https://example.org/n#a");
 });
 
+test("gleicher Titel auf verschiedenen Websites bleibt zweimal", async () => {
+  feedsAntworten({
+    a: [["Live Q&A", "2026-11-07T12:00:00Z", "https://www.youtube.com/v1"]],
+    b: [["Live Q&A", "2026-11-06T12:00:00Z", "https://blog.example.org/qa"]],
+  });
+
+  const stand = await ladeAbsender({ name: "X", feeds: ["a", "b"] }, JETZT);
+
+  expect(stand.meldungen.map((meldung) => meldung.link)).toEqual([
+    "https://www.youtube.com/v1",
+    "https://blog.example.org/qa",
+  ]);
+});
+
 test("ohne neue Meldung bleibt das Alter der letzten", async () => {
   feedsAntworten({ a: [["alt", "2026-10-16T12:00:00Z"]] });
 

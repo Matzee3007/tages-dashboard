@@ -8,7 +8,7 @@ import {
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import Page from "@/app/page";
 import { holeDashboard } from "@/lib/kacheln/abruf";
-import type { DashboardAntwort } from "@/lib/kacheln/typen";
+import type { DashboardAntwort, KachelDaten } from "@/lib/kacheln/typen";
 
 vi.mock("@/app/login/actions", () => ({ abmelden: vi.fn() }));
 vi.mock("@/lib/kacheln/abruf", () => ({ holeDashboard: vi.fn() }));
@@ -129,4 +129,24 @@ test("wenn alle Kacheln scheitern, behauptet der Kopf keine Aktualisierung", asy
 
   expect(await screen.findByText("Neuer Versuch in 1 Minute.")).toBeDefined();
   expect(screen.queryByText("Aktualisiert 14:32")).toBeNull();
+});
+
+test("eine Kachel unbekannter Art bittet ums Neuladen", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      {
+        id: "neu",
+        titel: "Neu",
+        status: "ok",
+        daten: { art: "unbekannt" } as unknown as KachelDaten,
+        stand: ZEIT,
+      },
+    ],
+  });
+  render(<Page />);
+
+  expect(
+    await screen.findByText("Neue Kachel, bitte die Seite neu laden."),
+  ).toBeDefined();
 });
