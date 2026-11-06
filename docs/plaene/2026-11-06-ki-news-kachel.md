@@ -156,13 +156,13 @@ test("die Einstellungen zeigen genau die KI-News-Kachel", () => {
 
 **Schnittstellen:**
 - Nutzt: `Abschnitt` aus `lib/kacheln/kachel.tsx`, `alterText` und `istFrisch` aus Aufgabe 1, `KachelDaten` aus Aufgabe 2
-- Liefert: `KiNewsAnsicht({ daten }: { daten: Extract<KachelDaten, { art: "ki-news" }> }): JSX.Element`
+- Liefert: `KiNewsAnsicht({ daten }: { daten: KachelDaten })` (`KachelDaten` hat nur die eine Art, `Extract` erübrigt sich)
 
 Daten der Tests mit `vi.useFakeTimers({ toFake: ["Date"], now: new Date("2026-11-08T13:32:00Z") })`: Anthropic mit zwei Meldungen
 (vor 3 Std., vor 4 Tagen), The Decoder mit einer Meldung mit Umlaut im Titel, OpenAI ohne neue Meldung (`letzteMeldung` vor 9 Tagen),
 Matt Pocock ohne je eine Meldung, Hacker News `erreichbar: false`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 ```tsx
 test("zeigt je Absender mit Meldung einen Abschnitt mit Links zum Original", () => {
@@ -206,11 +206,11 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
   Dazu in `__tests__/page.test.tsx` den bisherigen Test „zeigt Datum, Zeit der Aktualisierung, Kachel und Abmelden“ auf die KI-News-Kachel
   umstellen: Er findet die Überschrift „KI-News“ und einen Link einer Meldung.
 
-- [ ] **Schritt 2: `npx vitest run __tests__/ki-news-ansicht.test.tsx __tests__/page.test.tsx`.** Erwartet: FAIL, `KiNewsAnsicht` gibt es nicht.
-- [ ] **Schritt 3: `KiNewsAnsicht`** nach den Maßen unter „Feste Vorgaben“. Der Punkt ist ein `span` mit `role="img" aria-label="neu"`, nur
+- [x] **Schritt 2: `npx vitest run __tests__/ki-news-ansicht.test.tsx __tests__/page.test.tsx`.** Erwartet: FAIL, `KiNewsAnsicht` gibt es nicht.
+- [x] **Schritt 3: `KiNewsAnsicht`** nach den Maßen unter „Feste Vorgaben“. Der Punkt ist ein `span` mit `role="img" aria-label="neu"`, nur
       bei frischen Meldungen; sonst ein durchsichtiger `span` mit `aria-hidden`.
-- [ ] **Schritt 4: `npx vitest run`.** Erwartet: PASS.
-- [ ] **Schritt 5:** `npm run check`, committen: `Show AI news tile`.
+- [x] **Schritt 4: `npx vitest run`.** Erwartet: PASS.
+- [x] **Schritt 5:** `npm run check`, committen: `Show AI news tile`.
 
 ### Aufgabe 4: Im Browser prüfen und dokumentieren
 

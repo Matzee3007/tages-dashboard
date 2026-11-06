@@ -23,7 +23,23 @@ const OK: DashboardAntwort = {
       id: "ki-news",
       titel: "KI-News",
       status: "ok",
-      daten: { art: "ki-news", absender: [] },
+      daten: {
+        art: "ki-news",
+        absender: [
+          {
+            name: "Anthropic",
+            meldungen: [
+              {
+                titel: "Introducing Claude",
+                link: "https://www.anthropic.com/news/claude",
+                zeit: "2026-11-08T10:00:00.000Z",
+              },
+            ],
+            letzteMeldung: "2026-11-08T10:00:00.000Z",
+            erreichbar: true,
+          },
+        ],
+      },
       stand: ZEIT,
     },
   ],
@@ -48,6 +64,9 @@ test("zeigt Datum, Zeit der Aktualisierung, Kachel und Abmelden", async () => {
   expect(screen.getByText("Aktualisiert 14:32")).toBeDefined();
   expect(
     screen.getByRole("heading", { level: 2, name: "KI-News" }),
+  ).toBeDefined();
+  expect(
+    screen.getByRole("link", { name: /Introducing Claude/ }),
   ).toBeDefined();
   expect(screen.getByRole("button", { name: "Abmelden" })).toBeDefined();
 });

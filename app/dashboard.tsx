@@ -5,6 +5,7 @@ import { useCallback, useRef, useState } from "react";
 import { abmelden } from "@/app/login/actions";
 import { holeDashboard } from "@/lib/kacheln/abruf";
 import { FehlerHinweis, Kachel } from "@/lib/kacheln/kachel";
+import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
 import { neuerStand } from "@/lib/kacheln/stand";
 import type { KachelAnzeige, KachelDaten } from "@/lib/kacheln/typen";
 import { useAktualisierung } from "@/lib/kacheln/use-aktualisierung";
@@ -13,7 +14,7 @@ import { datum, uhrzeit } from "@/lib/zeit";
 function KachelInhalt({ daten }: { daten: KachelDaten }) {
   switch (daten.art) {
     case "ki-news":
-      return null;
+      return <KiNewsAnsicht daten={daten} />;
   }
 }
 
