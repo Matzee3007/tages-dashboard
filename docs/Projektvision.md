@@ -162,10 +162,11 @@ Stand 2026-11-04, nach der Befragung mit `/grill-with-docs`.
 
 1. **Feeds lesen** (erledigt 2026-11-04, PR #30, siehe [[projects/tages-dashboard/docs/plaene/2026-11-04-feeds-lesen|Plan]]): Der Server liest RSS- und Atom-Feeds, fasst die Kanäle eines Absenders zusammen und speichert kurz
    zwischen. Fällt ein Kanal aus, laufen die anderen weiter. Alle Absender mit Feed kommen in die Einstellungsdatei.
-2. **Links in der Mac-App:** Fremde Adressen gehen im Standardbrowser auf, die Hülle wird neu gebaut. Auf iPhone und
-   iPad prüfen, wie die installierte App solche Links öffnet.
+2. **Links in der Mac-App** (erledigt 2026-11-05, PR #34, siehe [[projects/tages-dashboard/docs/plaene/2026-11-05-links-mac-app|Plan]] und
+   [[projects/tages-dashboard/docs/adr/0006-links-im-standardbrowser|ADR 0006]]): Fremde Adressen gehen im Standardbrowser auf, die Hülle wird neu gebaut.
 3. **KI-News-Kachel:** ersetzt die Testkachel. Ein Abschnitt pro Absender, die neuesten 3 Meldungen der letzten 7 Tage,
-   die neueste oben, ohne neue Meldung nur eine Zeile. Beim ersten Deploy die offene App einmal neu laden. Offen aus dem `/code-review` von PR #30:
+   die neueste oben, ohne neue Meldung nur eine Zeile. Beim ersten Deploy die offene App einmal neu laden. Auf iPhone und iPad prüfen, wie die installierte
+   App fremde Links öffnet (aus Schritt 2, erst hier gibt es echte Links). Offen aus dem `/code-review` von PR #30:
    `stand` nennt die Abrufzeit statt des Alters der Daten, Rechenzeit für rund 2,4 MB XML je Minute auf Vercel messen, Rohtext wie `&ouml;` in Titeln
    an der echten Anzeige prüfen.
 4. **Seiten auslesen:** die Kanäle ohne Feed. Das kommt zuletzt, weil es am anfälligsten ist und die Kachel dann schon läuft.

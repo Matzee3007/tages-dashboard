@@ -1,11 +1,14 @@
 mod klick;
+mod links;
 
 use klick::{KlickAktion, klick_aktion};
+use links::{LinkZiel, im_browser_oeffnen, link_ziel};
 use tauri::{
-    AppHandle, Manager, RunEvent, WindowEvent,
+    AppHandle, Manager, RunEvent, WebviewWindowBuilder, WindowEvent,
     image::Image,
     menu::{Menu, MenuItem, PredefinedMenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
+    webview::NewWindowResponse,
 };
 
 const FENSTER: &str = "main";
@@ -33,6 +36,28 @@ fn linksklick(app: &AppHandle) {
         }
         KlickAktion::NachVorn => nach_vorn(app),
     }
+}
+
+/// Baut das Fenster aus `tauri.conf.json` selbst, denn die Handler für Links lassen sich nur beim Bauen setzen.
+fn fenster_bauen(app: &AppHandle) -> tauri::Result<()> {
+    WebviewWindowBuilder::from_config(app, &app.config().app.windows[0])?
+        .on_navigation(|adresse| match link_ziel(adresse) {
+            LinkZiel::ImFenster => true,
+            LinkZiel::Browser => {
+                im_browser_oeffnen(adresse);
+                false
+            }
+            LinkZiel::Blockiert => false,
+        })
+        // Es soll nie ein zweites Fenster entstehen, auch nicht für eine eigene Seite
+        .on_new_window(|adresse, _| {
+            if link_ziel(&adresse) != LinkZiel::Blockiert {
+                im_browser_oeffnen(&adresse);
+            }
+            NewWindowResponse::Deny
+        })
+        .build()?;
+    Ok(())
 }
 
 fn menueleiste_einrichten(app: &AppHandle) -> tauri::Result<()> {
@@ -78,6 +103,7 @@ fn menueleiste_einrichten(app: &AppHandle) -> tauri::Result<()> {
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
+            fenster_bauen(app.handle())?;
             menueleiste_einrichten(app.handle())?;
             Ok(())
         })

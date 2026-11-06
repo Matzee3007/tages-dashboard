@@ -24,6 +24,7 @@ braucht der Rechner Rust zum Bauen.
    - `tauri.conf.json`: Name „Heute“, Kennung `com.matzee3007.heute`, Adresse, Fenster, nur `.app`, Signatur `-`
    - `src/main.rs`: Menüleiste, roter Knopf, Klick aufs Dock
    - `src/klick.rs`: was ein Linksklick tut, mit 3 Tests
+   - `src/links.rs`: wohin eine Adresse gehört, mit 5 Tests (2026-11-05, [[projects/tages-dashboard/docs/adr/0006-links-im-standardbrowser|ADR 0006]])
    - `icons/`: App-Symbol und `tray.png`, Quellen in `assets/icons/`, umgewandelt mit `sips` und `tauri icon`
 
 Die Website bekommt keine Rechte in der Hülle: Es gibt keine Capability (Rechte-Datei von Tauri) und keine eigenen Befehle.
@@ -40,6 +41,7 @@ Hülle wird selten geändert).
 | Roter Knopf, `Cmd+W` | App ausblenden, sie läuft in der Menüleiste weiter |
 | Klick aufs Dock-Symbol | Fenster zurückholen |
 | `Cmd+Q`, „Beenden“ | App ganz beenden |
+| Klick auf einen fremden Link | Standardbrowser öffnet ihn, das Dashboard bleibt stehen |
 
 ## Gerätetest
 
@@ -61,6 +63,21 @@ Am 2026-11-03 mit der fertigen App aus `/Applications`:
 Am 2026-11-04 nachgeprüft: Die Anmeldung hält auch am nächsten Tag.
 
 Der Start ohne Warnung gilt für diesen Mac, auf dem die App gebaut wurde. Für die Weitergabe an andere ist sie nicht gedacht.
+
+Am 2026-11-05 die Links geprüft, mit `npm run tauri -- dev` und von Hand eingefügten Testlinks:
+
+| Prüfung | Ergebnis |
+|---|---|
+| Start: Dashboard im Fenster, kein Browser | bestanden |
+| Abmelden, Anmelden, „Neu laden“: alles im selben Fenster | bestanden |
+| Normaler fremder Link: Standardbrowser, Dashboard bleibt stehen | bestanden |
+| Fremder Link mit `target="_blank"`: Standardbrowser, kein zweites Fenster | bestanden |
+| Link auf `file:`: nichts passiert | bestanden |
+
+Danach mit der fertigen App aus `/Applications`: Start sowie Abmelden, Anmelden und „Neu laden“ bestanden. Die Testlinks entfallen dort, die fertige App hat keine Konsole.
+
+Am 2026-11-06 nach dem `/code-review` (`/usr/bin/open` mit festem Pfad) neu gebaut. Start ohne Internet: Das Fenster bleibt leer, früher kam eine Fehlerseite. Nach „Neu laden“ mit
+Internet ist das Dashboard da, kein Browser geht auf.
 
 ## Befehle
 

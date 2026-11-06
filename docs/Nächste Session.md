@@ -52,6 +52,8 @@ es ihn gibt. Am 2026-11-04 kam er mit Leerzeichen an und wurde wie normaler Text
 - Greift der Zwischenspeicher auf Vercel, antworten alle Anbieter den Servern, passt der OpenAI-Feed (825 KB) hinein? Siehe „In Schritt 3 prüfen“ im
   [[projects/tages-dashboard/docs/plaene/2026-11-04-feeds-lesen|Plan]] und [[projects/tages-dashboard/docs/adr/0005-feeds-im-fetch-speicher|ADR 0005]].
 - Offene Funde aus dem `/code-review` von PR #30: `stand` nennt die Abrufzeit statt des Alters der Daten, Rechenzeit für rund 2,4 MB XML je Minute messen, Rohtext wie `&ouml;` in Titeln prüfen.
+- Auf iPhone und iPad prüfen, wie die installierte App fremde Links öffnet. Das kam aus Schritt 2, weil es erst mit der Kachel echte Links gibt.
+- Echte Links auch in der fertigen Mac-App anklicken: Sie hat bisher nur Start und Login gesehen, die Klicks liefen in der Testfassung (Fund aus dem `/code-review` von PR #34).
 - Eine lange offene App kennt die neue `art` nicht und zeigt nur den Titel: beim ersten Deploy einmal neu laden.
 - Eine leere Kachelliste zeigt den Fehlerhinweis (Fund aus PR #27). Beim Entfernen der Testkachel darauf achten.
 
@@ -73,8 +75,6 @@ Restpunkte als Vorschläge:
    - **Vor Phase 4 ansehen:** Der Stand der Kacheln bleibt nach dem Abmelden im Speicher der Seite und könnte nach „Zurück“ ohne Netz wieder
      erscheinen. Mit den KI-News betrifft das öffentliche Meldungen, private Daten erst ab Phase 4.
    - iOS friert einen laufenden Abruf ein: Beim Zurückkommen entfällt dann der sofortige Abruf, bis zu 60 Sekunden steht ein falscher Hinweis.
-5. **Warnung von Dependabot, `glib` in `src-tauri/Cargo.lock`:** mittlere Schwere, behoben ab 0.20.0, bisher nicht bearbeitet. Prüfen, ob die
-   Mac-App das Paket überhaupt nutzt. Es gehört vermutlich zum Linux-Teil von Tauri, das ist aber nicht belegt. Passt zu Schritt 2, weil dort die Hülle ohnehin neu gebaut wird.
 
 Gelegentlich:
 

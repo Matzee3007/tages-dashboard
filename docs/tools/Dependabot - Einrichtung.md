@@ -69,6 +69,14 @@ Stand 2026-11-03: 17 mittlere Meldungen, mit `npm audit --omit=dev` (nur was die
 - **Warnung #3:** Am 2026-11-04 kam dieselbe Lücke erneut als neue Warnung, Ursache nicht geklärt. Betroffen ist laut Versionsbereich
   (`>= 7.0.0, < 11.0.1`) nur `minimatch@10.2.6` über `typescript-eslint`. Am 2026-11-05 ebenfalls als `tolerable_risk` geschlossen.
 
+## Warnung #2: `glib`
+
+Lücke GHSA-wrw7-89jp-8q8g, gemeldet für `src-tauri/Cargo.lock`, am 2026-11-05 als `not_used` geschlossen.
+
+- **Beleg:** `cargo tree -i glib --target aarch64-apple-darwin` findet das Paket nicht, mit `--target x86_64-unknown-linux-gnu` schon (über `gtk` und `webkit2gtk`).
+- **Risiko:** Keines für die Mac-App, das Paket gehört nur zum Linux-Teil von Tauri. Die Lock-Datei listet es trotzdem, deshalb die Warnung.
+- **Erneut nachsehen:** falls die Hülle einmal für Linux gebaut wird.
+
 ## Fehler
 
 **`security_update_not_possible`, Lauf „npm_and_yarn in /. for minimatch“ endet rot** (2026-11-03):
