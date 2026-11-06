@@ -222,7 +222,7 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
   - Eine Feed-Adresse in `ABSENDER` vorübergehend verfälschen: Nur dieser Absender zeigt „nicht erreichbar“, falls er keinen zweiten Kanal hat.
     Danach zurücksetzen.
 - [x] **Schritt 2: `npm run build`.** Erwartet: fehlerfrei.
-- [ ] **Schritt 3: PR öffnen, auf der Vorschau von Vercel prüfen** (Entwickler meldet sich an, Claude liest mit):
+- [x] **Schritt 3: PR öffnen, auf der Vorschau von Vercel prüfen** (Entwickler meldet sich an, Claude liest mit):
   - Die Kachel zeigt echte Meldungen, kein Absender ist dauerhaft „nicht erreichbar“. Sonst in den Logs von Vercel nach
     „ließ sich nicht laden“ suchen: Dann sperrt ein Anbieter die Server von Vercel.
   - **Zwischenspeicher:** In Vercel unter Observability → External APIs zählt `openai.com` höchstens etwa 4 Abrufe je Stunde, nicht 60.
@@ -264,3 +264,15 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
 **Entscheidungen des Entwicklers (2026-11-06):** Zeitlimit erst nach der Vorschau auf Vercel entscheiden. Gleiche Titel je Absender
 zusammenfassen, die neueste Meldung bleibt (`ladeAbsender`, Test „gleicher Titel erscheint nur einmal …“). Der Punkt bleibt bei 24 Std.,
 erst im Alltag ansehen.
+
+**Aufgabe 4, Schritt 3 (Vorschau von PR #37):**
+
+- Erst „Internal Server Error“ auf jeder Seite der Vorschau. Ursache: Die Supabase-Variablen galten bei Vercel nur für
+  Production, ohne sie wirft `proxy.ts`. Mit leeren Variablen lokal nachgestellt, vom Entwickler um Preview ergänzt und neu
+  gebaut. Hat mit der Kachel nichts zu tun, war bisher unbemerkt (Fehler in [[projects/tages-dashboard/docs/tools/Vercel|Vercel]]).
+- Danach Login und Kachel in Ordnung, kein Absender „nicht erreichbar“.
+- „External APIs“ gibt es im Gratis-Tarif nicht. Stattdessen mit Vercel-Token und Runtime-Logs-API gemessen, über eine
+  vorübergehende Log-Zeile (Commit `916373f`, entfernt in `70a4b7a`): alle 13 Feeds aus dem Zwischenspeicher, 66 bis 682 s alt,
+  auch OpenAI (825 KB). `ladeKiNews` 563 ms. Nur eine Abfrage erfasst, die Logs-API bricht nach 5 Minuten ab.
+- **Zeitlimit von 5 s bleibt:** Auf Vercel war kein Absender rot, und nach dem ersten Abruf kommen die Feeds aus dem Speicher.
+

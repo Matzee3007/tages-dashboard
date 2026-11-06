@@ -69,6 +69,35 @@ gh api "repos/Matzee3007/tages-dashboard/commits/$(git rev-parse HEAD)/status" \
 gh pr checks <nr>
 ```
 
+### Über die REST-API (ab 2026-11-06)
+
+Für Logs und den Stand von Deployments ohne Klicken. Nötig ist `VERCEL_TOKEN` in `.env.local`: auf
+https://vercel.com/account/tokens angelegt, Scope nur das Projekt `tages-dashboard`, mit Ablaufdatum. Das Token nie in den
+Chat oder ins Repo, sondern über einen Assistenten (Skill `assistent-bauen`) eintragen. Zurückziehen: dort **Delete**.
+
+```bash
+# Token in die Umgebung laden, ohne es anzuzeigen
+set -a; source .env.local; set +a
+
+# Neuestes Deployment: Zustand, ID, Commit (Antwort in eine Datei, echo in zsh zerstört \n im JSON)
+/usr/bin/curl -s -o dep.json -H "Authorization: Bearer $VERCEL_TOKEN" \
+  'https://api.vercel.com/v6/deployments?projectId=prj_QWERcypvPrphhPec8RQ40XIRpypr&limit=1'
+
+# Runtime-Logs eines Deployments mitschreiben (Strom, bricht nach 5 Minuten ab)
+/usr/bin/curl -s -N --max-time 300 -H "Authorization: Bearer $VERCEL_TOKEN" -o logs.jsonl \
+  'https://api.vercel.com/v1/projects/prj_QWERcypvPrphhPec8RQ40XIRpypr/deployments/<dpl_…>/runtime-logs'
+```
+
+Die Logs liefern Meldung, Pfad, Status und Zeit, **keine Dauer** einer Anfrage. Für Messungen eine markierte Log-Zeile
+(`[DEBUG-…]`) vorübergehend einbauen und danach entfernen.
+
+## Messungen
+
+- **Zwischenspeicher der Feeds (2026-11-06, PR #37):** Auf der Vorschau kamen alle 13 Feeds aus dem Speicher von
+  `fetch` mit `next.revalidate`, die Antworten waren 66 bis 682 s alt, auch der OpenAI-Feed mit 825 KB. Eine Abfrage
+  gemessen, `ladeKiNews` brauchte samt Lesen des XML 563 ms. Kein Anbieter sperrt die Server von Vercel.
+- **Observability → External APIs** gibt es im Gratis-Tarif nicht.
+
 ## Fehler
 
 - **`gh api …/deployments` ist leer (`null` bzw. Länge `0`):** Ursache: Vercel meldet sich in diesem Repo nur als
@@ -78,3 +107,10 @@ gh pr checks <nr>
   (nur die CI ist ein Check-Run). Lösung: `…/commits/<sha>/status`.
 - **`gh pr view <nr> --comments --json …` → „specify only one of --comments or --json“:** Ursache: Die beiden
   Schalter schließen sich aus. Lösung: `--json comments` mit `--jq '.comments[].body'`.
+- **Vorschau zeigt nur „Internal Server Error“, die Live-Seite läuft (2026-11-06, PR #37):** Ursache: Die Variablen
+  `NEXT_PUBLIC_SUPABASE_URL` und `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` galten nur für Production. Ohne sie wirft
+  `proxy.ts` bei jeder Anfrage „Your project's URL and Key are required to create a Supabase client!“. Aufgefallen erst jetzt,
+  weil bis dahin keine Vorschau mit Login geöffnet wurde. Nachgestellt mit leeren Variablen:
+  `NEXT_PUBLIC_SUPABASE_URL= NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY= npx next build && … npx next start`. Lösung: Unter Settings →
+  Environment Variables **Preview** dazunehmen, dann das Deployment mit **Redeploy** neu bauen. `NEXT_PUBLIC_…` steht schon nach
+  dem Bauen fest im Code, ein neuer Build ist nötig.
