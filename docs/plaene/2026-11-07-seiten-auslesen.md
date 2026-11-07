@@ -271,3 +271,15 @@ Tool-Notiz `node-html-parser.md` (Zweck, Version, warum nicht `fast-xml-parser` 
 - [ ] **Schritt 2:** Plan auf `status: abgeschlossen`, Schritt 4 im Fahrplan auf „erledigt“, Phase 2 abschließen (Journal, Übergabe).
 
 ## Ergebnisse
+
+**Aufgabe 1 bis 3 (2026-11-07):** Die Leser liefen auch über die am selben Tag gespeicherten echten Seiten: je 24 Meldungen auf den vier
+Anthropic-Seiten, 12 auf `claude.com/resources/articles`, 64 Tage in den Versionshinweisen, Titel, Links und Daten stimmen. Für die Tests, die
+sofort grün waren, kurz Fehler eingebaut: Ohne `istWebLink` und mit dem ersten Link der Zeile statt dem an der `<h3>` wurden Tests rot.
+
+**Aufgabe 4, Schritt 1 und 2 (2026-11-07, lokal ohne Login):**
+
+- Alle 9 Absender erreichbar. Anthropic zeigt 3 Meldungen vom 6. November aus Research und Red Team (die News-Seite hat nichts aus den letzten
+  7 Tagen), Claude Updates mischt Hilfe-Center (eine Meldung pro Tag) und Feed.
+- Kein Seiten-Kanal im Log als „ließ sich nicht laden“. Beim ersten Abruf fielen 10 Feeds mit „Gespeicherte Antwort von Fri, 06 Nov“ aus: Der
+  lokale Zwischenspeicher hielt Antworten vom Vortag, die Grenze von 1 Std. griff wie gewollt. Beim zweiten Abruf waren alle da.
+- `npm run build` fehlerfrei.
