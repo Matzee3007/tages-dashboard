@@ -324,3 +324,58 @@ test("ladeKiNews läuft weiter, wenn nur ein Absender ausfällt", async () => {
     ["A", false],
   ]);
 });
+
+const ANTHROPIC_SEITE = `<html><body><ul><li data-listing-row="x"><h3><a href="/news/seite">seite</a></h3><time>Nov 7, 2026</time></li></ul></body></html>`;
+
+test("ladeKanal nimmt den übergebenen Leser", async () => {
+  const lese = vi.fn(() => []);
+  fetchMock.mockResolvedValue(new Response("beliebiger Text"));
+
+  await ladeKanal("https://example.org/seite", JETZT, lese);
+
+  expect(lese).toHaveBeenCalledWith("beliebiger Text");
+});
+
+test("ein Absender fasst Feeds und Seiten zusammen", async () => {
+  fetchMock.mockImplementation(async (url: string) =>
+    url === "https://www.anthropic.com/news"
+      ? new Response(ANTHROPIC_SEITE)
+      : new Response(feed([["feed", "2026-11-08T11:00:00Z"]])),
+  );
+
+  const stand = await ladeAbsender(
+    {
+      name: "X",
+      feeds: ["a"],
+      seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
+    },
+    JETZT,
+  );
+
+  expect(
+    stand.meldungen.map((meldung) => [meldung.titel, meldung.link]),
+  ).toEqual([
+    ["feed", "https://example.org/feed"],
+    ["seite", "https://www.anthropic.com/news/seite"],
+  ]);
+});
+
+test("ein Seiten-Kanal fällt aus, die Feeds laufen weiter", async () => {
+  const log = vi.spyOn(console, "error").mockImplementation(() => {});
+  const seite = "https://www.anthropic.com/news";
+  fetchMock.mockImplementation(async (url: string) =>
+    url === seite
+      ? new Response("<html><body>Neu gestaltet</body></html>")
+      : new Response(feed([["feed", "2026-11-08T11:00:00Z"]])),
+  );
+
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a"], seiten: [{ url: seite, art: "anthropic" }] },
+    JETZT,
+  );
+
+  expect(stand.erreichbar).toBe(true);
+  expect(titel(stand.meldungen)).toEqual(["feed"]);
+  expect(log).toHaveBeenCalledTimes(1);
+  expect(log.mock.calls[0][0]).toContain(seite);
+});

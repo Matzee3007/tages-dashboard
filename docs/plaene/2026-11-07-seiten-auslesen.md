@@ -203,7 +203,7 @@ git commit -m "Read Claude blog and release notes"
   `AbsenderEinstellung = { name: string; feeds: string[]; seiten?: SeitenEinstellung[] }`,
   `ladeKanal(url: string, jetzt: Date, lese: (text: string) => Meldung[] = leseFeed): Promise<Meldung[]>`
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 `fetchMock` antwortet je nach Adresse mit Feed oder HTML (Muster wie in den bestehenden Tests mit mehreren Kanälen).
 
@@ -211,24 +211,24 @@ git commit -m "Read Claude blog and release notes"
 test("ladeKanal nimmt den übergebenen Leser", …);                       // lese = vi.fn(() => []) wird mit dem Text der Antwort aufgerufen
 test("ein Absender fasst Feeds und Seiten zusammen", …);               // feeds: [FEED-URL], seiten: [{ url, art: "anthropic" }] → Meldungen aus beiden, neueste zuerst
 test("ein Seiten-Kanal fällt aus, die Feeds laufen weiter", …);        // Seite liefert "<html></html>" → erreichbar: true, console.error nennt die Seiten-URL
-test("ein Absender ohne seiten lädt wie bisher nur Feeds", …);
+// "ein Absender ohne seiten lädt wie bisher nur Feeds": nicht eigens geschrieben, alle bestehenden Tests von ladeAbsender sind genau dieser Fall
 ```
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
 
 `npx vitest run __tests__/ki-news-laden.test.ts`. Erwartet: FAIL, die neuen Tests rot, die alten grün.
 
-- [ ] **Schritt 3: `ladeKanal` und `ladeAbsender` in `laden.ts`, Typen und Seiten in `einstellungen.ts`**
+- [x] **Schritt 3: `ladeKanal` und `ladeAbsender` in `laden.ts`, Typen und Seiten in `einstellungen.ts`**
 
 `ladeAbsender` macht aus `feeds` und `seiten` eine Liste von Kanälen mit Adresse und Leser. Die Fehlermeldung im Log nennt die Adresse
 aus dieser Liste. Einstellungen: Anthropic bekommt die vier Anthropic-Seiten und `https://claude.com/resources/articles`, Claude Updates
 die Versionshinweise (Adressen und Bauarten aus der Tabelle oben).
 
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
 
 `npm test`. Erwartet: alle Tests PASS.
 
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 5: Prüfen und committen**
 
 ```bash
 npm run check

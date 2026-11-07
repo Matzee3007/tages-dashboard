@@ -1,5 +1,6 @@
 import type { AbsenderEinstellung } from "@/lib/einstellungen";
 import { leseFeed, type Meldung } from "@/lib/kacheln/ki-news/feed";
+import { leseSeite } from "@/lib/kacheln/ki-news/seiten";
 
 const ZWISCHENSPEICHER_SEKUNDEN = 900;
 const KANAL_ZEITLIMIT_MS = 5000;
@@ -14,7 +15,13 @@ export type AbsenderStand = {
   erreichbar: boolean;
 };
 
-export async function ladeKanal(url: string, jetzt: Date): Promise<Meldung[]> {
+type Kanal = { url: string; lese: (text: string) => Meldung[] };
+
+export async function ladeKanal(
+  url: string,
+  jetzt: Date,
+  lese: Kanal["lese"] = leseFeed,
+): Promise<Meldung[]> {
   const antwort = await fetch(url, {
     headers: { "User-Agent": "Tages-Dashboard" },
     next: { revalidate: ZWISCHENSPEICHER_SEKUNDEN },
@@ -28,15 +35,22 @@ export async function ladeKanal(url: string, jetzt: Date): Promise<Meldung[]> {
   if (jetzt.getTime() - abgerufen > SPEICHER_HOECHSTALTER_MS) {
     throw new Error(`Gespeicherte Antwort von ${antwort.headers.get("Date")}`);
   }
-  return leseFeed(await antwort.text());
+  return lese(await antwort.text());
 }
 
 export async function ladeAbsender(
   absender: AbsenderEinstellung,
   jetzt: Date,
 ): Promise<AbsenderStand> {
+  const kanaele: Kanal[] = [
+    ...absender.feeds.map((url) => ({ url, lese: leseFeed })),
+    ...(absender.seiten ?? []).map(({ url, art }) => ({
+      url,
+      lese: (text: string) => leseSeite(art, text, url),
+    })),
+  ];
   const ergebnisse = await Promise.allSettled(
-    absender.feeds.map((url) => ladeKanal(url, jetzt)),
+    kanaele.map(({ url, lese }) => ladeKanal(url, jetzt, lese)),
   );
 
   const geladen: Meldung[] = [];
@@ -45,7 +59,7 @@ export async function ladeAbsender(
       geladen.push(...ergebnis.value);
     } else {
       console.error(
-        `Kanal ${absender.feeds[index]} ließ sich nicht laden:`,
+        `Kanal ${kanaele[index].url} ließ sich nicht laden:`,
         ergebnis.reason,
       );
     }
