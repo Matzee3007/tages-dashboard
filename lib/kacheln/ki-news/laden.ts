@@ -1,10 +1,12 @@
 import type { AbsenderEinstellung } from "@/lib/einstellungen";
 import { leseFeed, type Meldung } from "@/lib/kacheln/ki-news/feed";
+import { leseSeite } from "@/lib/kacheln/ki-news/seiten";
 
 const ZWISCHENSPEICHER_SEKUNDEN = 900;
 const KANAL_ZEITLIMIT_MS = 5000;
 const MELDUNGEN_JE_ABSENDER = 3;
-const SIEBEN_TAGE_MS = 7 * 24 * 60 * 60 * 1000;
+const TAG_MS = 24 * 60 * 60 * 1000;
+const SIEBEN_TAGE_MS = 7 * TAG_MS;
 const SPEICHER_HOECHSTALTER_MS = 60 * 60 * 1000;
 
 export type AbsenderStand = {
@@ -14,7 +16,13 @@ export type AbsenderStand = {
   erreichbar: boolean;
 };
 
-export async function ladeKanal(url: string, jetzt: Date): Promise<Meldung[]> {
+type Kanal = { url: string; lese: (text: string) => Meldung[] };
+
+export async function ladeKanal(
+  url: string,
+  jetzt: Date,
+  lese: Kanal["lese"],
+): Promise<Meldung[]> {
   const antwort = await fetch(url, {
     headers: { "User-Agent": "Tages-Dashboard" },
     next: { revalidate: ZWISCHENSPEICHER_SEKUNDEN },
@@ -28,15 +36,29 @@ export async function ladeKanal(url: string, jetzt: Date): Promise<Meldung[]> {
   if (jetzt.getTime() - abgerufen > SPEICHER_HOECHSTALTER_MS) {
     throw new Error(`Gespeicherte Antwort von ${antwort.headers.get("Date")}`);
   }
-  return leseFeed(await antwort.text());
+  return lese(await antwort.text());
+}
+
+// Ohne Uhrzeit (00:00 UTC) zählt eine Meldung wie vom Ende ihres Tages, höchstens bis jetzt. Sonst fiele ein
+// Beitrag vom Abend hinter alle Feed-Meldungen desselben Tages und aus den 3 Zeilen.
+function sortierZeit(meldung: Meldung, jetzt: Date): number {
+  const zeit = Date.parse(meldung.zeit);
+  return meldung.nurDatum ? Math.min(zeit + TAG_MS - 1, jetzt.getTime()) : zeit;
 }
 
 export async function ladeAbsender(
   absender: AbsenderEinstellung,
   jetzt: Date,
 ): Promise<AbsenderStand> {
+  const kanaele: Kanal[] = [
+    ...absender.feeds.map((url) => ({ url, lese: leseFeed })),
+    ...(absender.seiten ?? []).map(({ url, art }) => ({
+      url,
+      lese: (text: string) => leseSeite(art, text, url),
+    })),
+  ];
   const ergebnisse = await Promise.allSettled(
-    absender.feeds.map((url) => ladeKanal(url, jetzt)),
+    kanaele.map(({ url, lese }) => ladeKanal(url, jetzt, lese)),
   );
 
   const geladen: Meldung[] = [];
@@ -45,7 +67,7 @@ export async function ladeAbsender(
       geladen.push(...ergebnis.value);
     } else {
       console.error(
-        `Kanal ${absender.feeds[index]} ließ sich nicht laden:`,
+        `Kanal ${kanaele[index].url} ließ sich nicht laden:`,
         ergebnis.reason,
       );
     }
@@ -57,7 +79,7 @@ export async function ladeAbsender(
   const bekannteTitel = new Set<string>();
   const neuesteZuerst = geladen
     .filter((meldung) => Date.parse(meldung.zeit) <= jetzt.getTime())
-    .sort((a, b) => Date.parse(b.zeit) - Date.parse(a.zeit))
+    .sort((a, b) => sortierZeit(b, jetzt) - sortierZeit(a, jetzt))
     .filter((meldung) => {
       const titel = `${new URL(meldung.link).host} ${meldung.titel}`;
       if (bekannteLinks.has(meldung.link) || bekannteTitel.has(titel)) {
@@ -73,7 +95,7 @@ export async function ladeAbsender(
     meldungen: neuesteZuerst
       .filter(
         (meldung) =>
-          jetzt.getTime() - Date.parse(meldung.zeit) <= SIEBEN_TAGE_MS,
+          jetzt.getTime() - sortierZeit(meldung, jetzt) <= SIEBEN_TAGE_MS,
       )
       .slice(0, MELDUNGEN_JE_ABSENDER),
     letzteMeldung: neuesteZuerst[0]?.zeit ?? null,
@@ -91,9 +113,10 @@ export async function ladeKiNews(
   if (!staende.some((stand) => stand.erreichbar)) {
     throw new Error("Kein Absender ist erreichbar");
   }
-  return staende.sort(
-    (a, b) =>
-      Date.parse(b.letzteMeldung ?? "0000") -
-      Date.parse(a.letzteMeldung ?? "0000"),
-  );
+  // Wie innerhalb eines Absenders: Eine Seiten-Meldung von heute zählt nicht als 00:00 UTC.
+  const neueste = (stand: AbsenderStand) =>
+    stand.meldungen[0]
+      ? sortierZeit(stand.meldungen[0], jetzt)
+      : Date.parse(stand.letzteMeldung ?? "0000");
+  return staende.sort((a, b) => neueste(b) - neueste(a));
 }

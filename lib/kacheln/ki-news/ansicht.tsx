@@ -15,7 +15,7 @@ function MeldungsZeile({ meldung }: { meldung: Meldung }) {
       className="group flex min-h-11 items-center gap-3 border-t border-rand py-1.5 first:border-t-0"
     >
       {/* Ein durchsichtiger Punkt hält die Titel bündig. */}
-      {istFrisch(meldung.zeit, jetzt) ? (
+      {istFrisch(meldung.zeit, jetzt, meldung.nurDatum) ? (
         <span
           role="img"
           aria-label="neu"
@@ -28,7 +28,7 @@ function MeldungsZeile({ meldung }: { meldung: Meldung }) {
         {meldung.titel}
       </span>
       <span className="shrink-0 text-[13px] whitespace-nowrap text-gedaempft">
-        {alterText(meldung.zeit, jetzt)}
+        {alterText(meldung.zeit, jetzt, meldung.nurDatum)}
       </span>
     </a>
   );

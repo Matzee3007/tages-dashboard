@@ -47,19 +47,36 @@ function kalendertag(zeit: Date): number {
   return Date.UTC(teil("year"), teil("month") - 1, teil("day"));
 }
 
-export function istFrisch(iso: string, jetzt: Date = new Date()): boolean {
+function tageZurueck(iso: string, jetzt: Date): number {
+  return Math.round((kalendertag(jetzt) - kalendertag(new Date(iso))) / TAG_MS);
+}
+
+// nurDatum: Die Quelle nennt keine Uhrzeit. Frisch sind dann heute und gestern, weil ein Beitrag vom Abend in
+// den USA bei uns am Morgen schon „gestern“ heißt.
+export function istFrisch(
+  iso: string,
+  jetzt: Date = new Date(),
+  nurDatum = false,
+): boolean {
+  if (nurDatum) return tageZurueck(iso, jetzt) <= 1;
   return jetzt.getTime() - Date.parse(iso) < TAG_MS;
 }
 
-// Unter einem Tag zählen Stunden, damit Text und Punkt für „frisch“ zusammenpassen.
-export function alterText(iso: string, jetzt: Date = new Date()): string {
+// Unter einem Tag zählen Stunden, damit Text und Punkt für „frisch“ zusammenpassen. Ohne Uhrzeit nur Kalendertage.
+export function alterText(
+  iso: string,
+  jetzt: Date = new Date(),
+  nurDatum = false,
+): string {
   const abstand = jetzt.getTime() - Date.parse(iso);
-  if (abstand < STUNDE_MS) {
+  if (!nurDatum && abstand < STUNDE_MS) {
     return `vor ${Math.max(1, Math.floor(abstand / 60_000))} Min.`;
   }
-  if (abstand < TAG_MS) return `vor ${Math.floor(abstand / STUNDE_MS)} Std.`;
-  const tage = Math.round(
-    (kalendertag(jetzt) - kalendertag(new Date(iso))) / TAG_MS,
-  );
+  if (!nurDatum && abstand < TAG_MS) {
+    return `vor ${Math.floor(abstand / STUNDE_MS)} Std.`;
+  }
+  const tage = tageZurueck(iso, jetzt);
+  if (nurDatum && tage <= 0) return "heute";
+  // Mit Uhrzeit heißt über 24 Std. immer mindestens „gestern“, auch am 25-Stunden-Tag der Zeitumstellung.
   return tage <= 1 ? "gestern" : `vor ${tage} Tagen`;
 }

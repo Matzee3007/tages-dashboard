@@ -169,13 +169,13 @@ Stand 2026-11-04, nach der Befragung mit `/grill-with-docs`.
    App fremde Links öffnet (aus Schritt 2, erst hier gibt es echte Links). Aus dem `/code-review` von PR #30 erledigt:
    Rechenzeit auf Vercel gemessen (563 ms, Feeds aus dem Zwischenspeicher), keine Rohtexte wie `&ouml;` in Titeln. Hingenommen: `stand` nennt
    die Abrufzeit statt des Alters der Daten.
-4. **Seiten auslesen:** die Kanäle ohne Feed. Das kommt zuletzt, weil es am anfälligsten ist und die Kachel dann schon läuft.
+4. **Seiten auslesen** (Code fertig 2026-11-07, PR #40, siehe [[projects/tages-dashboard/docs/plaene/2026-11-07-seiten-auslesen|Plan]]): die Kanäle ohne Feed. Das kommt zuletzt, weil es am anfälligsten ist und die Kachel dann schon läuft.
 
-Absender und Kanäle (am 2026-11-04 von diesem Rechner aus abgerufen, außer `claude.com/blog` nur grob geprüft):
+Absender und Kanäle (am 2026-11-04 von diesem Rechner aus abgerufen, die Seiten am 2026-11-07 neu geprüft):
 
 | Absender | Feeds | Seiten zum Auslesen |
 |---|---|---|
-| Anthropic | YouTube `UCrDwWp7EBBv4NwvScIpBDOA`, `transformer-circuits.pub/feed.xml` | `anthropic.com/news`, `/research`, `/engineering`, `claude.com/blog`, `red.anthropic.com` |
+| Anthropic | YouTube `UCrDwWp7EBBv4NwvScIpBDOA`, `transformer-circuits.pub/feed.xml` | `anthropic.com/news`, `/research`, `/engineering`, `/research/team/frontier-red-team` (Ziel von `red.anthropic.com`), `claude.com/resources/articles` (Ziel von `claude.com/blog`) |
 | Claude Updates | `platform.claude.com/docs/en/release-notes/feed.xml` | `support.claude.com/en/articles/12138966-release-notes` |
 | OpenAI | `openai.com/news/rss.xml` | |
 | Google DeepMind | `deepmind.google/blog/rss.xml` | |

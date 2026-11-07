@@ -134,3 +134,24 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
   expect(screen.queryAllByRole("link")).toEqual([]);
   expect(screen.getByText("OpenAI")).toBeDefined();
 });
+
+test("eine Meldung ohne Uhrzeit zeigt Kalendertage und von gestern den Punkt", () => {
+  const seite: AbsenderStand = {
+    name: "Anthropic",
+    meldungen: [
+      {
+        titel: "Teaching AI to build scientific models",
+        link: "https://www.anthropic.com/research/teaching-ai",
+        zeit: "2026-11-07T00:00:00.000Z",
+        nurDatum: true,
+      },
+    ],
+    letzteMeldung: "2026-11-07T00:00:00.000Z",
+    erreichbar: true,
+  };
+  render(<KiNewsAnsicht daten={{ art: "ki-news", absender: [seite] }} />);
+
+  const link = screen.getByRole("link", { name: /Teaching AI/ });
+  expect(within(link).getByText("gestern")).toBeDefined();
+  expect(within(link).queryByRole("img", { name: "neu" })).not.toBeNull();
+});
