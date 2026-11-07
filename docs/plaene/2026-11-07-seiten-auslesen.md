@@ -266,7 +266,7 @@ Tool-Notiz `node-html-parser.md` (Zweck, Version, warum nicht `fast-xml-parser` 
 
 ### Aufgabe 5: Nach dem Merge (Entwickler)
 
-- [ ] **Schritt 1:** Die App auf einem Gerät neu laden. Erwartet: Anthropic zeigt Meldungen von der News-Seite oder dem Claude-Blog, ein
+- [x] **Schritt 1:** Die App auf einem Gerät neu laden. Erwartet: Anthropic zeigt Meldungen von der News-Seite oder dem Claude-Blog, ein
       Antippen öffnet den Beitrag.
 - [x] **Schritt 2:** Plan auf `status: abgeschlossen`, Schritt 4 im Fahrplan auf „erledigt“, Phase 2 abschließen (Journal, Übergabe).
 
@@ -317,3 +317,5 @@ Zweites `/code-review` von PR #40 über die Änderungen nach dem ersten, mit dem
   - `ladeKanal` verlangt den Leser, die alten Tests geben `leseFeed` mit.
 - **Hingenommen:** Mehrere Seiten-Meldungen von heute liegen gleichauf, ihre Reihenfolge folgt den Einstellungen. Ohne Uhrzeit gibt es keine bessere.
 - **Erledigt durch die Vorschau:** Abruf von Vercel aus.
+
+**Aufgabe 5, Gerätetest (2026-11-07, Entwickler):** Nach dem Neuladen zeigt Anthropic Meldungen mit „gestern“, der Test hat geklappt.

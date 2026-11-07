@@ -45,12 +45,6 @@ Stand vom 2026-11-07. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 `docs/Tools für später.md` prüfen (Stand 2026-11-07: nichts für Phase 3 vorgemerkt, Docker erst in Phase 4) und mit `/grill-with-docs` die
 offenen Fragen von Phase 3 klären, dann den Plan für Schritt 1 (Bundesliga, OpenLigaDB) schreiben.
 
-Nur der Entwickler, kurz:
-
-- **Gerätetest Schritt 4** ([[projects/tages-dashboard/docs/plaene/2026-11-07-seiten-auslesen|Plan]], Aufgabe 5, Schritt 1): die App auf einem
-  Gerät neu laden. Erwartet: Anthropic zeigt Meldungen von `anthropic.com` oder `claude.com` mit „heute“ oder „gestern“, ein Antippen öffnet den
-  Beitrag. Claude trägt das Ergebnis im Plan ein.
-
 Nur beobachten:
 
 - **Punkt für frische Meldungen:** Feeds jünger als 24 Std., Seiten heute und gestern. Nach ein paar Tagen im Alltag fragen, ob das passt.
