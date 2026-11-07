@@ -40,7 +40,7 @@ function alsText(wert: unknown): string | null {
   return null;
 }
 
-function istWebLink(text: string): boolean {
+export function istWebLink(text: string): boolean {
   try {
     return ["http:", "https:"].includes(new URL(text).protocol);
   } catch {
