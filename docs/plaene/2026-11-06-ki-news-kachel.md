@@ -1,6 +1,6 @@
 ---
 titel: "Plan: KI-News-Kachel"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-06
 tags: [plan, kacheln, ki-news, phase-2]
 ---
@@ -234,11 +234,11 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
 
 ### Aufgabe 5: Nach dem Merge auf den Geräten (Entwickler)
 
-- [ ] **Schritt 1:** Jede offene App (Mac, iPhone, iPad) einmal neu laden. Eine lange offene App kennt `art: "ki-news"` nicht und zeigt sonst nur den Titel.
-- [ ] **Schritt 2: Mac-App aus `/Applications`:** Eine Meldung anklicken. Erwartet: Sie öffnet sich im Standardbrowser, das Dashboard bleibt im Fenster.
-- [ ] **Schritt 3: iPhone und iPad, installierte App:** Eine Meldung antippen. Notieren, wo sie aufgeht (Safari, Ansicht in der App)
+- [x] **Schritt 1:** Jede offene App (Mac, iPhone, iPad) einmal neu laden. Eine lange offene App kennt `art: "ki-news"` nicht und zeigt sonst nur den Titel.
+- [x] **Schritt 2: Mac-App aus `/Applications`:** Eine Meldung anklicken. Erwartet: Sie öffnet sich im Standardbrowser, das Dashboard bleibt im Fenster.
+- [x] **Schritt 3: iPhone und iPad, installierte App:** Eine Meldung antippen. Notieren, wo sie aufgeht (Safari, Ansicht in der App)
       und wie man zurückkommt. Zurück im Dashboard: Ist man noch angemeldet?
-- [ ] **Schritt 4:** Ergebnisse in diesen Plan, Schritt 3 im Fahrplan auf „erledigt“, Plan auf `status: abgeschlossen`.
+- [x] **Schritt 4:** Ergebnisse in diesen Plan, Schritt 3 im Fahrplan auf „erledigt“, Plan auf `status: abgeschlossen`.
 
 ## Ergebnisse
 
@@ -275,6 +275,13 @@ erst im Alltag ansehen.
   vorübergehende Log-Zeile (Commit `916373f`, entfernt in `70a4b7a`): alle 13 Feeds aus dem Zwischenspeicher, 66 bis 682 s alt,
   auch OpenAI (825 KB). `ladeKiNews` 563 ms. Nur eine Abfrage erfasst, die Logs-API bricht nach 5 Minuten ab.
 - **Zeitlimit von 5 s bleibt:** Auf Vercel war kein Absender rot, und nach dem ersten Abruf kommen die Feeds aus dem Speicher.
+
+**Aufgabe 5, Gerätetest (2026-11-07, Entwickler):**
+
+- Nach dem Neuladen zeigt jede App (Mac, iPhone, iPad) die KI-News-Kachel.
+- Mac-App aus `/Applications`: Die Meldung geht im Standardbrowser auf, das Dashboard bleibt im Fenster.
+- iPhone und iPad, installierte App: Die Meldung geht in einem Safari-Fenster innerhalb der App auf, „Fertig“ bzw. „X“ führt zurück.
+  Danach ist man noch angemeldet.
 
 ## Nach dem Review
 
