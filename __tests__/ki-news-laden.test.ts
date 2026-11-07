@@ -379,3 +379,83 @@ test("ein Seiten-Kanal fällt aus, die Feeds laufen weiter", async () => {
   expect(log).toHaveBeenCalledTimes(1);
   expect(log.mock.calls[0][0]).toContain(seite);
 });
+
+test("eine Seiten-Meldung ohne Uhrzeit zählt wie vom Ende ihres Tages, höchstens bis jetzt", async () => {
+  const seite = (titel: string, datum: string) =>
+    `<html><body><ul><li data-listing-row="x"><h3><a href="/news/${titel}">${titel}</a></h3><time>${datum}</time></li></ul></body></html>`;
+  fetchMock.mockImplementation(async (url: string) => {
+    if (url === "https://www.anthropic.com/news") {
+      return new Response(seite("heute", "Nov 8, 2026"));
+    }
+    if (url === "https://www.anthropic.com/research") {
+      return new Response(seite("vorgestern", "Nov 6, 2026"));
+    }
+    return new Response(
+      feed([
+        ["video1", "2026-11-08T11:00:00Z"],
+        ["video2", "2026-11-08T10:00:00Z"],
+        ["video3", "2026-11-06T20:00:00Z"],
+      ]),
+    );
+  });
+
+  const stand = await ladeAbsender(
+    {
+      name: "X",
+      feeds: ["a"],
+      seiten: [
+        { url: "https://www.anthropic.com/news", art: "anthropic" },
+        { url: "https://www.anthropic.com/research", art: "anthropic" },
+      ],
+    },
+    JETZT,
+  );
+
+  expect(titel(stand.meldungen)).toEqual(["heute", "video1", "video2"]);
+  expect(stand.letzteMeldung).toBe("2026-11-08T00:00:00.000Z");
+});
+
+test("ohne Uhrzeit steht eine Meldung vor den Feed-Meldungen ihres Tages", async () => {
+  fetchMock.mockImplementation(async (url: string) =>
+    url === "https://www.anthropic.com/news"
+      ? new Response(
+          `<html><body><ul><li data-listing-row="x"><h3><a href="/news/seite">seite</a></h3><time>Nov 6, 2026</time></li></ul></body></html>`,
+        )
+      : new Response(
+          feed([
+            ["abend", "2026-11-06T20:00:00Z"],
+            ["morgen", "2026-11-07T08:00:00Z"],
+          ]),
+        ),
+  );
+
+  const stand = await ladeAbsender(
+    {
+      name: "X",
+      feeds: ["a"],
+      seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
+    },
+    JETZT,
+  );
+
+  expect(titel(stand.meldungen)).toEqual(["morgen", "seite", "abend"]);
+});
+
+test("ohne Uhrzeit zählt für die 7 Tage das Ende des Tages", async () => {
+  fetchMock.mockResolvedValue(
+    new Response(
+      `<html><body><ul><li data-listing-row="x"><h3><a href="/news/alt">alt</a></h3><time>Nov 1, 2026</time></li></ul></body></html>`,
+    ),
+  );
+
+  const stand = await ladeAbsender(
+    {
+      name: "X",
+      feeds: [],
+      seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
+    },
+    JETZT,
+  );
+
+  expect(titel(stand.meldungen)).toEqual(["alt"]);
+});

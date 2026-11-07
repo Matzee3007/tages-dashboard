@@ -1,6 +1,12 @@
 import { XMLParser } from "fast-xml-parser";
 
-export type Meldung = { titel: string; link: string; zeit: string };
+// nurDatum: Die Quelle nennt nur den Tag, zeit ist dann 00:00 UTC (Seiten ohne Feed).
+export type Meldung = {
+  titel: string;
+  link: string;
+  zeit: string;
+  nurDatum?: true;
+};
 
 type Knoten = Record<string, unknown>;
 

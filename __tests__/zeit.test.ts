@@ -48,3 +48,15 @@ test("genau 24 Stunden sind nicht mehr frisch", () => {
   expect(istFrisch("2026-11-07T13:32:00Z", JETZT)).toBe(false);
   expect(alterText("2026-11-07T13:32:00Z", JETZT)).toBe("gestern");
 });
+
+test("ohne Uhrzeit nennt das Alter nur Kalendertage, mit heute", () => {
+  expect(alterText("2026-11-08T00:00:00Z", JETZT, true)).toBe("heute");
+  expect(alterText("2026-11-07T00:00:00Z", JETZT, true)).toBe("gestern");
+  expect(alterText("2026-11-05T00:00:00Z", JETZT, true)).toBe("vor 3 Tagen");
+});
+
+test("ohne Uhrzeit ist eine Meldung von heute und gestern frisch", () => {
+  expect(istFrisch("2026-11-08T00:00:00Z", JETZT, true)).toBe(true);
+  expect(istFrisch("2026-11-07T00:00:00Z", JETZT, true)).toBe(true);
+  expect(istFrisch("2026-11-06T00:00:00Z", JETZT, true)).toBe(false);
+});

@@ -29,11 +29,13 @@ test("liest Titel, Link und Datum jeder Zeile einer Anthropic-Seite", () => {
       titel: "Preparing for the 2026 US midterms",
       link: "https://www.anthropic.com/news/2026-us-midterms",
       zeit: "2026-10-14T00:00:00.000Z",
+      nurDatum: true,
     },
     {
       titel: "Teaching AI to build scientific models",
       link: "https://www.anthropic.com/research/teaching-ai",
       zeit: "2026-11-06T00:00:00.000Z",
+      nurDatum: true,
     },
   ]);
 });
@@ -97,6 +99,29 @@ test("lässt Einträge ohne Web-Link oder ohne Datum weg", () => {
   ).toEqual(["Gut"]);
 });
 
+test("nimmt nur Links mit href aus der eigenen Zeile", () => {
+  const html =
+    `<html><body><a href="/alles"><ul>` +
+    zeile(`<h3>Ohne Link</h3><time>Nov 6, 2026</time>`) +
+    zeile(`<h3><a href="/b">B</a></h3><time>Nov 6, 2026</time>`) +
+    `</ul></a></body></html>`;
+  expect(
+    leseSeite("anthropic", html, URL_NEWS).map((meldung) => meldung.link),
+  ).toEqual(["https://www.anthropic.com/b"]);
+});
+
+test("verwirft unmögliche Tage und Wörter, die nur wie ein Monat beginnen", () => {
+  const html = seite(
+    zeile(`<h3><a href="/a">A</a></h3><time>Feb 31, 2026</time>`),
+    zeile(`<h3><a href="/b">B</a></h3><time>Nov 0, 2026</time>`),
+    zeile(`<h3><a href="/c">C</a></h3><time>Mayor 5, 2026</time>`),
+    zeile(`<h3><a href="/d">D</a></h3><time>Dec 31, 2026</time>`),
+  );
+  expect(
+    leseSeite("anthropic", html, URL_NEWS).map((meldung) => meldung.titel),
+  ).toEqual(["D"]);
+});
+
 test("wirft, wenn die Seite keine Meldung enthält", () => {
   expect(() =>
     leseSeite(
@@ -119,6 +144,7 @@ test("liest Karten von claude.com mit Datum und Titel im Link", () => {
       titel: "Make long-running agents faster with message threads",
       link: "https://claude.com/resources/articles/message-threads",
       zeit: "2026-11-02T00:00:00.000Z",
+      nurDatum: true,
     },
   ]);
 });
@@ -155,6 +181,7 @@ test("fasst die Versionshinweise eines Tages zu einer Meldung zusammen", () => {
       "New security and admin controls for Enterprise plans · Personal Finance in Claude",
     link: `${URL_HINWEISE}#h_1c75a86390`,
     zeit: "2026-11-05T00:00:00.000Z",
+    nurDatum: true,
   });
 });
 
@@ -163,7 +190,18 @@ test("zählt nur Absätze, die ganz fett sind, als Titel", () => {
     titel: "Track spend by cost code with project tags (beta)",
     link: `${URL_HINWEISE}#h_8cd3ee82ce`,
     zeit: "2026-11-06T00:00:00.000Z",
+    nurDatum: true,
   });
+});
+
+test("erkennt Titel aus mehreren fetten Teilen", () => {
+  const html = hinweise(
+    block(`<h3 id="h_1">November 6, 2026</h3>`),
+    block(`<p><b>New:</b> <b>Projects</b></p>`),
+  );
+  expect(leseSeite("versionshinweise", html, URL_HINWEISE)[0].titel).toBe(
+    "New: Projects",
+  );
 });
 
 test("überspringt Monatsüberschriften und Tage ohne Eintrag", () => {
