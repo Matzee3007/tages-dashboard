@@ -122,6 +122,21 @@ test("verwirft unmögliche Tage und Wörter, die nur wie ein Monat beginnen", ()
   ).toEqual(["D"]);
 });
 
+test("versteht Sept, Punkt nach dem Monat und geschützte Leerzeichen", () => {
+  const html = seite(
+    zeile(`<h3><a href="/a">A</a></h3><time>Sept 22, 2026</time>`),
+    zeile(`<h3><a href="/b">B</a></h3><time>Sep. 22, 2026</time>`),
+    zeile(`<h3><a href="/c">C</a></h3><time>Sep&nbsp;22,&nbsp;2026</time>`),
+  );
+  expect(
+    leseSeite("anthropic", html, URL_NEWS).map((meldung) => meldung.zeit),
+  ).toEqual([
+    "2026-09-22T00:00:00.000Z",
+    "2026-09-22T00:00:00.000Z",
+    "2026-09-22T00:00:00.000Z",
+  ]);
+});
+
 test("wirft, wenn die Seite keine Meldung enthält", () => {
   expect(() =>
     leseSeite(
@@ -202,6 +217,22 @@ test("erkennt Titel aus mehreren fetten Teilen", () => {
   expect(leseSeite("versionshinweise", html, URL_HINWEISE)[0].titel).toBe(
     "New: Projects",
   );
+});
+
+test("eine Monatsüberschrift beendet den laufenden Tag", () => {
+  const html = hinweise(
+    block(`<h3 id="h_1">November 6, 2026</h3>`),
+    block(`<p><b>A</b></p>`),
+    block(`<h2 id="h_m">October 2026</h2>`),
+    block(`<p><b>Ohne Tag</b></p>`),
+    block(`<h3 id="h_2">October 30, 2026</h3>`),
+    block(`<p><b>C</b></p>`),
+  );
+  expect(
+    leseSeite("versionshinweise", html, URL_HINWEISE).map(
+      (meldung) => meldung.titel,
+    ),
+  ).toEqual(["A", "C"]);
 });
 
 test("überspringt Monatsüberschriften und Tage ohne Eintrag", () => {

@@ -1,5 +1,6 @@
 // @vitest-environment node
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { leseFeed } from "@/lib/kacheln/ki-news/feed";
 import {
   ladeAbsender,
   ladeKanal,
@@ -26,7 +27,11 @@ afterEach(() => {
 test("ruft mit Zwischenspeicher, Zeitlimit und eigenem Namen ab", async () => {
   const zeitlimit = vi.spyOn(AbortSignal, "timeout");
 
-  const meldungen = await ladeKanal("https://example.org/feed", JETZT);
+  const meldungen = await ladeKanal(
+    "https://example.org/feed",
+    JETZT,
+    leseFeed,
+  );
 
   const [url, optionen] = fetchMock.mock.calls[0];
   expect(url).toBe("https://example.org/feed");
@@ -43,11 +48,13 @@ test("eine gespeicherte Antwort darf höchstens 1 Stunde alt sein", async () => 
 
   fetchMock.mockResolvedValue(mitDatum("2026-11-08T11:00:00Z"));
   await expect(
-    ladeKanal("https://example.org/feed", JETZT),
+    ladeKanal("https://example.org/feed", JETZT, leseFeed),
   ).resolves.toHaveLength(1);
 
   fetchMock.mockResolvedValue(mitDatum("2026-11-08T10:59:59Z"));
-  await expect(ladeKanal("https://example.org/feed", JETZT)).rejects.toThrow();
+  await expect(
+    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+  ).rejects.toThrow();
 });
 
 test("eine Antwort ohne lesbare Date-Zeile gilt als frisch", async () => {
@@ -55,27 +62,31 @@ test("eine Antwort ohne lesbare Date-Zeile gilt als frisch", async () => {
     new Response(FEED, { headers: { Date: "kaputt" } }),
   );
   await expect(
-    ladeKanal("https://example.org/feed", JETZT),
+    ladeKanal("https://example.org/feed", JETZT, leseFeed),
   ).resolves.toHaveLength(1);
 });
 
 test("wirft bei Status 404", async () => {
   fetchMock.mockResolvedValue(new Response("weg", { status: 404 }));
-  await expect(ladeKanal("https://example.org/feed", JETZT)).rejects.toThrow();
+  await expect(
+    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+  ).rejects.toThrow();
 });
 
 test("wirft bei Status 200 mit HTML", async () => {
   fetchMock.mockResolvedValue(
     new Response("<!doctype html><html><body>Hallo</body></html>"),
   );
-  await expect(ladeKanal("https://example.org/feed", JETZT)).rejects.toThrow();
+  await expect(
+    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+  ).rejects.toThrow();
 });
 
 test("wirft, wenn fetch fehlschlägt", async () => {
   fetchMock.mockRejectedValue(new Error("kein Netz"));
-  await expect(ladeKanal("https://example.org/feed", JETZT)).rejects.toThrow(
-    "kein Netz",
-  );
+  await expect(
+    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+  ).rejects.toThrow("kein Netz");
 });
 
 type Eintrag = [titel: string, zeit: string, link?: string];
@@ -458,4 +469,28 @@ test("ohne Uhrzeit zählt für die 7 Tage das Ende des Tages", async () => {
   );
 
   expect(titel(stand.meldungen)).toEqual(["alt"]);
+});
+
+test("ladeKiNews sortiert eine Seiten-Meldung von heute wie innerhalb des Absenders", async () => {
+  fetchMock.mockImplementation(async (url: string) =>
+    url === "https://www.anthropic.com/news"
+      ? new Response(
+          `<html><body><ul><li data-listing-row="x"><h3><a href="/news/heute">heute</a></h3><time>Nov 8, 2026</time></li></ul></body></html>`,
+        )
+      : new Response(feed([["frueh", "2026-11-08T06:00:00Z"]])),
+  );
+
+  const staende = await ladeKiNews(
+    [
+      { name: "OpenAI", feeds: ["openai"] },
+      {
+        name: "Anthropic",
+        feeds: [],
+        seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
+      },
+    ],
+    JETZT,
+  );
+
+  expect(staende.map((stand) => stand.name)).toEqual(["Anthropic", "OpenAI"]);
 });

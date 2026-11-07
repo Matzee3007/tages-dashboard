@@ -301,5 +301,19 @@ Aus dem `/code-review` von PR #40, mit dem Entwickler am 2026-11-07 durchgegange
 - **Hingenommen:**
   - Rechenzeit: Alle 6 Seiten werden pro Abruf neu zerlegt, gemessen 25 bis 42 ms auf dem Mac. Kein eigener Speicher für die Ergebnisse.
   - Lange Tageszeilen der Versionshinweise (gemessen bis 227 Zeichen, Median 49): bleiben vollständig, Entscheidung des Entwicklers.
-  - Die Reihenfolge der Absender richtet sich weiter nach `letzteMeldung`, bei Seiten also nach 00:00 UTC des Tages.
+  - ~~Die Reihenfolge der Absender richtet sich weiter nach `letzteMeldung`~~: im zweiten Review doch behoben, siehe unten.
 - **Erledigt durch die Vorschau:** Vercel darf die Seiten abrufen, die Vorschau zeigte ihre Meldungen (Entwickler, 2026-11-07).
+
+Zweites `/code-review` von PR #40 über die Änderungen nach dem ersten, mit dem Entwickler am 2026-11-07 durchgegangen:
+
+- **Behoben:**
+  - `ladeKiNews` sortiert die Absender nach `sortierZeit` ihrer obersten Meldung, wie innerhalb eines Absenders. Ohne Meldung der letzten 7 Tage
+    gilt weiter `letzteMeldung`.
+  - Versionshinweise: Eine Monatsüberschrift `<h2>` beendet den laufenden Tag. Einträge unter einer `<h3>` ohne Datum fallen weiter weg (bewusst).
+  - Mit Uhrzeit heißt über 24 Std. wieder mindestens „gestern“, auch am 25-Stunden-Tag der Winterzeit. Der Umbau nach dem ersten Review hatte
+    dort „heute“ ohne Punkt ergeben.
+  - `datumAusText` versteht „Sept“, „Sep.“ und geschützte Leerzeichen (Monat: Anfang des Namens, mindestens 3 Buchstaben).
+  - `claude-artikel` berechnet das Datum nur einmal (Schleife mit frühem Ende).
+  - `ladeKanal` verlangt den Leser, die alten Tests geben `leseFeed` mit.
+- **Hingenommen:** Mehrere Seiten-Meldungen von heute liegen gleichauf, ihre Reihenfolge folgt den Einstellungen. Ohne Uhrzeit gibt es keine bessere.
+- **Erledigt durch die Vorschau:** Abruf von Vercel aus.

@@ -21,7 +21,7 @@ type Kanal = { url: string; lese: (text: string) => Meldung[] };
 export async function ladeKanal(
   url: string,
   jetzt: Date,
-  lese: Kanal["lese"] = leseFeed,
+  lese: Kanal["lese"],
 ): Promise<Meldung[]> {
   const antwort = await fetch(url, {
     headers: { "User-Agent": "Tages-Dashboard" },
@@ -113,9 +113,10 @@ export async function ladeKiNews(
   if (!staende.some((stand) => stand.erreichbar)) {
     throw new Error("Kein Absender ist erreichbar");
   }
-  return staende.sort(
-    (a, b) =>
-      Date.parse(b.letzteMeldung ?? "0000") -
-      Date.parse(a.letzteMeldung ?? "0000"),
-  );
+  // Wie innerhalb eines Absenders: Eine Seiten-Meldung von heute zählt nicht als 00:00 UTC.
+  const neueste = (stand: AbsenderStand) =>
+    stand.meldungen[0]
+      ? sortierZeit(stand.meldungen[0], jetzt)
+      : Date.parse(stand.letzteMeldung ?? "0000");
+  return staende.sort((a, b) => neueste(b) - neueste(a));
 }

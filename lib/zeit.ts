@@ -76,6 +76,7 @@ export function alterText(
     return `vor ${Math.floor(abstand / STUNDE_MS)} Std.`;
   }
   const tage = tageZurueck(iso, jetzt);
-  if (tage <= 0) return "heute";
-  return tage === 1 ? "gestern" : `vor ${tage} Tagen`;
+  if (nurDatum && tage <= 0) return "heute";
+  // Mit Uhrzeit heißt über 24 Std. immer mindestens „gestern“, auch am 25-Stunden-Tag der Zeitumstellung.
+  return tage <= 1 ? "gestern" : `vor ${tage} Tagen`;
 }

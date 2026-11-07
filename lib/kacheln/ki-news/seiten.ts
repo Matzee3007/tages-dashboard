@@ -20,12 +20,12 @@ const MONATE = [
 
 // Die Seiten nennen nur den Tag ("Nov 6, 2026"). 00:00 UTC, damit eine Meldung von heute nicht in der Zukunft liegt.
 function datumAusText(text: string): string | null {
-  const treffer = /^([a-z]+) (\d{1,2}), (\d{4})$/i.exec(text.trim());
+  // \s erfasst auch das geschützte Leerzeichen; „Sep.“ und „Sept“ sind Anfänge des Monatsnamens.
+  const treffer = /^([a-z]+)\.?\s+(\d{1,2}),\s+(\d{4})$/i.exec(text.trim());
   if (!treffer) return null;
   const wort = treffer[1].toLowerCase();
-  const monat = MONATE.findIndex(
-    (name) => name === wort || name.slice(0, 3) === wort,
-  );
+  const monat =
+    wort.length >= 3 ? MONATE.findIndex((name) => name.startsWith(wort)) : -1;
   const tag = Number(treffer[2]);
   const zeit = new Date(Date.UTC(Number(treffer[3]), monat, tag));
   // Ein unmöglicher Tag wie „Feb 31“ rollte sonst still in den nächsten Monat.
@@ -83,10 +83,11 @@ function leseClaudeArtikel(wurzel: HTMLElement, url: string): Meldung[] {
   return wurzel.querySelectorAll("a[href]").flatMap((karte) => {
     const ueberschrift = karte.querySelector("h3");
     if (!ueberschrift) return [];
-    const mitDatum = karte
-      .querySelectorAll("*")
-      .find((element) => datumAusText(element.text));
-    const zeit = mitDatum ? datumAusText(mitDatum.text) : null;
+    let zeit: string | null = null;
+    for (const element of karte.querySelectorAll("*")) {
+      zeit = datumAusText(element.text);
+      if (zeit) break;
+    }
     return meldung(
       titelAus(ueberschrift),
       absoluterLink(karte.getAttribute("href"), url),
@@ -95,11 +96,18 @@ function leseClaudeArtikel(wurzel: HTMLElement, url: string): Meldung[] {
   });
 }
 
-// Hilfe-Center: Jede <h3> beginnt einen Tag, jeder ganz fette Absatz danach ist ein Eintrag.
+// Hilfe-Center: Jede <h3> beginnt einen Tag, jeder ganz fette Absatz danach ist ein Eintrag. Eine <h2> (Monat)
+// beendet den laufenden Tag.
 // Alle Einträge eines Tages zeigen auf denselben Anker und werden eine Meldung.
 function leseVersionshinweise(wurzel: HTMLElement, url: string): Meldung[] {
   const tage: { id: string; zeit: string | null; titel: string[] }[] = [];
-  for (const element of wurzel.querySelectorAll("article h3, article p")) {
+  for (const element of wurzel.querySelectorAll(
+    "article h2, article h3, article p",
+  )) {
+    if (element.tagName === "H2") {
+      tage.push({ id: "", zeit: null, titel: [] });
+      continue;
+    }
     if (element.tagName === "H3") {
       const id = element.getAttribute("id") ?? "";
       tage.push({ id, zeit: datumAusText(element.text), titel: [] });
