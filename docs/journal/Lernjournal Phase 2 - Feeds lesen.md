@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 2 - Feeds lesen
-status: aktiv
+status: abgeschlossen
 phase: 2
 erstellt: 2026-11-04
 tags: [lernjournal, phase-2, rss, fast-xml-parser, next-js, docker]

@@ -101,7 +101,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
   Projektvision mit `/grill-with-docs` geschärft, Phasen 1 bis 3 geplant
 - [x] **Phase 1 – Grundgerüst:** Login, PWA (Symbol, Vollbild auf iPhone und iPad), Mac-App mit Tauri, Kachel-System mit
   einer Beispielkachel, online auf Vercel
-- [ ] **Phase 2 – KI-News:** Feeds und selbst ausgelesene Seiten von Anthropic, Claude Updates, OpenAI, Google DeepMind,
+- [x] **Phase 2 – KI-News:** Feeds und selbst ausgelesene Seiten von Anthropic, Claude Updates, OpenAI, Google DeepMind,
   Karpathy, Matt Pocock und Fachseiten in einer Kachel mit einem Abschnitt pro Absender
 - [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (OpenLigaDB), Premier League und Champions League
   (football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
@@ -169,7 +169,7 @@ Stand 2026-11-04, nach der Befragung mit `/grill-with-docs`.
    App fremde Links öffnet (aus Schritt 2, erst hier gibt es echte Links). Aus dem `/code-review` von PR #30 erledigt:
    Rechenzeit auf Vercel gemessen (563 ms, Feeds aus dem Zwischenspeicher), keine Rohtexte wie `&ouml;` in Titeln. Hingenommen: `stand` nennt
    die Abrufzeit statt des Alters der Daten.
-4. **Seiten auslesen** (Code fertig 2026-11-07, PR #40, siehe [[projects/tages-dashboard/docs/plaene/2026-11-07-seiten-auslesen|Plan]]): die Kanäle ohne Feed. Das kommt zuletzt, weil es am anfälligsten ist und die Kachel dann schon läuft.
+4. **Seiten auslesen** (erledigt 2026-11-07, PR #40, siehe [[projects/tages-dashboard/docs/plaene/2026-11-07-seiten-auslesen|Plan]]): die Kanäle ohne Feed. Das kommt zuletzt, weil es am anfälligsten ist und die Kachel dann schon läuft.
 
 Absender und Kanäle (am 2026-11-04 von diesem Rechner aus abgerufen, die Seiten am 2026-11-07 neu geprüft):
 
