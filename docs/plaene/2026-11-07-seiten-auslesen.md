@@ -1,6 +1,6 @@
 ---
 titel: "Plan: Seiten auslesen"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-07
 tags: [plan, kacheln, ki-news, phase-2]
 ---
@@ -259,7 +259,7 @@ Tool-Notiz `node-html-parser.md` (Zweck, Version, warum nicht `fast-xml-parser` 
 `Tools Übersicht.md`. In der Projektvision: Schritt 4 „Code fertig, PR #…“, die Tabelle „Absender und Kanäle“ mit den neuen Adressen
 (`claude.com/resources/articles`, Red-Team-Seite statt `red.anthropic.com`).
 
-- [ ] **Schritt 4: Prüfen, committen, PR**
+- [x] **Schritt 4: Prüfen, committen, PR**
 
 `npm run check`, Agent `plan-pruefer`, committen: `Document page channels`. PR öffnen, auf der Vorschau anmelden und die Kachel ansehen
 (Entwickler), vor dem Merge `/code-review`.
@@ -268,7 +268,7 @@ Tool-Notiz `node-html-parser.md` (Zweck, Version, warum nicht `fast-xml-parser` 
 
 - [ ] **Schritt 1:** Die App auf einem Gerät neu laden. Erwartet: Anthropic zeigt Meldungen von der News-Seite oder dem Claude-Blog, ein
       Antippen öffnet den Beitrag.
-- [ ] **Schritt 2:** Plan auf `status: abgeschlossen`, Schritt 4 im Fahrplan auf „erledigt“, Phase 2 abschließen (Journal, Übergabe).
+- [x] **Schritt 2:** Plan auf `status: abgeschlossen`, Schritt 4 im Fahrplan auf „erledigt“, Phase 2 abschließen (Journal, Übergabe).
 
 ## Ergebnisse
 

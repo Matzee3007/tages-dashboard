@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 2 - KI-News-Kachel
-status: aktiv
+status: abgeschlossen
 phase: 2
 erstellt: 2026-11-06
 tags: [lernjournal, phase-2, ki-news, vercel, mock-bauer, code-review, plan-pruefer, chrome]

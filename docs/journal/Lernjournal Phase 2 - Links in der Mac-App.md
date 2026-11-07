@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 2 - Links in der Mac-App
-status: aktiv
+status: abgeschlossen
 phase: 2
 erstellt: 2026-11-06
 tags: [lernjournal, phase-2, tauri, rust, dependabot, code-review, plan-pruefer]
