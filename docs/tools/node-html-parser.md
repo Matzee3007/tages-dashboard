@@ -8,7 +8,7 @@ tags: [tools, html, scraping, ki-news]
 # node-html-parser
 
 Gehört zu [[projects/tages-dashboard/docs/tools/Tools Übersicht|Tools Übersicht]]. Plan:
-[[projects/tages-dashboard/docs/plaene/2026-11-07-seiten-auslesen|Plan: Seiten auslesen]].
+[[projects/tages-dashboard/docs/plaene/2026-11-07-seiten-auslesen|Plan: Seiten auslesen]], Entscheidung: [[projects/tages-dashboard/docs/adr/0007-seiten-mit-node-html-parser|ADR 0007]].
 
 ## Was ist das?
 

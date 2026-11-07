@@ -283,3 +283,23 @@ sofort grün waren, kurz Fehler eingebaut: Ohne `istWebLink` und mit dem ersten 
 - Kein Seiten-Kanal im Log als „ließ sich nicht laden“. Beim ersten Abruf fielen 10 Feeds mit „Gespeicherte Antwort von Fri, 06 Nov“ aus: Der
   lokale Zwischenspeicher hielt Antworten vom Vortag, die Grenze von 1 Std. griff wie gewollt. Beim zweiten Abruf waren alle da.
 - `npm run build` fehlerfrei.
+
+## Nach dem Review
+
+Aus dem `/code-review` von PR #40, mit dem Entwickler am 2026-11-07 durchgegangen:
+
+- **Behoben:**
+  - Uhrzeit (Fund 1 und 2): Meldungen von Seiten tragen `nurDatum: true`. `alterText` und `istFrisch` bekommen dafür einen dritten Parameter: Alter nur
+    in Kalendertagen („heute“, „gestern“, „vor X Tagen“), frisch sind heute und gestern (Entscheidung des Entwicklers), weil ein Beitrag vom Abend in
+    den USA bei uns am Morgen schon „gestern“ heißt. `ladeAbsender` sortiert und schneidet die 7 Tage nach `sortierZeit`: Ende des Tages, höchstens
+    jetzt. `letzteMeldung` bleibt das Datum selbst, damit „zuletzt vor X Tagen“ stimmt.
+  - Link nur mit `href`: erst der Link in der `<h3>`, sonst einer um sie herum, aber nur aus derselben Zeile.
+  - Titel aus mehreren fetten Teilen (`<b>New:</b> <b>Projects</b>`) gelten als Titel.
+  - `datumAusText` kennt nur echte Monatsnamen (lang oder 3 Buchstaben) und verwirft unmögliche Tage wie „Feb 31“. Bei `claude-artikel` wird
+    das Datum nur einmal berechnet.
+  - ADR fehlte: [[projects/tages-dashboard/docs/adr/0007-seiten-mit-node-html-parser|ADR 0007]].
+- **Hingenommen:**
+  - Rechenzeit: Alle 6 Seiten werden pro Abruf neu zerlegt, gemessen 25 bis 42 ms auf dem Mac. Kein eigener Speicher für die Ergebnisse.
+  - Lange Tageszeilen der Versionshinweise (gemessen bis 227 Zeichen, Median 49): bleiben vollständig, Entscheidung des Entwicklers.
+  - Die Reihenfolge der Absender richtet sich weiter nach `letzteMeldung`, bei Seiten also nach 00:00 UTC des Tages.
+- **Erledigt durch die Vorschau:** Vercel darf die Seiten abrufen, die Vorschau zeigte ihre Meldungen (Entwickler, 2026-11-07).
