@@ -176,7 +176,7 @@ test("wirft bei claude-artikel und versionshinweise ohne Meldung", …);
 - [x] **Schritt 3: Leser `claude-artikel` und `versionshinweise` in `seiten.ts`**
 
 `claude-artikel`: jedes `<a href>` mit `<h3>` darin, Datum aus dem ersten Text darin, den `datumAusText` versteht. `versionshinweise`: die Kinder
-von `<article>` der Reihe nach durchgehen. Eine `<h3>` mit lesbarem Datum beginnt einen Tag, ein `<p>`, dessen Text gleich dem Text seines
+von `<article>` der Reihe nach durchgehen. Jede `<h3>` beginnt einen Tag (ohne lesbares Datum fällt er samt Einträgen weg, statt sie dem Vortag zuzuschlagen), ein `<p>`, dessen Text gleich dem Text seines
 einzigen `<b>` ist, ist ein Titel dieses Tages.
 
 - [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
@@ -242,18 +242,18 @@ git commit -m "Load AI news pages as channels"
 - Neu: `docs/tools/node-html-parser.md`
 - Ändern: `docs/tools/Tools Übersicht.md`, `docs/Projektvision.md`, dieser Plan (Abschnitt „Ergebnisse“)
 
-- [ ] **Schritt 1: Echte Seiten lokal**
+- [x] **Schritt 1: Echte Seiten lokal**
 
 Wie im [[projects/tages-dashboard/docs/plaene/2026-11-06-ki-news-kachel|Plan KI-News-Kachel]], Aufgabe 4: `proxy.ts` vorübergehend heraus,
 `npm run dev`, `/api/kacheln` abrufen, danach `proxy.ts` zurück (`git status` sauber bis auf Gewolltes). Erwartet: Anthropic `erreichbar: true`
 mit Meldungen von `anthropic.com` und `claude.com` der letzten 7 Tage, Claude Updates mit einer Meldung pro Tag aus dem Hilfe-Center, kein
 `Kanal … ließ sich nicht laden` im Log des Servers. Zahlen in „Ergebnisse“ festhalten.
 
-- [ ] **Schritt 2: `npm run build`**
+- [x] **Schritt 2: `npm run build`**
 
 Erwartet: fehlerfrei.
 
-- [ ] **Schritt 3: Doku**
+- [x] **Schritt 3: Doku**
 
 Tool-Notiz `node-html-parser.md` (Zweck, Version, warum nicht `fast-xml-parser` oder `cheerio`, Selektoren, die wir nutzen), Eintrag in
 `Tools Übersicht.md`. In der Projektvision: Schritt 4 „Code fertig, PR #…“, die Tabelle „Absender und Kanäle“ mit den neuen Adressen
