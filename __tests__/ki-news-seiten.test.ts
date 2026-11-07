@@ -106,3 +106,81 @@ test("wirft, wenn die Seite keine Meldung enthält", () => {
     ),
   ).toThrow("Keine Meldung auf der Seite gefunden");
 });
+
+const URL_ARTIKEL = "https://claude.com/resources/articles";
+
+test("liest Karten von claude.com mit Datum und Titel im Link", () => {
+  const html =
+    `<html><body><div><a href="/resources/articles/message-threads"><div><span>Article</span>` +
+    `<span>Nov 2, 2026</span></div><div><h3>Make long-running agents faster with message threads</h3></div></a>` +
+    `<a href="/resources">Resources</a></div></body></html>`;
+  expect(leseSeite("claude-artikel", html, URL_ARTIKEL)).toEqual([
+    {
+      titel: "Make long-running agents faster with message threads",
+      link: "https://claude.com/resources/articles/message-threads",
+      zeit: "2026-11-02T00:00:00.000Z",
+    },
+  ]);
+});
+
+const URL_HINWEISE =
+  "https://support.claude.com/en/articles/12138966-release-notes";
+
+// Gekürzt nach dem Aufbau von support.claude.com am 2026-11-07.
+const block = (inhalt: string) => `<div>${inhalt}</div>`;
+const hinweise = (...bloecke: string[]) =>
+  `<html><body><header><time>Updated today</time></header><article>${bloecke.join("")}</article></body></html>`;
+
+const HINWEISE = hinweise(
+  block(`<h2 id="h_1d835e0105">November 2026</h2>`),
+  block(`<h3 id="h_8cd3ee82ce">November 6, 2026</h3>`),
+  block(`<p><b>Track spend by cost code with project tags (beta)</b></p>`),
+  block(
+    `<p>Eligible Enterprise organizations can now tag projects. For more information, see <b><a href="https://support.claude.com/x">Track spend by cost code</a></b>.</p>`,
+  ),
+  block(`<p> </p>`),
+  block(`<h3 id="h_1c75a86390">November 5, 2026</h3>`),
+  block(`<p><b>New security and admin controls for Enterprise plans</b></p>`),
+  block(`<p>Claude Enterprise has new security features.</p>`),
+  block(`<p><b>Personal Finance in Claude</b></p>`),
+  block(`<p>We’re rolling out Personal Finance.</p>`),
+  block(`<h2 id="h_aa">October 2026</h2>`),
+  block(`<h3 id="h_leer">October 21, 2026</h3>`),
+  block(`<p>Nur Text ohne fetten Titel.</p>`),
+);
+
+test("fasst die Versionshinweise eines Tages zu einer Meldung zusammen", () => {
+  expect(leseSeite("versionshinweise", HINWEISE, URL_HINWEISE)[1]).toEqual({
+    titel:
+      "New security and admin controls for Enterprise plans · Personal Finance in Claude",
+    link: `${URL_HINWEISE}#h_1c75a86390`,
+    zeit: "2026-11-05T00:00:00.000Z",
+  });
+});
+
+test("zählt nur Absätze, die ganz fett sind, als Titel", () => {
+  expect(leseSeite("versionshinweise", HINWEISE, URL_HINWEISE)[0]).toEqual({
+    titel: "Track spend by cost code with project tags (beta)",
+    link: `${URL_HINWEISE}#h_8cd3ee82ce`,
+    zeit: "2026-11-06T00:00:00.000Z",
+  });
+});
+
+test("überspringt Monatsüberschriften und Tage ohne Eintrag", () => {
+  expect(
+    leseSeite("versionshinweise", HINWEISE, URL_HINWEISE).map(
+      (meldung) => meldung.zeit,
+    ),
+  ).toEqual(["2026-11-06T00:00:00.000Z", "2026-11-05T00:00:00.000Z"]);
+});
+
+test("wirft bei claude-artikel und versionshinweise ohne Meldung", () => {
+  const leer =
+    "<html><body><article><p>Neu gestaltet</p></article></body></html>";
+  expect(() => leseSeite("claude-artikel", leer, URL_ARTIKEL)).toThrow(
+    "Keine Meldung auf der Seite gefunden",
+  );
+  expect(() => leseSeite("versionshinweise", leer, URL_HINWEISE)).toThrow(
+    "Keine Meldung auf der Seite gefunden",
+  );
+});

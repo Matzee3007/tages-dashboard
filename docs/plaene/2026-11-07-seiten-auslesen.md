@@ -148,7 +148,7 @@ git commit -m "Read Anthropic pages for AI news"
 - Nutzt: `leseSeite`, `datumAusText`, `absoluterLink` aus Aufgabe 1
 - Liefert: `leseSeite` versteht `"claude-artikel"` und `"versionshinweise"`
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 ```ts
 const URL_HINWEISE = "https://support.claude.com/en/articles/12138966-release-notes";
@@ -169,21 +169,21 @@ test("überspringt Monatsüberschriften und Tage ohne Eintrag", …); // <h2>Nov
 test("wirft bei claude-artikel und versionshinweise ohne Meldung", …);
 ```
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
 
 `npx vitest run __tests__/ki-news-seiten.test.ts`. Erwartet: FAIL mit „Unbekannte Bauart“.
 
-- [ ] **Schritt 3: Leser `claude-artikel` und `versionshinweise` in `seiten.ts`**
+- [x] **Schritt 3: Leser `claude-artikel` und `versionshinweise` in `seiten.ts`**
 
 `claude-artikel`: jedes `<a href>` mit `<h3>` darin, Datum aus dem ersten Text darin, den `datumAusText` versteht. `versionshinweise`: die Kinder
 von `<article>` der Reihe nach durchgehen. Eine `<h3>` mit lesbarem Datum beginnt einen Tag, ein `<p>`, dessen Text gleich dem Text seines
 einzigen `<b>` ist, ist ein Titel dieses Tages.
 
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
 
 `npx vitest run __tests__/ki-news-seiten.test.ts`. Erwartet: PASS.
 
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 5: Prüfen und committen**
 
 ```bash
 npm run check

@@ -66,17 +66,56 @@ function leseAnthropic(wurzel: HTMLElement, url: string): Meldung[] {
   });
 }
 
+// claude.com: Jede Karte ist ein Link mit einem Datum in einem eigenen Element und der Überschrift.
+function leseClaudeArtikel(wurzel: HTMLElement, url: string): Meldung[] {
+  return wurzel.querySelectorAll("a[href]").flatMap((karte) => {
+    const ueberschrift = karte.querySelector("h3");
+    if (!ueberschrift) return [];
+    const zeit =
+      karte
+        .querySelectorAll("*")
+        .map((element) => datumAusText(element.text))
+        .find(Boolean) ?? null;
+    return meldung(
+      titelAus(ueberschrift),
+      absoluterLink(karte.getAttribute("href"), url),
+      zeit,
+    );
+  });
+}
+
+// Hilfe-Center: Eine <h3> mit Datum beginnt einen Tag, jeder ganz fette Absatz danach ist ein Eintrag.
+// Alle Einträge eines Tages zeigen auf denselben Anker und werden eine Meldung.
+function leseVersionshinweise(wurzel: HTMLElement, url: string): Meldung[] {
+  const tage: { id: string; zeit: string | null; titel: string[] }[] = [];
+  for (const element of wurzel.querySelectorAll("article h3, article p")) {
+    if (element.tagName === "H3") {
+      const id = element.getAttribute("id") ?? "";
+      tage.push({ id, zeit: datumAusText(element.text), titel: [] });
+      continue;
+    }
+    const fett = element.querySelector("b");
+    const titel = titelAus(element);
+    if (fett && titel && titel === titelAus(fett)) {
+      tage.at(-1)?.titel.push(titel);
+    }
+  }
+  return tage.flatMap((tag) =>
+    meldung(
+      tag.titel.join(" · "),
+      tag.id ? absoluterLink(`#${tag.id}`, url) : null,
+      tag.zeit,
+    ),
+  );
+}
+
 const LESER: Record<
   SeitenArt,
   (wurzel: HTMLElement, url: string) => Meldung[]
 > = {
   anthropic: leseAnthropic,
-  "claude-artikel": () => {
-    throw new Error("Unbekannte Bauart");
-  },
-  versionshinweise: () => {
-    throw new Error("Unbekannte Bauart");
-  },
+  "claude-artikel": leseClaudeArtikel,
+  versionshinweise: leseVersionshinweise,
 };
 
 export function leseSeite(
