@@ -60,7 +60,7 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 | Login und Datenbank | Supabase (Auth, Postgres) |
 | Hosting | Vercel (kostenloser Tarif) |
 | Tests und Qualität | Vitest, Testing Library, ESLint, Prettier |
-| Sportdaten | OpenLigaDB, football-data.org, ESPN (inoffiziell), Jolpica, OpenF1 |
+| Sportdaten | ESPN (inoffiziell, Bundesliga und NFL), football-data.org, Jolpica, OpenF1 |
 | News | RSS- und Atom-Feeds (`fast-xml-parser`), selbst ausgelesene Seiten |
 | Schritte | iPhone-Kurzbefehl → eigene Schnittstelle der App |
 
@@ -103,7 +103,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
   einer Beispielkachel, online auf Vercel
 - [x] **Phase 2 – KI-News:** Feeds und selbst ausgelesene Seiten von Anthropic, Claude Updates, OpenAI, Google DeepMind,
   Karpathy, Matt Pocock und Fachseiten in einer Kachel mit einem Abschnitt pro Absender
-- [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (OpenLigaDB), Premier League und Champions League
+- [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (ESPN), Premier League und Champions League
   (football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
 - [ ] **Phase 4 – Schritte:** iPhone-Kurzbefehl schickt die Schritte aus Apple Health an die App, Kachel mit
   Tageswert, Tagesziel und Verlauf
@@ -209,13 +209,47 @@ Entscheidungen aus der Befragung vom 2026-11-04:
 
 **Phase 3 – Sport**
 
-1. **Bundesliga (OpenLigaDB):** Spieltag und Tabelle, Mein Team hervorgehoben. Die erste Sport-Kachel legt das
+1. **Bundesliga (ESPN, [[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]):** Spieltag und Tabelle, Mein Team hervorgehoben. Die erste Sport-Kachel legt das
    Muster für die anderen fest.
 2. **Premier League und Champions League (football-data.org):** API-Schlüssel auf dem Server, Zwischenspeicher
    für die Grenze von 10 Abrufen pro Minute.
 3. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
 4. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
    nicht, eine andere Gratis-Quelle suchen oder die Kachel unter „Später“ schieben.
+
+Entscheidungen aus der Befragung vom 2026-11-08:
+
+- **Wechsel des Spieltags:** eigene Regel für alle Wettbewerbe statt der des Anbieters. Ein Spieltag bleibt bis Mitternacht des Tages
+  nach seinem letzten Spiel stehen, danach kommt der nächste (in der Winterpause also schon mit den neuen Terminen).
+- **Tabelle als Ausschnitt:** Platz 1 und Mein Team mit je 2 Plätzen darüber und darunter. Spalten: Platz, Team, Spiele,
+  Tordifferenz, Punkte.
+- **Mein Team** kann mehrere Teams umfassen (Champions League: FC Bayern und Arsenal), die Formel 1 hat vorerst keins.
+- **Zwischenspeicher:** 1 Minute, solange ein Spiel des Spieltags läuft (ab Anstoß rund 2½ Stunden), sonst 15 Minuten. Die Grenze von
+  football-data.org wird in Schritt 2 eigens nachgerechnet.
+- **Zeitlimit:** Jeder Abruf eines Anbieters bekommt ein eigenes `AbortSignal.timeout` wie bei den KI-News. Ein zentrales
+  Abbruchsignal entfällt.
+- **Erst konkret, dann verallgemeinern:** Die Bundesliga wird ohne gemeinsame Sport-Hülle gebaut. Gemeinsames wird erst mit der zweiten
+  Sport-Kachel (Schritt 2) herausgezogen, dann auch der Skill `codebase-design` geprüft.
+- **Bundesliga von ESPN statt OpenLigaDB,** weil die Spieldaten möglichst live sein sollen und OpenLigaDB Ergebnisse oft erst Stunden
+  später hat ([[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]).
+- **Torschützen:** eine graue Zeile unter jeder Partie mit Toren, Tore beider Teams nach Minute, z. B. `García 7' · Schick 85'`.
+- **Logos:** rund 20 px vor dem Teamnamen, der Browser lädt sie direkt beim Anbieter. Fehlt ein Bild, bleibt der Platz leer.
+- **NFL** bleibt Schritt 4, zuerst mit einem Testabruf vom Server bei Vercel aus.
+- **Spieltag aus Kalendertagen:** Aufeinanderfolgende Tage mit Spielen bei ESPN bilden einen Spieltag, ein Tag ohne Spiel trennt.
+- **Nummer und Datum über dem Spieltag,** z. B. `9. Spieltag · Fr 6. – So 8. November`. ESPN kennt keine Nummer, sie kommt aus dem
+  Spielplan der Saison bei OpenLigaDB (`getmatchdata/bl1/<Saison>`, passende Tage). Fehlt sie, stehen nur die Tage da.
+- **Deutsche Teamnamen** aus einer eigenen Liste in den Einstellungen, nach der id von ESPN (z. B. `1. FC Köln`, `Bayern München`).
+  Mein Team wird über die id erkannt.
+- **Speicher von 1 Minute,** solange eine Partie läuft oder ihr Anstoß vorbei ist, sie aber noch nicht als beendet gilt (Status von ESPN),
+  sonst 15 Minuten. Das verfeinert die Regel „ab Anstoß rund 2½ Stunden“.
+- **Laufende Partie:** Spielminute mit orangem Live-Punkt statt Anstoßzeit, z. B. `● 56'  Freiburg – Union 0:0`.
+- **Nachholspiel:** Liegen alle Partien eines Blocks in einem früheren Spieltag als dem zuletzt gespielten, steht dort
+  `Nachholspiel · Mi 18. November`.
+- **Namensliste der Saison 2026/27:** Bayern München, Borussia Dortmund, RB Leipzig, SC Freiburg, Bayer Leverkusen, Werder Bremen,
+  SV Elversberg, VfB Stuttgart, Eintracht Frankfurt, Hamburger SV, Mainz 05, SC Paderborn, FC Augsburg, TSG Hoffenheim, 1. FC Köln,
+  Union Berlin, Schalke 04, Borussia Mönchengladbach. Ist die Zeile auf dem iPhone zu lang, werden einzelne Namen im Mock gekürzt.
+  Fehlt ein Team (z. B. ein Aufsteiger), steht der Name von ESPN da und im Server-Log `Team <id> fehlt in der Namensliste`.
+- **Speicher:** Spielplan von OpenLigaDB 24 Stunden, Tabelle von ESPN wie die Partien (1 bzw. 15 Minuten).
 
 ## Stolpersteine
 
