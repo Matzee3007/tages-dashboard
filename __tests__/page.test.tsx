@@ -150,3 +150,22 @@ test("eine Kachel unbekannter Art bittet ums Neuladen", async () => {
     await screen.findByText("Neue Kachel, bitte die Seite neu laden."),
   ).toBeDefined();
 });
+
+test("↻ holt die Kachel frisch, erneut versuchen und der Takt fragen ohne Argument", async () => {
+  vi.mocked(holeDashboard).mockResolvedValueOnce(null).mockResolvedValue(OK);
+  render(<Page />);
+
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Jetzt erneut versuchen" }),
+  );
+  fireEvent.click(
+    await screen.findByRole("button", { name: "KI-News aktualisieren" }),
+  );
+
+  await waitFor(() => expect(holeDashboard).toHaveBeenCalledTimes(3));
+  expect(vi.mocked(holeDashboard).mock.calls).toEqual([
+    [undefined],
+    [undefined],
+    ["ki-news"],
+  ]);
+});

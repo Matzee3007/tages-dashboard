@@ -18,15 +18,16 @@ export type AbsenderStand = {
 
 type Kanal = { url: string; lese: (text: string) => Meldung[] };
 
+// etikett: id der Kachel. Ihr Knopf ↻ leert damit den Speicher (ADR 0008).
 export async function ladeKanal(
   url: string,
   jetzt: Date,
+  etikett: string,
   lese: Kanal["lese"],
 ): Promise<Meldung[]> {
   const antwort = await fetch(url, {
     headers: { "User-Agent": "Tages-Dashboard" },
-    // Das Etikett ist die id der Kachel: Ihr Knopf ↻ leert damit den Speicher (ADR 0008).
-    next: { revalidate: ZWISCHENSPEICHER_SEKUNDEN, tags: ["ki-news"] },
+    next: { revalidate: ZWISCHENSPEICHER_SEKUNDEN, tags: [etikett] },
     signal: AbortSignal.timeout(KANAL_ZEITLIMIT_MS),
   });
   if (!antwort.ok) {
@@ -50,6 +51,7 @@ function sortierZeit(meldung: Meldung, jetzt: Date): number {
 export async function ladeAbsender(
   absender: AbsenderEinstellung,
   jetzt: Date,
+  etikett: string,
 ): Promise<AbsenderStand> {
   const kanaele: Kanal[] = [
     ...absender.feeds.map((url) => ({ url, lese: leseFeed })),
@@ -59,7 +61,7 @@ export async function ladeAbsender(
     })),
   ];
   const ergebnisse = await Promise.allSettled(
-    kanaele.map(({ url, lese }) => ladeKanal(url, jetzt, lese)),
+    kanaele.map(({ url, lese }) => ladeKanal(url, jetzt, etikett, lese)),
   );
 
   const geladen: Meldung[] = [];
@@ -107,9 +109,10 @@ export async function ladeAbsender(
 export async function ladeKiNews(
   absender: AbsenderEinstellung[],
   jetzt: Date,
+  etikett: string,
 ): Promise<AbsenderStand[]> {
   const staende = await Promise.all(
-    absender.map((einzeln) => ladeAbsender(einzeln, jetzt)),
+    absender.map((einzeln) => ladeAbsender(einzeln, jetzt, etikett)),
   );
   if (!staende.some((stand) => stand.erreichbar)) {
     throw new Error("Kein Absender ist erreichbar");

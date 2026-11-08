@@ -52,6 +52,11 @@ test("POST mit frisch leert den Speicher der Kachel vor dem Laden", async () => 
   const daten = await antwort.json();
   expect(daten.kacheln[0].status).toBe("ok");
   expect(ladeKiNews).toHaveBeenCalledTimes(1);
+  expect(ladeKiNews).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.any(Date),
+    "ki-news",
+  );
 });
 
 test.each(["", "?frisch=unbekannt"])(

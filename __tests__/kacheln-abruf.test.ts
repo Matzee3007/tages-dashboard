@@ -80,3 +80,17 @@ test("frisch schickt ein POST mit der Kachel", async () => {
     expect.objectContaining({ method: "POST", cache: "no-store" }),
   );
 });
+
+test("die id der Kachel kommt kodiert in die Adresse", async () => {
+  const attrappe = fetchAttrappe({
+    ok: true,
+    status: 200,
+    json: async () => DATEN,
+  });
+
+  await holeDashboard("a&b c");
+  expect(attrappe).toHaveBeenCalledWith(
+    "/api/kacheln?frisch=a%26b%20c",
+    expect.anything(),
+  );
+});

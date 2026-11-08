@@ -7,7 +7,9 @@ export async function holeDashboard(
 ): Promise<DashboardAntwort | "abgemeldet" | null> {
   try {
     const antwort = await fetch(
-      frisch ? `/api/kacheln?frisch=${frisch}` : "/api/kacheln",
+      frisch
+        ? `/api/kacheln?frisch=${encodeURIComponent(frisch)}`
+        : "/api/kacheln",
       {
         method: frisch ? "POST" : "GET",
         cache: "no-store",

@@ -38,7 +38,7 @@ test("die KI-News-Kachel liefert die Absender aus den Einstellungen", async () =
     JETZT,
   );
 
-  expect(ladeKiNews).toHaveBeenCalledWith(ABSENDER, JETZT);
+  expect(ladeKiNews).toHaveBeenCalledWith(ABSENDER, JETZT, "ki-news");
   expect(antwort.kacheln).toEqual([
     {
       id: "ki-news",

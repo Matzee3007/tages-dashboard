@@ -4,10 +4,13 @@ import type { KachelDaten } from "@/lib/kacheln/typen";
 
 // Eigene Datei, damit Tests ladeKiNews durch eine Attrappe ersetzen können.
 export async function ladeKiNewsKachel(
-  _einstellung: KachelEinstellung,
+  einstellung: KachelEinstellung,
   jetzt: Date,
 ): Promise<{ daten: KachelDaten }> {
   return {
-    daten: { art: "ki-news", absender: await ladeKiNews(ABSENDER, jetzt) },
+    daten: {
+      art: "ki-news",
+      absender: await ladeKiNews(ABSENDER, jetzt, einstellung.id),
+    },
   };
 }

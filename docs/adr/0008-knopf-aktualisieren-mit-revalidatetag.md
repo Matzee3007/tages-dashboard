@@ -15,7 +15,8 @@ abfragt, zeigt deshalb oft denselben Stand.
 
 ## Entscheidung
 
-- **Jeder Abruf einer Kachel trägt ihre id als Etikett** (`next: { tags: ["ki-news"] }`).
+- **Jeder Abruf einer Kachel trägt ihre id als Etikett** (`next: { tags: [etikett] }`). Die id kommt aus `KACHELN` und wird bis zum Abruf
+  durchgereicht, damit Knopf und Speicher nicht auseinanderlaufen.
 - **Der Knopf ↻ im Kopf der Kachel schickt `POST /api/kacheln?frisch=<id>`.** Die Schnittstelle prüft die id gegen `KACHELN`, ruft
   `revalidateTag(id, { expire: 0 })` und liefert dann dieselbe Antwort wie `GET`. Laut Quelltext von Next.js 16.4.3
   (`incremental-cache/index.js`) zählt ein Etikett, das in derselben Anfrage abgelaufen ist, sofort als Fehltreffer. Die Abrufe dieser Antwort gehen
@@ -37,3 +38,6 @@ abfragt, zeigt deshalb oft denselben Stand.
   bis zu 1 Stunde gehalten.
 - Jeder Klick ruft alle Feeds und Seiten der KI-News ab (rund 2,4 MB). Für einen Nutzer mit gelegentlichem Klick ist das unkritisch.
 - Eine neue Kachel bekommt den Knopf von selbst. Frisch wird sie aber erst, wenn ihre Abrufe ihre id als Etikett tragen.
+- ↻ dreht sich nur nach einem Klick auf ihn selbst. Gesperrt ist er bei jedem Abruf, auch beim Minutentakt.
+- Bewusst offen (Funde 6 und 7 aus dem `/code-review` von PR #44): Eine unbekannte id meldet 400, das zeigt alle Kacheln als Fehler. Und POST lädt
+  alle Kacheln, die anderen kommen dabei aus ihrem Speicher.

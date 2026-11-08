@@ -30,6 +30,7 @@ export function Dashboard() {
   const [zeit, setZeit] = useState<string | null>(null);
   const [geladen, setGeladen] = useState(false);
   const [laedt, setLaedt] = useState(false);
+  const [frischId, setFrischId] = useState<string | null>(null);
   const laeuft = useRef(false);
   const router = useRouter();
 
@@ -38,9 +39,11 @@ export function Dashboard() {
       if (laeuft.current) return;
       laeuft.current = true;
       setLaedt(true);
+      setFrischId(frisch ?? null);
       const antwort = await holeDashboard(frisch);
       laeuft.current = false;
       setLaedt(false);
+      setFrischId(null);
 
       if (antwort === "abgemeldet") {
         router.replace("/login");
@@ -106,6 +109,7 @@ export function Dashboard() {
               erneutVersuchen={erneutVersuchen}
               aktualisieren={() => abrufen(kachel.id)}
               laedt={laedt}
+              holtFrisch={frischId === kachel.id}
             >
               {kachel.daten && <KachelInhalt daten={kachel.daten} />}
             </Kachel>

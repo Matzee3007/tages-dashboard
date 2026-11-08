@@ -108,8 +108,8 @@ test("der Knopf ↻ aktualisiert die Kachel", () => {
   expect(aktualisieren).toHaveBeenCalledTimes(1);
 });
 
-test("während des Ladens ist der Knopf ↻ gesperrt", () => {
-  render(
+test("während jedes Ladens ist ↻ gesperrt, dreht sich aber nur beim frischen Holen", () => {
+  const { rerender } = render(
     <Kachel
       kachel={KACHEL}
       erneutVersuchen={() => {}}
@@ -121,4 +121,16 @@ test("während des Ladens ist der Knopf ↻ gesperrt", () => {
     name: "Testkachel aktualisieren",
   });
   expect(knopf.hasAttribute("disabled")).toBe(true);
+  expect(knopf.querySelector(".animate-spin")).toBeNull();
+
+  rerender(
+    <Kachel
+      kachel={KACHEL}
+      erneutVersuchen={() => {}}
+      aktualisieren={() => {}}
+      laedt
+      holtFrisch
+    />,
+  );
+  expect(knopf.querySelector(".animate-spin")).not.toBeNull();
 });
