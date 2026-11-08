@@ -21,8 +21,8 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 - **Login und Datenbank:** Supabase (Auth und Postgres)
 - **Hosting:** Vercel (kostenloser Tarif)
 - **Tests und Qualität:** Vitest, Testing Library, ESLint, Prettier
-- **Datenquellen:** OpenLigaDB (Bundesliga), football-data.org (Premier League, Champions League), ESPN (NFL,
-  inoffiziell), Jolpica und OpenF1 (Formel 1), RSS-Feeds (KI-News), iPhone-Kurzbefehl (Schritte aus Apple Health)
+- **Datenquellen:** ESPN (Bundesliga und NFL, inoffiziell, ADR 0009), football-data.org (Premier League, Champions
+  League), Jolpica und OpenF1 (Formel 1), RSS-Feeds (KI-News), iPhone-Kurzbefehl (Schritte aus Apple Health)
 
 ## Architekturprinzipien
 

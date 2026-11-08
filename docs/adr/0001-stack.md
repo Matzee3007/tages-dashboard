@@ -26,7 +26,8 @@ Kurzbefehle.
 - **Hosting:** Vercel, kostenloser Tarif. Passt am besten zu Next.js.
 - **Live:** Die Seite fragt jede Minute neu, solange sie offen ist. Der Server speichert Antworten kurz zwischen.
 - **Datenquellen:** OpenLigaDB, football-data.org, ESPN (inoffiziell), Jolpica und OpenF1, RSS-Feeds,
-  iPhone-Kurzbefehl.
+  iPhone-Kurzbefehl. Die Bundesliga kommt seit 2026-11-08 von ESPN statt OpenLigaDB
+  ([[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]).
 
 ## Alternativen
 

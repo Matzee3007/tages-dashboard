@@ -31,13 +31,14 @@ Champions League, NFL, Formel 1.
 _Nicht verwenden_: Liga (für alle), Turnier, Sportart
 
 **Mein Team**:
-Das Team, dem ich in einem Wettbewerb folge (FC Bayern, Arsenal, Seattle Seahawks). Eigene Team-Kacheln gibt es
-nicht.
+Die Teams, denen ich in einem Wettbewerb folge, meist eins (FC Bayern, Arsenal, Seattle Seahawks), in der Champions
+League zwei (FC Bayern und Arsenal). Die Formel 1 hat vorerst keins. Eigene Team-Kacheln gibt es nicht.
 _Nicht verwenden_: Lieblingsverein, Favorit
 
 **Spieltag**:
 Die aktuelle Runde eines Wettbewerbs mit allen Partien, auch wenn sie nicht heute stattfinden. In der NFL ist das
-die Woche, in der Formel 1 das Rennwochenende.
+die Woche, in der Formel 1 das Rennwochenende. Ein Spieltag bleibt bis Mitternacht (deutsche Zeit) des Tages nach seinem letzten
+Spiel aktuell, danach ist es der nächste.
 _Nicht verwenden_: Matchday, Runde, heute
 
 ## KI-News
