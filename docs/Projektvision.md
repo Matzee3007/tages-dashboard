@@ -243,6 +243,13 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 - **Speicher von 1 Minute,** solange eine Partie läuft oder ihr Anstoß vorbei ist, sie aber noch nicht als beendet gilt (Status von ESPN),
   sonst 15 Minuten. Das verfeinert die Regel „ab Anstoß rund 2½ Stunden“.
 - **Laufende Partie:** Spielminute mit orangem Live-Punkt statt Anstoßzeit, z. B. `● 56'  Freiburg – Union 0:0`.
+- **Nachholspiel:** Liegen alle Partien eines Blocks in einem früheren Spieltag als dem zuletzt gespielten, steht dort
+  `Nachholspiel · Mi 18. November`.
+- **Namensliste der Saison 2026/27:** Bayern München, Borussia Dortmund, RB Leipzig, SC Freiburg, Bayer Leverkusen, Werder Bremen,
+  SV Elversberg, VfB Stuttgart, Eintracht Frankfurt, Hamburger SV, Mainz 05, SC Paderborn, FC Augsburg, TSG Hoffenheim, 1. FC Köln,
+  Union Berlin, Schalke 04, Borussia Mönchengladbach. Ist die Zeile auf dem iPhone zu lang, werden einzelne Namen im Mock gekürzt.
+  Fehlt ein Team (z. B. ein Aufsteiger), steht der Name von ESPN da und im Server-Log `Team <id> fehlt in der Namensliste`.
+- **Speicher:** Spielplan von OpenLigaDB 24 Stunden, Tabelle von ESPN wie die Partien (1 bzw. 15 Minuten).
 
 ## Stolpersteine
 

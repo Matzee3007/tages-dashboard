@@ -41,6 +41,11 @@ die Woche, in der Formel 1 das Rennwochenende. Ein Spieltag bleibt bis Mitternac
 Spiel aktuell, danach ist es der nächste.
 _Nicht verwenden_: Matchday, Runde, heute
 
+**Nachholspiel**:
+Eine Partie, die nach ihrem Spieltag gespielt wird, weil sie verlegt wurde. Liegen alle Partien eines Spieltags in einem
+früheren Spieltag als dem zuletzt gespielten, heißt er Nachholspiel statt `5. Spieltag`.
+_Nicht verwenden_: verlegtes Spiel, Nachholtermin
+
 ## KI-News
 
 **Absender**:
