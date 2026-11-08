@@ -66,3 +66,17 @@ test("ein Netzausfall wirft nicht, sondern liefert null", async () => {
   fetchAttrappe(new TypeError("Failed to fetch"));
   await expect(holeDashboard()).resolves.toBeNull();
 });
+
+test("frisch schickt ein POST mit der Kachel", async () => {
+  const attrappe = fetchAttrappe({
+    ok: true,
+    status: 200,
+    json: async () => DATEN,
+  });
+
+  await expect(holeDashboard("ki-news")).resolves.toEqual(DATEN);
+  expect(attrappe).toHaveBeenCalledWith(
+    "/api/kacheln?frisch=ki-news",
+    expect.objectContaining({ method: "POST", cache: "no-store" }),
+  );
+});

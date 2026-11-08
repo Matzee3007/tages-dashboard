@@ -25,7 +25,8 @@ export async function ladeKanal(
 ): Promise<Meldung[]> {
   const antwort = await fetch(url, {
     headers: { "User-Agent": "Tages-Dashboard" },
-    next: { revalidate: ZWISCHENSPEICHER_SEKUNDEN },
+    // Das Etikett ist die id der Kachel: Ihr Knopf ↻ leert damit den Speicher (ADR 0008).
+    next: { revalidate: ZWISCHENSPEICHER_SEKUNDEN, tags: ["ki-news"] },
     signal: AbortSignal.timeout(KANAL_ZEITLIMIT_MS),
   });
   if (!antwort.ok) {

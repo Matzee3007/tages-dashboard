@@ -35,7 +35,7 @@ test("ruft mit Zwischenspeicher, Zeitlimit und eigenem Namen ab", async () => {
 
   const [url, optionen] = fetchMock.mock.calls[0];
   expect(url).toBe("https://example.org/feed");
-  expect(optionen.next).toEqual({ revalidate: 900 });
+  expect(optionen.next).toEqual({ revalidate: 900, tags: ["ki-news"] });
   expect(optionen.headers["User-Agent"]).toBe("Tages-Dashboard");
   expect(zeitlimit).toHaveBeenCalledWith(5000);
   expect(optionen.signal).toBeInstanceOf(AbortSignal);
