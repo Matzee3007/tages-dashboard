@@ -38,4 +38,6 @@ Freiburg gegen Union mit Minute 56.
 - ESPN dokumentiert die Schnittstelle nicht. Sie kann sich ohne Ankündigung ändern, dann fällt die Kachel aus.
 - Ob ESPN vom Server bei Vercel aus antwortet, ist noch offen (vom Mac aus am 2026-11-08: Status 200). Das prüft Schritt 1 als Erstes.
 - In Schritt 2 wird geprüft, ob ESPN auch Premier League und Champions League live liefert. Dann könnte football-data.org entfallen.
-- ESPN kennt keine Nummer des Spieltags. Die Kachel nennt deshalb die Tage statt „9. Spieltag“ (Befragung, Runde 3).
+- ESPN kennt keine Nummer des Spieltags und nur englische oder gemischte Namen. Die Nummer kommt deshalb aus dem Spielplan von OpenLigaDB,
+  die deutschen Namen aus einer eigenen Liste (Befragung, Runde 3). OpenLigaDB wird damit doch gebraucht, aber nur für den Spielplan, der
+  sich selten ändert.

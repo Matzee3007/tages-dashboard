@@ -235,6 +235,14 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 - **Torschützen:** eine graue Zeile unter jeder Partie mit Toren, Tore beider Teams nach Minute, z. B. `García 7' · Schick 85'`.
 - **Logos:** rund 20 px vor dem Teamnamen, der Browser lädt sie direkt beim Anbieter. Fehlt ein Bild, bleibt der Platz leer.
 - **NFL** bleibt Schritt 4, zuerst mit einem Testabruf vom Server bei Vercel aus.
+- **Spieltag aus Kalendertagen:** Aufeinanderfolgende Tage mit Spielen bei ESPN bilden einen Spieltag, ein Tag ohne Spiel trennt.
+- **Nummer und Datum über dem Spieltag,** z. B. `9. Spieltag · Fr 6. – So 8. November`. ESPN kennt keine Nummer, sie kommt aus dem
+  Spielplan der Saison bei OpenLigaDB (`getmatchdata/bl1/<Saison>`, passende Tage). Fehlt sie, stehen nur die Tage da.
+- **Deutsche Teamnamen** aus einer eigenen Liste in den Einstellungen, nach der id von ESPN (z. B. `1. FC Köln`, `Bayern München`).
+  Mein Team wird über die id erkannt.
+- **Speicher von 1 Minute,** solange eine Partie läuft oder ihr Anstoß vorbei ist, sie aber noch nicht als beendet gilt (Status von ESPN),
+  sonst 15 Minuten. Das verfeinert die Regel „ab Anstoß rund 2½ Stunden“.
+- **Laufende Partie:** Spielminute mit orangem Live-Punkt statt Anstoßzeit, z. B. `● 56'  Freiburg – Union 0:0`.
 
 ## Stolpersteine
 
