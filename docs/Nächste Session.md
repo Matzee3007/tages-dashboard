@@ -68,7 +68,11 @@ Restpunkte als Vorschläge:
 5. **Offene Funde aus dem `/code-review` von PR #34,** bewusst nicht behoben (Begründung im Journal „Links in der Mac-App“): fremde `iframe`s
    öffnen den Browser, der Abgleich der eigenen Adresse prüft `devUrl` nicht, Fehler von `open` werden nicht ausgewertet, `windows[0]` statt
    Suche nach dem Namen `main`.
-6. **Wie oft Vercel die Feeds neu holt,** ist nur an einer Abfrage gemessen. Für weitere Messungen braucht es ein neues Vercel-Token, eingetragen
+6. **Aus [[Engineering for Vibe Coders - Auswertung]] (2026-11-08):** Der Endpunkt für den iPhone-Kurzbefehl
+   (Schritte, noch nicht gebaut) braucht ein Token im Header, das sich tauschen lässt, nicht nur eine unbekannte
+   Adresse (Artikel 14, 50, 82). Zeigt jede Kachel, wenn ihre Daten veraltet sind (Artikel 20, 135)? Schon in
+   Ordnung: Alle Abrufe fremder APIs haben einen Timeout.
+7. **Wie oft Vercel die Feeds neu holt,** ist nur an einer Abfrage gemessen. Für weitere Messungen braucht es ein neues Vercel-Token, eingetragen
    über einen Assistenten (Skill `assistent-bauen`), nicht über den Chat. Weg: [[projects/tages-dashboard/docs/tools/Vercel|Vercel]],
    Abschnitt „Über die REST-API“.
 
