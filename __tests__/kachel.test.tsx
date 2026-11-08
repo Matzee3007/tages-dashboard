@@ -85,3 +85,52 @@ test("der Knopf versucht es erneut", () => {
   );
   expect(erneutVersuchen).toHaveBeenCalledTimes(1);
 });
+
+test("ohne aktualisieren gibt es keinen Knopf ↻", () => {
+  render(<Kachel kachel={KACHEL} erneutVersuchen={() => {}} />);
+  expect(
+    screen.queryByRole("button", { name: "Testkachel aktualisieren" }),
+  ).toBeNull();
+});
+
+test("der Knopf ↻ aktualisiert die Kachel", () => {
+  const aktualisieren = vi.fn();
+  render(
+    <Kachel
+      kachel={KACHEL}
+      erneutVersuchen={() => {}}
+      aktualisieren={aktualisieren}
+    />,
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "Testkachel aktualisieren" }),
+  );
+  expect(aktualisieren).toHaveBeenCalledTimes(1);
+});
+
+test("während jedes Ladens ist ↻ gesperrt, dreht sich aber nur beim frischen Holen", () => {
+  const { rerender } = render(
+    <Kachel
+      kachel={KACHEL}
+      erneutVersuchen={() => {}}
+      aktualisieren={() => {}}
+      laedt
+    />,
+  );
+  const knopf = screen.getByRole("button", {
+    name: "Testkachel aktualisieren",
+  });
+  expect(knopf.hasAttribute("disabled")).toBe(true);
+  expect(knopf.querySelector(".animate-spin")).toBeNull();
+
+  rerender(
+    <Kachel
+      kachel={KACHEL}
+      erneutVersuchen={() => {}}
+      aktualisieren={() => {}}
+      laedt
+      holtFrisch
+    />,
+  );
+  expect(knopf.querySelector(".animate-spin")).not.toBeNull();
+});

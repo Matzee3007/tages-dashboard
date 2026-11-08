@@ -46,6 +46,24 @@ Gerätetest vom 2026-11-02, Installieren über Safari:
 
 Am 2026-11-03 nachgeprüft: Die Anmeldung hält auch am nächsten Tag.
 
+## Speicher von fetch leeren
+
+Seit 2026-11-08 (PR #44) kann der Knopf ↻ einer Kachel ihren Speicher leeren
+([[projects/tages-dashboard/docs/adr/0008-knopf-aktualisieren-mit-revalidatetag|ADR 0008]]).
+
+```ts
+// Abruf mit Etikett (Tag): die id der Kachel
+fetch(url, { next: { revalidate: 900, tags: [etikett] } });
+
+// In einem Route Handler: alles mit diesem Etikett gilt sofort als abgelaufen
+import { revalidateTag } from "next/cache";
+revalidateTag(etikett, { expire: 0 });
+```
+
+- **`{ expire: 0 }`:** Schon die Abrufe derselben Anfrage gehen an die Quelle. Mit `"max"` käme zuerst noch der alte Stand.
+- **Ohne zweites Argument** ist `revalidateTag` veraltet (deprecated).
+- **`updateTag`** gibt es nur in Server Actions, nicht in Route Handlern.
+
 ## Fallen
 
 - **Route Handler friert ein (`cacheComponents: true`):** Ein `GET` ohne Laufzeitdaten wird schon beim Bauen vorgerendert, eine

@@ -30,30 +30,38 @@ export function Dashboard() {
   const [zeit, setZeit] = useState<string | null>(null);
   const [geladen, setGeladen] = useState(false);
   const [laedt, setLaedt] = useState(false);
+  const [frischId, setFrischId] = useState<string | null>(null);
   const laeuft = useRef(false);
   const router = useRouter();
 
-  const abrufen = useCallback(async () => {
-    if (laeuft.current) return;
-    laeuft.current = true;
-    setLaedt(true);
-    const antwort = await holeDashboard();
-    laeuft.current = false;
-    setLaedt(false);
+  const abrufen = useCallback(
+    async (frisch?: string) => {
+      if (laeuft.current) return;
+      laeuft.current = true;
+      setLaedt(true);
+      setFrischId(frisch ?? null);
+      const antwort = await holeDashboard(frisch);
+      laeuft.current = false;
+      setLaedt(false);
+      setFrischId(null);
 
-    if (antwort === "abgemeldet") {
-      router.replace("/login");
-      return;
-    }
-    setKacheln((bisher) => neuerStand(bisher, antwort));
-    // Scheitern alle Kacheln, gab es nichts Neues, und der Kopf soll das nicht behaupten.
-    if (antwort?.kacheln.some((kachel) => kachel.status === "ok")) {
-      setZeit(antwort.zeit);
-    }
-    setGeladen(true);
-  }, [router]);
+      if (antwort === "abgemeldet") {
+        router.replace("/login");
+        return;
+      }
+      setKacheln((bisher) => neuerStand(bisher, antwort));
+      // Scheitern alle Kacheln, gab es nichts Neues, und der Kopf soll das nicht behaupten.
+      if (antwort?.kacheln.some((kachel) => kachel.status === "ok")) {
+        setZeit(antwort.zeit);
+      }
+      setGeladen(true);
+    },
+    [router],
+  );
+  // Ohne Argument: Ein Knopf gäbe sonst sein Klick-Ereignis als frisch weiter.
+  const erneutVersuchen = useCallback(() => abrufen(), [abrufen]);
 
-  useAktualisierung(abrufen);
+  useAktualisierung(erneutVersuchen);
 
   return (
     <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-5 px-4 pt-6 pb-8">
@@ -87,15 +95,21 @@ export function Dashboard() {
       <main className="flex flex-col gap-4">
         {!geladen && <p className="text-gedaempft">Lädt …</p>}
         {geladen && kacheln.length === 0 && (
-          <FehlerHinweis stand={null} erneutVersuchen={abrufen} laedt={laedt} />
+          <FehlerHinweis
+            stand={null}
+            erneutVersuchen={erneutVersuchen}
+            laedt={laedt}
+          />
         )}
         <div className="grid grid-cols-[repeat(auto-fill,minmax(min(320px,100%),1fr))] items-start gap-4">
           {kacheln.map((kachel) => (
             <Kachel
               key={kachel.id}
               kachel={kachel}
-              erneutVersuchen={abrufen}
+              erneutVersuchen={erneutVersuchen}
+              aktualisieren={() => abrufen(kachel.id)}
               laedt={laedt}
+              holtFrisch={frischId === kachel.id}
             >
               {kachel.daten && <KachelInhalt daten={kachel.daten} />}
             </Kachel>

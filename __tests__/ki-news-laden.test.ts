@@ -30,12 +30,13 @@ test("ruft mit Zwischenspeicher, Zeitlimit und eigenem Namen ab", async () => {
   const meldungen = await ladeKanal(
     "https://example.org/feed",
     JETZT,
+    "test-kachel",
     leseFeed,
   );
 
   const [url, optionen] = fetchMock.mock.calls[0];
   expect(url).toBe("https://example.org/feed");
-  expect(optionen.next).toEqual({ revalidate: 900 });
+  expect(optionen.next).toEqual({ revalidate: 900, tags: ["test-kachel"] });
   expect(optionen.headers["User-Agent"]).toBe("Tages-Dashboard");
   expect(zeitlimit).toHaveBeenCalledWith(5000);
   expect(optionen.signal).toBeInstanceOf(AbortSignal);
@@ -48,12 +49,12 @@ test("eine gespeicherte Antwort darf höchstens 1 Stunde alt sein", async () => 
 
   fetchMock.mockResolvedValue(mitDatum("2026-11-08T11:00:00Z"));
   await expect(
-    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+    ladeKanal("https://example.org/feed", JETZT, "ki-news", leseFeed),
   ).resolves.toHaveLength(1);
 
   fetchMock.mockResolvedValue(mitDatum("2026-11-08T10:59:59Z"));
   await expect(
-    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+    ladeKanal("https://example.org/feed", JETZT, "ki-news", leseFeed),
   ).rejects.toThrow();
 });
 
@@ -62,14 +63,14 @@ test("eine Antwort ohne lesbare Date-Zeile gilt als frisch", async () => {
     new Response(FEED, { headers: { Date: "kaputt" } }),
   );
   await expect(
-    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+    ladeKanal("https://example.org/feed", JETZT, "ki-news", leseFeed),
   ).resolves.toHaveLength(1);
 });
 
 test("wirft bei Status 404", async () => {
   fetchMock.mockResolvedValue(new Response("weg", { status: 404 }));
   await expect(
-    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+    ladeKanal("https://example.org/feed", JETZT, "ki-news", leseFeed),
   ).rejects.toThrow();
 });
 
@@ -78,14 +79,14 @@ test("wirft bei Status 200 mit HTML", async () => {
     new Response("<!doctype html><html><body>Hallo</body></html>"),
   );
   await expect(
-    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+    ladeKanal("https://example.org/feed", JETZT, "ki-news", leseFeed),
   ).rejects.toThrow();
 });
 
 test("wirft, wenn fetch fehlschlägt", async () => {
   fetchMock.mockRejectedValue(new Error("kein Netz"));
   await expect(
-    ladeKanal("https://example.org/feed", JETZT, leseFeed),
+    ladeKanal("https://example.org/feed", JETZT, "ki-news", leseFeed),
   ).rejects.toThrow("kein Netz");
 });
 
@@ -125,7 +126,11 @@ test("fasst Kanäle zusammen und zeigt die neuesten 3 zuerst", async () => {
     ],
   });
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a", "b"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a", "b"] },
+    JETZT,
+    "ki-news",
+  );
 
   expect(stand.name).toBe("X");
   expect(titel(stand.meldungen)).toEqual(["eins", "zwei", "drei"]);
@@ -141,7 +146,11 @@ test("zeigt nur Meldungen der letzten 7 Tage", async () => {
     ],
   });
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a"] },
+    JETZT,
+    "ki-news",
+  );
 
   expect(titel(stand.meldungen)).toEqual(["genau"]);
 });
@@ -153,7 +162,11 @@ test("gleicher Link erscheint nur einmal, die neuere Fassung bleibt", async () =
     b: [["neu", "2026-11-07T12:00:00Z", link]],
   });
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a", "b"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a", "b"] },
+    JETZT,
+    "ki-news",
+  );
 
   expect(titel(stand.meldungen)).toEqual(["neu"]);
 });
@@ -167,7 +180,11 @@ test("gleicher Titel erscheint nur einmal, die neueste Meldung bleibt", async ()
     ],
   });
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a"] },
+    JETZT,
+    "ki-news",
+  );
 
   expect(titel(stand.meldungen)).toEqual(["Release notes", "Anderes"]);
   expect(stand.meldungen[0].link).toBe("https://example.org/n#a");
@@ -179,7 +196,11 @@ test("gleicher Titel auf verschiedenen Websites bleibt zweimal", async () => {
     b: [["Live Q&A", "2026-11-06T12:00:00Z", "https://blog.example.org/qa"]],
   });
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a", "b"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a", "b"] },
+    JETZT,
+    "ki-news",
+  );
 
   expect(stand.meldungen.map((meldung) => meldung.link)).toEqual([
     "https://www.youtube.com/v1",
@@ -190,7 +211,11 @@ test("gleicher Titel auf verschiedenen Websites bleibt zweimal", async () => {
 test("ohne neue Meldung bleibt das Alter der letzten", async () => {
   feedsAntworten({ a: [["alt", "2026-10-16T12:00:00Z"]] });
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a"] },
+    JETZT,
+    "ki-news",
+  );
 
   expect(stand).toEqual({
     name: "X",
@@ -203,7 +228,11 @@ test("ohne neue Meldung bleibt das Alter der letzten", async () => {
 test("eine Meldung aus der Zukunft zählt nicht", async () => {
   feedsAntworten({ a: [["zukunft", "2026-11-08T12:00:01Z"]] });
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a"] },
+    JETZT,
+    "ki-news",
+  );
 
   expect(stand.meldungen).toEqual([]);
   expect(stand.letzteMeldung).toBeNull();
@@ -217,6 +246,7 @@ test("fällt ein Kanal aus, zeigt der Absender still den Rest", async () => {
   const stand = await ladeAbsender(
     { name: "X", feeds: [ausgefallen, "b"] },
     JETZT,
+    "ki-news",
   );
 
   expect(stand.erreichbar).toBe(true);
@@ -247,6 +277,7 @@ test("ein hängender Kanal fällt nach dem Zeitlimit aus, die anderen laufen wei
   const stand = await ladeAbsender(
     { name: "X", feeds: ["haengt", "b"] },
     JETZT,
+    "ki-news",
   );
 
   expect(stand.erreichbar).toBe(true);
@@ -261,7 +292,11 @@ test("ist die gespeicherte Antwort zu alt, zeigt der Absender den Ausfall", asyn
     }),
   );
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a"] },
+    JETZT,
+    "ki-news",
+  );
 
   expect(stand.erreichbar).toBe(false);
 });
@@ -270,7 +305,11 @@ test("fallen alle Kanäle aus, ist der Absender nicht erreichbar", async () => {
   vi.spyOn(console, "error").mockImplementation(() => {});
   feedsAntworten({});
 
-  const stand = await ladeAbsender({ name: "X", feeds: ["a", "b"] }, JETZT);
+  const stand = await ladeAbsender(
+    { name: "X", feeds: ["a", "b"] },
+    JETZT,
+    "ki-news",
+  );
 
   expect(stand).toEqual({
     name: "X",
@@ -298,6 +337,7 @@ test("ladeKiNews sortiert nach der neuesten Meldung, nicht Erreichbare und Leere
       { name: "Mitte", feeds: ["mitte"] },
     ],
     JETZT,
+    "ki-news",
   );
 
   expect(staende.map((stand) => stand.name)).toEqual([
@@ -314,7 +354,7 @@ test("ladeKiNews wirft, wenn kein Absender erreichbar ist", async () => {
   feedsAntworten({});
 
   await expect(
-    ladeKiNews([{ name: "X", feeds: ["a"] }], JETZT),
+    ladeKiNews([{ name: "X", feeds: ["a"] }], JETZT, "ki-news"),
   ).rejects.toThrow();
 });
 
@@ -328,6 +368,7 @@ test("ladeKiNews läuft weiter, wenn nur ein Absender ausfällt", async () => {
       { name: "B", feeds: ["b"] },
     ],
     JETZT,
+    "ki-news",
   );
 
   expect(staende.map((stand) => [stand.name, stand.erreichbar])).toEqual([
@@ -342,7 +383,7 @@ test("ladeKanal nimmt den übergebenen Leser", async () => {
   const lese = vi.fn(() => []);
   fetchMock.mockResolvedValue(new Response("beliebiger Text"));
 
-  await ladeKanal("https://example.org/seite", JETZT, lese);
+  await ladeKanal("https://example.org/seite", JETZT, "ki-news", lese);
 
   expect(lese).toHaveBeenCalledWith("beliebiger Text");
 });
@@ -361,6 +402,7 @@ test("ein Absender fasst Feeds und Seiten zusammen", async () => {
       seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
     },
     JETZT,
+    "ki-news",
   );
 
   expect(
@@ -383,6 +425,7 @@ test("ein Seiten-Kanal fällt aus, die Feeds laufen weiter", async () => {
   const stand = await ladeAbsender(
     { name: "X", feeds: ["a"], seiten: [{ url: seite, art: "anthropic" }] },
     JETZT,
+    "ki-news",
   );
 
   expect(stand.erreichbar).toBe(true);
@@ -420,6 +463,7 @@ test("eine Seiten-Meldung ohne Uhrzeit zählt wie vom Ende ihres Tages, höchste
       ],
     },
     JETZT,
+    "ki-news",
   );
 
   expect(titel(stand.meldungen)).toEqual(["heute", "video1", "video2"]);
@@ -447,6 +491,7 @@ test("ohne Uhrzeit steht eine Meldung vor den Feed-Meldungen ihres Tages", async
       seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
     },
     JETZT,
+    "ki-news",
   );
 
   expect(titel(stand.meldungen)).toEqual(["morgen", "seite", "abend"]);
@@ -466,6 +511,7 @@ test("ohne Uhrzeit zählt für die 7 Tage das Ende des Tages", async () => {
       seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
     },
     JETZT,
+    "ki-news",
   );
 
   expect(titel(stand.meldungen)).toEqual(["alt"]);
@@ -490,6 +536,7 @@ test("ladeKiNews sortiert eine Seiten-Meldung von heute wie innerhalb des Absend
       },
     ],
     JETZT,
+    "ki-news",
   );
 
   expect(staende.map((stand) => stand.name)).toEqual(["Anthropic", "OpenAI"]);

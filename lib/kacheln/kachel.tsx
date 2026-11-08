@@ -54,12 +54,17 @@ export function FehlerHinweis({
 export function Kachel({
   kachel,
   erneutVersuchen,
+  aktualisieren,
   laedt = false,
+  holtFrisch = false,
   children,
 }: {
   kachel: KachelAnzeige;
   erneutVersuchen: () => void;
+  aktualisieren?: () => void;
   laedt?: boolean;
+  // Nur dann dreht sich ↻: Der Minutentakt soll nicht nach frischem Holen aussehen.
+  holtFrisch?: boolean;
   children?: ReactNode;
 }) {
   return (
@@ -71,9 +76,28 @@ export function Kachel({
         <h2 className="font-titel text-[22px] font-bold tracking-[0.03em] uppercase">
           {kachel.titel}
         </h2>
-        {kachel.zusatz && (
-          <span className="text-[13px] text-gedaempft">{kachel.zusatz}</span>
-        )}
+        <div className="flex items-center gap-1">
+          {kachel.zusatz && (
+            <span className="text-[13px] text-gedaempft">{kachel.zusatz}</span>
+          )}
+          {aktualisieren && (
+            <button
+              type="button"
+              onClick={aktualisieren}
+              disabled={laedt}
+              aria-label={`${kachel.titel} aktualisieren`}
+              title="Frisch von den Quellen holen"
+              className="-my-2 -mr-2 grid size-11 cursor-pointer place-items-center rounded-full text-xl text-gedaempft hover:bg-knopf disabled:cursor-default"
+            >
+              <span
+                aria-hidden
+                className={holtFrisch ? "animate-spin" : undefined}
+              >
+                ↻
+              </span>
+            </button>
+          )}
+        </div>
       </div>
       {kachel.fehler && (
         <FehlerHinweis
