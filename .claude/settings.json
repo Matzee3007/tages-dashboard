@@ -1,4 +1,8 @@
 {
+  "enabledPlugins": {
+    "vercel@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true
+  },
   "permissions": {
     "deny": ["Read(./.env)", "Edit(./.env)"]
   }
