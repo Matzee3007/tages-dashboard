@@ -238,17 +238,20 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 - **Spieltag aus Kalendertagen:** Aufeinanderfolgende Tage mit Spielen bei ESPN bilden einen Spieltag, ein Tag ohne Spiel trennt.
 - **Nummer und Datum über dem Spieltag,** z. B. `9. Spieltag · Fr 6. – So 8. November`. ESPN kennt keine Nummer, sie kommt aus dem
   Spielplan der Saison bei OpenLigaDB (`getmatchdata/bl1/<Saison>`, passende Tage). Fehlt sie, stehen nur die Tage da.
-- **Deutsche Teamnamen** aus einer eigenen Liste in den Einstellungen, nach der id von ESPN (z. B. `1. FC Köln`, `Bayern München`).
+- **Deutsche Teamnamen** aus einer eigenen Liste in den Einstellungen, nach der id von ESPN (Kurznamen, siehe unten).
   Mein Team wird über die id erkannt.
 - **Speicher von 1 Minute,** solange eine Partie läuft oder ihr Anstoß vorbei ist, sie aber noch nicht als beendet gilt (Status von ESPN),
   sonst 15 Minuten. Das verfeinert die Regel „ab Anstoß rund 2½ Stunden“.
 - **Laufende Partie:** Spielminute mit orangem Live-Punkt statt Anstoßzeit, z. B. `● 56'  Freiburg – Union 0:0`.
 - **Nachholspiel:** Liegen alle Partien eines Blocks in einem früheren Spieltag als dem zuletzt gespielten, steht dort
   `Nachholspiel · Mi 18. November`.
-- **Namensliste der Saison 2026/27:** Bayern München, Borussia Dortmund, RB Leipzig, SC Freiburg, Bayer Leverkusen, Werder Bremen,
-  SV Elversberg, VfB Stuttgart, Eintracht Frankfurt, Hamburger SV, Mainz 05, SC Paderborn, FC Augsburg, TSG Hoffenheim, 1. FC Köln,
-  Union Berlin, Schalke 04, Borussia Mönchengladbach. Ist die Zeile auf dem iPhone zu lang, werden einzelne Namen im Mock gekürzt.
-  Fehlt ein Team (z. B. ein Aufsteiger), steht der Name von ESPN da und im Server-Log `Team <id> fehlt in der Namensliste`.
+- **Kurznamen der Saison 2026/27** (nach dem Mock vom 2026-11-08, ersetzen die vollen Namen), in Spieltag und Tabelle: Bayern, Dortmund,
+  Leipzig, Freiburg, Leverkusen, Bremen, Elversberg, Stuttgart, Frankfurt, HSV, Mainz, Paderborn, Augsburg, Hoffenheim, Köln, Union,
+  Schalke, Gladbach. Fehlt ein Team (z. B. ein Aufsteiger), steht der Kurzname von ESPN da und im Server-Log
+  `Team <id> fehlt in der Namensliste`.
+- **Aussehen nach dem Mock:** eine Zeile pro Partie (Zeit oder Minute, Logo und Kurzname je Team, Ergebnis), darunter bei jeder Partie
+  mit Toren eine graue Zeile mit den Torschützen. Mein Team mit orangem Balken links und leicht orangem Hintergrund, in Spieltag und
+  Tabelle. Eine Lücke in der Tabelle zeigt eine Zeile `···`.
 - **Speicher:** Spielplan von OpenLigaDB 24 Stunden, Tabelle von ESPN wie die Partien (1 bzw. 15 Minuten).
 
 ## Stolpersteine
