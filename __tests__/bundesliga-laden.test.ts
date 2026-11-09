@@ -115,3 +115,30 @@ test("baut die Daten aus Kalender, Tagen, Tabelle und Spielplan", async () => {
   expect(daten.tabelle.map((z) => z?.name)).toEqual(["Bayern"]);
   expect(daten.meinTeam).toEqual(["132"]);
 });
+
+test("setzt Speicher, Etikett und Zeitlimit", async () => {
+  const zeitlimit = vi.spyOn(AbortSignal, "timeout");
+  await ladeBundesliga(EINSTELLUNG, JETZT);
+
+  const optionen = (url: string) =>
+    fetchMock.mock.calls.find(([aufgerufen]) => aufgerufen === url)?.[1];
+  expect(optionen(KALENDER).next).toEqual({
+    revalidate: 86400,
+    tags: ["bundesliga"],
+  });
+  expect(optionen(SPIELPLAN).next).toEqual({
+    revalidate: 86400,
+    tags: ["bundesliga"],
+  });
+  expect(optionen(`${KALENDER}?dates=20261108`).next).toEqual({
+    revalidate: 900,
+    tags: ["bundesliga"],
+  });
+  expect(optionen(TABELLE).next).toEqual({
+    revalidate: 900,
+    tags: ["bundesliga"],
+  });
+  expect(optionen(TABELLE).headers["User-Agent"]).toBe("Tages-Dashboard");
+  expect(zeitlimit).toHaveBeenCalledTimes(5);
+  expect(zeitlimit).toHaveBeenCalledWith(5000);
+});
