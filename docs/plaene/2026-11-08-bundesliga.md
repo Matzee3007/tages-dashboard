@@ -184,7 +184,7 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
   - `ladeBundesliga(einstellung: BundesligaEinstellung, jetzt: Date): Promise<BundesligaDaten>`
   - `ladeBundesligaKachel(einstellung, jetzt): Promise<{ daten: KachelDaten }>`
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben** (`fetch` als Attrappe, Antworten je Adresse)
+- [x] **Schritt 1: Fehlschlagende Tests schreiben** (`fetch` als Attrappe, Antworten je Adresse)
   - „baut die Daten aus Kalender, Tagen, Tabelle und Spielplan“: ein Abruf je Tag des Blocks (`dates=20261106` usw.), `titel "9. Spieltag"`.
   - „setzt Speicher, Etikett und Zeitlimit“: Kalender `revalidate 86400`, Tag `900`, alle `tags: ["bundesliga"]`, `AbortSignal.timeout(5000)`.
   - „ruft einen Tag mit laufender Partie mit 60 nach“: Tag mit `state "in"` → zweiter Abruf derselben Adresse mit `revalidate 60`, ebenso
@@ -192,11 +192,11 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
   - „ein gescheiterter Tag lässt die Kachel scheitern“: Status 500 für einen Tag → `ladeBundesliga` wirft.
   - „ohne Spielplan keine Nummer“: OpenLigaDB wirft → `titel null`, `console.error`, kein Wurf.
   - in `kacheln-laden.test.ts`: „die Bundesliga-Kachel ruft ladeBundesliga mit Einstellung und Zeit“.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [ ] **Schritt 3: Typen umstellen, `ladeBundesliga`, `ladeBundesligaKachel`, Eintrag in `LADER` und `KACHELN`.** Bestehende Stellen, die
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 3: Typen umstellen, `ladeBundesliga`, `ladeBundesligaKachel`, Eintrag in `LADER` und `KACHELN`.** Bestehende Stellen, die
   `daten.absender` lesen, auf `KiNewsDaten` einengen.
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: `npm run check`, committen** „Load Bundesliga tile with cache“
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: `npm run check`, committen** „Load Bundesliga tile with cache“
 
 ### Aufgabe 4: Ansicht
 

@@ -14,6 +14,13 @@ export type KachelEinstellung = KiNewsEinstellung | BundesligaEinstellung;
 
 // Die Reihenfolge hier ist die Reihenfolge auf dem Bildschirm.
 export const KACHELN: KachelEinstellung[] = [
+  // 132 ist der FC Bayern bei ESPN.
+  {
+    id: "bundesliga",
+    art: "bundesliga",
+    titel: "Bundesliga",
+    meinTeam: ["132"],
+  },
   { id: "ki-news", art: "ki-news", titel: "KI-News" },
 ];
 
