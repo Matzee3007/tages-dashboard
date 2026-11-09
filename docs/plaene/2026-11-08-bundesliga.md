@@ -12,7 +12,8 @@ Team).
 
 **Vorgehen:** Reine Lesefunktionen machen aus den Antworten von ESPN (Kalender, Tage, Tabelle) und OpenLigaDB (Spielplan) eigene Typen.
 Reine Rechenfunktionen wählen den Spieltag, seine Überschrift und den Tabellen-Ausschnitt. `ladeBundesliga` holt alles mit `fetch` und
-Zwischenspeicher, `BundesligaAnsicht` zeigt es. Die Kachel hängt sich wie die KI-News über `KACHELN`, `LADER` und `KachelInhalt` ein.
+Zwischenspeicher, `BundesligaAnsicht` zeigt es. Die Kachel hängt sich wie die KI-News über `KACHELN`, den Lader in `lib/kacheln/laden.ts` und `KachelInhalt` ein. Umgesetzt mit
+einem `switch` statt der Tabelle `LADER`, weil TypeScript nur so jede Einstellung ihrem Lader zuordnet (Abweichung, vom plan-pruefer gemeldet).
 
 **Technik:** Next.js 16.4.3 (`fetch` mit `next.revalidate` und `next.tags`), React, Tailwind, Vitest, Testing Library. Keine neue Abhängigkeit.
 

@@ -19,7 +19,7 @@ Freiburg gegen Union mit Minute 56.
 ## Entscheidung
 
 - **Spieltag, Torschützen, Logos und Tabelle der Bundesliga kommen von ESPN** (`site.api.espn.com`, Liga `ger.1`, inoffiziell, ohne
-  Schlüssel), mit den Kurznamen von ESPN.
+  Schlüssel). Die Teams heißen nach einer eigenen Liste deutscher Kurznamen (`TEAMNAMEN`, nach der id von ESPN).
 - **Ein Spieltag wird aus Tagen zusammengesetzt:** Die Anzeigetafel (`scoreboard`) liefert nur einzelne Tage, ein Datumsbereich ergibt
   Fehler 400. Ihr Kalender nennt alle Tage mit Spielen.
 - **OpenLigaDB bleibt der Ausweg,** falls ESPN wegbricht.
