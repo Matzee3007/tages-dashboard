@@ -42,11 +42,9 @@ Stand vom 2026-11-09. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 (Fahrplan in der [[projects/tages-dashboard/docs/Projektvision|Projektvision]]):
 
 1. Zuerst fragt Claude, ob vorher etwas anderes ansteht (Restpunkte unten, neue Ideen).
-2. **Anstehende Entscheidung (ungefragt getroffen, bitte bestätigen):** Die Saison bei OpenLigaDB wird so bestimmt: ab Juli das laufende
-   Jahr, sonst das Vorjahr (`lib/kacheln/bundesliga/laden.ts`, Funktion `saison`).
-3. Vor der Befragung prüfen (Fakten, nicht fragen): Liefert ESPN auch `eng.1` und `uefa.champions` live, mit Torschützen und Tabelle, und
+2. Vor der Befragung prüfen (Fakten, nicht fragen): Liefert ESPN auch `eng.1` und `uefa.champions` live, mit Torschützen und Tabelle, und
    vom Server aus? Dann könnte football-data.org entfallen ([[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]).
-4. `/grill-with-docs Phase 3 Schritt 2`: unter anderem Quelle, Mein Team je Wettbewerb (Arsenal; Champions League Bayern und Arsenal),
+3. `/grill-with-docs Phase 3 Schritt 2`: unter anderem Quelle, Mein Team je Wettbewerb (Arsenal; Champions League Bayern und Arsenal),
    Tabelle der Champions League (Ligaphase mit 36 Teams), was die Sport-Kacheln gemeinsam haben. Dabei den Skill `codebase-design` aus den
    Tools für später des Ecosystems ansehen (in der Befragung vom 2026-11-08 so vereinbart).
 
