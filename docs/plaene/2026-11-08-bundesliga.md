@@ -1,6 +1,6 @@
 ---
 titel: "Plan: Bundesliga-Kachel"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-08
 tags: [plan, kacheln, sport, bundesliga, phase-3]
 ---
@@ -233,6 +233,7 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
 (Schritt 1 als erledigt mit PR-Nummer), dieser Plan (Ergebnis des Versuchs, Haken).
 
 - [x] **Schritt 1: Tool-Notizen schreiben** (Adressen und Felder aus der Tabelle oben, Fehler 400 beim Datumsbereich, inoffiziell).
-- [ ] **Schritt 2: `npm run check`, PR öffnen, `/code-review`, Funde mit dem Entwickler durchgehen**
-- [ ] **Schritt 3: Nach dem Merge Abnahme durch den Entwickler** auf der Live-Adresse, iPhone und Mac: Spieltag, Tabelle, Logos, bei einem
+- [x] **Schritt 2: `npm run check`, PR öffnen, `/code-review`, Funde mit dem Entwickler durchgehen** (PR #49, 10 Funde, 9 behoben, Fund 6 bewusst offen)
+- [x] **Schritt 3: Nach dem Merge Abnahme durch den Entwickler** (2026-11-09 bestanden: Spieltag, Tabelle, Logos, ↻ auf iPhone und Mac. Der
+  Live-Teil ist offen, das erste Spiel ist am 2026-11-20 um 20:30 Uhr.) auf der Live-Adresse, iPhone und Mac: Spieltag, Tabelle, Logos, bei einem
   laufenden Spiel Minute und Torschützen innerhalb von rund 2 Minuten.
