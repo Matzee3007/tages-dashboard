@@ -142,3 +142,22 @@ test("setzt Speicher, Etikett und Zeitlimit", async () => {
   expect(zeitlimit).toHaveBeenCalledTimes(5);
   expect(zeitlimit).toHaveBeenCalledWith(5000);
 });
+
+test("ruft einen Tag mit laufender Partie mit 60 nach", async () => {
+  antworten({ [`${KALENDER}?dates=20261108`]: tag("in", "2026-11-08T16:30Z") });
+  const daten = await ladeBundesliga(EINSTELLUNG, JETZT);
+
+  const revalidate = (url: string) =>
+    fetchMock.mock.calls
+      .filter(([aufgerufen]) => aufgerufen === url)
+      .map(([, optionen]) => optionen.next.revalidate);
+  expect(revalidate(`${KALENDER}?dates=20261108`)).toEqual([900, 60]);
+  expect(revalidate(TABELLE)).toEqual([900, 60]);
+  expect(revalidate(`${KALENDER}?dates=20261107`)).toEqual([900]);
+  expect(daten.partien.some((p) => p.status === "laeuft")).toBe(true);
+});
+
+test("ohne laufende Partie kein zweiter Abruf", async () => {
+  await ladeBundesliga(EINSTELLUNG, JETZT);
+  expect(fetchMock).toHaveBeenCalledTimes(5);
+});

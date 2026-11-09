@@ -20,6 +20,7 @@ const TABELLE_URL = `${ESPN}/v2/sports/soccer/ger.1/standings`;
 // Speicher in Sekunden (Projektvision, Entscheidungen vom 2026-11-08).
 const TAG_SEKUNDEN = 86_400;
 const NORMAL_SEKUNDEN = 900;
+const LIVE_SEKUNDEN = 60;
 const ABRUF_ZEITLIMIT_MS = 5000;
 
 async function holeJson(
@@ -49,7 +50,14 @@ async function ladeTag(
   etikett: string,
 ): Promise<Partie[]> {
   const url = `${KALENDER_URL}?dates=${tag.replaceAll("-", "")}`;
-  return leseTag(await holeJson(url, NORMAL_SEKUNDEN, etikett), jetzt);
+  const partien = leseTag(await holeJson(url, NORMAL_SEKUNDEN, etikett), jetzt);
+  if (!laeuftEine(partien)) return partien;
+  // Next.js misst das Alter mit dem revalidate des Aufrufs: Derselbe Eintrag gilt jetzt nach 60 s als alt.
+  return leseTag(await holeJson(url, LIVE_SEKUNDEN, etikett), jetzt);
+}
+
+function laeuftEine(partien: Partie[]): boolean {
+  return partien.some((partie) => partie.status === "laeuft");
 }
 
 async function ladeSpielplan(
@@ -70,17 +78,21 @@ export async function ladeBundesliga(
     await holeJson(KALENDER_URL, TAG_SEKUNDEN, etikett),
   );
   const tage = waehleSpieltag(kalender, jetzt);
-  const [partienJeTag, tabelle, spielplan] = await Promise.all([
+  const [partienJeTag, normaleTabelle, spielplan] = await Promise.all([
     Promise.all(tage.map((tag) => ladeTag(tag, jetzt, etikett))),
     holeJson(TABELLE_URL, NORMAL_SEKUNDEN, etikett).then(leseTabelle),
     ladeSpielplan(tage, etikett),
   ]);
+  const partien = partienJeTag.flat();
+  const tabelle = laeuftEine(partien)
+    ? leseTabelle(await holeJson(TABELLE_URL, LIVE_SEKUNDEN, etikett))
+    : normaleTabelle;
 
   return {
     art: "bundesliga",
     titel: spieltagTitel(tage, spielplan),
     tage,
-    partien: sortierePartien(partienJeTag.flat(), einstellung.meinTeam),
+    partien: sortierePartien(partien, einstellung.meinTeam),
     tabelle: tabellenAusschnitt(tabelle, einstellung.meinTeam),
     meinTeam: einstellung.meinTeam,
   };
