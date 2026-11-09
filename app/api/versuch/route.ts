@@ -19,11 +19,18 @@ export async function GET(): Promise<Response> {
           signal: AbortSignal.timeout(5000),
         });
         const text = await antwort.text();
-        return { url, status: antwort.status, ms: Date.now() - start, bytes: text.length };
+        return {
+          url,
+          status: antwort.status,
+          ms: Date.now() - start,
+          bytes: text.length,
+        };
       } catch (fehler) {
         return { url, fehler: String(fehler), ms: Date.now() - start };
       }
     }),
   );
-  return Response.json(ergebnisse, { headers: { "Cache-Control": "no-store" } });
+  return Response.json(ergebnisse, {
+    headers: { "Cache-Control": "no-store" },
+  });
 }
