@@ -44,3 +44,6 @@ iPhone ist ein Netzausfall normal. Die Reihenfolge der Kacheln steht in `lib/ein
 - Nach einem Neuladen der Seite ist der letzte Stand weg, weil es keine Offline-Daten gibt.
 - Die Antwort ist so langsam wie die langsamste Kachel. Das Zeitlimit je Kachel beträgt 8 Sekunden.
 - Im Raster bleiben unter kurzen Kacheln Lücken.
+- Mit der zweiten Art von Kachel (Bundesliga, PR #49) wurden die Typen der KI-News einmalig eingeengt (`KiNewsDaten`, `KiNewsEinstellung`),
+  am Verhalten änderte sich nichts. Der Lader steht seitdem in einem `switch` in `lib/kacheln/laden.ts`. Jede weitere Kachel bringt nur
+  ihren eigenen Typ und einen `case` mit (vom Entwickler am 2026-11-09 so bestätigt).

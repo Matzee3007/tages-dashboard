@@ -241,8 +241,11 @@ Entscheidungen aus der Befragung vom 2026-11-08:
   Spielplan der Saison bei OpenLigaDB (`getmatchdata/bl1/<Saison>`, passende Tage). Fehlt sie, stehen nur die Tage da.
 - **Deutsche Teamnamen** aus einer eigenen Liste in den Einstellungen, nach der id von ESPN (Kurznamen, siehe unten).
   Mein Team wird über die id erkannt.
-- **Speicher von 1 Minute,** solange eine Partie läuft oder ihr Anstoß vorbei ist, sie aber noch nicht als beendet gilt (Status von ESPN),
-  sonst 15 Minuten. Das verfeinert die Regel „ab Anstoß rund 2½ Stunden“.
+- **Frisch abgerufen,** solange eine Partie läuft oder ihr Anstoß vorbei ist, sie aber noch nicht als beendet gilt (Status von ESPN),
+  sonst 15 Minuten Speicher. Das verfeinert die Regel „ab Anstoß rund 2½ Stunden“. Geändert nach dem `/code-review` von PR #49 statt
+  „Speicher von 1 Minute“: Next.js liefert einen abgelaufenen Eintrag erst noch aus und holt den neuen im Hintergrund, der Spielstand hinge
+  sonst immer einen Takt hinterher. Bei einem Abruf der Seite pro Minute bleibt es bei rund einem Abruf pro Minute.
+- **Abgesagte oder verlegte Partien** (Status `POSTPONED` oder `CANCELED` bei ESPN) zeigen `abgesagt` statt der Anstoßzeit, ohne Ergebnis.
 - **Laufende Partie:** Spielminute mit orangem Live-Punkt statt Anstoßzeit, z. B. `● 56'  Freiburg – Union 0:0`.
 - **Nachholspiel:** Liegen alle Partien eines Blocks in einem früheren Spieltag als dem zuletzt gespielten, steht dort
   `Nachholspiel · Mi 18. November`.

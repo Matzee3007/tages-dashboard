@@ -26,7 +26,8 @@ Schritte 2 und 4).
 
 - **Liga-Kürzel:** `ger.1` ist die Bundesliga, `eng.1` die Premier League, `uefa.champions` die Champions League.
 - **`state`:** Zustand einer Partie: `pre` (noch nicht angepfiffen), `in` (läuft), `post` (vorbei). Den Anpfiff meldet ESPN manchmal
-  verspätet, deshalb zählt `pre` nach dem Anstoß bei uns schon als laufend.
+  verspätet, deshalb zählt `pre` nach dem Anstoß bei uns schon als laufend. Verlegte oder abgesagte Partien erkennt die Kachel am
+  Statusnamen (`status.type.name`): `STATUS_POSTPONED`, `STATUS_CANCELED`.
 - **Team-id:** feste Nummer eines Teams, z. B. `132` für den FC Bayern. Damit erkennen wir Mein Team und die deutschen Kurznamen
   (`TEAMNAMEN` in `lib/einstellungen.ts`).
 
@@ -35,10 +36,11 @@ Schritte 2 und 4).
 | Abruf | Adresse | Speicher |
 |---|---|---|
 | Kalender (alle Tage mit Spielen) | `https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard`, Feld `leagues[0].calendar` | 24 Std. |
-| Partien eines Tages | `…/ger.1/scoreboard?dates=20261108` | 15 Min., bei laufender Partie 1 Min. |
-| Tabelle | `https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings` | 15 Min., bei laufender Partie 1 Min. |
+| Partien eines Tages | `…/ger.1/scoreboard?dates=20261108` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
+| Tabelle | `https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
 
-Alle mit `User-Agent: Tages-Dashboard`, 5 Sekunden Zeitlimit und dem Etikett `bundesliga` für den Knopf ↻ (ADR 0008).
+Alle mit `User-Agent: Tages-Dashboard`, 5 Sekunden Zeitlimit und dem Etikett `bundesliga` für den Knopf ↻ (ADR 0008). Eine gespeicherte
+Antwort darf höchstens doppelt so alt sein wie ihre Speicherzeit, mindestens 1 Stunde, sonst gilt sie als Ausfall (wie ADR 0005).
 
 Zum Ausprobieren im Terminal:
 

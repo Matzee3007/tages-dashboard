@@ -64,6 +64,9 @@ Ein Datumsbereich (`dates=20261106-20261108`) ergibt bei ESPN Fehler 400, deshal
   dieser Tag und die Tabelle **ein zweites Mal mit 60** abgerufen (Next.js misst das Alter mit dem `revalidate` des Aufrufs,
   `incremental-cache/index.js:404`). Alle Abrufe mit `tags: [einstellung.id]` (ADR 0008), `User-Agent: Tages-Dashboard` und
   `AbortSignal.timeout(5000)`.
+  _Nach dem `/code-review` von PR #49 geändert:_ Der zweite Abruf geht mit `cache: "no-store"` an die Quelle, weil Next.js einen
+  abgelaufenen Eintrag erst noch ausliefert. Der Spielplan trägt kein Etikett. Gespeicherte Antworten dürfen höchstens doppelt so alt sein
+  wie ihre Speicherzeit (mindestens 1 Stunde). Abgesagte Partien bekommen den Status `abgesagt`, `Tor.teamId` entfällt.
 - Ausfälle: Kalender, ein Tag oder die Tabelle scheitern → die Kachel scheitert (Fehlerzustand, letzter Stand bleibt). Nur der Spielplan
   scheitert → Überschrift ohne Nummer, Fehler ins Server-Log.
 - Logos: `<img>` mit `width`/`height` 20, `alt=""`, `loading="lazy"`, direkt von ESPN. `onError` blendet das Bild aus, der Platz bleibt.

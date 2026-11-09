@@ -23,7 +23,7 @@ OpenLigaDB Ergebnisse oft erst Stunden später einträgt (2026-11-08: Köln–Le
 
 | Abruf | Adresse | Speicher |
 |---|---|---|
-| Spielplan der Saison | `https://api.openligadb.de/getmatchdata/bl1/2026` (Saison 2026/27) | 24 Std. |
+| Spielplan der Saison | `https://api.openligadb.de/getmatchdata/bl1/2026` (Saison 2026/27) | 24 Std., ohne Etikett: ↻ lädt ihn nicht neu |
 
 Gelesen werden `matchDateTime` (deutsche Zeit, ohne Zone) und `group.groupOrderID` (Nummer des Spieltags). Ein verlegtes Spiel behält die
 Nummer seines alten Spieltags, daran erkennt die Kachel ein Nachholspiel.
