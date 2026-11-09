@@ -116,3 +116,14 @@ export function tageText(tage: string[]): string {
       : `${erster.wochentag} ${erster.tag}. ${erster.monat}`;
   return `${anfang} – ${ende}`;
 }
+
+const WOCHENTAG_DEUTSCH = new Intl.DateTimeFormat("de-DE", {
+  timeZone: ZEITZONE,
+  weekday: "short",
+});
+
+// Anstoß einer Partie in deutscher Zeit, z. B. "Sa 15:30".
+export function anstossText(iso: string): string {
+  const zeit = new Date(iso);
+  return `${WOCHENTAG_DEUTSCH.format(zeit).replace(".", "")} ${UHRZEIT.format(zeit)}`;
+}

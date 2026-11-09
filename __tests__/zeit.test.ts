@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
 import {
   alterText,
+  anstossText,
   datum,
   istFrisch,
   standText,
@@ -81,4 +82,9 @@ test("tageText nennt erste und letzte Tage eines Spieltags", () => {
   expect(tageText(["2026-10-30", "2026-10-31", "2026-11-01"])).toBe(
     "Fr 30. Oktober – So 1. November",
   );
+});
+
+test("anstossText zeigt Wochentag und deutsche Uhrzeit", () => {
+  expect(anstossText("2026-11-07T14:30:00Z")).toBe("Sa 15:30");
+  expect(anstossText("2026-11-06T19:30Z")).toBe("Fr 20:30");
 });
