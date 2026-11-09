@@ -7,6 +7,28 @@ export const KACHELN: KachelEinstellung[] = [
   { id: "ki-news", art: "ki-news", titel: "KI-News" },
 ];
 
+// Deutsche Kurznamen der Bundesliga nach der id von ESPN, Saison 2026/27 (Projektvision, Phase 3).
+export const TEAMNAMEN: Record<string, string> = {
+  "132": "Bayern",
+  "124": "Dortmund",
+  "11420": "Leipzig",
+  "126": "Freiburg",
+  "131": "Leverkusen",
+  "137": "Bremen",
+  "10388": "Elversberg",
+  "134": "Stuttgart",
+  "125": "Frankfurt",
+  "127": "HSV",
+  "2950": "Mainz",
+  "3307": "Paderborn",
+  "3841": "Augsburg",
+  "7911": "Hoffenheim",
+  "122": "Köln",
+  "598": "Union",
+  "133": "Schalke",
+  "268": "Gladbach",
+};
+
 export type SeitenEinstellung = { url: string; art: SeitenArt };
 
 export type AbsenderEinstellung = {
