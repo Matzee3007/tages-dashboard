@@ -47,6 +47,18 @@ function kalendertag(zeit: Date): number {
   return Date.UTC(teil("year"), teil("month") - 1, teil("day"));
 }
 
+// Kalendertag "YYYY-MM-DD" in deutscher Zeit.
+export function heute(jetzt: Date = new Date()): string {
+  return new Date(kalendertag(jetzt)).toISOString().slice(0, 10);
+}
+
+// Der Tag nach einem Kalendertag "YYYY-MM-DD".
+export function folgetag(tag: string): string {
+  return new Date(Date.parse(`${tag}T00:00:00Z`) + TAG_MS)
+    .toISOString()
+    .slice(0, 10);
+}
+
 function tageZurueck(iso: string, jetzt: Date): number {
   return Math.round((kalendertag(jetzt) - kalendertag(new Date(iso))) / TAG_MS);
 }

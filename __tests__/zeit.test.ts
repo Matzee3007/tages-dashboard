@@ -3,6 +3,8 @@ import {
   alterText,
   anstossText,
   datum,
+  folgetag,
+  heute,
   istFrisch,
   standText,
   tageText,
@@ -87,4 +89,13 @@ test("tageText nennt erste und letzte Tage eines Spieltags", () => {
 test("anstossText zeigt Wochentag und deutsche Uhrzeit", () => {
   expect(anstossText("2026-11-07T14:30:00Z")).toBe("Sa 15:30");
   expect(anstossText("2026-11-06T19:30Z")).toBe("Fr 20:30");
+});
+
+test("heute ist der Kalendertag in deutscher Zeit", () => {
+  expect(heute(new Date("2026-11-09T22:59:00Z"))).toBe("2026-11-09");
+  expect(heute(new Date("2026-11-09T23:00:00Z"))).toBe("2026-11-10");
+});
+
+test("folgetag zählt über das Monatsende", () => {
+  expect(folgetag("2026-10-31")).toBe("2026-11-01");
 });

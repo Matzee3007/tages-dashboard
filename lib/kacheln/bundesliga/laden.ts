@@ -20,21 +20,41 @@ const TABELLE_URL = `${ESPN}/v2/sports/soccer/ger.1/standings`;
 // Speicher in Sekunden (Projektvision, Entscheidungen vom 2026-11-08).
 const TAG_SEKUNDEN = 86_400;
 const NORMAL_SEKUNDEN = 900;
-const LIVE_SEKUNDEN = 60;
 const ABRUF_ZEITLIMIT_MS = 5000;
+const STUNDE_MS = 60 * 60 * 1000;
+
+// "frisch": an jedem Speicher vorbei, solange eine Partie läuft. Sonst Speicher in Sekunden, mit dem Etikett der
+// Kachel, wenn ihr Knopf ↻ ihn leeren soll (ADR 0008).
+type Speicher = "frisch" | { sekunden: number; etikett?: string };
 
 async function holeJson(
   url: string,
-  revalidate: number,
-  etikett: string,
+  speicher: Speicher,
+  jetzt: Date,
 ): Promise<unknown> {
   const antwort = await fetch(url, {
     headers: { "User-Agent": "Tages-Dashboard" },
-    // Das Etikett ist die id der Kachel: Ihr Knopf ↻ leert damit den Speicher (ADR 0008).
-    next: { revalidate, tags: [etikett] },
     signal: AbortSignal.timeout(ABRUF_ZEITLIMIT_MS),
+    ...(speicher === "frisch"
+      ? { cache: "no-store" as const }
+      : {
+          next: {
+            revalidate: speicher.sekunden,
+            ...(speicher.etikett && { tags: [speicher.etikett] }),
+          },
+        }),
   });
   if (!antwort.ok) throw new Error(`Status ${antwort.status} von ${url}`);
+  if (speicher !== "frisch") {
+    // Next.js liefert bei einem Ausfall still den alten Stand, die aufgehobene Date-Zeile verrät ihn (wie ADR 0005).
+    const hoechstalter = Math.max(STUNDE_MS, 2 * speicher.sekunden * 1000);
+    const abgerufen = Date.parse(antwort.headers.get("Date") ?? "");
+    if (jetzt.getTime() - abgerufen > hoechstalter) {
+      throw new Error(
+        `Gespeicherte Antwort von ${antwort.headers.get("Date")}: ${url}`,
+      );
+    }
+  }
   return antwort.json();
 }
 
@@ -44,31 +64,36 @@ function saison(tag: string): number {
   return monat >= 7 ? jahr : jahr - 1;
 }
 
+function laeuftEine(partien: Partie[]): boolean {
+  return partien.some((partie) => partie.status === "laeuft");
+}
+
 async function ladeTag(
   tag: string,
   jetzt: Date,
   etikett: string,
 ): Promise<Partie[]> {
   const url = `${KALENDER_URL}?dates=${tag.replaceAll("-", "")}`;
-  const partien = leseTag(await holeJson(url, NORMAL_SEKUNDEN, etikett), jetzt);
+  const partien = leseTag(
+    await holeJson(url, { sekunden: NORMAL_SEKUNDEN, etikett }, jetzt),
+    jetzt,
+  );
   if (!laeuftEine(partien)) return partien;
-  // Next.js misst das Alter mit dem revalidate des Aufrufs: Derselbe Eintrag gilt jetzt nach 60 s als alt.
-  return leseTag(await holeJson(url, LIVE_SEKUNDEN, etikett), jetzt);
+  return leseTag(await holeJson(url, "frisch", jetzt), jetzt);
 }
 
-function laeuftEine(partien: Partie[]): boolean {
-  return partien.some((partie) => partie.status === "laeuft");
-}
-
+// Ohne Etikett: Der Spielplan ändert sich selten, ↻ soll ihn nicht jedes Mal neu laden.
 async function ladeSpielplan(
   tage: string[],
-  etikett: string,
+  jetzt: Date,
 ): Promise<Map<string, number> | null> {
   if (tage.length === 0) return null;
   const url = `https://api.openligadb.de/getmatchdata/bl1/${saison(tage[0])}`;
   // Ohne Spielplan fehlt nur die Nummer des Spieltags, die Kachel läuft weiter.
   try {
-    return leseSpielplan(await holeJson(url, TAG_SEKUNDEN, etikett));
+    return leseSpielplan(
+      await holeJson(url, { sekunden: TAG_SEKUNDEN }, jetzt),
+    );
   } catch (fehler) {
     console.error("Spielplan von OpenLigaDB ließ sich nicht laden:", fehler);
     return null;
@@ -81,17 +106,19 @@ export async function ladeBundesliga(
 ): Promise<BundesligaDaten> {
   const etikett = einstellung.id;
   const kalender = leseKalender(
-    await holeJson(KALENDER_URL, TAG_SEKUNDEN, etikett),
+    await holeJson(KALENDER_URL, { sekunden: TAG_SEKUNDEN, etikett }, jetzt),
   );
   const tage = waehleSpieltag(kalender, jetzt);
   const [partienJeTag, normaleTabelle, spielplan] = await Promise.all([
     Promise.all(tage.map((tag) => ladeTag(tag, jetzt, etikett))),
-    holeJson(TABELLE_URL, NORMAL_SEKUNDEN, etikett).then(leseTabelle),
-    ladeSpielplan(tage, etikett),
+    holeJson(TABELLE_URL, { sekunden: NORMAL_SEKUNDEN, etikett }, jetzt).then(
+      leseTabelle,
+    ),
+    ladeSpielplan(tage, jetzt),
   ]);
   const partien = partienJeTag.flat();
   const tabelle = laeuftEine(partien)
-    ? leseTabelle(await holeJson(TABELLE_URL, LIVE_SEKUNDEN, etikett))
+    ? leseTabelle(await holeJson(TABELLE_URL, "frisch", jetzt))
     : normaleTabelle;
 
   return {

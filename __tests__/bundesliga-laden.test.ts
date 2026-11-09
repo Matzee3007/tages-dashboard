@@ -87,6 +87,7 @@ function antworten(abweichend: Record<string, unknown | number> = {}) {
     if (antwort === undefined) throw new Error(`Unerwartete Adresse ${url}`);
     if (typeof antwort === "number")
       return new Response("", { status: antwort });
+    if (antwort instanceof Response) return antwort;
     return Response.json(antwort);
   });
 }
@@ -126,10 +127,8 @@ test("setzt Speicher, Etikett und Zeitlimit", async () => {
     revalidate: 86400,
     tags: ["bundesliga"],
   });
-  expect(optionen(SPIELPLAN).next).toEqual({
-    revalidate: 86400,
-    tags: ["bundesliga"],
-  });
+  // Ohne Etikett: ↻ lädt den Spielplan der Saison nicht jedes Mal neu.
+  expect(optionen(SPIELPLAN).next).toEqual({ revalidate: 86400 });
   expect(optionen(`${KALENDER}?dates=20261108`).next).toEqual({
     revalidate: 900,
     tags: ["bundesliga"],
@@ -143,17 +142,17 @@ test("setzt Speicher, Etikett und Zeitlimit", async () => {
   expect(zeitlimit).toHaveBeenCalledWith(5000);
 });
 
-test("ruft einen Tag mit laufender Partie mit 60 nach", async () => {
+test("holt einen Tag mit laufender Partie frisch nach", async () => {
   antworten({ [`${KALENDER}?dates=20261108`]: tag("in", "2026-11-08T16:30Z") });
   const daten = await ladeBundesliga(EINSTELLUNG, JETZT);
 
-  const revalidate = (url: string) =>
+  const abrufe = (url: string) =>
     fetchMock.mock.calls
       .filter(([aufgerufen]) => aufgerufen === url)
-      .map(([, optionen]) => optionen.next.revalidate);
-  expect(revalidate(`${KALENDER}?dates=20261108`)).toEqual([900, 60]);
-  expect(revalidate(TABELLE)).toEqual([900, 60]);
-  expect(revalidate(`${KALENDER}?dates=20261107`)).toEqual([900]);
+      .map(([, optionen]) => optionen.cache ?? optionen.next.revalidate);
+  expect(abrufe(`${KALENDER}?dates=20261108`)).toEqual([900, "no-store"]);
+  expect(abrufe(TABELLE)).toEqual([900, "no-store"]);
+  expect(abrufe(`${KALENDER}?dates=20261107`)).toEqual([900]);
   expect(daten.partien.some((p) => p.status === "laeuft")).toBe(true);
 });
 
@@ -181,4 +180,28 @@ test("ohne Spielplan keine Nummer", async () => {
     "Spielplan von OpenLigaDB ließ sich nicht laden:",
     expect.any(Error),
   );
+});
+
+test("eine zu alte gespeicherte Antwort lässt die Kachel scheitern", async () => {
+  // Next.js liefert bei einem Ausfall still den alten Stand, die Date-Zeile verrät ihn (ADR 0005).
+  const alt = new Date(JETZT.getTime() - 61 * 60 * 1000).toUTCString();
+  antworten({
+    [`${KALENDER}?dates=20261108`]: Response.json(
+      tag("post", "2026-11-08T14:30Z"),
+      {
+        headers: { Date: alt },
+      },
+    ),
+  });
+  await expect(ladeBundesliga(EINSTELLUNG, JETZT)).rejects.toThrow(
+    "Gespeicherte Antwort",
+  );
+});
+
+test("Kalender und Spielplan dürfen bis zu zwei Tage alt sein", async () => {
+  const alt = new Date(JETZT.getTime() - 47 * 60 * 60 * 1000).toUTCString();
+  antworten({
+    [KALENDER]: Response.json(ANTWORTEN[KALENDER], { headers: { Date: alt } }),
+  });
+  await expect(ladeBundesliga(EINSTELLUNG, JETZT)).resolves.toBeDefined();
 });
