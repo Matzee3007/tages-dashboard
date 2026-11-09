@@ -66,7 +66,13 @@ async function ladeSpielplan(
 ): Promise<Map<string, number> | null> {
   if (tage.length === 0) return null;
   const url = `https://api.openligadb.de/getmatchdata/bl1/${saison(tage[0])}`;
-  return leseSpielplan(await holeJson(url, TAG_SEKUNDEN, etikett));
+  // Ohne Spielplan fehlt nur die Nummer des Spieltags, die Kachel läuft weiter.
+  try {
+    return leseSpielplan(await holeJson(url, TAG_SEKUNDEN, etikett));
+  } catch (fehler) {
+    console.error("Spielplan von OpenLigaDB ließ sich nicht laden:", fehler);
+    return null;
+  }
 }
 
 export async function ladeBundesliga(

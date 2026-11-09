@@ -161,3 +161,24 @@ test("ohne laufende Partie kein zweiter Abruf", async () => {
   await ladeBundesliga(EINSTELLUNG, JETZT);
   expect(fetchMock).toHaveBeenCalledTimes(5);
 });
+
+test("ein gescheiterter Tag lässt die Kachel scheitern", async () => {
+  antworten({ [`${KALENDER}?dates=20261107`]: 500 });
+  await expect(ladeBundesliga(EINSTELLUNG, JETZT)).rejects.toThrow(
+    "Status 500",
+  );
+});
+
+test("ohne Spielplan keine Nummer", async () => {
+  const log = vi.spyOn(console, "error").mockImplementation(() => {});
+  antworten({ [SPIELPLAN]: 503 });
+
+  const daten = await ladeBundesliga(EINSTELLUNG, JETZT);
+
+  expect(daten.titel).toBeNull();
+  expect(daten.partien).toHaveLength(2);
+  expect(log).toHaveBeenCalledWith(
+    "Spielplan von OpenLigaDB ließ sich nicht laden:",
+    expect.any(Error),
+  );
+});
