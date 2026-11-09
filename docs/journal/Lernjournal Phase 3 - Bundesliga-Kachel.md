@@ -39,7 +39,7 @@ Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]]. Die Se
 | Bauen | Typen der KI-News eingeengt (`KiNewsDaten`), Lader per `switch` statt Tabelle `LADER` | TypeScript ordnet nur so jede Einstellung ihrem Lader zu, Vermerk in ADR 0004 | Entwickler |
 | Prüfen | Versuch kurz auf der Live-Adresse statt in der Vorschau | Vorschau liegt hinter dem Vercel-Login | Entwickler |
 | Bauen | Eigentor ` (ET)`, Elfmeter ` (E)`, `pre` nach Anstoß gilt als laufend, Bundesliga-Kachel vor den KI-News | im Plan unter „Aufgetaucht“ genannt | Entwickler |
-| Technik | Saison bei OpenLigaDB: ab Juli das laufende Jahr, sonst das Vorjahr (`2026` für 2026/27) | Spielplan-Adresse braucht das Jahr | ungefragt |
+| Technik | Saison bei OpenLigaDB: ab Juli das laufende Jahr, sonst das Vorjahr (`2026` für 2026/27) | Spielplan-Adresse braucht das Jahr | Entwickler |
 | Prüfen | Fund 6 bleibt offen: Abrufe laufen nacheinander und könnten 8 s der Kachel reißen | ESPN gemessen rund 70 ms | Entwickler |
 
 ## Befehle: Schnittstellen erkunden
