@@ -6,13 +6,14 @@ export type TeamStand = {
   tore: number | null;
 };
 
-// text z. B. "García 7'", teamId: das Team, für das das Tor zählt.
-export type Tor = { text: string; teamId: string };
+// text z. B. "García 7'".
+export type Tor = { text: string };
 
 export type Partie = {
   id: string;
   anstoss: string;
-  status: "vorher" | "laeuft" | "vorbei";
+  // abgesagt: verlegt oder abgesagt, ohne Ergebnis.
+  status: "vorher" | "laeuft" | "vorbei" | "abgesagt";
   minute: string | null;
   heim: TeamStand;
   gast: TeamStand;

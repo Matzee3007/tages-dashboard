@@ -31,9 +31,9 @@ const KOELN_LEVERKUSEN: Partie = {
   heim: team("122", "Köln", 1),
   gast: team("131", "Leverkusen", 2),
   tore: [
-    { text: "García 7'", teamId: "131" },
-    { text: "Schick 85'", teamId: "131" },
-    { text: "El Mala 90+2'", teamId: "122" },
+    { text: "García 7'" },
+    { text: "Schick 85'" },
+    { text: "El Mala 90+2'" },
   ],
 };
 
@@ -119,4 +119,18 @@ test("ein Logo ohne Bild verschwindet", () => {
   const logo = container.querySelector("img")!;
   fireEvent.error(logo);
   expect(logo.style.visibility).toBe("hidden");
+});
+
+test("abgesagte Partie zeigt abgesagt statt Anstoß und Ergebnis", () => {
+  const abgesagt: Partie = {
+    ...MAINZ_BAYERN,
+    id: "9",
+    status: "abgesagt",
+    heim: team("2950", "Mainz", null),
+    gast: team("132", "Bayern", null),
+  };
+  render(<BundesligaAnsicht daten={{ ...DATEN, partien: [abgesagt] }} />);
+  const partie = screen.getByTestId("partie-9");
+  expect(partie.textContent).toContain("abgesagt");
+  expect(partie.textContent).not.toContain("Sa 15:30");
 });

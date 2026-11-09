@@ -47,7 +47,8 @@ function partie(
   felder: {
     id?: string;
     date?: string;
-    state?: "pre" | "in" | "post";
+    state?: "pre" | "in" | "post" | null;
+    name?: string;
     displayClock?: string;
     heim?: ReturnType<typeof team>;
     gast?: ReturnType<typeof team>;
@@ -59,7 +60,10 @@ function partie(
     date: felder.date ?? "2026-11-08T14:30Z",
     status: {
       displayClock: felder.displayClock ?? "90'+6'",
-      type: { state: felder.state ?? "post" },
+      type: {
+        state: felder.state === null ? undefined : (felder.state ?? "post"),
+        name: felder.name,
+      },
     },
     competitions: [
       {
@@ -126,9 +130,9 @@ test("liest eine beendete Partie mit Toren", () => {
         tore: 2,
       },
       tore: [
-        { text: "García 7'", teamId: "131" },
-        { text: "Schick 85'", teamId: "131" },
-        { text: "El Mala 90+2'", teamId: "122" },
+        { text: "García 7'" },
+        { text: "Schick 85'" },
+        { text: "El Mala 90+2'" },
       ],
     },
   ]);
@@ -270,4 +274,35 @@ test("liest die Tabelle", () => {
     },
   ]);
   expect(() => leseTabelle({})).toThrow("Unerwartete Antwort von ESPN");
+});
+
+test("abgesagte oder verlegte Partie ist weder vorbei noch live", () => {
+  const json = {
+    events: [
+      partie({ id: "a", state: "post", name: "STATUS_POSTPONED" }),
+      partie({
+        id: "b",
+        state: "pre",
+        name: "STATUS_CANCELED",
+        date: "2026-11-08T14:30Z",
+      }),
+    ],
+  };
+  const [verlegt, abgesagt] = leseTag(json, JETZT);
+  expect(verlegt.status).toBe("abgesagt");
+  expect(verlegt.heim.tore).toBeNull();
+  expect(abgesagt.status).toBe("abgesagt");
+});
+
+test("ohne bekannten Zustand gilt eine Partie nicht als laufend", () => {
+  const json = {
+    events: [partie({ state: null, date: "2026-11-08T14:30Z" })],
+  };
+  expect(leseTag(json, JETZT)[0].status).toBe("vorher");
+});
+
+test("ein Kalender in anderer Form wirft", () => {
+  expect(() =>
+    leseKalender({ leagues: [{ calendar: [{ label: "Spieltag 9" }] }] }),
+  ).toThrow("Unerwartete Antwort von ESPN");
 });

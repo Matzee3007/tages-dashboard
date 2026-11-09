@@ -71,6 +71,8 @@ function PartieZeile({
               </span>{" "}
               {partie.minute ?? ""}
             </>
+          ) : partie.status === "abgesagt" ? (
+            "abgesagt"
           ) : (
             anstossText(partie.anstoss)
           )}

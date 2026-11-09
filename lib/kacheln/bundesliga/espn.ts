@@ -7,6 +7,9 @@ import type {
 
 // Liest die inoffizielle Schnittstelle von ESPN (ADR 0009). Felder laut Antworten vom 2026-11-08.
 
+// Statusnamen von ESPN für Partien, die nicht wie geplant stattfinden.
+const ABGESAGT = new Set(["STATUS_POSTPONED", "STATUS_CANCELED"]);
+
 function falscheForm(): never {
   throw new Error("Unerwartete Antwort von ESPN");
 }
@@ -17,7 +20,7 @@ export function leseKalender(json: unknown): string[] {
     ?.leagues?.[0]?.calendar;
   if (!Array.isArray(kalender)) falscheForm();
   return kalender
-    .filter((eintrag): eintrag is string => typeof eintrag === "string")
+    .map((eintrag) => (typeof eintrag === "string" ? eintrag : falscheForm()))
     .map((eintrag) => eintrag.slice(0, 10))
     .sort();
 }
@@ -33,14 +36,13 @@ type EspnDetail = {
   ownGoal?: boolean;
   penaltyKick?: boolean;
   clock?: { displayValue?: string };
-  team?: { id?: string };
   athletesInvolved?: { shortName?: string }[];
 };
 
 type EspnPartie = {
   id?: string;
   date?: string;
-  status?: { displayClock?: string; type?: { state?: string } };
+  status?: { displayClock?: string; type?: { state?: string; name?: string } };
   competitions?: { competitors?: EspnTeam[]; details?: EspnDetail[] }[];
 };
 
@@ -81,10 +83,15 @@ export function leseTag(json: unknown, jetzt: Date): Partie[] {
     const anstoss = roh.date ?? falscheForm();
     const zustand = roh.status?.type?.state;
     // ESPN meldet den Anpfiff manchmal verspätet: pre nach dem Anstoß zählt schon als laufend.
-    const angepfiffen =
-      zustand !== "pre" || Date.parse(anstoss) <= jetzt.getTime();
-    const status: Partie["status"] =
-      zustand === "post" ? "vorbei" : angepfiffen ? "laeuft" : "vorher";
+    const status: Partie["status"] = ABGESAGT.has(roh.status?.type?.name ?? "")
+      ? "abgesagt"
+      : zustand === "post"
+        ? "vorbei"
+        : zustand === "in" ||
+            (zustand === "pre" && Date.parse(anstoss) <= jetzt.getTime())
+          ? "laeuft"
+          : "vorher";
+    const angepfiffen = status === "laeuft" || status === "vorbei";
     return {
       id: roh.id ?? falscheForm(),
       anstoss,
@@ -100,10 +107,7 @@ export function leseTag(json: unknown, jetzt: Date): Partie[] {
       ),
       tore: (wettkampf?.details ?? [])
         .filter((detail) => detail.scoringPlay)
-        .map((detail) => ({
-          text: torText(detail),
-          teamId: detail.team?.id ?? "",
-        })),
+        .map((detail) => ({ text: torText(detail) })),
     };
   });
 }
