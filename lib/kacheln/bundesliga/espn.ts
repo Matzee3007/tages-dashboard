@@ -74,15 +74,18 @@ export function leseTag(json: unknown, jetzt: Date): Partie[] {
   return partien.map((roh) => {
     const wettkampf = roh.competitions?.[0];
     const teams = wettkampf?.competitors ?? [];
+    const anstoss = roh.date ?? falscheForm();
     const zustand = roh.status?.type?.state;
+    // ESPN meldet den Anpfiff manchmal verspätet: pre nach dem Anstoß zählt schon als laufend.
+    const angepfiffen =
+      zustand !== "pre" || Date.parse(anstoss) <= jetzt.getTime();
     const status: Partie["status"] =
-      zustand === "post" ? "vorbei" : zustand === "in" ? "laeuft" : "vorher";
-    const angepfiffen = status !== "vorher";
+      zustand === "post" ? "vorbei" : angepfiffen ? "laeuft" : "vorher";
     return {
       id: roh.id ?? falscheForm(),
-      anstoss: roh.date ?? falscheForm(),
+      anstoss,
       status,
-      minute: status === "laeuft" ? (roh.status?.displayClock ?? null) : null,
+      minute: zustand === "in" ? (roh.status?.displayClock ?? null) : null,
       heim: teamStand(
         teams.find((t) => t.homeAway === "home"),
         angepfiffen,

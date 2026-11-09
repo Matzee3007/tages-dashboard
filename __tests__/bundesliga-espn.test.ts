@@ -165,3 +165,22 @@ test("liest eine laufende Partie", () => {
   expect(laufend.heim.tore).toBe(0);
   expect(laufend.gast.name).toBe("Union");
 });
+
+test("pre nach Anstoß zählt als laufend", () => {
+  const json = {
+    events: [partie({ date: "2026-11-08T17:30Z", state: "pre" })],
+  };
+  const [partieNachAnstoss] = leseTag(json, JETZT);
+  expect(partieNachAnstoss.status).toBe("laeuft");
+  expect(partieNachAnstoss.minute).toBeNull();
+});
+
+test("offene Partie hat keine Tore", () => {
+  const json = {
+    events: [partie({ date: "2026-11-08T18:30Z", state: "pre" })],
+  };
+  const [offen] = leseTag(json, JETZT);
+  expect(offen.status).toBe("vorher");
+  expect(offen.heim.tore).toBeNull();
+  expect(offen.gast.tore).toBeNull();
+});
