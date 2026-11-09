@@ -47,6 +47,18 @@ function kalendertag(zeit: Date): number {
   return Date.UTC(teil("year"), teil("month") - 1, teil("day"));
 }
 
+// Kalendertag "YYYY-MM-DD" in deutscher Zeit.
+export function heute(jetzt: Date = new Date()): string {
+  return new Date(kalendertag(jetzt)).toISOString().slice(0, 10);
+}
+
+// Der Tag nach einem Kalendertag "YYYY-MM-DD".
+export function folgetag(tag: string): string {
+  return new Date(Date.parse(`${tag}T00:00:00Z`) + TAG_MS)
+    .toISOString()
+    .slice(0, 10);
+}
+
 function tageZurueck(iso: string, jetzt: Date): number {
   return Math.round((kalendertag(jetzt) - kalendertag(new Date(iso))) / TAG_MS);
 }
@@ -79,4 +91,51 @@ export function alterText(
   if (nurDatum && tage <= 0) return "heute";
   // Mit Uhrzeit heißt über 24 Std. immer mindestens „gestern“, auch am 25-Stunden-Tag der Zeitumstellung.
   return tage <= 1 ? "gestern" : `vor ${tage} Tagen`;
+}
+
+const WOCHENTAG = new Intl.DateTimeFormat("de-DE", {
+  timeZone: "UTC",
+  weekday: "short",
+});
+const MONAT = new Intl.DateTimeFormat("de-DE", {
+  timeZone: "UTC",
+  month: "long",
+});
+
+// tag: Kalendertag "YYYY-MM-DD" ohne Zeitzone, deshalb in UTC formatiert. "Fr." → "Fr".
+function tagTeile(tag: string): {
+  wochentag: string;
+  tag: number;
+  monat: string;
+} {
+  const zeit = new Date(`${tag}T12:00:00Z`);
+  return {
+    wochentag: WOCHENTAG.format(zeit).replace(".", ""),
+    tag: zeit.getUTCDate(),
+    monat: MONAT.format(zeit),
+  };
+}
+
+// ["2026-11-06", …, "2026-11-08"] → "Fr 6. – So 8. November", den Monat vorn nur, wenn er wechselt.
+export function tageText(tage: string[]): string {
+  const erster = tagTeile(tage[0]);
+  const letzter = tagTeile(tage[tage.length - 1]);
+  const ende = `${letzter.wochentag} ${letzter.tag}. ${letzter.monat}`;
+  if (tage.length === 1) return ende;
+  const anfang =
+    erster.monat === letzter.monat
+      ? `${erster.wochentag} ${erster.tag}.`
+      : `${erster.wochentag} ${erster.tag}. ${erster.monat}`;
+  return `${anfang} – ${ende}`;
+}
+
+const WOCHENTAG_DEUTSCH = new Intl.DateTimeFormat("de-DE", {
+  timeZone: ZEITZONE,
+  weekday: "short",
+});
+
+// Anstoß einer Partie in deutscher Zeit, z. B. "Sa 15:30".
+export function anstossText(iso: string): string {
+  const zeit = new Date(iso);
+  return `${WOCHENTAG_DEUTSCH.format(zeit).replace(".", "")} ${UHRZEIT.format(zeit)}`;
 }

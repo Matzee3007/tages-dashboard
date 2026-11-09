@@ -209,7 +209,8 @@ Entscheidungen aus der Befragung vom 2026-11-04:
 
 **Phase 3 – Sport**
 
-1. **Bundesliga (ESPN, [[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]):** Spieltag und Tabelle, Mein Team hervorgehoben. Die erste Sport-Kachel legt das
+1. **Bundesliga (ESPN, [[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]])** (erledigt 2026-11-09, PR #49, siehe
+   [[projects/tages-dashboard/docs/plaene/2026-11-08-bundesliga|Plan]]): Spieltag und Tabelle, Mein Team hervorgehoben. Die erste Sport-Kachel legt das
    Muster für die anderen fest.
 2. **Premier League und Champions League (football-data.org):** API-Schlüssel auf dem Server, Zwischenspeicher
    für die Grenze von 10 Abrufen pro Minute.
@@ -238,17 +239,23 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 - **Spieltag aus Kalendertagen:** Aufeinanderfolgende Tage mit Spielen bei ESPN bilden einen Spieltag, ein Tag ohne Spiel trennt.
 - **Nummer und Datum über dem Spieltag,** z. B. `9. Spieltag · Fr 6. – So 8. November`. ESPN kennt keine Nummer, sie kommt aus dem
   Spielplan der Saison bei OpenLigaDB (`getmatchdata/bl1/<Saison>`, passende Tage). Fehlt sie, stehen nur die Tage da.
-- **Deutsche Teamnamen** aus einer eigenen Liste in den Einstellungen, nach der id von ESPN (z. B. `1. FC Köln`, `Bayern München`).
+- **Deutsche Teamnamen** aus einer eigenen Liste in den Einstellungen, nach der id von ESPN (Kurznamen, siehe unten).
   Mein Team wird über die id erkannt.
-- **Speicher von 1 Minute,** solange eine Partie läuft oder ihr Anstoß vorbei ist, sie aber noch nicht als beendet gilt (Status von ESPN),
-  sonst 15 Minuten. Das verfeinert die Regel „ab Anstoß rund 2½ Stunden“.
+- **Frisch abgerufen,** solange eine Partie läuft oder ihr Anstoß vorbei ist, sie aber noch nicht als beendet gilt (Status von ESPN),
+  sonst 15 Minuten Speicher. Das verfeinert die Regel „ab Anstoß rund 2½ Stunden“. Geändert nach dem `/code-review` von PR #49 statt
+  „Speicher von 1 Minute“: Next.js liefert einen abgelaufenen Eintrag erst noch aus und holt den neuen im Hintergrund, der Spielstand hinge
+  sonst immer einen Takt hinterher. Bei einem Abruf der Seite pro Minute bleibt es bei rund einem Abruf pro Minute.
+- **Abgesagte oder verlegte Partien** (Status `POSTPONED` oder `CANCELED` bei ESPN) zeigen `abgesagt` statt der Anstoßzeit, ohne Ergebnis.
 - **Laufende Partie:** Spielminute mit orangem Live-Punkt statt Anstoßzeit, z. B. `● 56'  Freiburg – Union 0:0`.
 - **Nachholspiel:** Liegen alle Partien eines Blocks in einem früheren Spieltag als dem zuletzt gespielten, steht dort
   `Nachholspiel · Mi 18. November`.
-- **Namensliste der Saison 2026/27:** Bayern München, Borussia Dortmund, RB Leipzig, SC Freiburg, Bayer Leverkusen, Werder Bremen,
-  SV Elversberg, VfB Stuttgart, Eintracht Frankfurt, Hamburger SV, Mainz 05, SC Paderborn, FC Augsburg, TSG Hoffenheim, 1. FC Köln,
-  Union Berlin, Schalke 04, Borussia Mönchengladbach. Ist die Zeile auf dem iPhone zu lang, werden einzelne Namen im Mock gekürzt.
-  Fehlt ein Team (z. B. ein Aufsteiger), steht der Name von ESPN da und im Server-Log `Team <id> fehlt in der Namensliste`.
+- **Kurznamen der Saison 2026/27** (nach dem Mock vom 2026-11-08, ersetzen die vollen Namen), in Spieltag und Tabelle: Bayern, Dortmund,
+  Leipzig, Freiburg, Leverkusen, Bremen, Elversberg, Stuttgart, Frankfurt, HSV, Mainz, Paderborn, Augsburg, Hoffenheim, Köln, Union,
+  Schalke, Gladbach. Fehlt ein Team (z. B. ein Aufsteiger), steht der Kurzname von ESPN da und im Server-Log
+  `Team <id> fehlt in der Namensliste`.
+- **Aussehen nach dem Mock:** eine Zeile pro Partie (Zeit oder Minute, Logo und Kurzname je Team, Ergebnis), darunter bei jeder Partie
+  mit Toren eine graue Zeile mit den Torschützen. Mein Team mit orangem Balken links und leicht orangem Hintergrund, in Spieltag und
+  Tabelle. Eine Lücke in der Tabelle zeigt eine Zeile `···`.
 - **Speicher:** Spielplan von OpenLigaDB 24 Stunden, Tabelle von ESPN wie die Partien (1 bzw. 15 Minuten).
 
 ## Stolpersteine

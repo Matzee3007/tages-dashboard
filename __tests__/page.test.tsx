@@ -169,3 +169,37 @@ test("↻ holt die Kachel frisch, erneut versuchen und der Takt fragen ohne Argu
     ["ki-news"],
   ]);
 });
+
+test("zeigt die Bundesliga-Kachel", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      {
+        id: "bundesliga",
+        titel: "Bundesliga",
+        status: "ok",
+        daten: {
+          art: "bundesliga",
+          titel: "9. Spieltag",
+          tage: ["2026-11-08"],
+          partien: [],
+          tabelle: [],
+          meinTeam: ["132"],
+        },
+        stand: ZEIT,
+      },
+      ...OK.kacheln,
+    ],
+  });
+  render(<Page />);
+
+  expect(
+    await screen.findByRole("heading", { level: 2, name: "Bundesliga" }),
+  ).toBeDefined();
+  expect(
+    screen.getByRole("heading", { name: "9. Spieltag · So 8. November" }),
+  ).toBeDefined();
+  expect(
+    screen.getByRole("heading", { level: 2, name: "KI-News" }),
+  ).toBeDefined();
+});

@@ -1,8 +1,25 @@
 import { KACHELN, type KachelEinstellung } from "@/lib/einstellungen";
+import { ladeBundesligaKachel } from "@/lib/kacheln/bundesliga/kachel";
 import { ladeKiNewsKachel } from "@/lib/kacheln/ki-news/kachel";
-import type { DashboardAntwort, KachelAntwort } from "@/lib/kacheln/typen";
+import type {
+  DashboardAntwort,
+  KachelAntwort,
+  KachelDaten,
+} from "@/lib/kacheln/typen";
 
-const LADER = { "ki-news": ladeKiNewsKachel };
+// Ein switch statt einer Tabelle: So passt TypeScript jede Einstellung zu ihrem Lader.
+function lade(
+  einstellung: KachelEinstellung,
+  jetzt: Date,
+): Promise<{ daten: KachelDaten }> {
+  switch (einstellung.art) {
+    case "ki-news":
+      return ladeKiNewsKachel(einstellung, jetzt);
+    case "bundesliga":
+      return ladeBundesligaKachel(einstellung, jetzt);
+  }
+}
+
 const KACHEL_ZEITLIMIT_MS = 8000;
 
 async function mitZeitlimit<T>(ladevorgang: Promise<T>): Promise<T> {
@@ -26,9 +43,7 @@ async function ladeKachel(
 ): Promise<KachelAntwort> {
   const { id, titel } = einstellung;
   try {
-    const ergebnis = await mitZeitlimit(
-      LADER[einstellung.art](einstellung, jetzt),
-    );
+    const ergebnis = await mitZeitlimit(lade(einstellung, jetzt));
     return {
       id,
       titel,

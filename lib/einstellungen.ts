@@ -1,11 +1,50 @@
 import type { SeitenArt } from "@/lib/kacheln/ki-news/seiten";
 
-export type KachelEinstellung = { id: string; art: "ki-news"; titel: string };
+export type KiNewsEinstellung = { id: string; art: "ki-news"; titel: string };
+
+// meinTeam: ids der Teams bei ESPN (Glossar: Mein Team).
+export type BundesligaEinstellung = {
+  id: string;
+  art: "bundesliga";
+  titel: string;
+  meinTeam: string[];
+};
+
+export type KachelEinstellung = KiNewsEinstellung | BundesligaEinstellung;
 
 // Die Reihenfolge hier ist die Reihenfolge auf dem Bildschirm.
 export const KACHELN: KachelEinstellung[] = [
+  // 132 ist der FC Bayern bei ESPN.
+  {
+    id: "bundesliga",
+    art: "bundesliga",
+    titel: "Bundesliga",
+    meinTeam: ["132"],
+  },
   { id: "ki-news", art: "ki-news", titel: "KI-News" },
 ];
+
+// Deutsche Kurznamen der Bundesliga nach der id von ESPN, Saison 2026/27 (Projektvision, Phase 3).
+export const TEAMNAMEN: Record<string, string> = {
+  "132": "Bayern",
+  "124": "Dortmund",
+  "11420": "Leipzig",
+  "126": "Freiburg",
+  "131": "Leverkusen",
+  "137": "Bremen",
+  "10388": "Elversberg",
+  "134": "Stuttgart",
+  "125": "Frankfurt",
+  "127": "HSV",
+  "2950": "Mainz",
+  "3307": "Paderborn",
+  "3841": "Augsburg",
+  "7911": "Hoffenheim",
+  "122": "Köln",
+  "598": "Union",
+  "133": "Schalke",
+  "268": "Gladbach",
+};
 
 export type SeitenEinstellung = { url: string; art: SeitenArt };
 
