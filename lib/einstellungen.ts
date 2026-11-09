@@ -1,6 +1,16 @@
 import type { SeitenArt } from "@/lib/kacheln/ki-news/seiten";
 
-export type KachelEinstellung = { id: string; art: "ki-news"; titel: string };
+export type KiNewsEinstellung = { id: string; art: "ki-news"; titel: string };
+
+// meinTeam: ids der Teams bei ESPN (Glossar: Mein Team).
+export type BundesligaEinstellung = {
+  id: string;
+  art: "bundesliga";
+  titel: string;
+  meinTeam: string[];
+};
+
+export type KachelEinstellung = KiNewsEinstellung | BundesligaEinstellung;
 
 // Die Reihenfolge hier ist die Reihenfolge auf dem Bildschirm.
 export const KACHELN: KachelEinstellung[] = [

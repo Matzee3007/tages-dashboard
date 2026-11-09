@@ -28,3 +28,13 @@ export type TabellenZeile = {
   differenz: number;
   punkte: number;
 };
+
+// tabelle: Ausschnitt, null steht für eine Lücke. titel null: keine Nummer bekannt.
+export type BundesligaDaten = {
+  art: "bundesliga";
+  titel: string | null;
+  tage: string[];
+  partien: Partie[];
+  tabelle: (TabellenZeile | null)[];
+  meinTeam: string[];
+};

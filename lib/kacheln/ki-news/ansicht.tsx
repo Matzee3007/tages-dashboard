@@ -1,7 +1,7 @@
 import { Abschnitt } from "@/lib/kacheln/kachel";
 import type { AbsenderStand } from "@/lib/kacheln/ki-news/laden";
 import type { Meldung } from "@/lib/kacheln/ki-news/feed";
-import type { KachelDaten } from "@/lib/kacheln/typen";
+import type { KiNewsDaten } from "@/lib/kacheln/typen";
 import { alterText, istFrisch } from "@/lib/zeit";
 
 function MeldungsZeile({ meldung }: { meldung: Meldung }) {
@@ -51,7 +51,7 @@ function RuhigeZeile({ absender }: { absender: AbsenderStand }) {
   );
 }
 
-export function KiNewsAnsicht({ daten }: { daten: KachelDaten }) {
+export function KiNewsAnsicht({ daten }: { daten: KiNewsDaten }) {
   const aktiv = daten.absender.filter((a) => a.meldungen.length > 0);
   const ruhig = daten.absender.filter((a) => a.meldungen.length === 0);
 
