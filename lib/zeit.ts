@@ -80,3 +80,39 @@ export function alterText(
   // Mit Uhrzeit heißt über 24 Std. immer mindestens „gestern“, auch am 25-Stunden-Tag der Zeitumstellung.
   return tage <= 1 ? "gestern" : `vor ${tage} Tagen`;
 }
+
+const WOCHENTAG = new Intl.DateTimeFormat("de-DE", {
+  timeZone: "UTC",
+  weekday: "short",
+});
+const MONAT = new Intl.DateTimeFormat("de-DE", {
+  timeZone: "UTC",
+  month: "long",
+});
+
+// tag: Kalendertag "YYYY-MM-DD" ohne Zeitzone, deshalb in UTC formatiert. "Fr." → "Fr".
+function tagTeile(tag: string): {
+  wochentag: string;
+  tag: number;
+  monat: string;
+} {
+  const zeit = new Date(`${tag}T12:00:00Z`);
+  return {
+    wochentag: WOCHENTAG.format(zeit).replace(".", ""),
+    tag: zeit.getUTCDate(),
+    monat: MONAT.format(zeit),
+  };
+}
+
+// ["2026-11-06", …, "2026-11-08"] → "Fr 6. – So 8. November", den Monat vorn nur, wenn er wechselt.
+export function tageText(tage: string[]): string {
+  const erster = tagTeile(tage[0]);
+  const letzter = tagTeile(tage[tage.length - 1]);
+  const ende = `${letzter.wochentag} ${letzter.tag}. ${letzter.monat}`;
+  if (tage.length === 1) return ende;
+  const anfang =
+    erster.monat === letzter.monat
+      ? `${erster.wochentag} ${erster.tag}.`
+      : `${erster.wochentag} ${erster.tag}. ${erster.monat}`;
+  return `${anfang} – ${ende}`;
+}

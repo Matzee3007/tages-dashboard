@@ -1,5 +1,12 @@
 import { expect, test } from "vitest";
-import { alterText, datum, istFrisch, standText, uhrzeit } from "@/lib/zeit";
+import {
+  alterText,
+  datum,
+  istFrisch,
+  standText,
+  tageText,
+  uhrzeit,
+} from "@/lib/zeit";
 
 test("zeigt die Sommerzeit", () => {
   expect(uhrzeit("2026-07-01T12:00:00Z")).toBe("14:00");
@@ -64,4 +71,14 @@ test("ohne Uhrzeit ist eine Meldung von heute und gestern frisch", () => {
 test("am Tag der Umstellung auf Winterzeit heißt eine Meldung über 24 Std. gestern", () => {
   const spaet = new Date("2026-10-25T22:45:00Z"); // 23:45 MEZ
   expect(alterText("2026-10-24T22:15:00Z", spaet)).toBe("gestern"); // 00:15 MESZ, 24,5 Std.
+});
+
+test("tageText nennt erste und letzte Tage eines Spieltags", () => {
+  expect(tageText(["2026-11-06", "2026-11-07", "2026-11-08"])).toBe(
+    "Fr 6. – So 8. November",
+  );
+  expect(tageText(["2026-11-18"])).toBe("Mi 18. November");
+  expect(tageText(["2026-10-30", "2026-10-31", "2026-11-01"])).toBe(
+    "Fr 30. Oktober – So 1. November",
+  );
 });
