@@ -1,8 +1,9 @@
 // @vitest-environment node
 import { expect, test } from "vitest";
-import type { Partie } from "@/lib/kacheln/bundesliga/typen";
+import type { Partie, TabellenZeile } from "@/lib/kacheln/bundesliga/typen";
 import {
   sortierePartien,
+  tabellenAusschnitt,
   spieltagTitel,
   waehleSpieltag,
 } from "@/lib/kacheln/bundesliga/spieltag";
@@ -94,4 +95,40 @@ test("Mein Team zuerst, dann nach Anstoß und Heimteam", () => {
     "b",
     "a",
   ]);
+});
+
+const TABELLE: TabellenZeile[] = Array.from({ length: 18 }, (_, i) => ({
+  platz: i + 1,
+  id: `t${i + 1}`,
+  name: `Team ${i + 1}`,
+  logo: null,
+  spiele: 9,
+  differenz: 0,
+  punkte: 30 - i,
+}));
+
+function plaetze(ausschnitt: (TabellenZeile | null)[]) {
+  return ausschnitt.map((zeile) => zeile?.platz ?? null);
+}
+
+test("Ausschnitt um Mein Team", () => {
+  expect(plaetze(tabellenAusschnitt(TABELLE, ["t6"]))).toEqual([
+    1,
+    null,
+    4,
+    5,
+    6,
+    7,
+    8,
+  ]);
+  expect(plaetze(tabellenAusschnitt(TABELLE, ["t1"]))).toEqual([1, 2, 3]);
+  expect(plaetze(tabellenAusschnitt(TABELLE, ["t2"]))).toEqual([1, 2, 3, 4]);
+  expect(plaetze(tabellenAusschnitt(TABELLE, ["t18"]))).toEqual([
+    1,
+    null,
+    16,
+    17,
+    18,
+  ]);
+  expect(plaetze(tabellenAusschnitt(TABELLE, []))).toEqual([1, 2, 3, 4, 5]);
 });

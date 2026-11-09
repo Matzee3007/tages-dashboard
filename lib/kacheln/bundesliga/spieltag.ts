@@ -1,5 +1,6 @@
+import type { Partie, TabellenZeile } from "@/lib/kacheln/bundesliga/typen";
+
 // Spieltag wählen und benennen (Projektvision, Entscheidungen der Befragung vom 2026-11-08).
-import type { Partie } from "@/lib/kacheln/bundesliga/typen";
 
 const HEUTE = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" });
 
@@ -60,4 +61,25 @@ export function sortierePartien(
       Date.parse(a.anstoss) - Date.parse(b.anstoss) ||
       a.heim.name.localeCompare(b.heim.name, "de"),
   );
+}
+
+// Platz 1 und Mein Team mit je 2 Plätzen darüber und darunter, null steht für eine Lücke. Ohne Mein Team Plätze 1–5.
+export function tabellenAusschnitt(
+  tabelle: TabellenZeile[],
+  meinTeam: string[],
+): (TabellenZeile | null)[] {
+  const gezeigt = new Set([0]);
+  tabelle.forEach((zeile, index) => {
+    if (!meinTeam.includes(zeile.id)) return;
+    for (let nah = index - 2; nah <= index + 2; nah++) gezeigt.add(nah);
+  });
+  if (gezeigt.size === 1) [1, 2, 3, 4].forEach((index) => gezeigt.add(index));
+
+  const ausschnitt: (TabellenZeile | null)[] = [];
+  tabelle.forEach((zeile, index) => {
+    if (!gezeigt.has(index)) return;
+    if (index > 0 && !gezeigt.has(index - 1)) ausschnitt.push(null);
+    ausschnitt.push(zeile);
+  });
+  return ausschnitt;
 }

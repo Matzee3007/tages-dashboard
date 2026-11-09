@@ -152,7 +152,7 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
   - `tabellenAusschnitt(tabelle: TabellenZeile[], meinTeam: string[]): (TabellenZeile | null)[]`
   - in `lib/zeit.ts`: `tageText(tage: string[]): string` und `anstossText(iso: string): string` (`"Sa 15:30"`, deutsche Zeit)
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - „wählt den Block bis Mitternacht des Folgetags“: Tage 6., 7., 8., 20., 21., 22. November; `jetzt` = 9.11. 23:59 Berlin → 6.–8.;
     10.11. 00:00 Berlin → 20.–22.
   - „nach dem letzten Block bleibt der letzte“.
@@ -165,10 +165,10 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
   - `tageText`: `["2026-11-06","2026-11-07","2026-11-08"]` → `"Fr 6. – So 8. November"`; ein Tag → `"Mi 18. November"`; über das
     Monatsende → `"Fr 30. Oktober – So 1. November"`. `anstossText("2026-11-07T14:30:00Z")` → `"Sa 15:30"`.
   - `leseSpielplan`: zwei Partien am 2026-11-08 mit Nummer 9 und eine Nachholpartie mit 5 → `8.11. → 9`.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [ ] **Schritt 3: Funktionen schreiben** (Werte wie in „Feste Vorgaben“).
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: `npm run check`, committen** „Choose and name the current matchday“
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 3: Funktionen schreiben** (Werte wie in „Feste Vorgaben“).
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: `npm run check`, committen** „Choose and name the current matchday“
 
 ### Aufgabe 3: Laden mit Speicher
 
