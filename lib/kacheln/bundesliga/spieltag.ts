@@ -1,4 +1,5 @@
 // Spieltag wählen und benennen (Projektvision, Entscheidungen der Befragung vom 2026-11-08).
+import type { Partie } from "@/lib/kacheln/bundesliga/typen";
 
 const HEUTE = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" });
 
@@ -42,4 +43,21 @@ export function spieltagTitel(
     .map(([, frueher]) => frueher);
   if (vorher.length > 0 && nummer < Math.max(...vorher)) return "Nachholspiel";
   return `${nummer}. Spieltag`;
+}
+
+// Partien mit Mein Team zuerst, dann nach Anstoß, bei gleichem Anstoß nach Heimteam.
+export function sortierePartien(
+  partien: Partie[],
+  meinTeam: string[],
+): Partie[] {
+  const mitMeinTeam = (partie: Partie) =>
+    meinTeam.includes(partie.heim.id) || meinTeam.includes(partie.gast.id)
+      ? 0
+      : 1;
+  return [...partien].sort(
+    (a, b) =>
+      mitMeinTeam(a) - mitMeinTeam(b) ||
+      Date.parse(a.anstoss) - Date.parse(b.anstoss) ||
+      a.heim.name.localeCompare(b.heim.name, "de"),
+  );
 }

@@ -1,6 +1,8 @@
 // @vitest-environment node
 import { expect, test } from "vitest";
+import type { Partie } from "@/lib/kacheln/bundesliga/typen";
 import {
+  sortierePartien,
   spieltagTitel,
   waehleSpieltag,
 } from "@/lib/kacheln/bundesliga/spieltag";
@@ -57,4 +59,39 @@ test("Nachholspiel", () => {
 test("ohne Spielplan keine Nummer", () => {
   expect(spieltagTitel(["2026-11-06"], null)).toBeNull();
   expect(spieltagTitel(["2026-12-24"], SPIELPLAN)).toBeNull();
+});
+
+function partie(
+  id: string,
+  anstoss: string,
+  heim: string,
+  gast: string,
+): Partie {
+  const team = (name: string) => ({ id: name, name, logo: null, tore: null });
+  return {
+    id,
+    anstoss,
+    status: "vorher",
+    minute: null,
+    heim: team(heim),
+    gast: team(gast),
+    tore: [],
+  };
+}
+
+test("Mein Team zuerst, dann nach Anstoß und Heimteam", () => {
+  const partien = [
+    partie("a", "2026-11-08T14:30Z", "Köln", "Leverkusen"),
+    partie("b", "2026-11-07T14:30Z", "Paderborn", "Frankfurt"),
+    partie("c", "2026-11-07T14:30Z", "Mainz", "Bayern"),
+    partie("d", "2026-11-06T19:30Z", "HSV", "Gladbach"),
+    partie("e", "2026-11-07T14:30Z", "Dortmund", "Elversberg"),
+  ];
+  expect(sortierePartien(partien, ["Bayern"]).map((p) => p.id)).toEqual([
+    "c",
+    "d",
+    "e",
+    "b",
+    "a",
+  ]);
 });
