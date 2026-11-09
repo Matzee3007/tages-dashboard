@@ -207,7 +207,7 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
 - Nutzt: `BundesligaDaten` (Aufgabe 3), `Abschnitt` aus `lib/kacheln/kachel.tsx`, `tageText`, `anstossText` (Aufgabe 2).
 - Liefert: `BundesligaAnsicht({ daten }: { daten: BundesligaDaten })`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - „Überschrift mit Nummer und Tagen“: Abschnitt `"9. Spieltag · Fr 6. – So 8. November"`; ohne Nummer nur `"Fr 6. – So 8. November"`.
   - „eine Partie zeigt Anstoß, Teams und Ergebnis“: `"Sa 15:30"`, `"Mainz"`, `"Bayern"`, `"1:2"`.
   - „laufende Partie zeigt die Minute“: `"56'"` und ein Element mit `aria-label "live"`.
@@ -216,19 +216,19 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
   - „Lücke in der Tabelle“: `null` → Zeile `"···"`.
   - „ein Logo ohne Bild verschwindet“: `fireEvent.error` auf das `<img>` → nicht mehr sichtbar.
   - in `page.test.tsx`: „zeigt die Bundesliga-Kachel“ mit einer Antwort aus beiden Kacheln.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [ ] **Schritt 3: Ansicht nach Mock Variante A mit Kurznamen bauen, `case "bundesliga"` in `KachelInhalt`.**
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: Im Browser ansehen** (`npm run dev`, angemeldet), iPhone-Breite 390 px in den Entwicklerwerkzeugen: jede Partie eine
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 3: Ansicht nach Mock Variante A mit Kurznamen bauen, `case "bundesliga"` in `KachelInhalt`.**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: Im Browser ansehen** (`npm run dev`, angemeldet), iPhone-Breite 390 px in den Entwicklerwerkzeugen: jede Partie eine
   Zeile, nichts läuft über den Rand.
-- [ ] **Schritt 6: `npm run check`, committen** „Show Bundesliga tile“
+- [x] **Schritt 6: `npm run check`, committen** „Show Bundesliga tile“
 
 ### Aufgabe 5: Doku und Abnahme
 
 **Dateien:** Neu `docs/tools/ESPN.md`, `docs/tools/OpenLigaDB.md`; Ändern `docs/tools/Tools Übersicht.md`, `docs/Projektvision.md`
 (Schritt 1 als erledigt mit PR-Nummer), dieser Plan (Ergebnis des Versuchs, Haken).
 
-- [ ] **Schritt 1: Tool-Notizen schreiben** (Adressen und Felder aus der Tabelle oben, Fehler 400 beim Datumsbereich, inoffiziell).
+- [x] **Schritt 1: Tool-Notizen schreiben** (Adressen und Felder aus der Tabelle oben, Fehler 400 beim Datumsbereich, inoffiziell).
 - [ ] **Schritt 2: `npm run check`, PR öffnen, `/code-review`, Funde mit dem Entwickler durchgehen**
 - [ ] **Schritt 3: Nach dem Merge Abnahme durch den Entwickler** auf der Live-Adresse, iPhone und Mac: Spieltag, Tabelle, Logos, bei einem
   laufenden Spiel Minute und Torschützen innerhalb von rund 2 Minuten.
