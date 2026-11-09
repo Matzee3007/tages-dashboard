@@ -27,3 +27,19 @@ export function waehleSpieltag(tage: string[], jetzt: Date): string[] {
     alle.find((block) => heute <= folgetag(block.at(-1)!)) ?? alle.at(-1) ?? []
   );
 }
+
+// "9. Spieltag", "Nachholspiel" (alle Partien gehören zu einem früheren Spieltag als dem zuletzt gespielten) oder null.
+export function spieltagTitel(
+  tage: string[],
+  spielplan: Map<string, number> | null,
+): string | null {
+  if (!spielplan || tage.length === 0) return null;
+  const nummern = tage.flatMap((tag) => spielplan.get(tag) ?? []);
+  if (nummern.length === 0) return null;
+  const nummer = Math.max(...nummern);
+  const vorher = [...spielplan]
+    .filter(([tag]) => tag < tage[0])
+    .map(([, frueher]) => frueher);
+  if (vorher.length > 0 && nummer < Math.max(...vorher)) return "Nachholspiel";
+  return `${nummer}. Spieltag`;
+}
