@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { leseKalender, leseTag } from "@/lib/kacheln/bundesliga/espn";
 
 // Ausschnitte echter Antworten von ESPN vom 2026-11-08, gekürzt auf die gelesenen Felder.
@@ -183,4 +183,19 @@ test("offene Partie hat keine Tore", () => {
   expect(offen.status).toBe("vorher");
   expect(offen.heim.tore).toBeNull();
   expect(offen.gast.tore).toBeNull();
+});
+
+test("fehlende id nimmt den Namen von ESPN und meldet sie", () => {
+  const log = vi.spyOn(console, "error").mockImplementation(() => {});
+  const json = {
+    events: [partie({ gast: team("999", "Neustadt", "away", "0") })],
+  };
+  expect(leseTag(json, JETZT)[0].gast.name).toBe("Neustadt");
+  expect(log).toHaveBeenCalledWith("Team 999 fehlt in der Namensliste");
+  log.mockRestore();
+});
+
+test("wirft bei falscher Form", () => {
+  expect(() => leseTag({}, JETZT)).toThrow("Unerwartete Antwort von ESPN");
+  expect(() => leseKalender({})).toThrow("Unerwartete Antwort von ESPN");
 });
