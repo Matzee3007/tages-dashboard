@@ -57,14 +57,15 @@ function teamStand(roh: EspnTeam | undefined, angepfiffen: boolean): TeamStand {
   };
 }
 
-// "A. García" → "García", "90'+2'" → "90+2'".
+// "A. García" → "García", "90'+2'" → "90+2'". Eigentor (ET) und Elfmeter (E) bekommen einen Zusatz.
 function torText(detail: EspnDetail): string {
   const name = (detail.athletesInvolved?.[0]?.shortName ?? "").replace(
     /^\S+\.\s+/,
     "",
   );
   const minute = (detail.clock?.displayValue ?? "").replace("'+", "+");
-  return `${name} ${minute}`;
+  const zusatz = detail.ownGoal ? " (ET)" : detail.penaltyKick ? " (E)" : "";
+  return `${name} ${minute}${zusatz}`;
 }
 
 export function leseTag(json: unknown, jetzt: Date): Partie[] {

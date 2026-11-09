@@ -129,3 +129,20 @@ test("liest eine beendete Partie mit Toren", () => {
     },
   ]);
 });
+
+test("Eigentor und Elfmeter bekommen einen Zusatz", () => {
+  const json = {
+    events: [
+      partie({
+        details: [
+          tor("T. Müller", "12'", "131", { ownGoal: true }),
+          tor("H. Kane", "30'", "122", { penaltyKick: true }),
+        ],
+      }),
+    ],
+  };
+  expect(leseTag(json, JETZT)[0].tore.map((t) => t.text)).toEqual([
+    "Müller 12' (ET)",
+    "Kane 30' (E)",
+  ]);
+});
