@@ -24,7 +24,8 @@ Kurznamen); [[projects/tages-dashboard/docs/Glossar|Glossar]] (Wettbewerb, Mein 
 `app/api/versuch/route.ts`, die den Status von `site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard`,
 `site.api.espn.com/apis/v2/sports/soccer/ger.1/standings` und `api.openligadb.de/getmatchdata/bl1/2026` als JSON zurückgibt. Push, die
 Vorschau von Vercel öffnet der Entwickler im Browser (Vercel-Login, dann App-Login). Danach Branch löschen, ohne PR.
-Ergebnis: _offen_
+Ergebnis: **trägt** (2026-11-09). Wegen des Vercel-Logins vor der Vorschau lief der Versuch kurz auf der Live-Adresse (PR #47, entfernt mit
+PR #48). Antwort vom Server: ESPN Kalender 200 in 70 ms, ESPN Tabelle 200 in 62 ms, OpenLigaDB Spielplan 200 in 621 ms (356 KB).
 
 ## Was die Quellen am 2026-11-08 liefern
 
