@@ -1,6 +1,10 @@
 // @vitest-environment node
 import { expect, test, vi } from "vitest";
-import { leseKalender, leseTag } from "@/lib/kacheln/bundesliga/espn";
+import {
+  leseKalender,
+  leseTabelle,
+  leseTag,
+} from "@/lib/kacheln/bundesliga/espn";
 
 // Ausschnitte echter Antworten von ESPN vom 2026-11-08, gekürzt auf die gelesenen Felder.
 
@@ -198,4 +202,72 @@ test("fehlende id nimmt den Namen von ESPN und meldet sie", () => {
 test("wirft bei falscher Form", () => {
   expect(() => leseTag({}, JETZT)).toThrow("Unerwartete Antwort von ESPN");
   expect(() => leseKalender({})).toThrow("Unerwartete Antwort von ESPN");
+});
+
+function tabellenEintrag(
+  id: string,
+  kurz: string,
+  werte: {
+    rank: number;
+    gamesPlayed: number;
+    pointDifferential: number;
+    points: number;
+  },
+) {
+  return {
+    team: {
+      id,
+      shortDisplayName: kurz,
+      logos: [
+        { href: `https://a.espncdn.com/i/teamlogos/soccer/500/${id}.png` },
+      ],
+    },
+    stats: Object.entries(werte).map(([name, value]) => ({ name, value })),
+  };
+}
+
+test("liest die Tabelle", () => {
+  const json = {
+    children: [
+      {
+        standings: {
+          entries: [
+            tabellenEintrag("124", "Dortmund", {
+              rank: 2,
+              gamesPlayed: 9,
+              pointDifferential: 9,
+              points: 21,
+            }),
+            tabellenEintrag("132", "Bayern", {
+              rank: 1,
+              gamesPlayed: 9,
+              pointDifferential: 20,
+              points: 21,
+            }),
+          ],
+        },
+      },
+    ],
+  };
+  expect(leseTabelle(json)).toEqual([
+    {
+      platz: 1,
+      id: "132",
+      name: "Bayern",
+      logo: "https://a.espncdn.com/i/teamlogos/soccer/500/132.png",
+      spiele: 9,
+      differenz: 20,
+      punkte: 21,
+    },
+    {
+      platz: 2,
+      id: "124",
+      name: "Dortmund",
+      logo: "https://a.espncdn.com/i/teamlogos/soccer/500/124.png",
+      spiele: 9,
+      differenz: 9,
+      punkte: 21,
+    },
+  ]);
+  expect(() => leseTabelle({})).toThrow("Unerwartete Antwort von ESPN");
 });

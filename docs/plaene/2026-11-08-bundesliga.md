@@ -119,7 +119,7 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
   - `leseTabelle(json: unknown): TabellenZeile[]`
   - Alle drei werfen `Error("Unerwartete Antwort von ESPN")`, wenn das Grundgerüst fehlt (`leagues`, `events`, `children`).
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - „liest die Tage des Kalenders“: `"2026-11-06T08:00Z"` → `"2026-11-06"`.
   - „liest eine beendete Partie mit Toren“: Köln–Leverkusen → `status "vorbei"`, `heim.name "Köln"`, `heim.tore 1`, `gast.tore 2`,
     `tore[0].text "García 7'"`, `tore[0].teamId "131"`.
@@ -131,11 +131,11 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
     mit `"Team 999 fehlt in der Namensliste"`.
   - „liest die Tabelle“: erste Zeile `{ platz: 1, id: "132", name: "Bayern", spiele: 9, differenz: 20, punkte: 21 }`, Logo aus `logos[0].href`.
   - „wirft bei falscher Form“: `leseTag({})` wirft.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
   `npx vitest run __tests__/bundesliga-espn.test.ts`, erwartet: FAIL, Modul fehlt.
-- [ ] **Schritt 3: Typen, `TEAMNAMEN` und die drei Lesefunktionen schreiben.**
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: `npm run check`, committen** „Read Bundesliga data from ESPN“
+- [x] **Schritt 3: Typen, `TEAMNAMEN` und die drei Lesefunktionen schreiben.**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: `npm run check`, committen** „Read Bundesliga data from ESPN“
 
 ### Aufgabe 2: Spieltag wählen und benennen
 

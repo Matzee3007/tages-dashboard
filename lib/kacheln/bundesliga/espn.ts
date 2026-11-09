@@ -1,5 +1,9 @@
 import { TEAMNAMEN } from "@/lib/einstellungen";
-import type { Partie, TeamStand } from "@/lib/kacheln/bundesliga/typen";
+import type {
+  Partie,
+  TabellenZeile,
+  TeamStand,
+} from "@/lib/kacheln/bundesliga/typen";
 
 // Liest die inoffizielle Schnittstelle von ESPN (ADR 0009). Felder laut Antworten vom 2026-11-08.
 
@@ -102,4 +106,37 @@ export function leseTag(json: unknown, jetzt: Date): Partie[] {
         })),
     };
   });
+}
+
+type EspnTabellenEintrag = {
+  team?: {
+    id?: string;
+    shortDisplayName?: string;
+    logos?: { href?: string }[];
+  };
+  stats?: { name?: string; value?: number }[];
+};
+
+// Nach Platz sortiert, weil die Reihenfolge der Antwort nicht dokumentiert ist.
+export function leseTabelle(json: unknown): TabellenZeile[] {
+  const eintraege = (
+    json as { children?: { standings?: { entries?: EspnTabellenEintrag[] } }[] }
+  )?.children?.[0]?.standings?.entries;
+  if (!Array.isArray(eintraege)) falscheForm();
+  return eintraege
+    .map((eintrag) => {
+      const id = eintrag.team?.id ?? falscheForm();
+      const wert = (name: string) =>
+        eintrag.stats?.find((stat) => stat.name === name)?.value ?? 0;
+      return {
+        platz: wert("rank"),
+        id,
+        name: teamName(id, eintrag.team?.shortDisplayName ?? ""),
+        logo: eintrag.team?.logos?.[0]?.href ?? null,
+        spiele: wert("gamesPlayed"),
+        differenz: wert("pointDifferential"),
+        punkte: wert("points"),
+      };
+    })
+    .sort((a, b) => a.platz - b.platz);
 }
