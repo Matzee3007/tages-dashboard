@@ -146,3 +146,22 @@ test("Eigentor und Elfmeter bekommen einen Zusatz", () => {
     "Kane 30' (E)",
   ]);
 });
+
+test("liest eine laufende Partie", () => {
+  const json = {
+    events: [
+      partie({
+        date: "2026-11-08T16:30Z",
+        state: "in",
+        displayClock: "56'",
+        heim: team("126", "Freiburg", "home", "0"),
+        gast: team("598", "Union Berlin", "away", "0"),
+      }),
+    ],
+  };
+  const [laufend] = leseTag(json, JETZT);
+  expect(laufend.status).toBe("laeuft");
+  expect(laufend.minute).toBe("56'");
+  expect(laufend.heim.tore).toBe(0);
+  expect(laufend.gast.name).toBe("Union");
+});

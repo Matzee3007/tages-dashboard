@@ -75,13 +75,14 @@ export function leseTag(json: unknown, jetzt: Date): Partie[] {
     const wettkampf = roh.competitions?.[0];
     const teams = wettkampf?.competitors ?? [];
     const zustand = roh.status?.type?.state;
-    const status: Partie["status"] = zustand === "post" ? "vorbei" : "vorher";
+    const status: Partie["status"] =
+      zustand === "post" ? "vorbei" : zustand === "in" ? "laeuft" : "vorher";
     const angepfiffen = status !== "vorher";
     return {
       id: roh.id ?? falscheForm(),
       anstoss: roh.date ?? falscheForm(),
       status,
-      minute: null,
+      minute: status === "laeuft" ? (roh.status?.displayClock ?? null) : null,
       heim: teamStand(
         teams.find((t) => t.homeAway === "home"),
         angepfiffen,
