@@ -20,7 +20,7 @@ iPhone-Kurzbefehl an.
 
 Eingerichtet am 2026-10-24 mit `create-next-app@latest` nach dem Rezept in `STACKS.md`.
 
-- **Versionen:** Next.js 16.4.3, React 19.3.0, Node 24.22, npm 11.19.
+- **Versionen:** Next.js 16.4.5 (seit 2026-11-12, PR #53), React 19.3.0, Node 24.22, npm 11.19.
 - **Tailwind CSS 4 läuft über `@tailwindcss/turbopack`**, ohne `postcss.config.mjs` (wie in musik-app).
 - **`AGENTS.md`** wird von `next dev` geschrieben und neu angelegt. `CLAUDE.md` bindet sie mit `@AGENTS.md` ein.
 
