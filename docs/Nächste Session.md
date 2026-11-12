@@ -1,21 +1,21 @@
 ---
 titel: Nächste Session
 status: aktiv
-erstellt: 2026-11-09
+erstellt: 2026-11-12
 tags: [session, übergabe]
 ---
 
 # Nächste Session
 
-Stand vom 2026-11-09. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
-[[projects/tages-dashboard/docs/journal/Lernjournal Phase 3 - Bundesliga-Kachel|Lernjournal Phase 3 - Bundesliga-Kachel]].
+Stand vom 2026-11-12. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
+[[projects/tages-dashboard/docs/journal/Lernjournal Phase 3 - Dependabot und Quellen|Lernjournal Phase 3 - Dependabot und Quellen]].
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge von PR #51)
-- **Offene PRs:** keine
+- **Branch:** `main` (nach dem Merge von PR #58)
+- **Offene PRs:** #56 „Bump the npm-klein group across 1 directory with 6 updates“ (Dependabot, nicht gemergt, Grund unten)
 - **Nicht committet:** nichts
-- **Live:** https://tages-dashboard-iota.vercel.app zeigt die Bundesliga-Kachel (PR #49) und die KI-News mit Knopf ↻ (PR #44).
+- **Live:** https://tages-dashboard-iota.vercel.app zeigt die Bundesliga-Kachel und die KI-News, seit PR #53 mit Next.js 16.4.5.
 
 ## Vor dem Start
 
@@ -26,27 +26,55 @@ Stand vom 2026-11-09. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
    claude
    ```
 
-2. Neue PRs und offene Warnungen von Dependabot ansehen. Er öffnet jede Woche PRs, Warnungen zeigt `gh pr list` nicht.
+2. **PR #56 fertig machen.** Nicht gemergt, weil der Login-Test in der Vorschau fehlt (das Update von `@supabase/supabase-js` auf 2.119.0
+   verlangt ihn laut [[projects/tages-dashboard/docs/tools/Dependabot - Einrichtung|Dependabot - Einrichtung]]). `/code-review` ist durch,
+   der Entwickler hat „mergen und danach Fix-PR“ gewählt.
+   - Die Vorschau-Adresse steht im Kommentar von Vercel im PR. Hat Dependabot den PR inzwischen neu gebaut, gilt das Review nicht mehr:
+     dann erneut `/code-review`.
+   - Login-Test: Adresse in einem privaten Fenster öffnen, bei Vercel anmelden, im Dashboard einloggen, Bundesliga und KI-News ohne Fehler,
+     `⌘ R`, weiter eingeloggt.
+   - Danach mergen und den Fix-PR bauen (siehe „Womit es weitergeht“, Punkt 1).
 
    ```bash
-   gh pr list --author 'app/dependabot'
+   gh pr list --author 'app/dependabot'   # ist #56 noch der aktuelle Sammel-PR?
+   gh pr checks 56                        # CI grün?
+   gh pr merge 56 --merge                 # erst nach dem Login-Test
+   ```
+
+3. Offene Warnungen von Dependabot ansehen, `gh pr list` zeigt sie nicht:
+
+   ```bash
    gh api 'repos/Matzee3007/tages-dashboard/dependabot/alerts?state=open' --jq '.[] | "\(.number) \(.security_advisory.severity) \(.dependency.package.name)"'
    ```
 
-   Ablauf: [[projects/tages-dashboard/docs/tools/Dependabot - Einrichtung|Dependabot - Einrichtung]].
-
 ## Womit es weitergeht
 
-**Phase 3 – Sport läuft.** Schritt 1 (Bundesliga) ist fertig und abgenommen
-([[projects/tages-dashboard/docs/plaene/2026-11-08-bundesliga|Plan]]). Als Nächstes **Schritt 2: Premier League und Champions League**
-(Fahrplan in der [[projects/tages-dashboard/docs/Projektvision|Projektvision]]):
+**Phase 3 – Sport läuft,** Schritt 2: Premier League und Champions League. Zuerst fragen, ob das KI-Feature (unten) vor oder neben
+Schritt 2 kommt.
 
-1. Zuerst fragt Claude, ob vorher etwas anderes ansteht (Restpunkte unten, neue Ideen).
-2. Vor der Befragung prüfen (Fakten, nicht fragen): Liefert ESPN auch `eng.1` und `uefa.champions` live, mit Torschützen und Tabelle, und
-   vom Server aus? Dann könnte football-data.org entfallen ([[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]).
-3. `/grill-with-docs Phase 3 Schritt 2`: unter anderem Quelle, Mein Team je Wettbewerb (Arsenal; Champions League Bayern und Arsenal),
-   Tabelle der Champions League (Ligaphase mit 36 Teams), was die Sport-Kacheln gemeinsam haben. Dabei den Skill `codebase-design` aus den
-   Tools für später des Ecosystems ansehen (in der Befragung vom 2026-11-08 so vereinbart).
+1. **Fix fürs Abmelden (eigener kleiner PR, mit `tdd`):** Seit supabase-js 2.119 bleibt bei einem Fehler des Servers beim Abmelden das
+   Cookie erhalten. `abmelden` in `app/login/actions.ts` prüft das Ergebnis von `signOut()` nicht, man landet still wieder angemeldet auf
+   dem Dashboard. Zuerst ein Test für den Fehlerfall (fehlt in `__tests__/login-actions.test.ts`). Lösung offen: `signOut({ scope: 'local' })`
+   oder Fehler auswerten und eine Meldung zeigen. Das Verhalten von `scope: 'local'` vorher im Paket nachlesen. Im selben PR nachziehen:
+   die Grenze „Abmelden bei einem Ausfall“ und die Version in `docs/tools/Supabase.md`, 9.0.6 in `docs/tools/node-html-parser.md` und als
+   Nachtrag in ADR 0007 (9.0.5 war nur gewählt, weil neuere Fassungen jünger als zwei Wochen waren).
+2. **`/grill-with-docs Phase 3 Schritt 2` fortsetzen.** Die Fakten sind geprüft (Journal, Abschnitt „ESPN für die Champions League“ und
+   Befehle). Runde 1 ist gestellt, aber noch ohne Antwort. Die Fragen erneut stellen:
+   - **F1 Quelle (Weichenfrage, ohne Empfehlung):** A ESPN mit Nummer des Spieltags von OpenLigaDB (`pl`, `ucl`) wie die Bundesliga, B
+     football-data.org wie geplant (offiziell, aber verzögert, Schlüssel, 10 Abrufe pro Minute), C ESPN live und football-data.org für
+     Spieltag und Tabelle (in ADR 0009 für die Bundesliga verworfen). Bei A oder C: neues ADR, Projektvision und ADR 0001 anpassen.
+   - **F2** Reihenfolge: Bundesliga, Premier League, Champions League, KI-News (Empfehlung ja).
+   - **F3** Spieltag der Champions League mit 18 Partien: alle zeigen wie in der Bundesliga (Empfehlung), nur Mein Team oder Torschützen
+     nur bei Mein Team.
+   - **F4** K.-o.-Phase parken, „Wieder aufgreifen, wenn die Ligaphase endet (27. Januar 2027)“ (Empfehlung ja).
+   - **F5** keine Linien nach Platz 8 und 24 in der Tabelle (Empfehlung ja).
+   - Runde 2 danach: Teamnamen (ESPN-Kurznamen wie `Man City`, `Spurs` oder eigene Liste, `TEAMNAMEN` für deutsche Teams?), was die
+     Sport-Kacheln gemeinsam haben (mit dem Skill `codebase-design` aus den Tools für später des Ecosystems), Aufteilung in PRs.
+   - Dabei bekannt: `leseKalender` bricht bei der Champions League ab (anderer Kalender, Tage über `calendar/ondays` der
+     Kern-Schnittstelle). Live-Minute und Status für `eng.1` und `uefa.champions` sind nicht gesehen, nur angenommen.
+3. Nach der Befragung `plan-schreiben`.
+4. Offen aus dem Review von #54 und #56: Kein Test prüft Links mit `&amp;` in den ausgelesenen Seiten (node-html-parser 9.0.6 decodiert
+   Attribute neu). Ein kleiner Test in `__tests__/ki-news-seiten.test.ts` wäre gut, gern im PR von Punkt 1.
 
 **Neu vom 2026-11-12 (aus dem Ecosystem): erstes KI-Feature.** Der Entwickler möchte hier zum ersten Mal ein Sprachmodell per API
 einbinden und daran Evaluation, Structured Output, RAG (Retrieval-Augmented Generation: erst passende Texte suchen, dann antworten lassen)
@@ -125,6 +153,6 @@ Punkte fürs Ecosystem: siehe dessen Übergabe, dort steht auch der Punkt „`/g
 
 ## Passende Skills
 
-- `grill-with-docs` (nur vom Entwickler aufrufbar: `/grill-with-docs Phase 3 Schritt 2`): Quelle und Gemeinsames der Sport-Kacheln klären
-- `plan-schreiben`: Plan für Schritt 2
-- `tdd`: Umsetzung der Kacheln Premier League und Champions League
+- `tdd`: Fix fürs Abmelden, zuerst der Test für den Fehlerfall
+- `grill-with-docs` (nur vom Entwickler aufrufbar: `/grill-with-docs Phase 3 Schritt 2`): Runde 1 beantworten, dann Runde 2
+- `plan-schreiben`: Plan für Schritt 2 nach der Befragung
