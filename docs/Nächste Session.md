@@ -48,6 +48,36 @@ Stand vom 2026-11-09. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
    Tabelle der Champions League (Ligaphase mit 36 Teams), was die Sport-Kacheln gemeinsam haben. Dabei den Skill `codebase-design` aus den
    Tools für später des Ecosystems ansehen (in der Befragung vom 2026-11-08 so vereinbart).
 
+**Neu vom 2026-11-12 (aus dem Ecosystem): erstes KI-Feature.** Der Entwickler möchte hier zum ersten Mal ein Sprachmodell per API
+einbinden und daran Evaluation, Structured Output, RAG (Retrieval-Augmented Generation: erst passende Texte suchen, dann antworten lassen)
+und einen Agenten lernen. Vorschlag: Zusammenfassung der KI-News. Anlass und Hintergrund:
+[[KI-Erfahrung fürs Bewerbungsgespräch]] (Abschnitt 7) und [[KI-Wissen - Auswertung]] (Checkliste für das erste KI-Feature).
+Beim Start zuerst fragen, ob das vor oder neben Schritt 2 kommt, dann `/grill-with-docs erstes KI-Feature`.
+
+Zu entscheiden, bevor ein Plan entsteht, weil es Festgelegtem widerspricht:
+
+- **Projektvision:** „Titel bleiben in der Originalsprache, ohne Übersetzung und Zusammenfassung.“ Eine Zusammenfassung ändert das, also
+  Vision anpassen und als ADR festhalten.
+- **„Erst gratis“** ([[projects/tages-dashboard/docs/adr/0005-feeds-im-fetch-speicher|ADR 0005]]): Der Modellaufruf kostet nach Verbrauch
+  und läuft über ein eigenes API-Konto mit Guthaben, getrennt vom Claude-Abo. Braucht ein Ausgabenlimit und den Schlüssel als
+  Umgebungsvariable bei Vercel (Skill `assistent-bauen`). Preise vorher auf der Anbieterseite prüfen.
+- **Was wird zusammengefasst?** Die Kachel hält bisher nur Titel und Alter. Prüfen (Fakten, nicht fragen), ob die Feeds genug Text liefern
+  oder ob die Artikel abgerufen werden müssten.
+- **Meldungen werden nicht gespeichert,** nur zwischengespeichert. Stufe 4 bräuchte Tabellen in Supabase.
+
+Die Leiter, jede Stufe ein eigener kleiner PR mit Prüfung:
+
+1. Erster Modellaufruf nur auf dem Server, mit Zeitlimit und Kostenlimit → prüfen: Der Schlüssel taucht im Browser nirgends auf, ein Test
+   mit nachgestelltem Modell ist grün.
+2. Evaluation: Testsatz aus 10 bis 20 echten Meldungen, auch schwierigen → prüfen: Ein Befehl vergleicht zwei Prompts oder Modelle und gibt
+   eine Trefferquote aus.
+3. Structured Output: Antwort in festem Format, gegen ein Schema geprüft → prüfen: Eine kaputte Antwort wird verworfen statt angezeigt.
+4. RAG „Frag meine News“ → prüfen: Der Testsatz zeigt, dass die Antworten mit Suche besser sind als ohne. Sonst bleibt es weg.
+5. Agent mit Werkzeugen → prüfen: Er kann nachweislich nur die freigegebenen Funktionen aufrufen.
+
+Dabei beachten: News-Texte sind fremde Inhalte und können indirekte Prompt Injection enthalten, die Antwort des Modells nie ungeprüft als
+HTML anzeigen. KI-Text als „KI-generiert“ kennzeichnen. Vor dem Bauen den Skill `claude-api` laden.
+
 **Termin:** **Live-Test am Freitag, 2026-11-20, ab 20:30 Uhr** (erstes Spiel des 10. Spieltags): Minute mit orangem Punkt, Spielstand und
 Torschützen sollten innerhalb von rund 2 Minuten nach einem Tor stimmen. Ergebnis im Plan der Bundesliga bei Aufgabe 5, Schritt 3 nachtragen.
 
