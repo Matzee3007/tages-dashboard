@@ -33,7 +33,7 @@ Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]].
 | Betrieb | Erst die Dependabot-PRs, dann Schritt 2 | Schritt 2 startet auf aktuellen Paketen, #53 schließt Sicherheitslücken | Entwickler |
 | Prüfen | Beide Dependabot-PRs erst nach Login-Test in der Vorschau mergen, den fehlenden Test für `&amp;` in Links nur notieren | Ablauf in [[projects/tages-dashboard/docs/tools/Dependabot - Einrichtung\|Dependabot - Einrichtung]] | Entwickler |
 | Betrieb | #56 nach dem Login-Test mergen, danach ein eigener PR mit Test, der das Abmelden bei einem Fehler von Supabase absichert, dazu die Versionen in der Doku nachziehen | seit supabase-js 2.119 bleibt man bei einer Störung nach „Abmelden“ still angemeldet | Entwickler |
-| Bauen | Nach dem Konflikt in #54 Dependabot mit `@dependabot rebase` neu aufsetzen lassen statt von Hand lösen | Dependabot pflegt seine Branches selbst | ungefragt |
+| Bauen | Nach dem Konflikt in #54 Dependabot mit `@dependabot rebase` neu aufsetzen lassen statt von Hand lösen | Dependabot pflegt seine Branches selbst | Entwickler |
 
 ## Befehle: Dependabot-PRs
 
