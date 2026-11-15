@@ -111,7 +111,7 @@ supabase projects list                       # Projekte mit Ref und Status, z. B
 # SQL über die Management API ausführen, ohne `supabase link`
 supabase db query --linked --project-ref imebsydcnchziitgccxs -f supabase/zusammenfassungen.sql
 supabase db query --linked --project-ref imebsydcnchziitgccxs "select count(*) from public.zusammenfassungen"
-supabase logout                              # löscht das Token wieder vom Mac
+supabase logout --yes                        # löscht das Token wieder vom Mac (ohne --yes bricht es in Claude Code ab)
 
 # Als Fremder prüfen (nur Publishable Key, ohne Anmeldung): muss [] bzw. Fehler 42501 liefern
 /usr/bin/curl -s -H "apikey: <publishable-key>" 'https://<ref>.supabase.co/rest/v1/zusammenfassungen?select=link'
