@@ -1,4 +1,10 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import type { AbsenderStand } from "@/lib/kacheln/ki-news/laden";
 import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
@@ -154,4 +160,68 @@ test("eine Meldung ohne Uhrzeit zeigt Kalendertage und von gestern den Punkt", (
   const link = screen.getByRole("link", { name: /Teaching AI/ });
   expect(within(link).getByText("gestern")).toBeDefined();
   expect(within(link).queryByRole("img", { name: "neu" })).not.toBeNull();
+});
+
+function mitZusammenfassung(zusammenfassung: string) {
+  const [erste, zweite] = ANTHROPIC.meldungen;
+  return {
+    art: "ki-news" as const,
+    absender: [
+      { ...ANTHROPIC, meldungen: [{ ...erste, zusammenfassung }, zweite] },
+    ],
+  };
+}
+
+test("die Zusammenfassung erscheint erst nach Tipp auf KI, markiert als KI-generiert", () => {
+  render(<KiNewsAnsicht daten={mitZusammenfassung("Eins. Zwei.")} />);
+  expect(screen.queryByText("Eins. Zwei.")?.closest("[hidden]")).toBeTruthy();
+
+  fireEvent.click(
+    screen.getByRole("button", { name: "KI-Zusammenfassung aufklappen" }),
+  );
+
+  expect(screen.getByText("Eins. Zwei.")).toBeTruthy();
+  expect(screen.getByText("KI-generiert")).toBeTruthy();
+  expect(
+    screen.getByRole("link", { name: /Zum Artikel/ }).getAttribute("href"),
+  ).toBe("https://www.anthropic.com/news/claude");
+  expect(
+    screen.getByRole("button", { name: "KI-Zusammenfassung zuklappen" }),
+  ).toBeTruthy();
+});
+
+test("HTML in der Zusammenfassung erscheint als Text, nicht als HTML", () => {
+  const { container } = render(
+    <KiNewsAnsicht daten={mitZusammenfassung("<b>fett</b><img src=x>")} />,
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "KI-Zusammenfassung aufklappen" }),
+  );
+
+  expect(screen.getByText("<b>fett</b><img src=x>")).toBeTruthy();
+  expect(container.querySelector("b")).toBeNull();
+  expect(container.querySelector("img")).toBeNull();
+});
+
+test("eine Meldung ohne Zusammenfassung hat keinen Knopf und keine Markierung", () => {
+  render(<KiNewsAnsicht daten={DATEN} />);
+
+  expect(
+    screen.queryByRole("button", { name: /KI-Zusammenfassung/ }),
+  ).toBeNull();
+  expect(screen.queryByText("KI-generiert")).toBeNull();
+});
+
+test("der Knopf zeigt auch zugeklappt auf seinen Kasten", () => {
+  const { container } = render(
+    <KiNewsAnsicht daten={mitZusammenfassung("Eins. Zwei.")} />,
+  );
+  const knopf = screen.getByRole("button", {
+    name: "KI-Zusammenfassung aufklappen",
+  });
+
+  const kasten = container.querySelector(
+    `[id="${knopf.getAttribute("aria-controls")}"]`,
+  );
+  expect(kasten?.hasAttribute("hidden")).toBe(true);
 });

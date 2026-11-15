@@ -1,0 +1,8 @@
+# Was nie ins Image gehört: Geheimnisse, lokale Builds, die Mac-App
+.env*
+.secrets
+node_modules
+.next
+src-tauri
+.git
+docs

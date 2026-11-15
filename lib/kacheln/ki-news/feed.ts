@@ -1,11 +1,13 @@
 import { XMLParser } from "fast-xml-parser";
 
 // nurDatum: Die Quelle nennt nur den Tag, zeit ist dann 00:00 UTC (Seiten ohne Feed).
+// zusammenfassung: KI-generiert vom Mac, aus Supabase dazugelesen (ADR 0010).
 export type Meldung = {
   titel: string;
   link: string;
   zeit: string;
   nurDatum?: true;
+  zusammenfassung?: string;
 };
 
 type Knoten = Record<string, unknown>;

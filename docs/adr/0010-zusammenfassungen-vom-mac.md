@@ -76,7 +76,7 @@ Randbedingungen:
   ([[projects/tages-dashboard/docs/adr/0007-seiten-mit-node-html-parser|ADR 0007]]). YouTube-Videos haben keinen Artikel.
 - **Kleine Modelle:** Lange Artikel (bis 80.000 Zeichen gemessen) passen womöglich nicht in das Kontextfenster. Tempo und Qualität auf dem
   Mac sind noch nicht gemessen.
-- **Docker Model Runner:** Aus einem Container heißt die Adresse `http://model-runner.docker.internal`, vom Mac `http://localhost:12434`,
-  die Pfade beginnen mit `/engines/v1/` (OpenAI-Format, ohne Schlüssel). Die Doku belegt nur `response_format: json_object`, ob
-  `json_schema` geht, ist zu prüfen (Docker-Doku, gelesen am 2026-11-13).
+- **Docker Model Runner:** Vom Mac heißt die Adresse `http://localhost:12434/engines/v1/`, aus einem Compose-Container setzt Compose
+  `http://model-runner.docker.internal/v1/` (OpenAI-Format, ohne Schlüssel). `response_format` mit `json_schema` funktioniert (Versuch
+  vom 2026-11-15, siehe Plan). Auf 16 GB passt immer nur ein Modell gleichzeitig in den Speicher.
 - **Später:** RAG („Frag meine News“) und ein Agent sind geparkt, siehe Offene Fragen der Projektvision.

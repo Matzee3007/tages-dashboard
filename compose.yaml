@@ -1,0 +1,25 @@
+# Zusammenfassungen der KI-News auf dem Mac (ADR 0010): docker compose up --build -d
+services:
+  zusammenfassen:
+    build:
+      context: .
+      dockerfile: zusammenfassen/Dockerfile
+    restart: unless-stopped
+    # NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY und ZUSAMMENFASSEN_EMAIL
+    env_file: .env.local
+    secrets:
+      - supabase_passwort
+    models:
+      llm:
+        endpoint_var: MODELL_URL
+        model_var: MODELL_NAME
+
+models:
+  llm:
+    # Bis zur Evaluation das schnellere Modell aus dem Versuch (Plan 2026-11-15)
+    model: ai/qwen3:4b-instruct-2507
+    context_size: 8192
+
+secrets:
+  supabase_passwort:
+    file: ./.secrets/supabase-passwort
