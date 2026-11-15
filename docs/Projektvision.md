@@ -289,3 +289,7 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 - Parkplatz: RAG „Frag meine News“ (erst passende Zusammenfassungen suchen, dann antworten lassen). Wieder aufgreifen, wenn Stufe 3 des
   KI-Features zwei Wochen im Alltag läuft.
 - Parkplatz: Agent mit Werkzeugen für die KI-News. Wieder aufgreifen, wenn Stufe 3 des KI-Features zwei Wochen im Alltag läuft.
+- Parkplatz: Lokale KI für die Fußball-Kacheln, z. B. ein deutscher Spielbericht nach Abpfiff aus dem englischen Liveticker von ESPN
+  (`summary?event=…` liefert `commentary` und `keyEvents`, aber keinen Bericht, gesehen am 2026-11-15 an Köln gegen Leverkusen). Wunsch
+  des Entwicklers vom 2026-11-15. Wieder aufgreifen, wenn Phase 3, Schritt 2 (Premier League und Champions League) fertig ist, dann mit
+  `/grill-with-docs` klären (Form, welche Spiele, Speicherort, Bezug zu ADR 0010).
