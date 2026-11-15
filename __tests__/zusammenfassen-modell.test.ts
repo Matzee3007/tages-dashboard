@@ -7,3 +7,13 @@ test("nimmt eine gültige Antwort an", () => {
     "Eins. Zwei.",
   );
 });
+
+test.each([
+  ["kaputtes JSON", '{"zusammenfassung":'],
+  ["falsches Feld", '{"summary":"Eins."}'],
+  ["kein Text", '{"zusammenfassung":42}'],
+  ["leer", '{"zusammenfassung":"  "}'],
+  ["zu lang", JSON.stringify({ zusammenfassung: "a".repeat(601) })],
+])("verwirft %s", (_, inhalt) => {
+  expect(pruefeAntwort(inhalt)).toBeNull();
+});
