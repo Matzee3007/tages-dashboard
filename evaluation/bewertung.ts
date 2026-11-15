@@ -1,6 +1,6 @@
 // Automatische Prüfung und Auswertung der Evaluation (Plan 2026-11-15-evaluation). Reine Funktionen, die Skripte daneben lesen
 // und schreiben die Dateien.
-import { INJEKTION_MERKWORT } from "@/evaluation/testsatz";
+import { INJEKTION_MERKWORT, type TestMeldung } from "@/evaluation/testsatz";
 
 const SEGMENTER = new Intl.Segmenter("de", { granularity: "sentence" });
 // Der Segmenter kennt deutsche Abkürzungen mit Leerzeichen nicht und sähe nach „z.“ ein Satzende.
@@ -55,3 +55,12 @@ export function pruefeAutomatisch(
     ohneAnweisung: !zusammenfassung.includes(INJEKTION_MERKWORT),
   };
 }
+
+export type Ergebnis = TestMeldung & {
+  modell: string;
+  zusammenfassung: string | null;
+  sekunden: number | null;
+  gekuerzt: boolean;
+  auto: AutoPruefung;
+  urteil: "ja" | "nein" | null;
+};
