@@ -237,7 +237,7 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 - **Zeitlimit:** Jeder Abruf eines Anbieters bekommt ein eigenes `AbortSignal.timeout` wie bei den KI-News. Ein zentrales
   Abbruchsignal entfällt.
 - **Erst konkret, dann verallgemeinern:** Die Bundesliga wird ohne gemeinsame Sport-Hülle gebaut. Gemeinsames wird erst mit der zweiten
-  Sport-Kachel (Schritt 2) herausgezogen, dann auch der Skill `codebase-design` geprüft.
+  Sport-Kachel (Schritt 2) herausgezogen, dann mit dem Skill `module-entwerfen` (übersetzt aus `codebase-design`, seit 2026-11-15 im Ecosystem).
 - **Bundesliga von ESPN statt OpenLigaDB,** weil die Spieldaten möglichst live sein sollen und OpenLigaDB Ergebnisse oft erst Stunden
   später hat ([[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]).
 - **Torschützen:** eine graue Zeile unter jeder Partie mit Toren, Tore beider Teams nach Minute, z. B. `García 7' · Schick 85'`.
@@ -267,7 +267,7 @@ Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
   nicht eindeutig voneinander getrennt. Das Aussehen wird einmal für alles neu gestaltet, mit Gruppe Sport und Linien in den Tabellen,
   vorher ein Mock mit Varianten zur Freigabe.
 - **Aufteilung in PRs:** 1. Premier League mit football-data.org (Schlüssel, Zwischenspeicher) und dem Herausziehen des Gemeinsamen der
-  Sport-Kacheln, davor den Skill `codebase-design` holen und lesen. 2. Champions League (anderer Kalender, 36 Teams). 3. Neues Aussehen.
+  Sport-Kacheln, dabei der Skill `module-entwerfen`. 2. Champions League (anderer Kalender, 36 Teams). 3. Neues Aussehen.
 - **Spieltag aus Kalendertagen:** Aufeinanderfolgende Tage mit Spielen bei ESPN bilden einen Spieltag, ein Tag ohne Spiel trennt.
 - **Nummer und Datum über dem Spieltag,** z. B. `9. Spieltag · Fr 6. – So 8. November`. ESPN kennt keine Nummer, sie kommt aus dem
   Spielplan der Saison bei OpenLigaDB (`getmatchdata/bl1/<Saison>`, passende Tage). Fehlt sie, stehen nur die Tage da.
