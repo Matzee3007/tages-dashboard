@@ -267,22 +267,22 @@ test("Fehler des Modells ergibt null", async () => {
 **Dateien:**
 - Neu: `zusammenfassen/lauf.ts`, `zusammenfassen/Dockerfile`, `compose.yaml`, `.dockerignore`
 - Ändern: `.gitignore` (`/.secrets/`), `package.json` (`tsx` als devDependency)
-- Doku: `docs/tools/Docker Model Runner.md` neu (Einrichtung, Befehle, Fehler mit Ursache und Lösung), Eintrag in `Tools Übersicht.md`
+- Doku: `docs/tools/Docker - Einrichtung.md` neu (nach der globalen Regel für Werkzeuge aller Projekte) (Einrichtung, Befehle, Fehler mit Ursache und Lösung), Eintrag in `Tools Übersicht.md`
 
 **Schnittstellen:**
 - Nutzt: `durchlauf` (Aufgabe 4).
 
-- [ ] **Schritt 1: `lauf.ts`:** liest `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `ZUSAMMENFASSEN_EMAIL`, das
+- [x] **Schritt 1: `lauf.ts`:** liest `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `ZUSAMMENFASSEN_EMAIL`, das
   Passwort aus `/run/secrets/supabase_passwort`, `MODELL_URL` und `MODELL_NAME`. Pro Stunde: anmelden mit `signInWithPassword`,
   `durchlauf`, Ergebnis ins Log, abmelden. Ein Fehler im Durchlauf landet im Log und beendet die Schleife nicht.
-- [ ] **Schritt 2: `Dockerfile`** auf `node:24-slim`: `npm ci`, nur `lib/`, `zusammenfassen/`, `tsconfig.json` kopieren, Start mit
+- [x] **Schritt 2: `Dockerfile`** auf `node:24-slim`: `npm ci`, nur `lib/`, `zusammenfassen/`, `tsconfig.json` kopieren, Start mit
   `npx tsx zusammenfassen/lauf.ts`. `.dockerignore` schließt `.env*`, `.secrets`, `node_modules`, `.next`, `src-tauri` aus.
-- [ ] **Schritt 3: `compose.yaml`:** Dienst `zusammenfassen` mit `restart: unless-stopped`, `env_file: .env.local`,
+- [x] **Schritt 3: `compose.yaml`:** Dienst `zusammenfassen` mit `restart: unless-stopped`, `env_file: .env.local`,
   `secrets: [supabase_passwort]` aus `./.secrets/supabase-passwort`, `models: { llm: { endpoint_var: MODELL_URL, model_var: MODELL_NAME } }`.
   Oben `models: { llm: { model: ai/qwen3:4b-instruct-2507, context_size: 8192 } }`.
-- [ ] **Schritt 4: Handgriff des Entwicklers mit einem Assistenten** (Skill `assistent-bauen`): `ZUSAMMENFASSEN_EMAIL` in `.env.local`,
+- [x] **Schritt 4: Handgriff des Entwicklers mit einem Assistenten** (Skill `assistent-bauen`): `ZUSAMMENFASSEN_EMAIL` in `.env.local`,
   Passwort in `.secrets/supabase-passwort`, Docker Desktop → Settings → General → „Start Docker Desktop when you sign in“ an.
-- [ ] **Schritt 5: Ende-zu-Ende auf dem Mac prüfen**
+- [x] **Schritt 5: Ende-zu-Ende auf dem Mac prüfen**
 
 ```bash
 docker compose up --build -d          # baut das Image und startet den Container im Hintergrund
@@ -292,7 +292,11 @@ docker history --no-trunc tages-dashboard-zusammenfassen | grep -ci passwort   #
 ```
 
   Im Supabase-Dashboard (Table Editor) stehen danach Zeilen in `zusammenfassungen`.
-- [ ] **Schritt 6: `npm run check`, committen** (`Run summaries hourly in a container`).
+- [x] **Schritt 6: `npm run check`, committen** (`Run summaries hourly in a container`).
+
+  Ergebnis (2026-11-15): erster Durchlauf `neu 4, ohne 19`, davon 7 Antworten über 600 Zeichen verworfen. Nach „zusammen höchstens
+  400 Zeichen“ in der Anweisung zweiter Durchlauf `neu 13, ohne 6`, alle 6 ohne Artikel (OpenAI 403, YouTube, Seite ohne Text).
+  17 Zeilen in der Tabelle, längste 559 Zeichen. Kein Treffer für Geheimnisse in `git ls-files`, im Image und in `docker history`.
 
 ### Aufgabe 6: Kachel liest die Zusammenfassungen
 
