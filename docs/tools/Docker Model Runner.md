@@ -87,6 +87,8 @@ docker model unload --all && docker compose up --build -d   # danach Container w
 Gemessen auf dem M5 mit 16 GB, nur `fasseZusammen`: Qwen 3 4B 5,8 bis 56,6 s (Median 16,5 s), Gemma 4 E4B 28,7 bis 83,1 s (Median
 46,3 s). Die Artikel mit 20.000 Zeichen passten bei beiden ins Kontextfenster von 8192.
 
+## Bekannte Grenzen
+
 
 - **Nur ein Modell gleichzeitig:** Auf 16 GB reicht der Speicher nicht für zwei geladene Modelle (siehe Fehler).
 - **Mac aus, keine Zusammenfassung:** Läuft Docker Desktop nicht, bekommen neue Meldungen erst später eine.
