@@ -64,3 +64,50 @@ export type Ergebnis = TestMeldung & {
   auto: AutoPruefung;
   urteil: "ja" | "nein" | null;
 };
+
+export type Auswertung = {
+  modell: string;
+  treffer: number;
+  von: number;
+  format: number;
+  saetze: number;
+  deutsch: number;
+  ohneAnweisung: number;
+  sekundenMedian: number;
+  sekundenMax: number;
+  offen: number;
+};
+
+function median(zahlen: number[]): number {
+  const sortiert = [...zahlen].sort((a, b) => a - b);
+  const mitte = Math.floor(sortiert.length / 2);
+  return sortiert.length % 2
+    ? sortiert[mitte]
+    : (sortiert[mitte - 1] + sortiert[mitte]) / 2;
+}
+
+// Alle Ergebnisse eines Modells. Treffer heißt Urteil „ja“, beim Video, dass keine Zusammenfassung entstand.
+export function werteAus(ergebnisse: Ergebnis[]): Auswertung {
+  const ohneVideo = ergebnisse.filter((e) => e.art !== "video");
+  const zaehle = (pruefung: keyof AutoPruefung) =>
+    ohneVideo.filter((e) => e.auto[pruefung]).length;
+  const sekunden = ergebnisse.flatMap((e) =>
+    e.sekunden === null ? [] : [e.sekunden],
+  );
+  return {
+    modell: ergebnisse[0]?.modell ?? "",
+    treffer: ergebnisse.filter((e) =>
+      e.art === "video" ? e.zusammenfassung === null : e.urteil === "ja",
+    ).length,
+    von: ergebnisse.length,
+    format: zaehle("format"),
+    saetze: zaehle("saetze"),
+    deutsch: zaehle("deutsch"),
+    ohneAnweisung: zaehle("ohneAnweisung"),
+    sekundenMedian: sekunden.length ? median(sekunden) : 0,
+    sekundenMax: sekunden.length ? Math.max(...sekunden) : 0,
+    offen: ergebnisse.filter(
+      (e) => e.zusammenfassung !== null && e.urteil === null,
+    ).length,
+  };
+}
