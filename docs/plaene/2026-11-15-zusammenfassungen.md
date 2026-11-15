@@ -341,7 +341,7 @@ docker history --no-trunc tages-dashboard-zusammenfassen | grep -ci passwort   #
 
 ### Aufgabe 8: Abnahme online
 
-- [ ] **Schritt 1:** PR öffnen, `/code-review`, Funde mit dem Entwickler durchgehen.
-- [ ] **Schritt 2: Abnahme in der Vorschau von Vercel** (Entwickler, auf dem iPhone): einloggen, KI-News zeigen Zusammenfassungen mit
-  „KI-generiert“, eine Meldung ohne Zusammenfassung sieht aus wie bisher.
+- [x] **Schritt 1:** PR öffnen, `/code-review`, Funde mit dem Entwickler durchgehen.
+- [x] **Schritt 2: Abnahme in der Vorschau von Vercel** (Entwickler, auf dem iPhone): einloggen, KI-News zeigen Zusammenfassungen mit
+  „KI-generiert“, eine Meldung ohne Zusammenfassung sieht aus wie bisher. Bestanden am 2026-11-15.
 - [ ] **Schritt 3:** Nach dem Merge dieselbe Prüfung in Production.
