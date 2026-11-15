@@ -30,6 +30,9 @@ export async function durchlauf(
     const zusammenfassung =
       artikel && (await fasseZusammen(artikel, meldung.titel, modell));
     if (!artikel || !zusammenfassung) {
+      console.log(
+        `Ohne Zusammenfassung: ${meldung.link} (${artikel ? "Antwort verworfen" : "kein Artikel"})`,
+      );
       ergebnis.ohne++;
       continue;
     }
