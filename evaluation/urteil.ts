@@ -16,7 +16,11 @@ async function main(): Promise<void> {
   }
   const offen = [...dateien].flatMap(([pfad, ergebnisse]) =>
     ergebnisse
-      .filter((e) => e.zusammenfassung !== null && e.urteil === null)
+      // Beim Video zählt nur, ob eine Zusammenfassung entstand, ein Urteil ginge nicht in die Auswertung ein.
+      .filter(
+        (e) =>
+          e.art !== "video" && e.zusammenfassung !== null && e.urteil === null,
+      )
       .map((ergebnis) => ({ pfad, ergebnis })),
   );
   // Mischen nach Fisher-Yates, damit die Reihenfolge nichts über das Modell verrät.

@@ -13,6 +13,24 @@ test("zählt Sätze, Abkürzungen und Versionsnummern beenden keinen", () => {
   expect(zaehleSaetze("Das gilt z. B. für Claude. Mehr nicht.")).toBe(2);
 });
 
+test("Datum, Abkürzung am Satzanfang und bzw. beenden keinen Satz (Review von PR #64)", () => {
+  expect(
+    zaehleSaetze("Das Modell erscheint am 15. November. Es ist schnell."),
+  ).toBe(2);
+  expect(zaehleSaetze("Z. B. Claude ist gut. Mehr nicht.")).toBe(2);
+  expect(zaehleSaetze("Es kostet ca. Zehn Euro bzw. Elf. Mehr nicht.")).toBe(2);
+});
+
+test("erkennt kurze deutsche Sätze mit „in“ oder ohne Füllwörter (Review von PR #64)", () => {
+  expect(
+    istDeutsch("Die Firma zeigt in Berlin ein Modell in drei Größen."),
+  ).toBe(true);
+  expect(
+    istDeutsch("Nvidia baut neue Chips. Kongress verschärft Exportregeln."),
+  ).toBe(true);
+  expect(istDeutsch("Nvidia builds new chips in Taiwan.")).toBe(false);
+});
+
 test("erkennt Deutsch, auch mit englischen Fachbegriffen", () => {
   expect(
     istDeutsch(
@@ -94,6 +112,7 @@ test("Treffer: Urteil ja, beim Video keine Zusammenfassung", () => {
   expect(auswertung).toMatchObject({
     modell: "m",
     treffer: 2,
+    mitText: 3,
     von: 4,
     offen: 1,
     format: 3,

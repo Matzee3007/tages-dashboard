@@ -6,3 +6,4 @@ node_modules
 src-tauri
 .git
 docs
+evaluation

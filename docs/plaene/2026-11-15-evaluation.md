@@ -398,3 +398,8 @@ Gewählt (Entwickler): **Qwen 3 4B Instruct**, gleich gut und fast dreimal so sc
 
 Unterwegs: In Aufgabe 4 las `urteil.ts` auch eine Sicherung `….json.bak` mit, seitdem nur Dateien mit `.json`. Ein Befehl mit `!` in
 Claude Code bekommt keine Tastatur, `urteil.ts` läuft deshalb nur in der Terminal-App.
+
+`/code-review` von PR #64: behoben wurden Satzende nach Datum, „Z. B.“ und „bzw.“, `istDeutsch` bei „in“ und ohne Füllwörter,
+Abbruch des ganzen Laufs beim Zeitlimit, Überschreiben beurteilter Ergebnisse, fester Nenner `von - 1`, Urteil beim Video und
+`evaluation` in `.dockerignore`. Die 28 Zusammenfassungen ergeben mit der neuen Prüfung dieselben Werte. Bewusst offen: Ein nicht
+ladbarer Artikel zählt als Fehler des Modells (`texte.ts` meldet ihn schon), Ordner und Dateifilter stehen in drei Skripten.

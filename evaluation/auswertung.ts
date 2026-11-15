@@ -18,9 +18,8 @@ console.log(
 );
 console.log("|---|---|---|---|---|---|---|---|");
 for (const a of auswertungen) {
-  const mitText = a.von - 1; // ohne das Video
   console.log(
-    `| ${a.modell} | ${a.treffer}/${a.von} | ${a.format}/${mitText} | ${a.saetze}/${mitText} | ${a.deutsch}/${mitText} | ${a.ohneAnweisung}/${mitText} | ${a.sekundenMedian.toFixed(1)} | ${a.sekundenMax} |`,
+    `| ${a.modell} | ${a.treffer}/${a.von} | ${a.format}/${a.mitText} | ${a.saetze}/${a.mitText} | ${a.deutsch}/${a.mitText} | ${a.ohneAnweisung}/${a.mitText} | ${a.sekundenMedian.toFixed(1)} | ${a.sekundenMax} |`,
   );
 }
 for (const a of auswertungen) {
