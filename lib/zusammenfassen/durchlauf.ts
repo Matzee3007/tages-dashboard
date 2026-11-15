@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ABSENDER } from "@/lib/einstellungen";
+import type { Meldung } from "@/lib/kacheln/ki-news/feed";
 import { ladeKiNews } from "@/lib/kacheln/ki-news/laden";
 import { ladeArtikel } from "@/lib/zusammenfassen/artikel";
 import { fasseZusammen } from "@/lib/zusammenfassen/modell";
@@ -26,23 +27,42 @@ export async function durchlauf(
   // Nacheinander: Das Modell auf dem Mac schafft nur eine Anfrage gleichzeitig gut.
   for (const meldung of meldungen) {
     if (vorhanden.has(meldung.link)) continue;
-    const artikel = await ladeArtikel(meldung.link);
-    const zusammenfassung =
-      artikel && (await fasseZusammen(artikel, meldung.titel, modell));
-    if (!artikel || !zusammenfassung) {
-      console.log(
-        `Ohne Zusammenfassung: ${meldung.link} (${artikel ? "Antwort verworfen" : "kein Artikel"})`,
-      );
-      ergebnis.ohne++;
-      continue;
+    try {
+      if (await fasseEineZusammen(client, modell, meldung)) {
+        ergebnis.neu++;
+        continue;
+      }
+    } catch (fehler) {
+      // Ist das Modell gar nicht erreichbar (fetch wirft TypeError), scheitert jeder weitere Artikel auch: abbrechen.
+      // Zeitlimit oder Fehler beim Speichern betreffen nur diesen Artikel (Review von PR #61).
+      if (fehler instanceof TypeError) throw fehler;
+      console.error(`Ohne Zusammenfassung: ${meldung.link}`, fehler);
     }
-    await speichereZusammenfassung(client, {
-      link: meldung.link,
-      zusammenfassung,
-      modell: modell.name,
-      gekuerzt: artikel.gekuerzt,
-    });
-    ergebnis.neu++;
+    ergebnis.ohne++;
   }
   return ergebnis;
+}
+
+// true: gespeichert. false: kein Artikel oder Antwort verworfen.
+async function fasseEineZusammen(
+  client: SupabaseClient,
+  modell: { url: string; name: string },
+  meldung: Meldung,
+): Promise<boolean> {
+  const artikel = await ladeArtikel(meldung.link);
+  const zusammenfassung =
+    artikel && (await fasseZusammen(artikel, meldung.titel, modell));
+  if (!artikel || !zusammenfassung) {
+    console.log(
+      `Ohne Zusammenfassung: ${meldung.link} (${artikel ? "Antwort verworfen" : "kein Artikel"})`,
+    );
+    return false;
+  }
+  await speichereZusammenfassung(client, {
+    link: meldung.link,
+    zusammenfassung,
+    modell: modell.name,
+    gekuerzt: artikel.gekuerzt,
+  });
+  return true;
 }

@@ -1,6 +1,6 @@
 // @vitest-environment node
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { beforeEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { ladeKiNews } from "@/lib/kacheln/ki-news/laden";
 import { ladeArtikel } from "@/lib/zusammenfassen/artikel";
 import { durchlauf } from "@/lib/zusammenfassen/durchlauf";
@@ -100,4 +100,32 @@ test("Modell nicht erreichbar bricht den Durchlauf ab", async () => {
     "fetch failed",
   );
   expect(upsert).not.toHaveBeenCalled();
+});
+
+test("ein Zeitlimit des Modells betrifft nur diesen Artikel", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  vi.mocked(fasseZusammen).mockRejectedValueOnce(
+    new DOMException("timeout", "TimeoutError"),
+  );
+  const { client: supabase, upsert } = client([]);
+
+  const ergebnis = await durchlauf(supabase, MODELL, JETZT);
+
+  expect(ergebnis).toEqual({ neu: 2, ohne: 1 });
+  expect(upsert).toHaveBeenCalledTimes(2);
+});
+
+test("ein Fehler beim Speichern betrifft nur diesen Artikel", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  const { client: supabase, upsert } = client([]);
+  upsert.mockResolvedValueOnce({ error: { message: "kurz weg" } });
+
+  const ergebnis = await durchlauf(supabase, MODELL, JETZT);
+
+  expect(ergebnis).toEqual({ neu: 2, ohne: 1 });
+  expect(upsert).toHaveBeenCalledTimes(3);
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
 });
