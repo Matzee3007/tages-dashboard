@@ -2,25 +2,11 @@ import { ABSENDER, type KiNewsEinstellung } from "@/lib/einstellungen";
 import { ladeKiNews, type AbsenderStand } from "@/lib/kacheln/ki-news/laden";
 import type { KachelDaten } from "@/lib/kacheln/typen";
 import { erstelleLeseClient } from "@/lib/supabase/server";
+import { mitZeitlimit } from "@/lib/zeitlimit";
 import { leseZusammenfassungen } from "@/lib/zusammenfassen/speicher";
 
-const LESE_ZEITLIMIT_MS = 3000;
-
-// Die Kachel hat insgesamt 8 Sekunden. Ein langsames Supabase soll davon höchstens 3 kosten.
-async function hoechstens<T>(vorgang: Promise<T>, ms: number): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const zeitlimit = new Promise<never>((_, abbrechen) => {
-    timer = setTimeout(
-      () => abbrechen(new Error("Zeitlimit überschritten")),
-      ms,
-    );
-  });
-  try {
-    return await Promise.race([vorgang, zeitlimit]);
-  } finally {
-    clearTimeout(timer);
-  }
-}
+// Die Kachel hat insgesamt 8 Sekunden, die Feeds davon bis zu 5. Supabase bekommt höchstens 2, damit Luft bleibt.
+const LESE_ZEITLIMIT_MS = 2000;
 
 // Die Zusammenfassungen erzeugt der Mac (ADR 0010). Fehlen sie, zeigt die Kachel die Meldungen wie bisher.
 async function mitZusammenfassungen(
@@ -31,7 +17,7 @@ async function mitZusammenfassungen(
   );
   let texte: Map<string, string>;
   try {
-    texte = await hoechstens(
+    texte = await mitZeitlimit(
       erstelleLeseClient().then((client) =>
         leseZusammenfassungen(client, links),
       ),

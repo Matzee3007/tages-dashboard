@@ -6,6 +6,7 @@ import type {
   KachelAntwort,
   KachelDaten,
 } from "@/lib/kacheln/typen";
+import { mitZeitlimit } from "@/lib/zeitlimit";
 
 // Ein switch statt einer Tabelle: So passt TypeScript jede Einstellung zu ihrem Lader.
 function lade(
@@ -22,28 +23,16 @@ function lade(
 
 const KACHEL_ZEITLIMIT_MS = 8000;
 
-async function mitZeitlimit<T>(ladevorgang: Promise<T>): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const zeitlimit = new Promise<never>((_, abbrechen) => {
-    timer = setTimeout(
-      () => abbrechen(new Error("Zeitlimit überschritten")),
-      KACHEL_ZEITLIMIT_MS,
-    );
-  });
-  try {
-    return await Promise.race([ladevorgang, zeitlimit]);
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
 async function ladeKachel(
   einstellung: KachelEinstellung,
   jetzt: Date,
 ): Promise<KachelAntwort> {
   const { id, titel } = einstellung;
   try {
-    const ergebnis = await mitZeitlimit(lade(einstellung, jetzt));
+    const ergebnis = await mitZeitlimit(
+      lade(einstellung, jetzt),
+      KACHEL_ZEITLIMIT_MS,
+    );
     return {
       id,
       titel,
