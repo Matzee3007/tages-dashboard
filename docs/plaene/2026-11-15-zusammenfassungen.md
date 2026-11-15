@@ -309,16 +309,16 @@ docker history --no-trunc tages-dashboard-zusammenfassen | grep -ci passwort   #
 - Liefert: `erstelleLeseClient(): Promise<SupabaseClient>` (Cookies nur lesen, `setAll` tut nichts, die Sitzung erneuert `proxy.ts`),
   `Meldung.zusammenfassung?: string`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests** mit Attrappen für `ladeKiNews` und `erstelleLeseClient`:
+- [x] **Schritt 1: Fehlschlagende Tests** mit Attrappen für `ladeKiNews` und `erstelleLeseClient`:
   - `"hängt die Zusammenfassung an die passende Meldung"`: Meldung mit Link `https://example.org/1`, Tabelle liefert dafür „Eins.“ →
     `daten.absender[0].meldungen[0].zusammenfassung === "Eins."`.
   - `"ohne Tabelle lädt die Kachel trotzdem"`: `leseZusammenfassungen` wirft → Meldungen kommen ohne `zusammenfassung`, kein Fehler.
   - `"ein langsames Supabase bremst die Kachel höchstens 3 Sekunden"`: mit `vi.useFakeTimers()`, Lesen hängt → nach 3000 ms Meldungen ohne
     Zusammenfassung.
-- [ ] **Schritt 2: Test**, erwartet: FAIL.
-- [ ] **Schritt 3: Umsetzen.** Gelesen wird nur für die Links der gezeigten Meldungen.
-- [ ] **Schritt 4: Test**, erwartet: PASS.
-- [ ] **Schritt 5: `npm run check`, committen** (`Show stored summaries in news tile data`).
+- [x] **Schritt 2: Test**, erwartet: FAIL.
+- [x] **Schritt 3: Umsetzen.** Gelesen wird nur für die Links der gezeigten Meldungen.
+- [x] **Schritt 4: Test**, erwartet: PASS.
+- [x] **Schritt 5: `npm run check`, committen** (`Show stored summaries in news tile data`).
 
 ### Aufgabe 7: Zusammenfassung in der Kachel zeigen
 

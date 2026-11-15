@@ -4,6 +4,24 @@ import type { KachelDaten } from "@/lib/kacheln/typen";
 import { erstelleLeseClient } from "@/lib/supabase/server";
 import { leseZusammenfassungen } from "@/lib/zusammenfassen/speicher";
 
+const LESE_ZEITLIMIT_MS = 3000;
+
+// Die Kachel hat insgesamt 8 Sekunden. Ein langsames Supabase soll davon höchstens 3 kosten.
+async function hoechstens<T>(vorgang: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const zeitlimit = new Promise<never>((_, abbrechen) => {
+    timer = setTimeout(
+      () => abbrechen(new Error("Zeitlimit überschritten")),
+      ms,
+    );
+  });
+  try {
+    return await Promise.race([vorgang, zeitlimit]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 // Die Zusammenfassungen erzeugt der Mac (ADR 0010). Fehlen sie, zeigt die Kachel die Meldungen wie bisher.
 async function mitZusammenfassungen(
   staende: AbsenderStand[],
@@ -13,7 +31,12 @@ async function mitZusammenfassungen(
   );
   let texte: Map<string, string>;
   try {
-    texte = await leseZusammenfassungen(await erstelleLeseClient(), links);
+    texte = await hoechstens(
+      erstelleLeseClient().then((client) =>
+        leseZusammenfassungen(client, links),
+      ),
+      LESE_ZEITLIMIT_MS,
+    );
   } catch (fehler) {
     console.error("Zusammenfassungen ließen sich nicht lesen:", fehler);
     return staende;

@@ -80,3 +80,19 @@ test("ohne Tabelle lädt die Kachel trotzdem", async () => {
   ]);
   expect(daten.absender[0].meldungen[0].zusammenfassung).toBeUndefined();
 });
+
+test("ein langsames Supabase bremst die Kachel höchstens 3 Sekunden", async () => {
+  vi.useFakeTimers();
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  vi.mocked(erstelleLeseClient).mockResolvedValue(
+    client(() => new Promise(() => {})),
+  );
+
+  const laden = ladeKiNewsKachel(EINSTELLUNG, JETZT);
+  await vi.advanceTimersByTimeAsync(3000);
+  const { daten } = await laden;
+
+  if (daten.art !== "ki-news") throw new Error("falsche Art");
+  expect(daten.absender[0].meldungen).toHaveLength(2);
+  expect(daten.absender[0].meldungen[0].zusammenfassung).toBeUndefined();
+});
