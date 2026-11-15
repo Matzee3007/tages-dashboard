@@ -218,11 +218,12 @@ test("Fehler des Modells ergibt null", async () => {
 - Neu: `supabase/zusammenfassungen.sql`
 - Ändern: `docs/tools/Supabase.md` (Abschnitt Tabelle und RLS, Befehle unten)
 
-- [ ] **Schritt 1: SQL schreiben:** Tabelle nach den festen Vorgaben, `alter table … enable row level security`, je eine Policy für
+- [x] **Schritt 1: SQL schreiben:** Tabelle nach den festen Vorgaben, `alter table … enable row level security`, je eine Policy für
   `select`, `insert` und `update` mit `auth.uid() = '19c0195a-1112-4a25-96c0-de11af74b01e'`.
-- [ ] **Schritt 2: Handgriff des Entwicklers:** Supabase-Dashboard → SQL Editor → Inhalt der Datei einfügen → Run. Erwartet:
-  „Success. No rows returned“. Claude leitet Schritt für Schritt an.
-- [ ] **Schritt 3: Als Fremder prüfen,** ohne Anmeldung, nur mit dem Publishable Key:
+- [x] **Schritt 2: Handgriff des Entwicklers:** Supabase-Dashboard → SQL Editor → Inhalt der Datei einfügen → Run. Erwartet:
+  „Success. No rows returned“. Auf Wunsch des Entwicklers stattdessen über die Supabase-CLI eingespielt (`supabase db query --linked --project-ref …`), siehe
+  `docs/tools/Supabase.md`.
+- [x] **Schritt 3: Als Fremder prüfen,** ohne Anmeldung, nur mit dem Publishable Key:
 
 ```bash
 /usr/bin/curl -s -H "apikey: <publishable-key>" 'https://<ref>.supabase.co/rest/v1/zusammenfassungen?select=link'
@@ -233,7 +234,7 @@ test("Fehler des Modells ergibt null", async () => {
 # erwartet: Fehler 42501 "new row violates row-level security policy"
 ```
 
-- [ ] **Schritt 4: Committen** (`Add summaries table with row level security`).
+- [x] **Schritt 4: Committen** (`Add summaries table with row level security`).
 
 ### Aufgabe 4: Ein Durchlauf
 

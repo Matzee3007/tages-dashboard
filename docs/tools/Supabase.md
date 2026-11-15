@@ -17,7 +17,8 @@ Supabase-Dashboard im Browser.
 
 ## Wofür nutzen wir es?
 
-Für den Login des einzigen Kontos, ab Phase 4 auch für die Schritte. Warum die Anmeldung nur auf dem
+Für den Login des einzigen Kontos und die Tabelle `zusammenfassungen` der KI-News
+([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]), ab Phase 4 auch für die Schritte. Warum die Anmeldung nur auf dem
 Server läuft: [[projects/tages-dashboard/docs/adr/0002-login-nur-auf-dem-server|ADR 0002]].
 
 ## Begriffe
@@ -43,6 +44,7 @@ Nachgelesen am 2026-11-01 ([Pricing](https://supabase.com/pricing),
 - Sitzungen laufen nicht von selbst ab, zeitliche Grenzen gibt es erst im Tarif Pro
 - **Pause** nach 1 Woche mit zu wenig Datenbank-Aktivität. Die Doku sagt nicht, ob Logins zählen. Im Zustand „pausiert“
   sollte die App „Anmeldung gerade nicht möglich.“ zeigen (nicht ausprobiert), dann im Dashboard „Resume project“.
+  Am 2026-11-15 zeigte `supabase projects list` das Projekt als `ACTIVE_HEALTHY`, es war also nicht pausiert.
 
 ## Wie haben wir es eingerichtet?
 
@@ -57,6 +59,13 @@ Supabase]], mit einem Assistent-Skript (Skill `assistent-bauen`):
 5. Bei Vercel beide Variablen für Production und Preview. Sie gelten erst für das nächste Deployment.
 6. Die User UID des Kontos (Authentication → Users) als `BESITZER_ID` in `lib/besitzer.ts`. Wird das Konto neu angelegt,
    muss sie mit, sonst sperrt der Proxy auch den Besitzer aus.
+
+**2026-11-15, Einschub KI-Feature, Aufgabe 3** nach
+[[projects/tages-dashboard/docs/plaene/2026-11-15-zusammenfassungen|Plan: Zusammenfassungen erzeugen und zeigen]]:
+
+7. Tabelle `zusammenfassungen` mit RLS aus `supabase/zusammenfassungen.sql`, eingespielt über die Supabase-CLI (Befehle unten).
+   Drei Policies (lesen, anlegen, ändern), alle nur für `auth.uid()` gleich `BESITZER_ID`. Löschen ist nicht erlaubt.
+   Gegenprobe ohne Anmeldung: `select` liefert `[]`, `insert` scheitert mit `42501`.
 
 Die CI braucht die Variablen nicht: Beim Bauen laufen weder Proxy noch Server Actions.
 
@@ -95,7 +104,20 @@ Aus dem `/code-review` von PR #12, bewusst nicht behoben:
 /usr/bin/curl -s -H "apikey: <publishable-key>" 'https://<ref>.supabase.co/auth/v1/settings'
 # Installation mit festen Versionen
 npm install --save-exact @supabase/ssr@0.12.7 @supabase/supabase-js@2.118.0
+
+# Supabase-CLI (Homebrew, 2.121.0): einmal anmelden, nur in einem eigenen Terminal-Fenster (siehe Fehler)
+supabase login
+supabase projects list                       # Projekte mit Ref und Status, z. B. ACTIVE_HEALTHY
+# SQL über die Management API ausführen, ohne `supabase link`
+supabase db query --linked --project-ref imebsydcnchziitgccxs -f supabase/zusammenfassungen.sql
+supabase db query --linked --project-ref imebsydcnchziitgccxs "select count(*) from public.zusammenfassungen"
+supabase logout                              # löscht das Token wieder vom Mac
+
+# Als Fremder prüfen (nur Publishable Key, ohne Anmeldung): muss [] bzw. Fehler 42501 liefern
+/usr/bin/curl -s -H "apikey: <publishable-key>" 'https://<ref>.supabase.co/rest/v1/zusammenfassungen?select=link'
 ```
+
+Das Token von `supabase login` gilt für alle Projekte des Kontos, nicht nur für dieses.
 
 ## Fehler
 
@@ -103,3 +125,11 @@ npm install --save-exact @supabase/ssr@0.12.7 @supabase/supabase-js@2.118.0
   gespeichert. **Ursache:** nicht ermittelt, der Schalter wurde vermutlich nicht
   gefunden oder nicht gespeichert. **Lösung:** von Hand über
   `https://supabase.com/dashboard/project/<ref>/auth/providers` ausschalten und speichern, dann mit dem Befehl oben prüfen.
+- **`LoginMissingTokenError: Cannot use automatic login flow inside non-TTY environments`** (2026-11-15): `supabase login` mit `!`
+  in Claude Code. **Ursache:** Dort läuft der Befehl ohne echtes Terminal-Fenster (TTY), die CLI startet die Anmeldung im Browser dann
+  nicht. **Lösung:** `supabase login` einmal in der App Terminal ausführen. Das Token liegt danach im Schlüsselbund, Claude Code findet es.
+- **`DbQueryMutuallyExclusiveFlagsError: --project-ref only applies when targeting the linked project`** (2026-11-15): `supabase db
+  query --project-ref …` allein. **Ursache:** Der Schalter gilt nur zusammen mit `--linked`. **Lösung:** `--linked --project-ref <ref>`,
+  ein `supabase link` ist dafür nicht nötig.
+- **`Invalid API key` mit Status 401** (2026-11-15) bei der Prüfung als Fremder. **Ursache:** Der Schlüssel steht in `.env.local` in
+  einfachen Anführungszeichen, sie gingen mit in den Header. **Lösung:** Anführungszeichen entfernen, bevor man den Wert benutzt.
