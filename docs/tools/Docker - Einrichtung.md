@@ -73,7 +73,7 @@ Adressen: vom Mac `http://localhost:12434/engines/v1/`, aus dem Compose-Containe
 - **Nur ein Modell gleichzeitig:** Auf 16 GB reicht der Speicher nicht für zwei geladene Modelle (siehe Fehler).
 - **Mac aus, keine Zusammenfassung:** Läuft Docker Desktop nicht, bekommen neue Meldungen erst später eine.
 - **Image 1,43 GB:** `npm ci` installiert alle Abhängigkeiten des Projekts, auch Next.js.
-- **OpenAI antwortete dem Container mit 403,** vom Mac aus am selben Tag mit 200 (2026-11-15, Ursache nicht ermittelt).
+- **OpenAI-Artikel bleiben ohne Zusammenfassung:** openai.com antwortet dem Container mit 403 (siehe Fehler).
 
 ## Fehler
 
@@ -86,3 +86,9 @@ Adressen: vom Mac `http://localhost:12434/engines/v1/`, aus dem Compose-Containe
   **Ursache:** Ohne `"type": "module"` in `package.json` übersetzt `tsx` als CommonJS. **Lösung:** die Schleife in eine Funktion packen.
 - **7 von 12 Zusammenfassungen verworfen** (2026-11-15), alle länger als 600 Zeichen. **Ursache:** Die Anweisung „2 bis 3 Sätze“ nannte
   keine Zeichenzahl. **Lösung:** „zusammen höchstens 400 Zeichen“ in die Anweisung, danach 12 von 12 angenommen.
+- **`Status 403` mit `cf-mitigated: challenge` bei openai.com** (2026-11-15), nur im Container, vom Mac mit Node 200. **Ursache:**
+  Cloudflare vor openai.com stellt Programmen eine Prüfung „Bist du ein Mensch?“ und erkennt sie am Verbindungsaufbau (TLS-Fingerabdruck),
+  nicht an der Netzadresse: Mac und Container gingen über dieselbe Adresse `104.18.33.45`, und auch `curl` vom Mac bekam 403. Node im
+  Image (24.22.3, OpenSSL 3.5.9) wird geprüft, Node auf dem Mac (24.22.0, OpenSSL 4.0.3) kam durch. Dass es genau an OpenSSL liegt,
+  ist nicht bewiesen. **Lösung:** keine. Die Sperre ist gewollt, sie zu umgehen hieße, den Schutz von OpenAI auszutricksen. Diese
+  Meldungen erscheinen ohne Zusammenfassung (ADR 0010, „Fehlt eine Zusammenfassung“).
