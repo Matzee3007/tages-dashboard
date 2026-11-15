@@ -41,6 +41,7 @@ Weitere Notizen: [[projects/tages-dashboard/docs/Arbeitsumgebung|Arbeitsumgebung
 - **RSS-Feeds** auslesen und zusammenführen
 - Daten vom **iPhone per Kurzbefehl** an die eigene App schicken
 - ein **Kachel-System**, in das neue Bereiche einfach hineinpassen
+- ein **lokales Sprachmodell** einbinden und prüfen (Evaluation, Structured Output)
 
 Arbeitsweise (aus der globalen `CLAUDE.md`):
 - Erst erklären lassen, dann ausführen. Bei jedem Befehl „Warum?“ fragen.
@@ -63,6 +64,7 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 | Sportdaten | ESPN (inoffiziell, Bundesliga und NFL), football-data.org, Jolpica, OpenF1 |
 | News | RSS- und Atom-Feeds (`fast-xml-parser`), selbst ausgelesene Seiten |
 | Schritte | iPhone-Kurzbefehl → eigene Schnittstelle der App |
+| Zusammenfassungen | lokales Sprachmodell auf dem Mac über Docker Model Runner, Skript in Docker Compose ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac\|ADR 0010]]) |
 
 ## Architekturentscheidungen
 
@@ -72,7 +74,8 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 3. **Kacheln:** jeder Bereich eigenständig, neue Bereiche ohne Umbau der anderen. Eine Kachel besteht aus
    Abschnitten.
 4. **Daten holt der Server** und speichert sie kurz zwischen. Die Seite fragt jede Minute neu, solange sie offen ist.
-   Verzögerte Ergebnisse im Gratis-Tarif (football-data.org) sind in Ordnung.
+   Verzögerte Ergebnisse im Gratis-Tarif (football-data.org) sind in Ordnung. Ausnahme: Die Zusammenfassungen der KI-News erzeugt
+   der Mac und legt sie in Supabase ab ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]).
 5. **Erst gratis:** bezahlte Quellen nur mit eigenem ADR.
 6. **Einstellungen im Code:** Kacheln, Reihenfolge, Mein Team, Absender und Feeds, Tagesziel stehen in einer Datei
    im Code. Ändern heißt: Datei ändern und neu veröffentlichen. Eine Einstellungsseite lässt sich später nachrüsten.
@@ -83,7 +86,8 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
   Abschnitt zeigt die neuesten 3 Meldungen der letzten 7 Tage mit Titel und Alter, ein Tipp öffnet das Original.
   Ohne neue Meldung schrumpft der Abschnitt auf eine Zeile mit dem Alter der letzten Meldung
   (`Anthropic · zuletzt vor 23 Tagen`). Der Abschnitt mit der neuesten Meldung steht oben. Titel bleiben in der
-  Originalsprache, ohne Übersetzung und Zusammenfassung.
+  Originalsprache, ohne Übersetzung. Dazu kommt je Meldung eine KI-Zusammenfassung des verlinkten Artikels auf Deutsch
+  ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]). Fehlt sie, erscheint die Meldung wie bisher.
 - **Sport:** eine Kachel pro Wettbewerb mit den Abschnitten Spieltag und Tabelle (Formel 1: Rennwochenende und
   WM-Wertung). Gezeigt wird der aktuelle Spieltag, nicht nur heute. Mein Team ist hervorgehoben und steht oben.
   Uhrzeiten in deutscher Zeit.
@@ -105,6 +109,9 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
   Karpathy, Matt Pocock und Fachseiten in einer Kachel mit einem Abschnitt pro Absender
 - [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (ESPN), Premier League und Champions League
   (football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
+- [ ] **Einschub – KI-Feature:** Zusammenfassung je Meldung der KI-News mit einem lokalen Sprachmodell
+  ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]), in drei Stufen: erster Modellaufruf, Evaluation mit
+  Testsatz, Structured Output. Phase 3, Schritt 2 ruht so lange.
 - [ ] **Phase 4 – Schritte:** iPhone-Kurzbefehl schickt die Schritte aus Apple Health an die App, Kachel mit
   Tageswert, Tagesziel und Verlauf
 - [ ] **Später:** X-API (Kosten), weitere Wettbewerbe (z. B. DFB-Pokal, FA Cup), Push-Benachrichtigungen,
@@ -279,3 +286,6 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 
 - Antwortet die ESPN-Schnittstelle von einem Server aus (Testabruf ergab 403)?
 - Lohnen sich später Live-Daten für Arsenal (12 €/Monat) oder Formel 1 (9,90 €/Monat)?
+- Parkplatz: RAG „Frag meine News“ (erst passende Zusammenfassungen suchen, dann antworten lassen). Wieder aufgreifen, wenn Stufe 3 des
+  KI-Features zwei Wochen im Alltag läuft.
+- Parkplatz: Agent mit Werkzeugen für die KI-News. Wieder aufgreifen, wenn Stufe 3 des KI-Features zwei Wochen im Alltag läuft.

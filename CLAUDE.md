@@ -23,6 +23,8 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 - **Tests und Qualität:** Vitest, Testing Library, ESLint, Prettier
 - **Datenquellen:** ESPN (Bundesliga und NFL, inoffiziell, ADR 0009), football-data.org (Premier League, Champions
   League), Jolpica und OpenF1 (Formel 1), RSS-Feeds (KI-News), iPhone-Kurzbefehl (Schritte aus Apple Health)
+- **Zusammenfassungen der KI-News:** lokales Sprachmodell über Docker Model Runner, Skript im Container per Docker Compose
+  auf dem Mac (ADR 0010)
 
 ## Architekturprinzipien
 
@@ -33,7 +35,8 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 3. **Kacheln:** Jede Kachel (je Wettbewerb, Schritte, KI-News …) ist eigenständig, mit eigener Art von Datenquelle,
    und besteht aus Abschnitten. Eine neue Kachel kommt dazu, ohne die anderen zu ändern. Begriffe: `docs/Glossar.md`.
 4. **Daten holt der Server**, nicht der Browser: API-Schlüssel bleiben auf dem Server, Antworten werden kurz
-   zwischengespeichert, damit die Gratis-Grenzen der Anbieter reichen.
+   zwischengespeichert, damit die Gratis-Grenzen der Anbieter reichen. Ausnahme: Die Zusammenfassungen erzeugt der Mac
+   und legt sie in Supabase ab, Vercel liest sie nur (ADR 0010).
 5. **Erst gratis:** keine bezahlte Datenquelle ohne eigenes ADR (z. B. X-API, Live-Daten für Formel 1).
 6. **Einstellungen im Code:** Kacheln, Reihenfolge, Mein Team, Absender und Feeds, Tagesziel stehen in einer Datei
    im Code, nicht in der Datenbank. Eine Einstellungsseite gibt es erst später.
