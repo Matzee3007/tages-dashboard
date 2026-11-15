@@ -54,3 +54,13 @@ test("schickt Schema, Modellname und den Artikel als Daten", async () => {
   );
   expect(zeitlimit).toHaveBeenCalledWith(120000);
 });
+
+test("Fehler des Modells ergibt null", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn().mockResolvedValue(new Response("Compute error.", { status: 500 })),
+  );
+  await expect(
+    fasseZusammen({ text: "x", gekuerzt: false }, "T", MODELL),
+  ).resolves.toBeNull();
+});

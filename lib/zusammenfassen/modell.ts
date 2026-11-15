@@ -67,6 +67,11 @@ export async function fasseZusammen(
       }),
     },
   );
+  // Ein Fehler des Modells betrifft nur diesen Artikel. Ist das Modell gar nicht erreichbar, wirft fetch weiter.
+  if (!antwort.ok) {
+    console.error(`Modell: Status ${antwort.status}`, await antwort.text());
+    return null;
+  }
   const daten = await antwort.json();
   return pruefeAntwort(daten.choices[0].message.content);
 }
