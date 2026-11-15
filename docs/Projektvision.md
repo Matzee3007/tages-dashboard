@@ -109,7 +109,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
   Karpathy, Matt Pocock und Fachseiten in einer Kachel mit einem Abschnitt pro Absender
 - [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (ESPN), Premier League und Champions League
   (football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
-- [ ] **Einschub – KI-Feature:** Zusammenfassung je Meldung der KI-News mit einem lokalen Sprachmodell
+- [x] **Einschub – KI-Feature:** Zusammenfassung je Meldung der KI-News mit einem lokalen Sprachmodell
   ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]), in drei Stufen: erster Modellaufruf, Evaluation mit
   Testsatz, Structured Output. Phase 3, Schritt 2 ruht so lange.
 - [ ] **Phase 4 – Schritte:** iPhone-Kurzbefehl schickt die Schritte aus Apple Health an die App, Kachel mit

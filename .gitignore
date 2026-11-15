@@ -30,3 +30,4 @@ next-env.d.ts
 /src-tauri/gen
 /supabase/.temp/
 /.secrets/
+/evaluation/daten/
