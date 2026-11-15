@@ -77,7 +77,7 @@ Abend-Session vom 2026-11-15:
 | Design | Linien in allen Tabellen (Europapokal, Abstieg), Plätze in der Einstellungsdatei | Befragung F5, F10, F13 | Entwickler |
 | Design | Neues Aussehen für das ganze Dashboard als eigener PR nach Premier League und Champions League, mit Mock | Zu eintönig, Absender der KI-News nicht klar getrennt | Entwickler |
 | Bauen | Skill `codebase-design` global eingebaut statt nur als Wissen genutzt | Wahl des Entwicklers | Entwickler |
-| Bauen | Name `module-entwerfen`, ohne `DESIGN-IT-TWICE.md`, „Nahtstelle“ wie in `tdd` | Namensregel des Ecosystems, keine Subagent-Runde, Review-Fund 1 | ungefragt |
+| Bauen | Name `module-entwerfen`, ohne `DESIGN-IT-TWICE.md`, „Nahtstelle“ wie in `tdd` | Namensregel des Ecosystems, keine Subagent-Runde, Review-Fund 1. Am 2026-11-16 bestätigt: Name bleibt | Entwickler |
 
 ## Befehle: Docker Model Runner und Compose
 

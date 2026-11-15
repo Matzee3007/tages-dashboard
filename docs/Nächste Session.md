@@ -56,8 +56,8 @@ Aufteilung: PR 1 Premier League, PR 2 Champions League, PR 3 neues Aussehen.
 
 Anstehende Entscheidungen, zuerst klären:
 
-- **Zwei „ungefragt“-Zeilen im Journal** bestätigen oder umdrehen: Zusammensetzung des Testsatzes (ohne OpenAI, Karpathy aus dem Archiv)
-  und Name `module-entwerfen` samt Anpassungen des Skills.
+- **Eine „ungefragt“-Zeile im Journal** bestätigen oder umdrehen: Zusammensetzung des Testsatzes (ohne OpenAI, Karpathy aus dem
+  Archiv, Seite mit Anweisung selbst geschrieben).
 
 Dann:
 
