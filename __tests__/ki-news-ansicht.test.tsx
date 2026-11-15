@@ -174,7 +174,7 @@ function mitZusammenfassung(zusammenfassung: string) {
 
 test("die Zusammenfassung erscheint erst nach Tipp auf KI, markiert als KI-generiert", () => {
   render(<KiNewsAnsicht daten={mitZusammenfassung("Eins. Zwei.")} />);
-  expect(screen.queryByText("Eins. Zwei.")).toBeNull();
+  expect(screen.queryByText("Eins. Zwei.")?.closest("[hidden]")).toBeTruthy();
 
   fireEvent.click(
     screen.getByRole("button", { name: "KI-Zusammenfassung aufklappen" }),
@@ -210,4 +210,18 @@ test("eine Meldung ohne Zusammenfassung hat keinen Knopf und keine Markierung", 
     screen.queryByRole("button", { name: /KI-Zusammenfassung/ }),
   ).toBeNull();
   expect(screen.queryByText("KI-generiert")).toBeNull();
+});
+
+test("der Knopf zeigt auch zugeklappt auf seinen Kasten", () => {
+  const { container } = render(
+    <KiNewsAnsicht daten={mitZusammenfassung("Eins. Zwei.")} />,
+  );
+  const knopf = screen.getByRole("button", {
+    name: "KI-Zusammenfassung aufklappen",
+  });
+
+  const kasten = container.querySelector(
+    `[id="${knopf.getAttribute("aria-controls")}"]`,
+  );
+  expect(kasten?.hasAttribute("hidden")).toBe(true);
 });

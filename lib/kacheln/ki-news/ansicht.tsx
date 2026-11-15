@@ -102,26 +102,26 @@ function ZeileMitZusammenfassung({
         </button>
         <Alter meldung={meldung} jetzt={jetzt} />
       </div>
-      {offen && (
-        <div
-          id={kastenId}
-          className="mb-2.5 ml-5 rounded-[10px] bg-knopf px-3 py-2.5 text-sm leading-[1.42] text-gedaempft"
+      {/* Immer im DOM, damit aria-controls auch zugeklappt auf ein Element zeigt (Review von PR #61). */}
+      <div
+        id={kastenId}
+        hidden={!offen}
+        className="mb-2.5 ml-5 rounded-[10px] bg-knopf px-3 py-2.5 text-sm leading-[1.42] text-gedaempft"
+      >
+        <span className="mb-1 block w-max rounded-[5px] bg-info/15 px-1.5 text-[11px] font-semibold tracking-[0.06em] text-info uppercase">
+          KI-generiert
+        </span>
+        {meldung.zusammenfassung}
+        <br />
+        <a
+          href={meldung.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="-mb-2.5 mt-0.5 inline-flex min-h-11 items-center text-[13px] font-medium text-text hover:underline"
         >
-          <span className="mb-1 block w-max rounded-[5px] bg-info/15 px-1.5 text-[11px] font-semibold tracking-[0.06em] text-info uppercase">
-            KI-generiert
-          </span>
-          {meldung.zusammenfassung}
-          <br />
-          <a
-            href={meldung.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="-mb-2.5 mt-0.5 inline-flex min-h-11 items-center text-[13px] font-medium text-text hover:underline"
-          >
-            Zum Artikel ↗
-          </a>
-        </div>
-      )}
+          Zum Artikel ↗
+        </a>
+      </div>
     </div>
   );
 }
