@@ -30,6 +30,8 @@ Session vom 2026-11-12 bis 2026-11-15: das erste KI-Feature, als Einschub zwisch
 - [x] `plan-pruefer`: STATUS ERFÜLLT. `/code-review` von PR #61: 10 Funde, 7 behoben (je mit Test), 3 dokumentiert. 257 Tests grün.
 - [x] Aufgabe 8: Abnahme in der Vorschau auf dem iPhone bestanden, PR #61 gemergt.
 - [ ] Aufgabe 8, Schritt 3: dieselbe Prüfung in Production.
+- [x] Übergabe des Ecosystems auf den neuen Stand gebracht (PR #216 im Repo `claude-ecosystem`): KI-Feature bis auf die
+      Evaluation gebaut, eingebunden ist ein lokales Modell, keine API.
 
 ## Entscheidungen
 
