@@ -16,3 +16,8 @@ test("kürzt auf 20.000 Zeichen und merkt sich das", () => {
   expect(artikel?.text.length).toBe(20000);
   expect(artikel?.gekuerzt).toBe(true);
 });
+
+test("Seite ohne Text (Video) ergibt null", () => {
+  const html = "<html><body><h1>Video</h1><video></video></body></html>";
+  expect(leseArtikel(html, "https://www.youtube.com/watch?v=1")).toBeNull();
+});
