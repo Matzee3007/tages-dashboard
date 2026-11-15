@@ -32,7 +32,7 @@ Ein Container auf dem Mac fasst einmal pro Stunde die Meldungen der KI-News zusa
 [[projects/tages-dashboard/docs/plaene/2026-11-15-zusammenfassungen|Plan: Zusammenfassungen erzeugen und zeigen]]:
 
 1. Docker Desktop mit Docker Model Runner 1.2.6 und Docker Compose 5.5.1 waren schon installiert.
-2. Modelle geladen: `ai/qwen3:4b-instruct-2507` (2,5 GB, im Betrieb) und `ai/gemma4:e4b` (6 GB, Kandidat für die Evaluation).
+2. Modelle geladen: `ai/qwen3:4b-instruct-2507` (2,5 GB, im Betrieb) und `ai/gemma4:e4b` (6 GB, Kandidat der Evaluation, danach nicht gewählt).
 3. Dateien im Repo: `compose.yaml` (Dienst `zusammenfassen`, Modell, Secret), `zusammenfassen/Dockerfile` (`node:24-slim`, `npm ci`,
    Start mit `npx tsx zusammenfassen/lauf.ts`), `.dockerignore` (keine `.env*`, `.secrets`, `docs`, `.git` im Image).
 4. Werte über einen Assistenten (Skill `assistent-bauen`): `ZUSAMMENFASSEN_EMAIL` in `.env.local`, das Passwort des Dashboard-Kontos in
@@ -68,7 +68,25 @@ docker run --rm --entrypoint ls tages-dashboard-zusammenfassen -a /app   # was i
 
 Adressen: vom Mac `http://localhost:12434/engines/v1/`, aus dem Compose-Container `http://model-runner.docker.internal/v1/`.
 
-## Bekannte Grenzen
+## Evaluation der Modelle
+
+Am 2026-11-15 nach [[projects/tages-dashboard/docs/plaene/2026-11-15-evaluation|Plan: Evaluation der Zusammenfassungen]]. Vorher den
+Container stoppen, damit nur ein Modell im Speicher liegt:
+
+```bash
+docker compose stop zusammenfassen                     # Container gibt sein Modell frei
+docker model unload --all                              # Speicher leeren
+docker model configure --context-size 8192 <modell>    # wie in compose.yaml
+npx tsx evaluation/texte.ts                            # Artikeltexte einmal holen (evaluation/daten/, nicht im Repo)
+npx tsx evaluation/lauf.ts <modell>                    # ein Modell fasst den Testsatz zusammen
+npx tsx evaluation/urteil.ts                           # blind urteilen, nur in der Terminal-App (braucht Tastatur)
+npx tsx evaluation/auswertung.ts                       # Tabelle je Modell
+docker model unload --all && docker compose up --build -d   # danach Container wieder starten
+```
+
+Gemessen auf dem M5 mit 16 GB, nur `fasseZusammen`: Qwen 3 4B 5,8 bis 56,6 s (Median 16,5 s), Gemma 4 E4B 28,7 bis 83,1 s (Median
+46,3 s). Die Artikel mit 20.000 Zeichen passten bei beiden ins Kontextfenster von 8192.
+
 
 - **Nur ein Modell gleichzeitig:** Auf 16 GB reicht der Speicher nicht für zwei geladene Modelle (siehe Fehler).
 - **Mac aus, keine Zusammenfassung:** Läuft Docker Desktop nicht, bekommen neue Meldungen erst später eine.

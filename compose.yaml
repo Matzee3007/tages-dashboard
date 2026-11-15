@@ -16,7 +16,7 @@ services:
 
 models:
   llm:
-    # Bis zur Evaluation das schnellere Modell aus dem Versuch (Plan 2026-11-15)
+    # Gewählt nach der Evaluation vom 2026-11-15: so gut wie ai/gemma4:e4b, fast dreimal so schnell (ADR 0010)
     model: ai/qwen3:4b-instruct-2507
     context_size: 8192
 

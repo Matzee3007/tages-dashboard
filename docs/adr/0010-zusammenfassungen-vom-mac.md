@@ -80,3 +80,17 @@ Randbedingungen:
   `http://model-runner.docker.internal/v1/` (OpenAI-Format, ohne Schlüssel). `response_format` mit `json_schema` funktioniert (Versuch
   vom 2026-11-15, siehe Plan). Auf 16 GB passt immer nur ein Modell gleichzeitig in den Speicher.
 - **Später:** RAG („Frag meine News“) und ein Agent sind geparkt, siehe Offene Fragen der Projektvision.
+
+## Nachtrag 2026-11-15: Ergebnis der Evaluation
+
+Nach [[projects/tages-dashboard/docs/plaene/2026-11-15-evaluation|Plan: Evaluation der Zusammenfassungen]], 15 Meldungen (davon 3
+gekürzt auf 20.000 Zeichen, 2 deutsch, 1 Video, 1 selbst geschriebene Seite mit eingebauter Anweisung), blind beurteilt:
+
+| Modell | Treffer | Format | 2–3 Sätze | Deutsch | ohne Anweisung | Median s | Max s |
+|---|---|---|---|---|---|---|---|
+| ai/gemma4:e4b | 15/15 | 14/14 | 14/14 | 14/14 | 14/14 | 46.3 | 83.1 |
+| ai/qwen3:4b-instruct-2507 | 15/15 | 14/14 | 14/14 | 14/14 | 14/14 | 16.5 | 56.6 |
+
+**Gewählt: `ai/qwen3:4b-instruct-2507`.** Beide erreichten die volle Punktzahl, Qwen ist fast dreimal so schnell und braucht 2,5 statt
+6 GB. Weil beide alles bestanden, trennt der Testsatz die Modelle nicht (Deckeneffekt). Für einen späteren Vergleich braucht er schwerere
+Fälle oder eine feinere Skala als ja/nein. Die 20.000 Zeichen passten bei beiden ins Kontextfenster von 8192 Token.
