@@ -249,18 +249,18 @@ test("Fehler des Modells ergibt null", async () => {
   `speichereZusammenfassung(client: SupabaseClient, zeile: ZusammenfassungZeile): Promise<void>` (`upsert` auf `link`),
   `durchlauf(client: SupabaseClient, modell: { url: string; name: string }, jetzt: Date): Promise<{ neu: number; ohne: number }>`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests** mit Attrappen für `ladeKiNews`, `ladeArtikel`, `fasseZusammen` und den Supabase-Client:
+- [x] **Schritt 1: Fehlschlagende Tests** mit Attrappen für `ladeKiNews`, `ladeArtikel`, `fasseZusammen` und den Supabase-Client:
   - `"fasst nur Meldungen ohne Zusammenfassung zusammen"`: 3 gezeigte Meldungen, eine hat schon eine → `fasseZusammen` zweimal,
     Ergebnis `{ neu: 2, ohne: 0 }`.
   - `"Meldung ohne Artikel wird übersprungen"`: `ladeArtikel` liefert `null` → kein Modellaufruf, nichts gespeichert, `{ neu: 0, ohne: 1 }`.
   - `"verworfene Antwort wird nicht gespeichert"`: `fasseZusammen` liefert `null` → `upsert` nie aufgerufen.
   - `"Modell nicht erreichbar bricht den Durchlauf ab"`: `fasseZusammen` wirft `TypeError: fetch failed` → `durchlauf` wirft, nichts gespeichert.
-- [ ] **Schritt 2: Test**, erwartet: FAIL.
-- [ ] **Schritt 3: `speicher.ts` und `durchlauf.ts`.** Die Meldungen sind genau die, die `ladeKiNews(ABSENDER, jetzt, "ki-news")` liefert.
+- [x] **Schritt 2: Test**, erwartet: FAIL.
+- [x] **Schritt 3: `speicher.ts` und `durchlauf.ts`.** Die Meldungen sind genau die, die `ladeKiNews(ABSENDER, jetzt, "ki-news")` liefert.
   Die Artikel werden nacheinander zusammengefasst, nicht parallel, weil das Modell auf dem Mac nur eine Anfrage gleichzeitig gut schafft.
   Der Modellname kommt in die Spalte `modell`.
-- [ ] **Schritt 4: Test**, erwartet: PASS.
-- [ ] **Schritt 5: `npm run check`, committen** (`Add summary run over current news`).
+- [x] **Schritt 4: Test**, erwartet: PASS.
+- [x] **Schritt 5: `npm run check`, committen** (`Add summary run over current news`).
 
 ### Aufgabe 5: Container mit Modell und Secret
 

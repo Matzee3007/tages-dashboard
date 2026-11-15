@@ -37,6 +37,7 @@ function client(gespeichert: { link: string; zusammenfassung: string }[]) {
 }
 
 beforeEach(() => {
+  vi.clearAllMocks();
   vi.mocked(ladeKiNews).mockResolvedValue([
     {
       name: "Anthropic",
@@ -68,4 +69,35 @@ test("fasst nur Meldungen ohne Zusammenfassung zusammen", async () => {
     },
     { onConflict: "link" },
   );
+});
+
+test("Meldung ohne Artikel wird übersprungen", async () => {
+  vi.mocked(ladeArtikel).mockResolvedValue(null);
+  const { client: supabase, upsert } = client([]);
+
+  const ergebnis = await durchlauf(supabase, MODELL, JETZT);
+
+  expect(ergebnis).toEqual({ neu: 0, ohne: 3 });
+  expect(fasseZusammen).not.toHaveBeenCalled();
+  expect(upsert).not.toHaveBeenCalled();
+});
+
+test("verworfene Antwort wird nicht gespeichert", async () => {
+  vi.mocked(fasseZusammen).mockResolvedValue(null);
+  const { client: supabase, upsert } = client([]);
+
+  const ergebnis = await durchlauf(supabase, MODELL, JETZT);
+
+  expect(ergebnis).toEqual({ neu: 0, ohne: 3 });
+  expect(upsert).not.toHaveBeenCalled();
+});
+
+test("Modell nicht erreichbar bricht den Durchlauf ab", async () => {
+  vi.mocked(fasseZusammen).mockRejectedValue(new TypeError("fetch failed"));
+  const { client: supabase, upsert } = client([]);
+
+  await expect(durchlauf(supabase, MODELL, JETZT)).rejects.toThrow(
+    "fetch failed",
+  );
+  expect(upsert).not.toHaveBeenCalled();
 });
