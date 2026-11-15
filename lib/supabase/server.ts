@@ -24,3 +24,22 @@ export async function erstelleClient() {
     },
   );
 }
+
+// Für Route Handler, die nur lesen (z. B. /api/kacheln). Cookies schreibt allein proxy.ts, er erneuert die Sitzung.
+export async function erstelleLeseClient() {
+  const cookieStore = await cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      cookieOptions: SUPABASE_COOKIE_OPTIONEN,
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll() {},
+      },
+    },
+  );
+}
