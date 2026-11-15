@@ -109,7 +109,7 @@ Fremde Dienste (spürbar):
 - Ändern `lib/supabase/server.ts`: zweite Funktion `erstelleLeseClient()` für Route Handler.
 - Ändern `lib/kacheln/ki-news/ansicht.tsx`: Zusammenfassung unter dem Titel.
 - Ändern `.gitignore`: `/.secrets/`.
-- Doku: `docs/tools/Docker - Einrichtung.md` neu, `docs/tools/Supabase.md` und `docs/tools/Tools Übersicht.md` ergänzen.
+- Doku: `docs/tools/Docker Model Runner.md` neu, `docs/tools/Supabase.md` und `docs/tools/Tools Übersicht.md` ergänzen.
 
 ## Aufgaben
 
@@ -267,7 +267,7 @@ test("Fehler des Modells ergibt null", async () => {
 **Dateien:**
 - Neu: `zusammenfassen/lauf.ts`, `zusammenfassen/Dockerfile`, `compose.yaml`, `.dockerignore`
 - Ändern: `.gitignore` (`/.secrets/`), `package.json` (`tsx` als devDependency)
-- Doku: `docs/tools/Docker - Einrichtung.md` neu (nach der globalen Regel für Werkzeuge aller Projekte) (Einrichtung, Befehle, Fehler mit Ursache und Lösung), Eintrag in `Tools Übersicht.md`
+- Doku: `docs/tools/Docker Model Runner.md` neu (Einrichtung, Befehle, Fehler mit Ursache und Lösung), Eintrag in `Tools Übersicht.md`
 
 **Schnittstellen:**
 - Nutzt: `durchlauf` (Aufgabe 4).

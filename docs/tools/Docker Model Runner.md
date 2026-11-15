@@ -1,13 +1,13 @@
 ---
-titel: Docker - Einrichtung
+titel: Docker Model Runner
 status: aktiv
 erstellt: 2026-11-15
 tags: [tools, docker, compose, sprachmodell, ki-news]
 ---
 
-# Docker - Einrichtung
+# Docker Model Runner
 
-Wie Docker im Tages-Dashboard eingerichtet ist. Was Docker allgemein ist: [[docs/werkzeuge/Docker|Docker]] im Ecosystem.
+Wie Docker und Docker Model Runner im Tages-Dashboard eingerichtet sind. Was Docker allgemein ist: [[docs/werkzeuge/Docker|Docker]] im Ecosystem.
 Teil der [[projects/tages-dashboard/docs/tools/Tools Übersicht|Tools Übersicht]]. Entscheidung:
 [[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]].
 

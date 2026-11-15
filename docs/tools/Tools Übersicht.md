@@ -32,4 +32,4 @@ alle benutzten Befehle, Fehler.
 | [[projects/tages-dashboard/docs/tools/node-html-parser\|node-html-parser]] | 2026-11-07 | liest Titel, Links und Daten aus Seiten ohne Feed |
 | [[projects/tages-dashboard/docs/tools/ESPN\|ESPN]] | 2026-11-09 | liefert die Bundesliga live: Partien, Torschützen, Logos, Tabelle (inoffiziell) |
 | [[projects/tages-dashboard/docs/tools/OpenLigaDB\|OpenLigaDB]] | 2026-11-09 | liefert den Spielplan für die Nummer des Spieltags |
-| [[docs/werkzeuge/Docker\|Docker]] ([[projects/tages-dashboard/docs/tools/Docker - Einrichtung\|Einrichtung]]) | 2026-11-15 | Container mit lokalem Sprachmodell fasst die KI-News zusammen |
+| [[projects/tages-dashboard/docs/tools/Docker Model Runner\|Docker Model Runner]] (zu [[docs/werkzeuge/Docker\|Docker]]) | 2026-11-15 | Container mit lokalem Sprachmodell fasst die KI-News zusammen |
