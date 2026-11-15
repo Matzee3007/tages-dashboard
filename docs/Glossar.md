@@ -58,8 +58,16 @@ Ein Ort, an dem ein Absender regelmäßig veröffentlicht, z. B. ein Feed oder e
 _Nicht verwenden_: Quelle, Plattform
 
 **Meldung**:
-Ein einzelner Eintrag eines Absenders mit Titel, Alter und Link zum Original.
-_Nicht verwenden_: Artikel, Post, News (für den einzelnen Eintrag)
+Ein einzelner Eintrag eines Absenders mit Titel, Alter und Link zum Artikel.
+_Nicht verwenden_: Post, News (für den einzelnen Eintrag)
+
+**Artikel**:
+Der verlinkte Originaltext einer Meldung auf der Website des Absenders. Ein Video hat keinen Artikel.
+_Nicht verwenden_: Meldung (für den Originaltext), Beitrag
+
+**Zusammenfassung**:
+Ein kurzer, KI-generierter Text zu einer Meldung, erzeugt aus ihrem Artikel. Eine Meldung hat höchstens eine.
+_Nicht verwenden_: Summary, Überblick, Anreißer
 
 ## Schritte
 
