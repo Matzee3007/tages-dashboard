@@ -109,7 +109,7 @@ Fremde Dienste (spürbar):
 - Ändern `lib/supabase/server.ts`: zweite Funktion `erstelleLeseClient()` für Route Handler.
 - Ändern `lib/kacheln/ki-news/ansicht.tsx`: Zusammenfassung unter dem Titel.
 - Ändern `.gitignore`: `/.secrets/`.
-- Doku: `docs/tools/Docker Model Runner.md` neu, `docs/tools/Supabase.md` und `docs/tools/Tools Übersicht.md` ergänzen.
+- Doku: `docs/tools/Docker - Einrichtung.md` neu, `docs/tools/Supabase.md` und `docs/tools/Tools Übersicht.md` ergänzen.
 
 ## Aufgaben
 

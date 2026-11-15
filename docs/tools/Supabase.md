@@ -88,6 +88,9 @@ Aus dem `/code-review` von PR #12, bewusst nicht behoben:
 - **`secure` hängt an `NODE_ENV`:** Ein Produktions-Build über `http://` (`npm start`, auch im Heimnetz vom iPhone) setzt
   Cookies, die der Browser ablehnt. Das Passwort scheint zu stimmen, man landet aber wieder auf `/login`. Lokal mit
   `npm run dev` testen.
+- **Lese-Client verwirft neue Tokens** (`/code-review` von PR #61, bewusst offen): `erstelleLeseClient` schreibt keine Cookies. Läuft
+  der Access Token genau zwischen `proxy.ts` und der Abfrage in `/api/kacheln` ab, gehen die erneuerten Tokens verloren. Sehr
+  unwahrscheinlich, weil `proxy.ts` Millisekunden vorher erneuert. Folge wäre eine Abmeldung.
 - **Doppelter Aufruf:** `proxy.ts` und `lib/supabase/server.ts` rufen beide `createServerClient` auf, und `NEXT_PUBLIC_` wäre
   ohne Browser-Code unnötig. Kostet nur Pflege.
 
