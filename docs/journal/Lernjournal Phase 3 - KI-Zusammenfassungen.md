@@ -68,7 +68,7 @@ Abend-Session vom 2026-11-15:
 | Bauen | `@types/jsdom` 30.0.0 als devDependency ohne Rückfrage | `npm run check` scheiterte ohne Typen für `jsdom` | Entwickler |
 | Bauen | Tool-Notiz heißt `docs/tools/Docker Model Runner.md`, nicht `Docker - Einrichtung.md` nach der globalen Regel | Wunsch des Entwicklers | Entwickler |
 | Prüfen | Evaluation mit festem Testsatz, blind beurteilt, Treffer heißt Urteil „ja“, beim Video „keine Zusammenfassung“ | [[projects/tages-dashboard/docs/plaene/2026-11-15-evaluation\|Plan der Evaluation]], Liste „Aufgetaucht“ bestätigt | Entwickler |
-| Prüfen | Testsatz ohne OpenAI (Cloudflare-Sperre), Karpathy aus dem Archiv, Seite mit Anweisung selbst geschrieben | Keine aktuelle Karpathy-Meldung, OpenAI liefert keinen Text | ungefragt |
+| Prüfen | Testsatz ohne OpenAI (Cloudflare-Sperre), Karpathy aus dem Archiv, Seite mit Anweisung selbst geschrieben | Keine aktuelle Karpathy-Meldung, OpenAI liefert keinen Text | Entwickler (nachträglich bestätigt am 2026-11-16) |
 | Technik | Qwen 3 4B bleibt das Modell | Gleich gut wie Gemma (15/15), fast dreimal so schnell. Nachtrag in ADR 0010 | Entwickler |
 | Prüfen | Review-Funde von PR #64: 1+7, 2, 3, 4, 6, 8, 10 behoben, 5 und 9 bewusst offen | Abwägung in der Session | Entwickler |
 | Produkt | Lokale KI auch für die Fußball-Kacheln (z. B. Spielbericht aus dem Liveticker), nach Phase 3, Schritt 2 | Wunsch des Entwicklers, Parkplatz in der Projektvision | Entwickler |
