@@ -261,7 +261,12 @@ Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
   „Tabelle gerade nicht erreichbar“.
 - **Sport als Gruppe** (Glossar): Die Fußball-Kacheln bleiben eigenständige Kacheln (Architekturprinzip 3), stehen aber sichtbar zusammen
   unter „Sport“.
-- **Plätze der Linien** stehen je Wettbewerb in der Einstellungsdatei im Code und werden zu jeder Saison von Hand geprüft.
+- **Plätze der Linien** stehen je Wettbewerb in der Einstellungsdatei im Code und werden zu jeder Saison von Hand geprüft. Sie zeigen
+  die Grundverteilung, für 2026/27 geprüft am 2026-11-16: Bundesliga nach 4, 5, 6, 15, 16, Premier League nach 4, 5, 6, 17, Champions
+  League nach 8 und 24. Verschieben Pokalsieger oder ein Zusatzplatz der UEFA-Wertung die Plätze, wird das am Saisonende von Hand
+  nachgetragen. Quellen: [Bundesliga 2026/27](https://wiki.krisyotam.com/content/wikipedia_en_all_nopic_2026-03/2026%E2%80%9327_Bundesliga),
+  [Premier League](https://www.fourfourtwo.com/competition/how-many-european-places-does-the-premier-league-get),
+  [Champions League](https://www.foxsports.com/stories/soccer/champions-league-who-is-in-the-round-of-16-who-heads-to-playoffs-who-is-out).
 - **Quelle** festgehalten in [[projects/tages-dashboard/docs/adr/0011-pl-und-cl-von-espn-und-football-data|ADR 0011]].
 - **Neues Aussehen für das ganze Dashboard:** Die Darstellung wirkt dem Entwickler zu eintönig, vor allem die Absender der KI-News sind
   nicht eindeutig voneinander getrennt. Das Aussehen wird einmal für alles neu gestaltet, mit Gruppe Sport und Linien in den Tabellen,
