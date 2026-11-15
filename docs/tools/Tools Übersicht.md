@@ -33,3 +33,4 @@ alle benutzten Befehle, Fehler.
 | [[projects/tages-dashboard/docs/tools/ESPN\|ESPN]] | 2026-11-09 | liefert die Bundesliga live: Partien, Torschützen, Logos, Tabelle (inoffiziell) |
 | [[projects/tages-dashboard/docs/tools/OpenLigaDB\|OpenLigaDB]] | 2026-11-09 | liefert den Spielplan für die Nummer des Spieltags |
 | [[projects/tages-dashboard/docs/tools/Docker Model Runner\|Docker Model Runner]] (zu [[docs/werkzeuge/Docker\|Docker]]) | 2026-11-15 | Container mit lokalem Sprachmodell fasst die KI-News zusammen |
+| [[projects/tages-dashboard/docs/tools/football-data.org\|football-data.org]] | 2026-11-16 | liefert Spieltag und Tabelle von Premier League und Champions League |
