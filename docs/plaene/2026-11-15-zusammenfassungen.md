@@ -124,7 +124,7 @@ Fremde Dienste (spürbar):
   `leseArtikel(html: string, url: string): ArtikelText | null`,
   `ladeArtikel(url: string): Promise<ArtikelText | null>` (Abruf mit `AbortSignal.timeout(10000)` und `User-Agent: Tages-Dashboard`).
 
-- [ ] **Schritt 1: `npm install @mozilla/readability@0.6.0` und fehlschlagende Tests schreiben**
+- [x] **Schritt 1: `npm install @mozilla/readability@0.6.0` und fehlschlagende Tests schreiben**
 
 ```ts
 test("löst den Haupttext heraus und lässt Menü und Fußzeile weg", () => {
@@ -152,12 +152,12 @@ test("ein hängender Abruf ergibt nach dem Zeitlimit null", async () => {
 });
 ```
 
-- [ ] **Schritt 2: `npx vitest run __tests__/zusammenfassen-artikel.test.ts`**, erwartet: FAIL, das Modul fehlt.
-- [ ] **Schritt 3: `leseArtikel` und `ladeArtikel` in `lib/zusammenfassen/artikel.ts`.** `jsdom` erzeugt das Dokument, Readability
+- [x] **Schritt 2: `npx vitest run __tests__/zusammenfassen-artikel.test.ts`**, erwartet: FAIL, das Modul fehlt.
+- [x] **Schritt 3: `leseArtikel` und `ladeArtikel` in `lib/zusammenfassen/artikel.ts`.** `jsdom` erzeugt das Dokument, Readability
   liefert `textContent`. Leer oder unter 200 Zeichen gilt als kein Artikel. `ladeArtikel` fängt Fehler und Status ungleich 200 ab und
   liefert dann `null`.
-- [ ] **Schritt 4: Test erneut**, erwartet: PASS.
-- [ ] **Schritt 5: `npm run check`, dann committen** (`Add article text extraction for summaries`).
+- [x] **Schritt 4: Test erneut**, erwartet: PASS.
+- [x] **Schritt 5: `npm run check`, dann committen** (`Add article text extraction for summaries`).
 
 ### Aufgabe 2: Modell fragen und Antwort prüfen
 

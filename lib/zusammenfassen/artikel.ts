@@ -20,3 +20,23 @@ export function leseArtikel(html: string, url: string): ArtikelText | null {
     gekuerzt: text.length > MAX_ARTIKEL_ZEICHEN,
   };
 }
+
+const ABRUF_ZEITLIMIT_MS = 10000;
+
+// Jeder Fehler (Zeitlimit, Netz, Status) heißt: diesmal keine Zusammenfassung, der nächste Durchlauf versucht es neu.
+export async function ladeArtikel(url: string): Promise<ArtikelText | null> {
+  try {
+    const antwort = await fetch(url, {
+      headers: { "User-Agent": "Tages-Dashboard" },
+      signal: AbortSignal.timeout(ABRUF_ZEITLIMIT_MS),
+    });
+    if (!antwort.ok) {
+      console.error(`Artikel ${url}: Status ${antwort.status}`);
+      return null;
+    }
+    return leseArtikel(await antwort.text(), url);
+  } catch (fehler) {
+    console.error(`Artikel ${url} ließ sich nicht laden:`, fehler);
+    return null;
+  }
+}
