@@ -9,3 +9,10 @@ test("löst den Haupttext heraus und lässt Menü und Fußzeile weg", () => {
   expect(artikel?.text).not.toContain("Impressum");
   expect(artikel?.gekuerzt).toBe(false);
 });
+
+test("kürzt auf 20.000 Zeichen und merkt sich das", () => {
+  const html = `<article><p>${"Wort ".repeat(6000)}</p></article>`;
+  const artikel = leseArtikel(html, "https://example.org/a");
+  expect(artikel?.text.length).toBe(20000);
+  expect(artikel?.gekuerzt).toBe(true);
+});
