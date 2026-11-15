@@ -189,3 +189,25 @@ test("die Zusammenfassung erscheint erst nach Tipp auf KI, markiert als KI-gener
     screen.getByRole("button", { name: "KI-Zusammenfassung zuklappen" }),
   ).toBeTruthy();
 });
+
+test("HTML in der Zusammenfassung erscheint als Text, nicht als HTML", () => {
+  const { container } = render(
+    <KiNewsAnsicht daten={mitZusammenfassung("<b>fett</b><img src=x>")} />,
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "KI-Zusammenfassung aufklappen" }),
+  );
+
+  expect(screen.getByText("<b>fett</b><img src=x>")).toBeTruthy();
+  expect(container.querySelector("b")).toBeNull();
+  expect(container.querySelector("img")).toBeNull();
+});
+
+test("eine Meldung ohne Zusammenfassung hat keinen Knopf und keine Markierung", () => {
+  render(<KiNewsAnsicht daten={DATEN} />);
+
+  expect(
+    screen.queryByRole("button", { name: /KI-Zusammenfassung/ }),
+  ).toBeNull();
+  expect(screen.queryByText("KI-generiert")).toBeNull();
+});

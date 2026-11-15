@@ -326,17 +326,18 @@ docker history --no-trunc tages-dashboard-zusammenfassen | grep -ci passwort   #
 - Ändern: `lib/kacheln/ki-news/ansicht.tsx`
 - Test: `__tests__/ki-news-ansicht.test.tsx`
 
-- [ ] **Schritt 1: Mock** mit dem Agent `mock-bauer`: Varianten für Zusammenfassung immer sichtbar oder aufklappbar, mit Markierung
-  „KI-generiert“, iPhone-Breite, hell und dunkel. **Der Entwickler gibt eine Variante frei.**
-- [ ] **Schritt 2: Fehlschlagende Tests:**
+- [x] **Schritt 1: Mock** mit dem Agent `mock-bauer`: Varianten für Zusammenfassung immer sichtbar oder aufklappbar, mit Markierung
+  „KI-generiert“, iPhone-Breite, hell und dunkel. **Der Entwickler gibt eine Variante frei.** Freigegeben am 2026-11-15: Variante B, aufklappbar mit Knopf „KI“, darunter
+  „Zum Artikel ↗“. Punkt und Titel öffnen das Original, das Alter ist in diesen Zeilen kein Link mehr.
+- [x] **Schritt 2: Fehlschlagende Tests:**
   - `"zeigt die Zusammenfassung mit Markierung KI-generiert"`: `screen.getByText("Eins.")` und `screen.getByText(/KI-generiert/)`.
   - `"zeigt HTML im Text als Text"`: Zusammenfassung `"<b>fett</b>"` → `screen.getByText("<b>fett</b>")`, `container.querySelector("b")`
     ist `null`.
   - `"ohne Zusammenfassung keine Markierung"`: `screen.queryByText(/KI-generiert/)` ist `null`.
-- [ ] **Schritt 3: Test**, erwartet: FAIL.
-- [ ] **Schritt 4: Umsetzen nach der freigegebenen Variante.**
-- [ ] **Schritt 5: Test**, erwartet: PASS.
-- [ ] **Schritt 6: `npm run check`, committen** (`Show summaries in news tile`).
+- [x] **Schritt 3: Test**, erwartet: FAIL.
+- [x] **Schritt 4: Umsetzen nach der freigegebenen Variante.**
+- [x] **Schritt 5: Test**, erwartet: PASS.
+- [x] **Schritt 6: `npm run check`, committen** (`Show summaries in news tile`).
 
 ### Aufgabe 8: Abnahme online
 
