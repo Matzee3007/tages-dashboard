@@ -61,7 +61,7 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 | Login und Datenbank | Supabase (Auth, Postgres) |
 | Hosting | Vercel (kostenloser Tarif) |
 | Tests und Qualität | Vitest, Testing Library, ESLint, Prettier |
-| Sportdaten | ESPN (inoffiziell, Bundesliga und NFL), football-data.org, Jolpica, OpenF1 |
+| Sportdaten | ESPN (inoffiziell, Bundesliga, Premier League, Champions League und NFL), football-data.org (Spieltag und Tabelle von PL und CL), Jolpica, OpenF1 |
 | News | RSS- und Atom-Feeds (`fast-xml-parser`), selbst ausgelesene Seiten |
 | Schritte | iPhone-Kurzbefehl → eigene Schnittstelle der App |
 | Zusammenfassungen | lokales Sprachmodell auf dem Mac über Docker Model Runner, Skript in Docker Compose ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac\|ADR 0010]]) |
@@ -108,7 +108,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 - [x] **Phase 2 – KI-News:** Feeds und selbst ausgelesene Seiten von Anthropic, Claude Updates, OpenAI, Google DeepMind,
   Karpathy, Matt Pocock und Fachseiten in einer Kachel mit einem Abschnitt pro Absender
 - [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (ESPN), Premier League und Champions League
-  (football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
+  (ESPN und football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
 - [x] **Einschub – KI-Feature:** Zusammenfassung je Meldung der KI-News mit einem lokalen Sprachmodell
   ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]), in drei Stufen: erster Modellaufruf, Evaluation mit
   Testsatz, Structured Output. Phase 3, Schritt 2 ruht so lange.
@@ -219,7 +219,7 @@ Entscheidungen aus der Befragung vom 2026-11-04:
 1. **Bundesliga (ESPN, [[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]])** (erledigt 2026-11-09, PR #49, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-08-bundesliga|Plan]]): Spieltag und Tabelle, Mein Team hervorgehoben. Die erste Sport-Kachel legt das
    Muster für die anderen fest.
-2. **Premier League und Champions League (football-data.org):** API-Schlüssel auf dem Server, Zwischenspeicher
+2. **Premier League und Champions League (ESPN und football-data.org, ADR 0011):** API-Schlüssel auf dem Server, Zwischenspeicher
    für die Grenze von 10 Abrufen pro Minute.
 3. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
 4. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
@@ -243,6 +243,31 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 - **Torschützen:** eine graue Zeile unter jeder Partie mit Toren, Tore beider Teams nach Minute, z. B. `García 7' · Schick 85'`.
 - **Logos:** rund 20 px vor dem Teamnamen, der Browser lädt sie direkt beim Anbieter. Fehlt ein Bild, bleibt der Platz leer.
 - **NFL** bleibt Schritt 4, zuerst mit einem Testabruf vom Server bei Vercel aus.
+
+Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
+
+- **Quelle für Premier League und Champions League:** Partien, Live-Stand und Torschützen von ESPN (`eng.1`, `uefa.champions`),
+  Nummer des Spieltags und Tabelle von football-data.org (Gratis-Tarif `TIER_ONE` deckt beide ab, geprüft am 2026-11-15). Die
+  Bundesliga bleibt bei ESPN mit OpenLigaDB ([[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]).
+- **Reihenfolge:** Bundesliga, Premier League, Champions League, KI-News.
+- **Champions League zeigt alle Partien** des Spieltags (18 an zwei Abenden), Torschützen wie in der Bundesliga.
+- **Tabelle mit Linien** an den Grenzen, die über das Weiterkommen entscheiden, in allen Ligen: Champions League nach Platz 8 und 24,
+  Bundesliga und Premier League an den Plätzen für Champions League, Europa League, Conference League und Abstieg. Eine Linie erscheint
+  nur, wenn beide Nachbarplätze im Ausschnitt stehen. Gilt auch für die schon gebaute Bundesliga.
+- **Tabelle verzögert:** Der Spielstand ist live (ESPN), die Tabelle von football-data.org zieht nach.
+- **Teams zusammenführen:** je Wettbewerb eine Liste im Code mit id bei ESPN, id bei football-data.org und deutschem Kurznamen, wie
+  `TEAMNAMEN` der Bundesliga. Fehlt ein Eintrag, steht der Name von ESPN da.
+- **football-data.org fällt aus:** Partien und Live-Stand kommen weiter, der Spieltag erscheint ohne Nummer, statt der Tabelle die Zeile
+  „Tabelle gerade nicht erreichbar“.
+- **Sport als Gruppe** (Glossar): Die Fußball-Kacheln bleiben eigenständige Kacheln (Architekturprinzip 3), stehen aber sichtbar zusammen
+  unter „Sport“.
+- **Plätze der Linien** stehen je Wettbewerb in der Einstellungsdatei im Code und werden zu jeder Saison von Hand geprüft.
+- **Quelle** festgehalten in [[projects/tages-dashboard/docs/adr/0011-pl-und-cl-von-espn-und-football-data|ADR 0011]].
+- **Neues Aussehen für das ganze Dashboard:** Die Darstellung wirkt dem Entwickler zu eintönig, vor allem die Absender der KI-News sind
+  nicht eindeutig voneinander getrennt. Das Aussehen wird einmal für alles neu gestaltet, mit Gruppe Sport und Linien in den Tabellen,
+  vorher ein Mock mit Varianten zur Freigabe.
+- **Aufteilung in PRs:** 1. Premier League mit football-data.org (Schlüssel, Zwischenspeicher) und dem Herausziehen des Gemeinsamen der
+  Sport-Kacheln, davor den Skill `codebase-design` holen und lesen. 2. Champions League (anderer Kalender, 36 Teams). 3. Neues Aussehen.
 - **Spieltag aus Kalendertagen:** Aufeinanderfolgende Tage mit Spielen bei ESPN bilden einen Spieltag, ein Tag ohne Spiel trennt.
 - **Nummer und Datum über dem Spieltag,** z. B. `9. Spieltag · Fr 6. – So 8. November`. ESPN kennt keine Nummer, sie kommt aus dem
   Spielplan der Saison bei OpenLigaDB (`getmatchdata/bl1/<Saison>`, passende Tage). Fehlt sie, stehen nur die Tage da.
@@ -289,6 +314,8 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 - Parkplatz: RAG „Frag meine News“ (erst passende Zusammenfassungen suchen, dann antworten lassen). Wieder aufgreifen, wenn Stufe 3 des
   KI-Features zwei Wochen im Alltag läuft.
 - Parkplatz: Agent mit Werkzeugen für die KI-News. Wieder aufgreifen, wenn Stufe 3 des KI-Features zwei Wochen im Alltag läuft.
+- Parkplatz: K.-o.-Phase der Champions League (Hin- und Rückspiel, keine Tabelle). Wieder aufgreifen, wenn die Ligaphase endet
+  (27. Januar 2027).
 - Parkplatz: Lokale KI für die Fußball-Kacheln, z. B. ein deutscher Spielbericht nach Abpfiff aus dem englischen Liveticker von ESPN
   (`summary?event=…` liefert `commentary` und `keyEvents`, aber keinen Bericht, gesehen am 2026-11-15 an Köln gegen Leverkusen). Wunsch
   des Entwicklers vom 2026-11-15. Wieder aufgreifen, wenn Phase 3, Schritt 2 (Premier League und Champions League) fertig ist, dann mit

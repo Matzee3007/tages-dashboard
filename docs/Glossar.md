@@ -23,6 +23,11 @@ Ein Teilbereich innerhalb einer Kachel, z. B. Spieltag und Tabelle einer Sport-K
 KI-News-Kachel.
 _Nicht verwenden_: kleine Kachel, Unterkachel, Untereinheit
 
+**Gruppe**:
+Mehrere Kacheln, die sichtbar unter einer gemeinsamen Überschrift stehen, z. B. die Gruppe Sport mit Bundesliga, Premier League und
+Champions League. Jede Kachel darin bleibt eigenständig. Die KI-News stehen ohne Gruppe.
+_Nicht verwenden_: große Kachel, Bereich, Kategorie
+
 ## Sport
 
 **Wettbewerb**:
@@ -40,6 +45,11 @@ Die aktuelle Runde eines Wettbewerbs mit allen Partien, auch wenn sie nicht heut
 die Woche, in der Formel 1 das Rennwochenende. Ein Spieltag bleibt bis Mitternacht (deutsche Zeit) des Tages nach seinem letzten
 Spiel aktuell, danach ist es der nächste.
 _Nicht verwenden_: Matchday, Runde, heute
+
+**Ligaphase**:
+Der erste Teil der Champions League bis Ende Januar: 36 Teams in einer gemeinsamen Tabelle, 8 Spieltage. Danach folgt die K.-o.-Phase
+mit Hin- und Rückspiel und ohne Tabelle.
+_Nicht verwenden_: Gruppenphase, Vorrunde
 
 **Nachholspiel**:
 Eine Partie, die nach ihrem Spieltag gespielt wird, weil sie verlegt wurde. Liegen alle Partien eines Spieltags in einem
