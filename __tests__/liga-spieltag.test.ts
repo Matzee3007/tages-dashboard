@@ -1,12 +1,12 @@
 // @vitest-environment node
 import { expect, test } from "vitest";
-import type { Partie, TabellenZeile } from "@/lib/kacheln/bundesliga/typen";
+import type { Partie, TabellenZeile } from "@/lib/kacheln/liga/typen";
 import {
   sortierePartien,
   tabellenAusschnitt,
   spieltagTitel,
   waehleSpieltag,
-} from "@/lib/kacheln/bundesliga/spieltag";
+} from "@/lib/kacheln/liga/spieltag";
 
 const TAGE = [
   "2026-11-06",

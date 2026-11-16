@@ -179,7 +179,7 @@ test("zeigt die Bundesliga-Kachel", async () => {
         titel: "Bundesliga",
         status: "ok",
         daten: {
-          art: "bundesliga",
+          art: "liga",
           titel: "9. Spieltag",
           tage: ["2026-11-08"],
           partien: [],

@@ -2,52 +2,63 @@ import type { SeitenArt } from "@/lib/kacheln/ki-news/seiten";
 
 export type KiNewsEinstellung = { id: string; art: "ki-news"; titel: string };
 
+// Ein Team mit id bei ESPN, id bei football-data.org (falls die Liga sie braucht) und deutschem Kurznamen.
+export type Team = { espn: string; footballData?: number; name: string };
+
+// Eine Fußball-Liga: Partien immer von ESPN, Spielplan (Nummer des Spieltags) und Tabelle je nach Quelle (ADR 0011).
 // meinTeam: ids der Teams bei ESPN (Glossar: Mein Team).
-export type BundesligaEinstellung = {
+export type LigaEinstellung = {
   id: string;
-  art: "bundesliga";
+  art: "liga";
   titel: string;
+  espn: "ger.1" | "eng.1";
+  spielplan:
+    | { art: "openligadb"; liga: "bl1" }
+    | { art: "football-data"; wettbewerb: "PL" };
+  tabelle: { art: "espn" } | { art: "football-data"; wettbewerb: "PL" };
+  teams: Team[];
   meinTeam: string[];
 };
 
-export type KachelEinstellung = KiNewsEinstellung | BundesligaEinstellung;
+export type KachelEinstellung = KiNewsEinstellung | LigaEinstellung;
 
-// Ein Team mit id bei ESPN, id bei football-data.org (falls die Liga sie braucht) und deutschem Kurznamen.
-export type Team = { espn: string; footballData?: number; name: string };
+// Teams der Bundesliga mit deutschem Kurznamen nach der id von ESPN, Saison 2026/27 (Projektvision, Phase 3).
+export const TEAMS_BUNDESLIGA: Team[] = [
+  { espn: "132", name: "Bayern" },
+  { espn: "124", name: "Dortmund" },
+  { espn: "11420", name: "Leipzig" },
+  { espn: "126", name: "Freiburg" },
+  { espn: "131", name: "Leverkusen" },
+  { espn: "137", name: "Bremen" },
+  { espn: "10388", name: "Elversberg" },
+  { espn: "134", name: "Stuttgart" },
+  { espn: "125", name: "Frankfurt" },
+  { espn: "127", name: "HSV" },
+  { espn: "2950", name: "Mainz" },
+  { espn: "3307", name: "Paderborn" },
+  { espn: "3841", name: "Augsburg" },
+  { espn: "7911", name: "Hoffenheim" },
+  { espn: "122", name: "Köln" },
+  { espn: "598", name: "Union" },
+  { espn: "133", name: "Schalke" },
+  { espn: "268", name: "Gladbach" },
+];
 
 // Die Reihenfolge hier ist die Reihenfolge auf dem Bildschirm.
 export const KACHELN: KachelEinstellung[] = [
   // 132 ist der FC Bayern bei ESPN.
   {
     id: "bundesliga",
-    art: "bundesliga",
+    art: "liga",
     titel: "Bundesliga",
+    espn: "ger.1",
+    spielplan: { art: "openligadb", liga: "bl1" },
+    tabelle: { art: "espn" },
+    teams: TEAMS_BUNDESLIGA,
     meinTeam: ["132"],
   },
   { id: "ki-news", art: "ki-news", titel: "KI-News" },
 ];
-
-// Deutsche Kurznamen der Bundesliga nach der id von ESPN, Saison 2026/27 (Projektvision, Phase 3).
-export const TEAMNAMEN: Record<string, string> = {
-  "132": "Bayern",
-  "124": "Dortmund",
-  "11420": "Leipzig",
-  "126": "Freiburg",
-  "131": "Leverkusen",
-  "137": "Bremen",
-  "10388": "Elversberg",
-  "134": "Stuttgart",
-  "125": "Frankfurt",
-  "127": "HSV",
-  "2950": "Mainz",
-  "3307": "Paderborn",
-  "3841": "Augsburg",
-  "7911": "Hoffenheim",
-  "122": "Köln",
-  "598": "Union",
-  "133": "Schalke",
-  "268": "Gladbach",
-};
 
 export type SeitenEinstellung = { url: string; art: SeitenArt };
 

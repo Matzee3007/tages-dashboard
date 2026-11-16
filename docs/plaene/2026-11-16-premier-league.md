@@ -125,6 +125,9 @@ OpenLigaDB (356 KB), der seit 2026-11-09 gespeichert läuft.
 
 Reiner Umbau ohne neues Verhalten. Riskant, weil die laufende Bundesliga betroffen ist, deshalb vor der Premier League.
 
+**Abweichung (2026-11-16):** `tabelle` bleibt hier noch ohne `null`, sonst bräuchte die Ansicht ungetestetes Verhalten. `null`
+kommt mit Aufgabe 4, die deshalb vor Aufgabe 3 läuft.
+
 **Dateien:**
 - Umzug: `lib/kacheln/bundesliga/*` → `lib/kacheln/liga/*`, `__tests__/bundesliga-*` → `__tests__/liga-*` (mit `git mv`)
 - Neu: `lib/kacheln/liga/abruf.ts`
@@ -144,13 +147,13 @@ Reiner Umbau ohne neues Verhalten. Riskant, weil die laufende Bundesliga betroff
   - `leseTag(json, jetzt, teams: Team[])` und `leseTabelle(json, teams: Team[])` in `espn.ts`: Name aus `teams`, sonst ESPN.
   - ESPN-Adressen aus `einstellung.espn` statt fest `ger.1`.
 
-- [ ] **Schritt 1: Tests umziehen und auf die neuen Namen bringen** (`ladeLiga`, Art `liga`, Einstellung mit `espn: "ger.1"`,
+- [x] **Schritt 1: Tests umziehen und auf die neuen Namen bringen** (`ladeLiga`, Art `liga`, Einstellung mit `espn: "ger.1"`,
   `spielplan: { art: "openligadb", liga: "bl1" }`, `tabelle: { art: "espn" }`, `teams: TEAMS_BUNDESLIGA`). Neuer Test in
   `liga-laden.test.ts`: Einstellung mit `espn: "eng.1"` ruft `…/soccer/eng.1/scoreboard` ab.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen** (Module unter `lib/kacheln/liga/` fehlen)
-- [ ] **Schritt 3: Code umziehen und umbenennen** wie unter „Liefert“. Erwartete Werte der alten Tests bleiben unverändert.
-- [ ] **Schritt 4: `npm test`, alle müssen bestehen** (bisher 266 Tests, dazu der neue)
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen** (Module unter `lib/kacheln/liga/` fehlen)
+- [x] **Schritt 3: Code umziehen und umbenennen** wie unter „Liefert“. Erwartete Werte der alten Tests bleiben unverändert.
+- [x] **Schritt 4: `npm test`, alle müssen bestehen** (bisher 266 Tests, dazu der neue)
+- [x] **Schritt 5: Prüfen und committen**
 
   ```bash
   npm run check

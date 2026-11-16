@@ -1,10 +1,10 @@
 import { Abschnitt } from "@/lib/kacheln/kachel";
 import type {
-  BundesligaDaten,
+  LigaDaten,
   Partie,
   TabellenZeile,
   TeamStand,
-} from "@/lib/kacheln/bundesliga/typen";
+} from "@/lib/kacheln/liga/typen";
 import { anstossText, tageText } from "@/lib/zeit";
 
 const MEIN_TEAM_STIL =
@@ -151,7 +151,7 @@ function TabellenZeilen({
   );
 }
 
-export function BundesligaAnsicht({ daten }: { daten: BundesligaDaten }) {
+export function LigaAnsicht({ daten }: { daten: LigaDaten }) {
   const tage = daten.tage.length > 0 ? tageText(daten.tage) : "";
   const ueberschrift = [daten.titel, tage].filter(Boolean).join(" · ");
   return (

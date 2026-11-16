@@ -1,9 +1,9 @@
-import { TEAMNAMEN } from "@/lib/einstellungen";
+import type { Team } from "@/lib/einstellungen";
 import type {
   Partie,
   TabellenZeile,
   TeamStand,
-} from "@/lib/kacheln/bundesliga/typen";
+} from "@/lib/kacheln/liga/typen";
 
 // Liest die inoffizielle Schnittstelle von ESPN (ADR 0009). Felder laut Antworten vom 2026-11-08.
 
@@ -46,18 +46,22 @@ type EspnPartie = {
   competitions?: { competitors?: EspnTeam[]; details?: EspnDetail[] }[];
 };
 
-function teamName(id: string, espnName: string): string {
-  const name = TEAMNAMEN[id];
+function teamName(id: string, espnName: string, teams: Team[]): string {
+  const name = teams.find((team) => team.espn === id)?.name;
   if (name) return name;
   console.error(`Team ${id} fehlt in der Namensliste`);
   return espnName;
 }
 
-function teamStand(roh: EspnTeam | undefined, angepfiffen: boolean): TeamStand {
+function teamStand(
+  roh: EspnTeam | undefined,
+  angepfiffen: boolean,
+  teams: Team[],
+): TeamStand {
   const id = roh?.team?.id ?? falscheForm();
   return {
     id,
-    name: teamName(id, roh?.team?.shortDisplayName ?? ""),
+    name: teamName(id, roh?.team?.shortDisplayName ?? "", teams),
     logo: roh?.team?.logo ?? null,
     tore: angepfiffen ? Number(roh?.score ?? 0) : null,
   };
@@ -74,12 +78,11 @@ function torText(detail: EspnDetail): string {
   return `${name} ${minute}${zusatz}`;
 }
 
-export function leseTag(json: unknown, jetzt: Date): Partie[] {
+export function leseTag(json: unknown, jetzt: Date, teams: Team[]): Partie[] {
   const partien = (json as { events?: EspnPartie[] })?.events;
   if (!Array.isArray(partien)) falscheForm();
   return partien.map((roh) => {
     const wettkampf = roh.competitions?.[0];
-    const teams = wettkampf?.competitors ?? [];
     const anstoss = roh.date ?? falscheForm();
     const zustand = roh.status?.type?.state;
     // ESPN meldet den Anpfiff manchmal verspätet: pre nach dem Anstoß zählt schon als laufend.
@@ -98,12 +101,14 @@ export function leseTag(json: unknown, jetzt: Date): Partie[] {
       status,
       minute: zustand === "in" ? (roh.status?.displayClock ?? null) : null,
       heim: teamStand(
-        teams.find((t) => t.homeAway === "home"),
+        roh.competitions?.[0]?.competitors?.find((t) => t.homeAway === "home"),
         angepfiffen,
+        teams,
       ),
       gast: teamStand(
-        teams.find((t) => t.homeAway === "away"),
+        roh.competitions?.[0]?.competitors?.find((t) => t.homeAway === "away"),
         angepfiffen,
+        teams,
       ),
       tore: (wettkampf?.details ?? [])
         .filter((detail) => detail.scoringPlay)
@@ -122,7 +127,7 @@ type EspnTabellenEintrag = {
 };
 
 // Nach Platz sortiert, weil die Reihenfolge der Antwort nicht dokumentiert ist.
-export function leseTabelle(json: unknown): TabellenZeile[] {
+export function leseTabelle(json: unknown, teams: Team[]): TabellenZeile[] {
   const eintraege = (
     json as { children?: { standings?: { entries?: EspnTabellenEintrag[] } }[] }
   )?.children?.[0]?.standings?.entries;
@@ -135,7 +140,7 @@ export function leseTabelle(json: unknown): TabellenZeile[] {
       return {
         platz: wert("rank"),
         id,
-        name: teamName(id, eintrag.team?.shortDisplayName ?? ""),
+        name: teamName(id, eintrag.team?.shortDisplayName ?? "", teams),
         logo: eintrag.team?.logos?.[0]?.href ?? null,
         spiele: wert("gamesPlayed"),
         differenz: wert("pointDifferential"),

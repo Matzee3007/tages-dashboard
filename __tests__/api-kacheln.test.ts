@@ -2,21 +2,21 @@
 import { beforeEach, expect, test, vi } from "vitest";
 import { revalidateTag } from "next/cache";
 import { GET, POST } from "@/app/api/kacheln/route";
-import { ladeBundesliga } from "@/lib/kacheln/bundesliga/laden";
+import { ladeLiga } from "@/lib/kacheln/liga/laden";
 import { ladeKiNews } from "@/lib/kacheln/ki-news/laden";
 
 vi.mock("next/server", () => ({ connection: vi.fn(async () => {}) }));
 vi.mock("next/cache", () => ({ revalidateTag: vi.fn() }));
 vi.mock("@/lib/kacheln/ki-news/laden", () => ({ ladeKiNews: vi.fn() }));
-vi.mock("@/lib/kacheln/bundesliga/laden", () => ({ ladeBundesliga: vi.fn() }));
+vi.mock("@/lib/kacheln/liga/laden", () => ({ ladeLiga: vi.fn() }));
 
 beforeEach(() => {
   vi.mocked(revalidateTag).mockReset();
   vi.mocked(ladeKiNews).mockReset();
   vi.mocked(ladeKiNews).mockResolvedValue([]);
-  vi.mocked(ladeBundesliga).mockReset();
-  vi.mocked(ladeBundesliga).mockResolvedValue({
-    art: "bundesliga",
+  vi.mocked(ladeLiga).mockReset();
+  vi.mocked(ladeLiga).mockResolvedValue({
+    art: "liga",
     titel: null,
     tage: [],
     partien: [],

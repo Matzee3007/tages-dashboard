@@ -1,10 +1,7 @@
 // @vitest-environment node
 import { expect, test, vi } from "vitest";
-import {
-  leseKalender,
-  leseTabelle,
-  leseTag,
-} from "@/lib/kacheln/bundesliga/espn";
+import { TEAMS_BUNDESLIGA } from "@/lib/einstellungen";
+import { leseKalender, leseTabelle, leseTag } from "@/lib/kacheln/liga/espn";
 
 // Ausschnitte echter Antworten von ESPN vom 2026-11-08, gekürzt auf die gelesenen Felder.
 
@@ -111,7 +108,7 @@ test("liest eine beendete Partie mit Toren", () => {
       }),
     ],
   };
-  expect(leseTag(json, JETZT)).toEqual([
+  expect(leseTag(json, JETZT, TEAMS_BUNDESLIGA)).toEqual([
     {
       id: "1",
       anstoss: "2026-11-08T14:30Z",
@@ -149,10 +146,9 @@ test("Eigentor und Elfmeter bekommen einen Zusatz", () => {
       }),
     ],
   };
-  expect(leseTag(json, JETZT)[0].tore.map((t) => t.text)).toEqual([
-    "Müller 12' (ET)",
-    "Kane 30' (E)",
-  ]);
+  expect(
+    leseTag(json, JETZT, TEAMS_BUNDESLIGA)[0].tore.map((t) => t.text),
+  ).toEqual(["Müller 12' (ET)", "Kane 30' (E)"]);
 });
 
 test("liest eine laufende Partie", () => {
@@ -167,7 +163,7 @@ test("liest eine laufende Partie", () => {
       }),
     ],
   };
-  const [laufend] = leseTag(json, JETZT);
+  const [laufend] = leseTag(json, JETZT, TEAMS_BUNDESLIGA);
   expect(laufend.status).toBe("laeuft");
   expect(laufend.minute).toBe("56'");
   expect(laufend.heim.tore).toBe(0);
@@ -178,7 +174,7 @@ test("pre nach Anstoß zählt als laufend", () => {
   const json = {
     events: [partie({ date: "2026-11-08T17:30Z", state: "pre" })],
   };
-  const [partieNachAnstoss] = leseTag(json, JETZT);
+  const [partieNachAnstoss] = leseTag(json, JETZT, TEAMS_BUNDESLIGA);
   expect(partieNachAnstoss.status).toBe("laeuft");
   expect(partieNachAnstoss.minute).toBeNull();
 });
@@ -187,7 +183,7 @@ test("offene Partie hat keine Tore", () => {
   const json = {
     events: [partie({ date: "2026-11-08T18:30Z", state: "pre" })],
   };
-  const [offen] = leseTag(json, JETZT);
+  const [offen] = leseTag(json, JETZT, TEAMS_BUNDESLIGA);
   expect(offen.status).toBe("vorher");
   expect(offen.heim.tore).toBeNull();
   expect(offen.gast.tore).toBeNull();
@@ -198,13 +194,15 @@ test("fehlende id nimmt den Namen von ESPN und meldet sie", () => {
   const json = {
     events: [partie({ gast: team("999", "Neustadt", "away", "0") })],
   };
-  expect(leseTag(json, JETZT)[0].gast.name).toBe("Neustadt");
+  expect(leseTag(json, JETZT, TEAMS_BUNDESLIGA)[0].gast.name).toBe("Neustadt");
   expect(log).toHaveBeenCalledWith("Team 999 fehlt in der Namensliste");
   log.mockRestore();
 });
 
 test("wirft bei falscher Form", () => {
-  expect(() => leseTag({}, JETZT)).toThrow("Unerwartete Antwort von ESPN");
+  expect(() => leseTag({}, JETZT, TEAMS_BUNDESLIGA)).toThrow(
+    "Unerwartete Antwort von ESPN",
+  );
   expect(() => leseKalender({})).toThrow("Unerwartete Antwort von ESPN");
 });
 
@@ -253,7 +251,7 @@ test("liest die Tabelle", () => {
       },
     ],
   };
-  expect(leseTabelle(json)).toEqual([
+  expect(leseTabelle(json, TEAMS_BUNDESLIGA)).toEqual([
     {
       platz: 1,
       id: "132",
@@ -273,7 +271,9 @@ test("liest die Tabelle", () => {
       punkte: 21,
     },
   ]);
-  expect(() => leseTabelle({})).toThrow("Unerwartete Antwort von ESPN");
+  expect(() => leseTabelle({}, TEAMS_BUNDESLIGA)).toThrow(
+    "Unerwartete Antwort von ESPN",
+  );
 });
 
 test("abgesagte oder verlegte Partie ist weder vorbei noch live", () => {
@@ -288,7 +288,7 @@ test("abgesagte oder verlegte Partie ist weder vorbei noch live", () => {
       }),
     ],
   };
-  const [verlegt, abgesagt] = leseTag(json, JETZT);
+  const [verlegt, abgesagt] = leseTag(json, JETZT, TEAMS_BUNDESLIGA);
   expect(verlegt.status).toBe("abgesagt");
   expect(verlegt.heim.tore).toBeNull();
   expect(abgesagt.status).toBe("abgesagt");
@@ -298,7 +298,7 @@ test("ohne bekannten Zustand gilt eine Partie nicht als laufend", () => {
   const json = {
     events: [partie({ state: null, date: "2026-11-08T14:30Z" })],
   };
-  expect(leseTag(json, JETZT)[0].status).toBe("vorher");
+  expect(leseTag(json, JETZT, TEAMS_BUNDESLIGA)[0].status).toBe("vorher");
 });
 
 test("ein Kalender in anderer Form wirft", () => {

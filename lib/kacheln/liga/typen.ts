@@ -31,8 +31,8 @@ export type TabellenZeile = {
 };
 
 // tabelle: Ausschnitt, null steht für eine Lücke. titel null: keine Nummer bekannt.
-export type BundesligaDaten = {
-  art: "bundesliga";
+export type LigaDaten = {
+  art: "liga";
   titel: string | null;
   tage: string[];
   partien: Partie[];
