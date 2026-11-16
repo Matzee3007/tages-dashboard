@@ -152,7 +152,7 @@ Test `__tests__/zeit.test.ts`, `__tests__/fussball-ansicht.test.tsx`.
 **Dateien:** `docs/Projektvision.md` (Nachtrag G ersetzt den Nachtrag F, „eine Zeile pro Partie“ und „Plätze der Linien“ angepasst),
 `docs/tools/ESPN.md` (Feld `details[].team.id`), `docs/plaene/2026-11-16-neues-aussehen.md` (Hinweis: abgelöst durch diesen Plan).
 
-- [ ] **Schritt 1: Doku nachtragen, Commit** „Document look G“
+- [x] **Schritt 1: Doku nachtragen, Commit** „Document look G“
 - [ ] **Schritt 2: Abnahme durch den Entwickler** in der Vorschau auf Mac und iPhone: Karten, Partien nach Tag, Torschützen unter dem
   Team, Zonen mit Legende, große erste Schlagzeile, kein waagrechtes Scrollen.
 

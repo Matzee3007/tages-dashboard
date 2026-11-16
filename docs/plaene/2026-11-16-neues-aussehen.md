@@ -1,11 +1,14 @@
 ---
 titel: "Plan: Neues Aussehen"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-16
 tags: [plan, aussehen, sport, ki-news]
 ---
 
 # Plan: Neues Aussehen
+
+> Abgeschlossen mit PR #80 (2026-11-16). Das Aussehen F wurde am 2026-11-17 durch
+> [[projects/tages-dashboard/docs/plaene/2026-11-17-aussehen-g|Aussehen G]] abgelöst.
 
 **Ziel:** Das Dashboard bekommt das Aussehen von Variante F „Instrument“: keine Kästen, Ordnung über Schriftgewicht, Größe und Abstand,
 Hausfarben der Quellen als Akzent, Gruppe Sport, Linien in den Tabellen und Absender in einer eigenen farbigen Spalte.
