@@ -54,11 +54,12 @@ export async function ladeFussball(
       jetzt,
     ),
   );
-  const tage = waehleSpieltag(kalender, null, jetzt);
-  const [partienJeTag, normaleTabelle, spielplan] = await Promise.all([
+  // Der Spielplan kommt vor der Wahl: Wechselt die Nummer, trennt er Spieltage ohne Lücke.
+  const spielplan = await ladeSpielplan(einstellung, kalender, jetzt);
+  const tage = waehleSpieltag(kalender, spielplan, jetzt);
+  const [partienJeTag, normaleTabelle] = await Promise.all([
     Promise.all(tage.map((tag) => ladeTag(einstellung, tag, jetzt))),
     ladeTabelle(einstellung, false, jetzt),
-    ladeSpielplan(einstellung, tage, jetzt),
   ]);
   const partien = partienJeTag.flat();
   // Nur ESPN wird live nachgeholt, die Tabelle von football-data.org darf nachziehen (ADR 0011).
