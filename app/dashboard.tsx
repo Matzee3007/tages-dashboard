@@ -67,32 +67,26 @@ export function Dashboard() {
   useAktualisierung(erneutVersuchen);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-5 px-4 pt-6 pb-8">
-      <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[13px] font-semibold tracking-[0.08em] text-gedaempft uppercase">
-            Tages-Dashboard
-          </span>
-          <h1 className="font-titel text-[40px] leading-none font-bold tracking-[0.01em]">
+    <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-10 px-[18px] pt-[22px] pb-9 min-[600px]:gap-[52px] min-[600px]:px-9 min-[600px]:pt-[30px] min-[600px]:pb-12">
+      <header className="flex items-center justify-between gap-x-4 gap-y-2">
+        <div className="flex flex-col gap-x-3 min-[600px]:flex-row min-[600px]:items-baseline">
+          <h1 className="text-[17px] font-[650] tracking-[-0.005em]">
             {zeit ? datum(zeit) : "Heute"}
           </h1>
-        </div>
-        <div className="flex items-center gap-4">
           {zeit && (
-            <span className="flex items-center gap-2 text-[13px] text-gedaempft">
-              <span className="size-2 rounded-full bg-info" />
-              <span>Aktualisiert {uhrzeit(zeit)}</span>
+            <span className="text-[17px] text-gedaempft">
+              Aktualisiert {uhrzeit(zeit)}
             </span>
           )}
-          <form action={abmelden}>
-            <button
-              type="submit"
-              className="min-h-11 cursor-pointer rounded-[10px] border border-rand-stark px-4 text-sm"
-            >
-              Abmelden
-            </button>
-          </form>
         </div>
+        <form action={abmelden}>
+          <button
+            type="submit"
+            className="min-h-11 cursor-pointer rounded-lg px-3.5 font-medium text-gedaempft hover:bg-knopf hover:text-text"
+          >
+            Abmelden
+          </button>
+        </form>
       </header>
 
       <main className="flex flex-col gap-4">
