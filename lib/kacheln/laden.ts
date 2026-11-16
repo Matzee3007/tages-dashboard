@@ -1,5 +1,5 @@
 import { KACHELN, type KachelEinstellung } from "@/lib/einstellungen";
-import { ladeBundesligaKachel } from "@/lib/kacheln/bundesliga/kachel";
+import { ladeFussballKachel } from "@/lib/kacheln/fussball/kachel";
 import { ladeKiNewsKachel } from "@/lib/kacheln/ki-news/kachel";
 import type {
   DashboardAntwort,
@@ -16,8 +16,8 @@ function lade(
   switch (einstellung.art) {
     case "ki-news":
       return ladeKiNewsKachel(einstellung, jetzt);
-    case "bundesliga":
-      return ladeBundesligaKachel(einstellung, jetzt);
+    case "fussball":
+      return ladeFussballKachel(einstellung, jetzt);
   }
 }
 

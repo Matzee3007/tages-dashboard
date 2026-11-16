@@ -41,3 +41,10 @@ abfragt, zeigt deshalb oft denselben Stand.
 - ↻ dreht sich nur nach einem Klick auf ihn selbst. Gesperrt ist er bei jedem Abruf, auch beim Minutentakt.
 - Bewusst offen (Funde 6 und 7 aus dem `/code-review` von PR #44): Eine unbekannte id meldet 400, das zeigt alle Kacheln als Fehler. Und POST lädt
   alle Kacheln, die anderen kommen dabei aus ihrem Speicher.
+
+## Nachtrag 2026-11-16: Spielplan ohne Etikett
+
+Der Spielplan der Saison (OpenLigaDB für die Bundesliga seit 2026-11-09, football-data.org für die Premier League seit PR #73) wird bewusst
+**ohne** Etikett abgerufen und 24 Stunden gespeichert. Er liefert nur die Nummer des Spieltags und ändert sich selten. ↻ soll ihn nicht
+jedes Mal neu laden, bei football-data.org auch wegen der Grenze von 10 Abrufen pro Minute. Ausnahme von „Jeder Abruf einer Kachel trägt
+ihre id als Etikett“, vom `plan-pruefer` gemeldet und vom Entwickler bestätigt.

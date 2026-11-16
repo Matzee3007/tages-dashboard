@@ -31,6 +31,31 @@ Live-Stand und Torschützen kommen von [[projects/tages-dashboard/docs/tools/ESP
 | Welcher Schlüssel, wo? | `FOOTBALL_DATA_API_KEY`, **nur Server** (ohne `NEXT_PUBLIC_`), in `.env.local` und bei Vercel (Production, Preview, „Sensitive“). | ADR 0011 |
 | Ausfall | Partien und Live-Stand kommen weiter von ESPN, der Spieltag erscheint ohne Nummer, statt der Tabelle „Tabelle gerade nicht erreichbar“. | Projektvision, ADR 0011 |
 
+## Abrufe
+
+Seit 2026-11-16 in `lib/kacheln/fussball/quellen.ts` (lesen: `football-data.ts`), Kachel Premier League (`PL`).
+
+| Abruf | Adresse | Speicher |
+|---|---|---|
+| Spielplan der Saison | `https://api.football-data.org/v4/competitions/PL/matches` (380 Partien, 371 KB), Felder `utcDate`, `matchday` | 24 Std., ohne Etikett: ↻ lädt ihn nicht neu |
+| Tabelle | `https://api.football-data.org/v4/competitions/PL/standings`, nur `type: "TOTAL"` | 15 Min., Etikett `premier-league`, nie frisch |
+
+Beide mit `X-Auth-Token`, `User-Agent: Tages-Dashboard` und 5 Sekunden Zeitlimit. Fällt ein Abruf aus (auch 429 oder ohne Schlüssel),
+steht der Fehler im Server-Log, die Kachel zeigt den Spieltag ohne Nummer bzw. „Tabelle gerade nicht erreichbar“. Rechnung zur Grenze von
+10 Abrufen pro Minute: [[projects/tages-dashboard/docs/plaene/2026-11-16-premier-league|Plan der Premier League]], „Fremde Dienste“.
+
+## Bekannte Grenzen
+
+Aus dem `/code-review` von PR #73, bewusst offen:
+
+- **Vorgezogenes Spiel:** Behält eine vorgezogene Partie ihren alten `matchday`, gelten die Spieltage dazwischen als „Nachholspiel“, weil
+  `spieltagTitel` die höchste frühere Nummer vergleicht (gilt auch für OpenLigaDB). Selten.
+- **Tagesgrenze:** `leseFdSpielplan` ordnet nach deutschem Kalendertag, die Tage von ESPN folgen einer US-Tagesgrenze. Trifft nur Anstöße
+  nach etwa 1 Uhr deutscher Zeit. Bei der Champions League (PR 2) erneut prüfen.
+- **↻ und die Grenze:** Jeder Druck auf ↻ holt die Tabelle neu, ab etwa 6 Drücken in einer Minute droht 429. Dann erscheint „Tabelle
+  gerade nicht erreichbar“.
+- **Verschmolzene Spieltage** (Samstag bis Montag, dann Dienstag): eigener PR nach #73, siehe Plan der Premier League.
+
 ## Wie haben wir es eingerichtet?
 
 2026-11-16 mit einem Assistenten (Skill `assistent-bauen`, einmalig im Scratchpad, nicht im Repo):

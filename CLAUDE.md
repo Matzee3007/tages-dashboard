@@ -21,8 +21,9 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 - **Login und Datenbank:** Supabase (Auth und Postgres)
 - **Hosting:** Vercel (kostenloser Tarif)
 - **Tests und Qualität:** Vitest, Testing Library, ESLint, Prettier
-- **Datenquellen:** ESPN (Bundesliga und NFL, inoffiziell, ADR 0009), football-data.org (Premier League, Champions
-  League), Jolpica und OpenF1 (Formel 1), RSS-Feeds (KI-News), iPhone-Kurzbefehl (Schritte aus Apple Health)
+- **Datenquellen:** ESPN (Partien von Bundesliga, Premier League, Champions League und NFL, inoffiziell, ADR 0009),
+  OpenLigaDB (Spielplan der Bundesliga), football-data.org (Spieltag und Tabelle von Premier League und Champions League,
+  ADR 0011), Jolpica und OpenF1 (Formel 1), RSS-Feeds (KI-News), iPhone-Kurzbefehl (Schritte aus Apple Health)
 - **Zusammenfassungen der KI-News:** lokales Sprachmodell über Docker Model Runner, Skript im Container per Docker Compose
   auf dem Mac (ADR 0010)
 

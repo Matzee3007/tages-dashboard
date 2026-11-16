@@ -1,10 +1,10 @@
 import { Abschnitt } from "@/lib/kacheln/kachel";
 import type {
-  BundesligaDaten,
+  FussballDaten,
   Partie,
   TabellenZeile,
   TeamStand,
-} from "@/lib/kacheln/bundesliga/typen";
+} from "@/lib/kacheln/fussball/typen";
 import { anstossText, tageText } from "@/lib/zeit";
 
 const MEIN_TEAM_STIL =
@@ -151,7 +151,7 @@ function TabellenZeilen({
   );
 }
 
-export function BundesligaAnsicht({ daten }: { daten: BundesligaDaten }) {
+export function FussballAnsicht({ daten }: { daten: FussballDaten }) {
   const tage = daten.tage.length > 0 ? tageText(daten.tage) : "";
   const ueberschrift = [daten.titel, tage].filter(Boolean).join(" · ");
   return (
@@ -168,26 +168,30 @@ export function BundesligaAnsicht({ daten }: { daten: BundesligaDaten }) {
         </div>
       </Abschnitt>
       <Abschnitt titel="Tabelle">
-        <table className="w-full border-collapse text-sm tabular-nums">
-          <thead>
-            <tr className="text-[11px] font-semibold tracking-[0.08em] text-gedaempft uppercase">
-              <th className="pb-1 text-right font-semibold">#</th>
-              <th className="pb-1 pl-2 text-left font-semibold">Team</th>
-              <th className="pb-1 text-right font-semibold">Sp</th>
-              <th className="pb-1 text-right font-semibold">+/−</th>
-              <th className="pb-1 text-right font-semibold">Pkt</th>
-            </tr>
-          </thead>
-          <tbody>
-            {daten.tabelle.map((zeile, index) => (
-              <TabellenZeilen
-                key={zeile?.id ?? `luecke-${index}`}
-                zeile={zeile}
-                meinTeam={daten.meinTeam}
-              />
-            ))}
-          </tbody>
-        </table>
+        {daten.tabelle === null ? (
+          <p className="text-gedaempft">Tabelle gerade nicht erreichbar</p>
+        ) : (
+          <table className="w-full border-collapse text-sm tabular-nums">
+            <thead>
+              <tr className="text-[11px] font-semibold tracking-[0.08em] text-gedaempft uppercase">
+                <th className="pb-1 text-right font-semibold">#</th>
+                <th className="pb-1 pl-2 text-left font-semibold">Team</th>
+                <th className="pb-1 text-right font-semibold">Sp</th>
+                <th className="pb-1 text-right font-semibold">+/−</th>
+                <th className="pb-1 text-right font-semibold">Pkt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {daten.tabelle.map((zeile, index) => (
+                <TabellenZeilen
+                  key={zeile?.id ?? `luecke-${index}`}
+                  zeile={zeile}
+                  meinTeam={daten.meinTeam}
+                />
+              ))}
+            </tbody>
+          </table>
+        )}
       </Abschnitt>
     </>
   );

@@ -1,11 +1,11 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, test } from "vitest";
-import { BundesligaAnsicht } from "@/lib/kacheln/bundesliga/ansicht";
+import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
 import type {
-  BundesligaDaten,
+  FussballDaten,
   Partie,
   TabellenZeile,
-} from "@/lib/kacheln/bundesliga/typen";
+} from "@/lib/kacheln/fussball/typen";
 
 afterEach(cleanup);
 
@@ -51,8 +51,8 @@ function zeile(platz: number, id: string, name: string): TabellenZeile {
   return { platz, id, name, logo: null, spiele: 9, differenz: 20, punkte: 21 };
 }
 
-const DATEN: BundesligaDaten = {
-  art: "bundesliga",
+const DATEN: FussballDaten = {
+  art: "fussball",
   titel: "9. Spieltag",
   tage: ["2026-11-06", "2026-11-07", "2026-11-08"],
   partien: [MAINZ_BAYERN, KOELN_LEVERKUSEN, FREIBURG_UNION],
@@ -61,21 +61,21 @@ const DATEN: BundesligaDaten = {
 };
 
 test("Überschrift mit Nummer und Tagen", () => {
-  const { rerender } = render(<BundesligaAnsicht daten={DATEN} />);
+  const { rerender } = render(<FussballAnsicht daten={DATEN} />);
   expect(
     screen.getByRole("heading", {
       name: "9. Spieltag · Fr 6. – So 8. November",
     }),
   ).toBeDefined();
 
-  rerender(<BundesligaAnsicht daten={{ ...DATEN, titel: null }} />);
+  rerender(<FussballAnsicht daten={{ ...DATEN, titel: null }} />);
   expect(
     screen.getByRole("heading", { name: "Fr 6. – So 8. November" }),
   ).toBeDefined();
 });
 
 test("eine Partie zeigt Anstoß, Teams und Ergebnis", () => {
-  render(<BundesligaAnsicht daten={DATEN} />);
+  render(<FussballAnsicht daten={DATEN} />);
   const partie = screen.getByTestId("partie-1");
   expect(partie.textContent).toContain("Sa 15:30");
   expect(partie.textContent).toContain("Mainz");
@@ -84,21 +84,21 @@ test("eine Partie zeigt Anstoß, Teams und Ergebnis", () => {
 });
 
 test("laufende Partie zeigt die Minute", () => {
-  render(<BundesligaAnsicht daten={DATEN} />);
+  render(<FussballAnsicht daten={DATEN} />);
   const partie = screen.getByTestId("partie-3");
   expect(partie.textContent).toContain("56'");
   expect(partie.querySelector('[aria-label="live"]')).not.toBeNull();
 });
 
 test("Torschützen in einer Zeile", () => {
-  render(<BundesligaAnsicht daten={DATEN} />);
+  render(<FussballAnsicht daten={DATEN} />);
   expect(
     screen.getByText("García 7' · Schick 85' · El Mala 90+2'"),
   ).toBeDefined();
 });
 
 test("Mein Team ist markiert", () => {
-  render(<BundesligaAnsicht daten={DATEN} />);
+  render(<FussballAnsicht daten={DATEN} />);
   expect(screen.getByTestId("partie-1").hasAttribute("data-mein-team")).toBe(
     true,
   );
@@ -110,12 +110,12 @@ test("Mein Team ist markiert", () => {
 });
 
 test("Lücke in der Tabelle", () => {
-  render(<BundesligaAnsicht daten={DATEN} />);
+  render(<FussballAnsicht daten={DATEN} />);
   expect(screen.getByText("···")).toBeDefined();
 });
 
 test("ein Logo ohne Bild verschwindet", () => {
-  const { container } = render(<BundesligaAnsicht daten={DATEN} />);
+  const { container } = render(<FussballAnsicht daten={DATEN} />);
   const logo = container.querySelector("img")!;
   fireEvent.error(logo);
   expect(logo.style.visibility).toBe("hidden");
@@ -129,8 +129,16 @@ test("abgesagte Partie zeigt abgesagt statt Anstoß und Ergebnis", () => {
     heim: team("2950", "Mainz", null),
     gast: team("132", "Bayern", null),
   };
-  render(<BundesligaAnsicht daten={{ ...DATEN, partien: [abgesagt] }} />);
+  render(<FussballAnsicht daten={{ ...DATEN, partien: [abgesagt] }} />);
   const partie = screen.getByTestId("partie-9");
   expect(partie.textContent).toContain("abgesagt");
   expect(partie.textContent).not.toContain("Sa 15:30");
+});
+
+test("ohne Tabelle steht ein Hinweis statt der Tabelle", () => {
+  const { container } = render(
+    <FussballAnsicht daten={{ ...DATEN, tabelle: null }} />,
+  );
+  expect(screen.getByText("Tabelle gerade nicht erreichbar")).toBeDefined();
+  expect(container.querySelector("table")).toBeNull();
 });

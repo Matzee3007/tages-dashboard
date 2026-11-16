@@ -1,13 +1,14 @@
 import { afterEach, expect, test, vi } from "vitest";
 import { ABSENDER, type KachelEinstellung } from "@/lib/einstellungen";
-import { ladeBundesliga } from "@/lib/kacheln/bundesliga/laden";
-import type { BundesligaDaten } from "@/lib/kacheln/bundesliga/typen";
+import { TEAMS_BUNDESLIGA } from "@/lib/einstellungen";
+import { ladeFussball } from "@/lib/kacheln/fussball/laden";
+import type { FussballDaten } from "@/lib/kacheln/fussball/typen";
 import type { AbsenderStand } from "@/lib/kacheln/ki-news/laden";
 import { ladeKiNews } from "@/lib/kacheln/ki-news/laden";
 import { ladeDashboard } from "@/lib/kacheln/laden";
 
 vi.mock("@/lib/kacheln/ki-news/laden", () => ({ ladeKiNews: vi.fn() }));
-vi.mock("@/lib/kacheln/bundesliga/laden", () => ({ ladeBundesliga: vi.fn() }));
+vi.mock("@/lib/kacheln/fussball/laden", () => ({ ladeFussball: vi.fn() }));
 
 const JETZT = new Date("2026-11-08T13:32:07Z");
 
@@ -86,25 +87,29 @@ test("der Fehlertext bleibt auf dem Server", async () => {
   expect(log).toHaveBeenCalled();
 });
 
-test("die Bundesliga-Kachel ruft ladeBundesliga mit Einstellung und Zeit", async () => {
+test("die Bundesliga-Kachel ruft ladeFussball mit Einstellung und Zeit", async () => {
   const einstellung = {
     id: "bundesliga",
-    art: "bundesliga" as const,
+    art: "fussball" as const,
     titel: "Bundesliga",
+    espn: "ger.1" as const,
+    spielplan: { art: "openligadb" as const, liga: "bl1" as const },
+    tabelle: { art: "espn" as const },
+    teams: TEAMS_BUNDESLIGA,
     meinTeam: ["132"],
   };
-  const daten: BundesligaDaten = {
-    art: "bundesliga",
+  const daten: FussballDaten = {
+    art: "fussball",
     titel: "9. Spieltag",
     tage: ["2026-11-08"],
     partien: [],
     tabelle: [],
     meinTeam: ["132"],
   };
-  vi.mocked(ladeBundesliga).mockResolvedValue(daten);
+  vi.mocked(ladeFussball).mockResolvedValue(daten);
 
   const antwort = await ladeDashboard([einstellung], JETZT);
 
-  expect(ladeBundesliga).toHaveBeenCalledWith(einstellung, JETZT);
+  expect(ladeFussball).toHaveBeenCalledWith(einstellung, JETZT);
   expect(antwort.kacheln[0]).toMatchObject({ status: "ok", daten });
 });

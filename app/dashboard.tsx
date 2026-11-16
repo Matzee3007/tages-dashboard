@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { abmelden } from "@/app/login/actions";
 import { holeDashboard } from "@/lib/kacheln/abruf";
-import { BundesligaAnsicht } from "@/lib/kacheln/bundesliga/ansicht";
+import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
 import { FehlerHinweis, Kachel } from "@/lib/kacheln/kachel";
 import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
 import { neuerStand } from "@/lib/kacheln/stand";
@@ -16,8 +16,8 @@ function KachelInhalt({ daten }: { daten: KachelDaten }) {
   switch (daten.art) {
     case "ki-news":
       return <KiNewsAnsicht daten={daten} />;
-    case "bundesliga":
-      return <BundesligaAnsicht daten={daten} />;
+    case "fussball":
+      return <FussballAnsicht daten={daten} />;
     // Eine seit dem letzten Deploy offene Seite kennt eine neue Kachel-Art noch nicht.
     default:
       return (

@@ -1,0 +1,178 @@
+// @vitest-environment node
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { KACHELN, type FussballEinstellung } from "@/lib/einstellungen";
+import { ladeDashboard } from "@/lib/kacheln/laden";
+import { ladeFussball } from "@/lib/kacheln/fussball/laden";
+
+const EINSTELLUNG: FussballEinstellung = {
+  id: "premier-league",
+  art: "fussball",
+  titel: "Premier League",
+  espn: "eng.1",
+  spielplan: { art: "football-data", wettbewerb: "PL" },
+  tabelle: { art: "football-data", wettbewerb: "PL" },
+  teams: [
+    { espn: "359", footballData: 57, name: "Arsenal" },
+    { espn: "367", footballData: 73, name: "Tottenham" },
+  ],
+  meinTeam: ["359"],
+};
+// Sa 21.11. 18:00 deutscher Zeit
+const JETZT = new Date("2026-11-21T17:00:00Z");
+const SCHLUESSEL = "geheimer-test-schluessel";
+
+const KALENDER =
+  "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard";
+const SPIELPLAN = "https://api.football-data.org/v4/competitions/PL/matches";
+const TABELLE = "https://api.football-data.org/v4/competitions/PL/standings";
+
+function tag(state: "pre" | "in" | "post") {
+  const team = (id: string, homeAway: string) => ({
+    homeAway,
+    score: "1",
+    team: { id, shortDisplayName: id, logo: null },
+  });
+  return {
+    events: [
+      {
+        id: "1",
+        date: "2026-11-21T15:00Z",
+        status: { displayClock: "56'", type: { state } },
+        competitions: [
+          { competitors: [team("359", "home"), team("367", "away")] },
+        ],
+      },
+    ],
+  };
+}
+
+function fdZeile(position: number, id: number) {
+  return {
+    position,
+    team: { id, shortName: String(id), crest: null },
+    playedGames: 11,
+    goalDifference: 5,
+    points: 30 - position,
+  };
+}
+
+const ANTWORTEN: Record<string, unknown> = {
+  [KALENDER]: { leagues: [{ calendar: ["2026-11-21T08:00Z"] }] },
+  [`${KALENDER}?dates=20261121`]: tag("post"),
+  [SPIELPLAN]: {
+    matches: [
+      { utcDate: "2026-11-08T14:00:00Z", matchday: 11 },
+      { utcDate: "2026-11-21T15:00:00Z", matchday: 12 },
+    ],
+  },
+  [TABELLE]: {
+    standings: [{ type: "TOTAL", table: [fdZeile(1, 57), fdZeile(2, 73)] }],
+  },
+};
+
+const fetchMock = vi.fn();
+
+function antworten(abweichend: Record<string, unknown | number> = {}) {
+  const alle = { ...ANTWORTEN, ...abweichend };
+  fetchMock.mockImplementation(async (url: string) => {
+    const antwort = alle[url];
+    if (antwort === undefined) throw new Error(`Unerwartete Adresse ${url}`);
+    if (typeof antwort === "number")
+      return new Response("", { status: antwort });
+    return Response.json(antwort);
+  });
+}
+
+const optionen = (url: string) =>
+  fetchMock.mock.calls.find(([aufgerufen]) => aufgerufen === url)?.[1];
+const abrufe = (url: string) =>
+  fetchMock.mock.calls.filter(([aufgerufen]) => aufgerufen === url).length;
+
+beforeEach(() => {
+  fetchMock.mockReset();
+  vi.stubGlobal("fetch", fetchMock);
+  vi.stubEnv("FOOTBALL_DATA_API_KEY", SCHLUESSEL);
+  antworten();
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
+  vi.restoreAllMocks();
+});
+
+test("Premier League: Partien von ESPN, Nummer und Tabelle von football-data.org", async () => {
+  const daten = await ladeFussball(EINSTELLUNG, JETZT);
+
+  expect(daten.titel).toBe("12. Spieltag");
+  expect(daten.partien.map((p) => p.heim.name)).toEqual(["Arsenal"]);
+  expect(daten.tabelle?.map((z) => z && [z.id, z.name])).toEqual([
+    ["359", "Arsenal"],
+    ["367", "Tottenham"],
+  ]);
+});
+
+test("football-data.org bekommt den Schlüssel im Header, der Spielplan keinen Etikett", async () => {
+  await ladeFussball(EINSTELLUNG, JETZT);
+
+  expect(optionen(SPIELPLAN).headers["X-Auth-Token"]).toBe(SCHLUESSEL);
+  expect(optionen(SPIELPLAN).next).toEqual({ revalidate: 86400 });
+  expect(optionen(TABELLE).headers["X-Auth-Token"]).toBe(SCHLUESSEL);
+  expect(optionen(TABELLE).next).toEqual({
+    revalidate: 900,
+    tags: ["premier-league"],
+  });
+});
+
+test("bei laufender Partie wird die Tabelle von football-data.org nicht frisch nachgeholt", async () => {
+  antworten({ [`${KALENDER}?dates=20261121`]: tag("in") });
+  await ladeFussball(EINSTELLUNG, JETZT);
+
+  expect(abrufe(TABELLE)).toBe(1);
+});
+
+test("antwortet football-data.org mit 429, laufen die Partien ohne Nummer und Tabelle weiter", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  antworten({ [SPIELPLAN]: 429, [TABELLE]: 429 });
+  const daten = await ladeFussball(EINSTELLUNG, JETZT);
+
+  expect(daten.partien).toHaveLength(1);
+  expect(daten.titel).toBeNull();
+  expect(daten.tabelle).toBeNull();
+});
+
+test("ohne Schlüssel kein Abruf bei football-data.org", async () => {
+  const fehler = vi.spyOn(console, "error").mockImplementation(() => {});
+  vi.stubEnv("FOOTBALL_DATA_API_KEY", "");
+  const daten = await ladeFussball(EINSTELLUNG, JETZT);
+
+  expect(abrufe(SPIELPLAN) + abrufe(TABELLE)).toBe(0);
+  expect(daten.titel).toBeNull();
+  expect(daten.tabelle).toBeNull();
+  expect(String(fehler.mock.calls[0][1])).toContain(
+    "FOOTBALL_DATA_API_KEY fehlt",
+  );
+});
+
+test("der Schlüssel steht nie in der Antwort an den Browser", async () => {
+  const antwort = await ladeDashboard([EINSTELLUNG], JETZT);
+
+  expect(antwort.kacheln[0].status).toBe("ok");
+  expect(JSON.stringify(antwort)).not.toContain(SCHLUESSEL);
+});
+
+test("die Premier League steht zwischen Bundesliga und KI-News, Mein Team ist Arsenal", () => {
+  expect(KACHELN.map((kachel) => kachel.id)).toEqual([
+    "bundesliga",
+    "premier-league",
+    "ki-news",
+  ]);
+  const premierLeague = KACHELN[1] as FussballEinstellung;
+  expect(premierLeague.meinTeam).toEqual(["359"]);
+  expect(premierLeague.teams).toHaveLength(20);
+  expect(premierLeague.teams).toContainEqual({
+    espn: "359",
+    footballData: 57,
+    name: "Arsenal",
+  });
+});

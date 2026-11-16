@@ -30,12 +30,13 @@ export type TabellenZeile = {
   punkte: number;
 };
 
-// tabelle: Ausschnitt, null steht für eine Lücke. titel null: keine Nummer bekannt.
-export type BundesligaDaten = {
-  art: "bundesliga";
+// tabelle: Ausschnitt, null in der Liste steht für eine Lücke, null statt der Liste: Tabelle nicht erreichbar.
+// titel null: keine Nummer bekannt.
+export type FussballDaten = {
+  art: "fussball";
   titel: string | null;
   tage: string[];
   partien: Partie[];
-  tabelle: (TabellenZeile | null)[];
+  tabelle: (TabellenZeile | null)[] | null;
   meinTeam: string[];
 };
