@@ -27,22 +27,22 @@ async function ladeKachel(
   einstellung: KachelEinstellung,
   jetzt: Date,
 ): Promise<KachelAntwort> {
-  const { id, titel } = einstellung;
+  const { id, titel, aussehen, gruppe } = einstellung;
+  const kopf = { id, titel, aussehen, ...(gruppe && { gruppe }) };
   try {
     const ergebnis = await mitZeitlimit(
       lade(einstellung, jetzt),
       KACHEL_ZEITLIMIT_MS,
     );
     return {
-      id,
-      titel,
+      ...kopf,
       status: "ok",
       ...ergebnis,
       stand: jetzt.toISOString(),
     };
   } catch (fehler) {
     console.error(`Kachel ${id} ließ sich nicht laden:`, fehler);
-    return { id, titel, status: "fehler" };
+    return { ...kopf, status: "fehler" };
   }
 }
 

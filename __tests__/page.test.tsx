@@ -22,6 +22,7 @@ const OK: DashboardAntwort = {
     {
       id: "ki-news",
       titel: "KI-News",
+      aussehen: { farbe: "#8E99A8" },
       status: "ok",
       daten: {
         art: "ki-news",
@@ -123,7 +124,14 @@ test("während des erneuten Versuchs ist der Knopf gesperrt und sagt das", async
 test("wenn alle Kacheln scheitern, behauptet der Kopf keine Aktualisierung", async () => {
   vi.mocked(holeDashboard).mockResolvedValue({
     zeit: ZEIT,
-    kacheln: [{ id: "ki-news", titel: "KI-News", status: "fehler" }],
+    kacheln: [
+      {
+        id: "ki-news",
+        titel: "KI-News",
+        aussehen: { farbe: "#8E99A8" },
+        status: "fehler",
+      },
+    ],
   });
   render(<Page />);
 
@@ -138,6 +146,7 @@ test("eine Kachel unbekannter Art bittet ums Neuladen", async () => {
       {
         id: "neu",
         titel: "Neu",
+        aussehen: { farbe: "#8E99A8" },
         status: "ok",
         daten: { art: "unbekannt" } as unknown as KachelDaten,
         stand: ZEIT,
@@ -177,6 +186,7 @@ test("zeigt die Bundesliga-Kachel", async () => {
       {
         id: "bundesliga",
         titel: "Bundesliga",
+        aussehen: { farbe: "#8E99A8" },
         status: "ok",
         daten: {
           art: "fussball",

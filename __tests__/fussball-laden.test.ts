@@ -7,6 +7,7 @@ const EINSTELLUNG = {
   id: "bundesliga",
   art: "fussball" as const,
   titel: "Bundesliga",
+  aussehen: { farbe: "#8E99A8" },
   espn: "ger.1" as const,
   kalender: { art: "espn" as const },
   spielplan: { art: "openligadb" as const, liga: "bl1" as const },

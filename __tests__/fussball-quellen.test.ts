@@ -7,6 +7,7 @@ import { ladeFussball } from "@/lib/kacheln/fussball/laden";
 const EINSTELLUNG: FussballEinstellung = {
   id: "premier-league",
   art: "fussball",
+  aussehen: { farbe: "#8E99A8" },
   titel: "Premier League",
   espn: "eng.1",
   kalender: { art: "espn" },
@@ -187,6 +188,7 @@ test("Reihenfolge Bundesliga, Premier League, Champions League, KI-News mit Mein
 const CL: FussballEinstellung = {
   id: "champions-league",
   art: "fussball",
+  aussehen: { farbe: "#8E99A8" },
   titel: "Champions League",
   espn: "uefa.champions",
   kalender: { art: "spielplan" },

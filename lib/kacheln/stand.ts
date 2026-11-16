@@ -10,15 +10,15 @@ export function neuerStand(
   }
 
   return antwort.kacheln.map((kachel) => {
-    const { id, titel } = kachel;
+    const { id, titel, aussehen, gruppe } = kachel;
+    const kopf = { id, titel, aussehen, ...(gruppe && { gruppe }) };
     if (kachel.status === "ok") {
       const { zusatz, daten, stand } = kachel;
-      return { id, titel, zusatz, daten, stand, fehler: false };
+      return { ...kopf, zusatz, daten, stand, fehler: false };
     }
     const alt = bisher.find((vorher) => vorher.id === id);
     return {
-      id,
-      titel,
+      ...kopf,
       zusatz: alt?.zusatz,
       daten: alt?.daten ?? null,
       stand: alt?.stand ?? null,

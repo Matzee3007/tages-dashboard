@@ -13,6 +13,7 @@ const EINSTELLUNG = {
   id: "ki-news",
   art: "ki-news",
   titel: "KI-News",
+  aussehen: { farbe: "#8E99A8" },
 } as const;
 
 // Attrappe des Supabase-Clients: Die Abfrage liefert, was `antwort` zurückgibt.

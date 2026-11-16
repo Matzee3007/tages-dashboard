@@ -6,6 +6,7 @@ import type { KachelAnzeige } from "@/lib/kacheln/typen";
 const KACHEL: KachelAnzeige = {
   id: "test",
   titel: "Testkachel",
+  aussehen: { farbe: "#E3343F" },
   zusatz: "Server",
   daten: { art: "ki-news", absender: [] },
   stand: "2026-11-08T13:31:00.000Z",
@@ -33,6 +34,27 @@ test("ohne Fehler zeigt die Kachel Titel und Inhalt, aber keinen Hinweis", () =>
   expect(screen.getByText("Server")).toBeDefined();
   expect(screen.getByText("Inhalt")).toBeDefined();
   expect(screen.queryByText("Daten gerade nicht erreichbar.")).toBeNull();
+});
+
+test("die Kachel trägt ihre Hausfarbe, das Quadrat die Marke", () => {
+  const { container, rerender } = render(
+    <Kachel kachel={KACHEL} erneutVersuchen={() => {}} />,
+  );
+  const kachel = container.querySelector("section")!;
+  expect(kachel.style.getPropertyValue("--farbe")).toBe("#E3343F");
+  expect(kachel.style.getPropertyValue("--marke")).toBe("#E3343F");
+
+  rerender(
+    <Kachel
+      kachel={{
+        ...KACHEL,
+        aussehen: { farbe: "#E8E6DC", marke: "#D97757" },
+      }}
+      erneutVersuchen={() => {}}
+    />,
+  );
+  expect(kachel.style.getPropertyValue("--farbe")).toBe("#E8E6DC");
+  expect(kachel.style.getPropertyValue("--marke")).toBe("#D97757");
 });
 
 test("bei einem Fehler bleibt der Inhalt, dazu kommt der letzte Stand", () => {

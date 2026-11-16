@@ -1,6 +1,18 @@
 import type { SeitenArt } from "@/lib/kacheln/ki-news/seiten";
 
-export type KiNewsEinstellung = { id: string; art: "ki-news"; titel: string };
+// Hausfarbe einer Quelle als Akzent (Name, Grenzlinie). marke: Farbe des kleinen Quadrats, wenn sie anders ist, z. B. weil die
+// Hausfarbe nahe an Orange liegt, das Mein Team, Live und „neu“ gehört (Mock F vom 2026-11-16).
+export type Aussehen = { farbe: string; marke?: string };
+
+// gruppe: Kacheln mit derselben Gruppe stehen zusammen unter ihrer Überschrift (Glossar: Gruppe).
+type KachelBasis = {
+  id: string;
+  titel: string;
+  aussehen: Aussehen;
+  gruppe?: string;
+};
+
+export type KiNewsEinstellung = KachelBasis & { art: "ki-news" };
 
 // Ein Team mit id bei ESPN, id bei football-data.org (falls die Liga sie braucht) und deutschem Kurznamen.
 export type Team = { espn: string; footballData?: number; name: string };
@@ -11,10 +23,8 @@ export type FdTeam = Team & { footballData: number };
 // Ein Fußball-Wettbewerb: Partien immer von ESPN, Kalender (Tage mit Spielen), Spielplan (Nummer des Spieltags) und
 // Tabelle je nach Quelle (ADR 0011). Der Kalender von ESPN kennt bei der Champions League keine Tage, dort kommen sie
 // aus dem Spielplan. meinTeam: ids der Teams bei ESPN (Glossar: Mein Team).
-export type FussballEinstellung = {
-  id: string;
+export type FussballEinstellung = KachelBasis & {
   art: "fussball";
-  titel: string;
   espn: "ger.1" | "eng.1" | "uefa.champions";
   kalender: { art: "espn" } | { art: "spielplan" };
   spielplan:
@@ -24,12 +34,12 @@ export type FussballEinstellung = {
   // Plätze, nach denen in der Tabelle eine Linie steht. Grundverteilung der Saison, von Hand geprüft (Projektvision).
   linien: number[];
 } & (
-  | { tabelle: { art: "espn" }; teams: Team[] }
-  | {
-      tabelle: { art: "football-data"; wettbewerb: "PL" | "CL" };
-      teams: FdTeam[];
-    }
-);
+    | { tabelle: { art: "espn" }; teams: Team[] }
+    | {
+        tabelle: { art: "football-data"; wettbewerb: "PL" | "CL" };
+        teams: FdTeam[];
+      }
+  );
 
 export type KachelEinstellung = KiNewsEinstellung | FussballEinstellung;
 
@@ -129,6 +139,8 @@ export const KACHELN: KachelEinstellung[] = [
     id: "bundesliga",
     art: "fussball",
     titel: "Bundesliga",
+    aussehen: { farbe: "#E3343F" },
+    gruppe: "Sport",
     espn: "ger.1",
     kalender: { art: "espn" },
     spielplan: { art: "openligadb", liga: "bl1" },
@@ -142,6 +154,8 @@ export const KACHELN: KachelEinstellung[] = [
     id: "premier-league",
     art: "fussball",
     titel: "Premier League",
+    aussehen: { farbe: "#B061D1" },
+    gruppe: "Sport",
     espn: "eng.1",
     kalender: { art: "espn" },
     spielplan: { art: "football-data", wettbewerb: "PL" },
@@ -155,6 +169,8 @@ export const KACHELN: KachelEinstellung[] = [
     id: "champions-league",
     art: "fussball",
     titel: "Champions League",
+    aussehen: { farbe: "#5B8DEF" },
+    gruppe: "Sport",
     espn: "uefa.champions",
     kalender: { art: "spielplan" },
     spielplan: { art: "football-data", wettbewerb: "CL" },
@@ -163,7 +179,12 @@ export const KACHELN: KachelEinstellung[] = [
     meinTeam: ["132", "359"],
     linien: [8, 24],
   },
-  { id: "ki-news", art: "ki-news", titel: "KI-News" },
+  {
+    id: "ki-news",
+    art: "ki-news",
+    titel: "KI-News",
+    aussehen: { farbe: "#8E99A8" },
+  },
 ];
 
 export type SeitenEinstellung = { url: string; art: SeitenArt };
