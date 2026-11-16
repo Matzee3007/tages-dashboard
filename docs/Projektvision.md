@@ -231,9 +231,9 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 
 - **Wechsel des Spieltags:** eigene Regel für alle Wettbewerbe statt der des Anbieters. Ein Spieltag bleibt bis Mitternacht des Tages
   nach seinem letzten Spiel stehen, danach kommt der nächste (in der Winterpause also schon mit den neuen Terminen).
-  *Nachtrag 2026-11-16:* Spieltage ohne Tag Pause dazwischen (Premier League Sa–Mo, gleich Di wieder) trennt der Wechsel der
-  Nummer im Spielplan. Beginnt der nächste Spieltag am Tag nach dem letzten Spiel, gilt er ab 0 Uhr dieses Tages. Ohne Spielplan
-  trennt nur eine Lücke, wie bisher. Ein Nachholspiel direkt neben einem Spieltag wird so ein eigener Block.
+  *Nachtrag 2026-11-16 ([[projects/tages-dashboard/docs/adr/0012-spieltage-nach-nummer-trennen|ADR 0012]]):* Spieltage ohne Tag Pause
+  dazwischen (Premier League Sa–Mo, gleich Di wieder) trennt der Anstieg der Nummer im Spielplan. Beginnt der nächste Spieltag am Tag
+  nach dem letzten Spiel, gilt er ab 0 Uhr dieses Tages. Ein Nachholspiel bleibt im Block. Ohne Spielplan trennt nur eine Lücke.
 - **Tabelle als Ausschnitt:** Platz 1 und Mein Team mit je 2 Plätzen darüber und darunter. Spalten: Platz, Team, Spiele,
   Tordifferenz, Punkte.
 - **Mein Team** kann mehrere Teams umfassen (Champions League: FC Bayern und Arsenal), die Formel 1 hat vorerst keins.

@@ -54,8 +54,11 @@ Aus dem `/code-review` von PR #73, bewusst offen:
   nach etwa 1 Uhr deutscher Zeit. Bei der Champions League (PR 2) erneut prüfen.
 - **↻ und die Grenze:** Jeder Druck auf ↻ holt die Tabelle neu, ab etwa 6 Drücken in einer Minute droht 429. Dann erscheint „Tabelle
   gerade nicht erreichbar“.
-- **Spieltage ohne Pause** (Samstag bis Montag, dann Dienstag): behoben am 2026-11-16, `waehleSpieltag` trennt beim Wechsel des
-  `matchday`. Fällt der Spielplan aus, verschmelzen sie wieder zu einem Block, bis er zurück ist.
+- **Spieltage ohne Pause** (Samstag bis Montag, dann Dienstag): behoben am 2026-11-16, `waehleSpieltag` trennt, wo der `matchday` steigt
+  (ADR 0012). Fällt der Spielplan aus (auch bei 429, das nicht gespeichert wird), verschmelzen sie wieder zu einem Block, bis er zurück
+  ist. Die Kachel kann dann zwischen beiden Ansichten springen.
+- **Zwei Spieltage an einem Tag** (z. B. über Weihnachten die letzten Partien des 18. und die ersten des 19.): Der Spielplan merkt sich je
+  Tag nur die höchste Nummer, der Tag zählt ganz zum 19. Spieltag, der 18. verschwindet um 0 Uhr. Erst beheben, wenn es auftritt.
 
 ## Wie haben wir es eingerichtet?
 
