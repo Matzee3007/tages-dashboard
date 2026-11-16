@@ -7,6 +7,17 @@ import type {
 
 // Liest die inoffizielle Schnittstelle von ESPN (ADR 0009). Felder laut Antworten vom 2026-11-08.
 
+const ESPN = "https://site.api.espn.com/apis";
+
+// Adresse einer Liga bei ESPN, z. B. espnAdresse("scoreboard", "eng.1").
+export function espnAdresse(
+  art: "scoreboard" | "standings",
+  liga: string,
+): string {
+  const pfad = art === "scoreboard" ? "site/v2" : "v2";
+  return `${ESPN}/${pfad}/sports/soccer/${liga}/${art}`;
+}
+
 // Statusnamen von ESPN für Partien, die nicht wie geplant stattfinden.
 const ABGESAGT = new Set(["STATUS_POSTPONED", "STATUS_CANCELED"]);
 
@@ -83,6 +94,7 @@ export function leseTag(json: unknown, jetzt: Date, teams: Team[]): Partie[] {
   if (!Array.isArray(partien)) falscheForm();
   return partien.map((roh) => {
     const wettkampf = roh.competitions?.[0];
+    const teilnehmer = wettkampf?.competitors ?? [];
     const anstoss = roh.date ?? falscheForm();
     const zustand = roh.status?.type?.state;
     // ESPN meldet den Anpfiff manchmal verspätet: pre nach dem Anstoß zählt schon als laufend.
@@ -101,12 +113,12 @@ export function leseTag(json: unknown, jetzt: Date, teams: Team[]): Partie[] {
       status,
       minute: zustand === "in" ? (roh.status?.displayClock ?? null) : null,
       heim: teamStand(
-        roh.competitions?.[0]?.competitors?.find((t) => t.homeAway === "home"),
+        teilnehmer.find((t) => t.homeAway === "home"),
         angepfiffen,
         teams,
       ),
       gast: teamStand(
-        roh.competitions?.[0]?.competitors?.find((t) => t.homeAway === "away"),
+        teilnehmer.find((t) => t.homeAway === "away"),
         angepfiffen,
         teams,
       ),

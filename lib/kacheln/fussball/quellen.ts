@@ -1,6 +1,10 @@
 import type { FussballEinstellung } from "@/lib/einstellungen";
-import { holeJson } from "@/lib/kacheln/fussball/abruf";
-import { leseTabelle } from "@/lib/kacheln/fussball/espn";
+import {
+  holeJson,
+  NORMAL_SEKUNDEN,
+  TAG_SEKUNDEN,
+} from "@/lib/kacheln/fussball/abruf";
+import { espnAdresse, leseTabelle } from "@/lib/kacheln/fussball/espn";
 import {
   leseFdSpielplan,
   leseFdTabelle,
@@ -9,10 +13,6 @@ import { leseSpielplan } from "@/lib/kacheln/fussball/spielplan";
 import type { TabellenZeile } from "@/lib/kacheln/fussball/typen";
 
 // Die beiden Nahtstellen einer Liga: Spielplan (Nummer des Spieltags) und Tabelle, je nach Quelle aus der Einstellung.
-
-// Speicher in Sekunden (Projektvision, Entscheidungen vom 2026-11-08).
-const TAG_SEKUNDEN = 86_400;
-const NORMAL_SEKUNDEN = 900;
 
 const FOOTBALL_DATA = "https://api.football-data.org/v4/competitions";
 
@@ -64,7 +64,7 @@ export async function ladeTabelle(
   const { tabelle: quelle, teams, id: etikett } = einstellung;
   const speicher = { sekunden: NORMAL_SEKUNDEN, etikett };
   if (quelle.art === "espn") {
-    const url = `https://site.api.espn.com/apis/v2/sports/soccer/${einstellung.espn}/standings`;
+    const url = espnAdresse("standings", einstellung.espn);
     return leseTabelle(
       await holeJson(url, frisch ? "frisch" : speicher, jetzt),
       teams,

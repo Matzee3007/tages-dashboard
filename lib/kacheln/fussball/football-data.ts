@@ -44,14 +44,17 @@ export function leseFdTabelle(json: unknown, teams: Team[]): TabellenZeile[] {
       const fdId = roh.team?.id ?? falscheForm();
       const team = teams.find((t) => t.footballData === fdId);
       if (!team) console.error(`Team ${fdId} fehlt in der Liste`);
+      // Fehlt eine Zahl, hat sich die Antwort geändert: lieber keine Tabelle als eine falsche.
+      const zahl = (wert: number | undefined) =>
+        typeof wert === "number" ? wert : falscheForm();
       return {
-        platz: roh.position ?? 0,
+        platz: zahl(roh.position),
         id: team?.espn ?? `fd-${fdId}`,
         name: team?.name ?? roh.team?.shortName ?? "",
         logo: roh.team?.crest ?? null,
-        spiele: roh.playedGames ?? 0,
-        differenz: roh.goalDifference ?? 0,
-        punkte: roh.points ?? 0,
+        spiele: zahl(roh.playedGames),
+        differenz: zahl(roh.goalDifference),
+        punkte: zahl(roh.points),
       };
     })
     .sort((a, b) => a.platz - b.platz);

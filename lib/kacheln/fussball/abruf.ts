@@ -1,5 +1,9 @@
 // Abruf mit Zwischenspeicher für alle Quellen der Fußball-Kacheln.
 
+// Speicher in Sekunden (Projektvision, Entscheidungen vom 2026-11-08).
+export const TAG_SEKUNDEN = 86_400;
+export const NORMAL_SEKUNDEN = 900;
+
 const ABRUF_ZEITLIMIT_MS = 5000;
 const STUNDE_MS = 60 * 60 * 1000;
 

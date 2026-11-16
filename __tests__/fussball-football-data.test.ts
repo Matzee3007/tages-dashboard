@@ -105,3 +105,15 @@ test("wirft bei falscher Form der Tabelle", () => {
     "Unerwartete Antwort von football-data.org",
   );
 });
+
+test("wirft, wenn einer Zeile Platz oder Punkte fehlen", () => {
+  const ohnePlatz = { ...zeile(1, 57, "Arsenal FC"), position: undefined };
+  const ohnePunkte = { ...zeile(1, 57, "Arsenal FC"), points: undefined };
+  for (const roh of [ohnePlatz, ohnePunkte]) {
+    expect(() =>
+      leseFdTabelle({ standings: [{ type: "TOTAL", table: [roh] }] }, [
+        ARSENAL,
+      ]),
+    ).toThrow("Unerwartete Antwort von football-data.org");
+  }
+});

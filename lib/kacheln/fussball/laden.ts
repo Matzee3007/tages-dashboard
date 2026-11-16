@@ -1,6 +1,14 @@
 import type { FussballEinstellung } from "@/lib/einstellungen";
-import { holeJson } from "@/lib/kacheln/fussball/abruf";
-import { leseKalender, leseTag } from "@/lib/kacheln/fussball/espn";
+import {
+  holeJson,
+  NORMAL_SEKUNDEN,
+  TAG_SEKUNDEN,
+} from "@/lib/kacheln/fussball/abruf";
+import {
+  espnAdresse,
+  leseKalender,
+  leseTag,
+} from "@/lib/kacheln/fussball/espn";
 import { ladeSpielplan, ladeTabelle } from "@/lib/kacheln/fussball/quellen";
 import {
   sortierePartien,
@@ -9,14 +17,6 @@ import {
   waehleSpieltag,
 } from "@/lib/kacheln/fussball/spieltag";
 import type { FussballDaten, Partie } from "@/lib/kacheln/fussball/typen";
-
-const ESPN = "https://site.api.espn.com/apis";
-const kalenderUrl = (liga: string) =>
-  `${ESPN}/site/v2/sports/soccer/${liga}/scoreboard`;
-
-// Speicher in Sekunden (Projektvision, Entscheidungen vom 2026-11-08).
-const TAG_SEKUNDEN = 86_400;
-const NORMAL_SEKUNDEN = 900;
 
 function laeuftEine(partien: Partie[]): boolean {
   return partien.some((partie) => partie.status === "laeuft");
@@ -27,7 +27,7 @@ async function ladeTag(
   tag: string,
   jetzt: Date,
 ): Promise<Partie[]> {
-  const url = `${kalenderUrl(einstellung.espn)}?dates=${tag.replaceAll("-", "")}`;
+  const url = `${espnAdresse("scoreboard", einstellung.espn)}?dates=${tag.replaceAll("-", "")}`;
   const etikett = einstellung.id;
   const partien = leseTag(
     await holeJson(url, { sekunden: NORMAL_SEKUNDEN, etikett }, jetzt),
@@ -49,7 +49,7 @@ export async function ladeFussball(
   const etikett = einstellung.id;
   const kalender = leseKalender(
     await holeJson(
-      kalenderUrl(einstellung.espn),
+      espnAdresse("scoreboard", einstellung.espn),
       { sekunden: TAG_SEKUNDEN, etikett },
       jetzt,
     ),
