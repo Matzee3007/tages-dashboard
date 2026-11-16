@@ -65,6 +65,17 @@ test("trennt den Block, wo die Nummer des Spieltags wechselt", () => {
   ).toEqual(["2026-11-28", "2026-11-29", "2026-11-30"]);
 });
 
+test("am Tag nach dem letzten Spiel gilt schon der nächste Spieltag, wenn er dann beginnt", () => {
+  // Di 1.12. 0:00 deutscher Zeit
+  expect(
+    waehleSpieltag(
+      ENGLISCHE_WOCHE,
+      SPIELPLAN_ENGLISCHE_WOCHE,
+      new Date("2026-11-30T23:00:00Z"),
+    ),
+  ).toEqual(["2026-12-01"]);
+});
+
 const SPIELPLAN = new Map([
   ["2026-11-06", 9],
   ["2026-11-07", 9],

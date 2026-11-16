@@ -24,15 +24,20 @@ function bloecke(
   return ergebnis;
 }
 
-// Ein Spieltag bleibt bis Mitternacht (deutsche Zeit) des Tages nach seinem letzten Spiel aktuell.
+// Ein Spieltag bleibt bis Mitternacht (deutsche Zeit) des Tages nach seinem letzten Spiel aktuell,
+// höchstens bis der nächste beginnt.
 export function waehleSpieltag(
   tage: string[],
   spielplan: Map<string, number> | null,
   jetzt: Date,
 ): string[] {
   const alle = bloecke(tage, spielplan);
+  const tag = heute(jetzt);
   return (
-    alle.find((block) => heute(jetzt) <= folgetag(block.at(-1)!)) ??
+    alle.find(
+      (block, index) =>
+        tag <= folgetag(block.at(-1)!) && !(tag >= alle[index + 1]?.[0]),
+    ) ??
     alle.at(-1) ??
     []
   );
