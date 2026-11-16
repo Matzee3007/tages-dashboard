@@ -44,11 +44,12 @@ async function ladeTag(
 }
 
 // Tage mit Spielen und Spielplan. Bei der Champions League sind die Tage die des Spielplans (Einstellung kalender).
-// Fehlt er, nimmt sie die Tage aus dem Standardabruf von ESPN (aktueller oder nächster Tag), ohne Nummer (ADR 0011).
+// Fehlt er oder ist leer, nimmt sie die Tage aus dem Standardabruf von ESPN (aktueller oder nächster Tag), ohne Nummer (ADR 0011).
 async function ladeKalender(einstellung: FussballEinstellung, jetzt: Date) {
   if (einstellung.kalender.art === "spielplan") {
     const spielplan = await ladeSpielplan(einstellung, [], jetzt);
-    if (spielplan) return { kalender: [...spielplan.keys()].sort(), spielplan };
+    if (spielplan?.size)
+      return { kalender: [...spielplan.keys()].sort(), spielplan };
     const ersatz = await holeJson(
       espnAdresse("scoreboard", einstellung.espn),
       { sekunden: NORMAL_SEKUNDEN, etikett: einstellung.id },

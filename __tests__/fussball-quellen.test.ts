@@ -288,3 +288,14 @@ test("Champions League: ohne Spielplan kommen die Tage aus dem Standardabruf von
   expect(daten.tabelle).toBeNull();
   expect(daten.partien.map((p) => p.id)).toEqual(["a"]);
 });
+
+test("Champions League: ein leerer Spielplan führt auch zum Standardabruf von ESPN", async () => {
+  clAntworten({
+    [CL_SPIELPLAN]: { matches: [] },
+    [CL_SCOREBOARD]: clTag(["a", "2026-11-24T17:45Z"]),
+  });
+  const daten = await ladeFussball(CL, new Date("2026-11-16T12:00:00Z"));
+
+  expect(daten.tage).toEqual(["2026-11-24"]);
+  expect(daten.partien.map((p) => p.id)).toEqual(["a"]);
+});

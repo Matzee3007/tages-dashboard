@@ -41,9 +41,10 @@ export function leseKalender(json: unknown): string[] {
 export function leseTageDerPartien(json: unknown): string[] {
   const partien = (json as { events?: { date?: string }[] })?.events;
   if (!Array.isArray(partien)) falscheForm();
-  const tage = partien.map((partie) =>
-    heute(new Date(partie.date ?? falscheForm())),
-  );
+  const tage = partien.map((partie) => {
+    const zeit = Date.parse(partie.date ?? "");
+    return Number.isNaN(zeit) ? falscheForm() : heute(new Date(zeit));
+  });
   return [...new Set(tage)].sort();
 }
 

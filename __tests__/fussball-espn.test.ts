@@ -324,4 +324,7 @@ test("Tage der Partien nach deutscher Zeit, ohne Doppelte, aufsteigend", () => {
     }),
   ).toEqual(["2026-11-24", "2026-11-25"]);
   expect(() => leseTageDerPartien({})).toThrow("Unerwartete Antwort von ESPN");
+  expect(() => leseTageDerPartien({ events: [{ date: "TBD" }] })).toThrow(
+    "Unerwartete Antwort von ESPN",
+  );
 });
