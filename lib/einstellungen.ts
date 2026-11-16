@@ -12,6 +12,9 @@ export type BundesligaEinstellung = {
 
 export type KachelEinstellung = KiNewsEinstellung | BundesligaEinstellung;
 
+// Ein Team mit id bei ESPN, id bei football-data.org (falls die Liga sie braucht) und deutschem Kurznamen.
+export type Team = { espn: string; footballData?: number; name: string };
+
 // Die Reihenfolge hier ist die Reihenfolge auf dem Bildschirm.
 export const KACHELN: KachelEinstellung[] = [
   // 132 ist der FC Bayern bei ESPN.
