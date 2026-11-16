@@ -257,7 +257,7 @@ Die Tests gehen über `ladeFussball` (`__tests__/fussball-quellen.test.ts`).
   ERFÜLLT. Behoben: 4 (Tabelle streng lesen), 7 und 8 (Doppeltes zusammengeführt). Bekannte Grenzen in der Tool-Notiz: 1, 3, 5. Fund 2
   (Spieltage verschmelzen Montag/Dienstag) als eigener PR danach, Fund 6 und 9 bewusst offen (9 bei der Champions League). Drift des
   `plan-pruefer` als Nachträge in ADR 0008 (Spielplan ohne Etikett) und ADR 0011 (Name in der Tabelle).
-- [ ] **Schritt 2: Abnahme in der Vorschau von Vercel** (Entwickler): einloggen, Premier League steht zwischen Bundesliga und KI-News,
+- [x] **Schritt 2: Abnahme in der Vorschau von Vercel** (Entwickler, bestanden am 2026-11-16): einloggen, Premier League steht zwischen Bundesliga und KI-News,
   Überschrift „12. Spieltag · …“ (Nummer aus football-data.org, also vom Server bei Vercel aus erreichbar), Tabelle mit Arsenal und je
   2 Plätzen darum, deutsche Kurznamen, Logos. Bundesliga sieht aus wie vorher.
 - [ ] **Schritt 3:** Nach dem Merge dieselbe Prüfung in Production.
