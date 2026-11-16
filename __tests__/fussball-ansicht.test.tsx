@@ -58,6 +58,7 @@ const DATEN: FussballDaten = {
   partien: [MAINZ_BAYERN, KOELN_LEVERKUSEN, FREIBURG_UNION],
   tabelle: [zeile(1, "132", "Bayern"), null, zeile(4, "126", "Freiburg")],
   meinTeam: ["132"],
+  linien: [],
 };
 
 test("Überschrift mit Nummer und Tagen", () => {
@@ -107,6 +108,47 @@ test("Mein Team ist markiert", () => {
   );
   const bayernZeile = screen.getByRole("row", { name: /Bayern/ });
   expect(bayernZeile.hasAttribute("data-mein-team")).toBe(true);
+});
+
+function mitLinien(
+  tabelle: (TabellenZeile | null)[],
+  linien: number[],
+  meinTeam: string[] = [],
+) {
+  render(<FussballAnsicht daten={{ ...DATEN, tabelle, linien, meinTeam }} />);
+  return screen
+    .getAllByRole("row")
+    .filter((reihe) => reihe.hasAttribute("data-linie"))
+    .map((reihe) => reihe.textContent?.match(/^\d+/)?.[0]);
+}
+
+test("nach Platz 4 kommt eine Linie, wenn Platz 5 folgt", () => {
+  const tabelle = [
+    zeile(1, "1", "Eins"),
+    null,
+    zeile(3, "3", "Drei"),
+    zeile(4, "4", "Vier"),
+    zeile(5, "5", "Fünf"),
+  ];
+  expect(mitLinien(tabelle, [4])).toEqual(["4"]);
+});
+
+test("keine Linie über eine Lücke", () => {
+  const tabelle = [
+    zeile(1, "1", "Eins"),
+    null,
+    zeile(4, "4", "Vier"),
+    null,
+    zeile(7, "7", "Sieben"),
+  ];
+  expect(mitLinien(tabelle, [4])).toEqual([]);
+});
+
+test("Mein Team an der Grenze hat Markierung und Linie", () => {
+  mitLinien([zeile(4, "4", "Vier"), zeile(5, "5", "Fünf")], [4], ["4"]);
+  const reihe = screen.getByRole("row", { name: /Vier/ });
+  expect(reihe.hasAttribute("data-mein-team")).toBe(true);
+  expect(reihe.hasAttribute("data-linie")).toBe(true);
 });
 
 test("Lücke in der Tabelle", () => {

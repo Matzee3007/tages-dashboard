@@ -21,6 +21,8 @@ export type FussballEinstellung = {
     | { art: "openligadb"; liga: "bl1" }
     | { art: "football-data"; wettbewerb: "PL" | "CL" };
   meinTeam: string[];
+  // Plätze, nach denen in der Tabelle eine Linie steht. Grundverteilung der Saison, von Hand geprüft (Projektvision).
+  linien: number[];
 } & (
   | { tabelle: { art: "espn" }; teams: Team[] }
   | {
@@ -133,6 +135,7 @@ export const KACHELN: KachelEinstellung[] = [
     tabelle: { art: "espn" },
     teams: TEAMS_BUNDESLIGA,
     meinTeam: ["132"],
+    linien: [4, 5, 6, 15, 16],
   },
   // 359 ist Arsenal bei ESPN.
   {
@@ -145,6 +148,7 @@ export const KACHELN: KachelEinstellung[] = [
     tabelle: { art: "football-data", wettbewerb: "PL" },
     teams: TEAMS_PREMIER_LEAGUE,
     meinTeam: ["359"],
+    linien: [4, 5, 6, 17],
   },
   // Ligaphase: Tage aus dem Spielplan, weil ESPN dort keine Tage im Kalender hat (ADR 0011). 132 Bayern, 359 Arsenal.
   {
@@ -157,6 +161,7 @@ export const KACHELN: KachelEinstellung[] = [
     tabelle: { art: "football-data", wettbewerb: "CL" },
     teams: TEAMS_CHAMPIONS_LEAGUE,
     meinTeam: ["132", "359"],
+    linien: [8, 24],
   },
   { id: "ki-news", art: "ki-news", titel: "KI-News" },
 ];

@@ -17,6 +17,7 @@ const EINSTELLUNG: FussballEinstellung = {
     { espn: "367", footballData: 73, name: "Tottenham" },
   ],
   meinTeam: ["359"],
+  linien: [],
 };
 // Sa 21.11. 18:00 deutscher Zeit
 const JETZT = new Date("2026-11-21T17:00:00Z");
@@ -196,6 +197,7 @@ const CL: FussballEinstellung = {
     { espn: "359", footballData: 57, name: "Arsenal" },
   ],
   meinTeam: ["132", "359"],
+  linien: [],
 };
 const CL_SCOREBOARD =
   "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard";

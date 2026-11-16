@@ -1,2 +1,4 @@
 *.md
 package-lock.json
+# Mocks sind Wegwerf-Entwürfe des Agents mock-bauer, sie werden nicht formatiert.
+assets/mocks/

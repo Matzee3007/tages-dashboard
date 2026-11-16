@@ -185,6 +185,7 @@ test("zeigt die Bundesliga-Kachel", async () => {
           partien: [],
           tabelle: [],
           meinTeam: ["132"],
+          linien: [],
         },
         stand: ZEIT,
       },

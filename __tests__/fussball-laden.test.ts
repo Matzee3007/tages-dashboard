@@ -13,6 +13,7 @@ const EINSTELLUNG = {
   tabelle: { art: "espn" as const },
   teams: TEAMS_BUNDESLIGA,
   meinTeam: ["132"],
+  linien: [4, 5, 6, 15, 16],
 };
 // So 8.11. 17:45 deutscher Zeit
 const JETZT = new Date("2026-11-08T16:45:00Z");
@@ -121,6 +122,7 @@ test("baut die Daten aus Kalender, Tagen, Tabelle und Spielplan", async () => {
   ]);
   expect(daten.tabelle?.map((z) => z?.name)).toEqual(["Bayern"]);
   expect(daten.meinTeam).toEqual(["132"]);
+  expect(daten.linien).toEqual([4, 5, 6, 15, 16]);
 });
 
 test("setzt Speicher, Etikett und Zeitlimit", async () => {

@@ -102,9 +102,11 @@ function PartieZeile({
 function TabellenZeilen({
   zeile,
   meinTeam,
+  linie,
 }: {
   zeile: TabellenZeile | null;
   meinTeam: string[];
+  linie: boolean;
 }) {
   if (!zeile) {
     return (
@@ -119,9 +121,11 @@ function TabellenZeilen({
     );
   }
   const mein = meinTeam.includes(zeile.id);
-  const zelle = `h-[34px] border-t border-rand py-1.5 ${mein ? "bg-akzent/8" : ""}`;
+  const zelle = `h-[34px] border-t border-rand py-1.5 ${mein ? "bg-akzent/8" : ""} ${
+    linie ? "border-b-[1.5px] border-b-(--farbe)" : ""
+  }`;
   return (
-    <tr data-mein-team={mein || undefined}>
+    <tr data-mein-team={mein || undefined} data-linie={linie || undefined}>
       <td
         className={`${zelle} w-[26px] text-right text-gedaempft ${
           mein
@@ -182,11 +186,16 @@ export function FussballAnsicht({ daten }: { daten: FussballDaten }) {
               </tr>
             </thead>
             <tbody>
-              {daten.tabelle.map((zeile, index) => (
+              {daten.tabelle.map((zeile, index, alle) => (
                 <TabellenZeilen
                   key={zeile?.id ?? `luecke-${index}`}
                   zeile={zeile}
                   meinTeam={daten.meinTeam}
+                  linie={
+                    zeile !== null &&
+                    daten.linien.includes(zeile.platz) &&
+                    alle[index + 1]?.platz === zeile.platz + 1
+                  }
                 />
               ))}
             </tbody>
