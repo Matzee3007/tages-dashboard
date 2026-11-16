@@ -223,7 +223,8 @@ Entscheidungen aus der Befragung vom 2026-11-04:
    für die Grenze von 10 Abrufen pro Minute. PR 1 Premier League erledigt 2026-11-16 (PR #73, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-16-premier-league|Plan]]), gemeinsames Modul `lib/kacheln/fussball/`. Spieltage ohne Pause
    dazwischen trennt seit 2026-11-16 der Spielplan (Nachtrag unten). PR 2 Champions League (Ligaphase) erledigt 2026-11-16, siehe
-   [[projects/tages-dashboard/docs/plaene/2026-11-16-champions-league|Plan]]. Offen: PR 3 neues Aussehen.
+   [[projects/tages-dashboard/docs/plaene/2026-11-16-champions-league|Plan]]. PR 3 neues Aussehen erledigt 2026-11-16, siehe
+   [[projects/tages-dashboard/docs/plaene/2026-11-16-neues-aussehen|Plan]] (Nachtrag unten).
 3. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
 4. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
    nicht, eine andere Gratis-Quelle suchen oder die Kachel unter „Später“ schieben.
@@ -278,6 +279,12 @@ Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
 - **Neues Aussehen für das ganze Dashboard:** Die Darstellung wirkt dem Entwickler zu eintönig, vor allem die Absender der KI-News sind
   nicht eindeutig voneinander getrennt. Das Aussehen wird einmal für alles neu gestaltet, mit Gruppe Sport und Linien in den Tabellen,
   vorher ein Mock mit Varianten zur Freigabe.
+- **Nachtrag 2026-11-16, Aussehen nach Mock F „Instrument“** (`assets/mocks/2026-11-16-aussehen-f.html`, nach zwei Runden mit den
+  Varianten A–F): keine Kästen, Ordnung über Gewicht und Größe der Schrift Commissioner, Grundton Schiefer `#171B22`, immer dunkel.
+  Jede Kachel und jeder Absender hat seine Hausfarbe als Akzent (Quadrat, Grenzlinie, Name des Absenders), die Werte stehen in der
+  Einstellungsdatei. Orange gehört allein Mein Team, Live und „neu“: Bei Anthropic, Claude Updates und Hacker News steht die orange
+  Hausfarbe deshalb nur im kleinen Quadrat. Die Absender hängen in einer eigenen Spalte links neben ihren Meldungen. Der Knopf für die
+  KI-Zusammenfassung heißt jetzt „Zusammenfassung“, die Markierung „KI-generiert“ bleibt.
 - **Aufteilung in PRs:** 1. Premier League mit football-data.org (Schlüssel, Zwischenspeicher) und dem Herausziehen des Gemeinsamen der
   Sport-Kacheln, dabei der Skill `module-entwerfen`. 2. Champions League (anderer Kalender, 36 Teams). 3. Neues Aussehen.
 - **Spieltag aus Kalendertagen:** Aufeinanderfolgende Tage mit Spielen bei ESPN bilden einen Spieltag, ein Tag ohne Spiel trennt.

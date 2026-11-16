@@ -80,17 +80,17 @@ Claude und Hacker News nur im Quadrat (Variante B2 und D, E wurden verworfen).
 - Liefert: `FussballEinstellung.linien: number[]` und `FussballDaten.linien: number[]` (Plätze, nach denen eine Linie kommt).
   Die Zeile trägt `data-linie` und unten eine Linie in `var(--farbe)`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - `fussball-ansicht`: „nach Platz 4 kommt eine Linie, wenn Platz 5 folgt“ mit Tabelle `[1, null, 3, 4, 5]`, `linien: [4]` →
     Zeile 4 hat `data-linie`, die anderen nicht.
   - „keine Linie über eine Lücke“ mit `[1, null, 4, null, 7]`, `linien: [4]` → keine Zeile hat `data-linie`.
   - „Mein Team an der Grenze hat Markierung und Linie“: Platz 4 ist Mein Team → `data-mein-team` und `data-linie`.
   - `fussball-laden`: `ladeFussball` gibt `linien` der Einstellung zurück.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen** `npx vitest run __tests__/fussball-ansicht.test.tsx __tests__/fussball-laden.test.ts`
-- [ ] **Schritt 3: Umsetzen.** Linie, wenn `linien` den Platz der Zeile enthält und das nächste Element des Ausschnitts die Zeile mit Platz + 1 ist.
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen** `npx vitest run __tests__/fussball-ansicht.test.tsx __tests__/fussball-laden.test.ts`
+- [x] **Schritt 3: Umsetzen.** Linie, wenn `linien` den Platz der Zeile enthält und das nächste Element des Ausschnitts die Zeile mit Platz + 1 ist.
   Werte in `KACHELN` nach den festen Vorgaben.
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Draw qualification lines in tables"`
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Draw qualification lines in tables"`
 
 ### Aufgabe 2: Farben und Schrift als Grundlage
 
@@ -103,12 +103,12 @@ Claude und Hacker News nur im Quadrat (Variante B2 und D, E wurden verworfen).
 **Schnittstellen:**
 - Liefert: Token `grund`, `rand`, `text`, `gedaempft`, `rauch`, `akzent`, `info`, `fehler` und `--font-sans` mit Commissioner. `--font-titel` entfällt.
 
-- [ ] **Schritt 1: Fehlschlagende Tests anpassen:** `globals.css` enthält `--color-grund: #171b22` und `--color-rauch: #69727f`,
+- [x] **Schritt 1: Fehlschlagende Tests anpassen:** `globals.css` enthält `--color-grund: #171b22` und `--color-rauch: #69727f`,
   `viewport.themeColor` und Manifest nennen `#171B22`. Die Attrappe von `next/font/google` liefert `Commissioner`.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen** `npx vitest run __tests__/layout.test.ts __tests__/manifest.test.ts`
-- [ ] **Schritt 3: Umsetzen.** Commissioner mit `next/font/google`, Gewicht variabel. Kopf nach Mock F.
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Switch to slate palette and Commissioner"`
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen** `npx vitest run __tests__/layout.test.ts __tests__/manifest.test.ts`
+- [x] **Schritt 3: Umsetzen.** Commissioner mit `next/font/google`, Gewicht variabel. Kopf nach Mock F.
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Switch to slate palette and Commissioner"`
 
 ### Aufgabe 3: Farbe je Kachel, Kachel ohne Kasten
 
@@ -121,15 +121,15 @@ Claude und Hacker News nur im Quadrat (Variante B2 und D, E wurden verworfen).
 - Liefert: `export type Aussehen = { farbe: string; marke?: string }`. `KachelAntwort` und `KachelAnzeige` tragen `aussehen: Aussehen`
   und `gruppe?: string`, auch im Zustand Fehler. `Kachel` setzt `--farbe` und `--marke` (`marke ?? farbe`) auf ihr `<section>`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - `kacheln-laden`: Aussehen und Gruppe kommen bei `ok` und bei `fehler` aus der Einstellung mit.
   - `kacheln-stand`: Eine Kachel mit Fehler ohne bisherigen Stand behält `aussehen` und `gruppe` aus der Antwort.
   - `kachel`: Die Kachel setzt `--farbe: #E3343F` und `--marke: #E3343F`. Mit `marke` gesetzt ist `--marke` die Marke.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [ ] **Schritt 3: Umsetzen.** Kein Rahmen, keine Fläche. Kopf: Quadrat in `--marke`, Titel, ↻. Gruppe `"Sport"` an den drei Fußball-Kacheln.
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 3: Umsetzen.** Kein Rahmen, keine Fläche. Kopf: Quadrat in `--marke`, Titel, ↻. Gruppe `"Sport"` an den drei Fußball-Kacheln.
   Der Fehlerhinweis behält seine Texte, steht aber als Text mit Knopf ohne gestrichelten Kasten.
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Give tiles house colours without boxes"`
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Give tiles house colours without boxes"`
 
 ### Aufgabe 4: Gruppe Sport
 
@@ -141,16 +141,16 @@ Claude und Hacker News nur im Quadrat (Variante B2 und D, E wurden verworfen).
 **Schnittstellen:**
 - Nutzt: `KachelAnzeige.gruppe` aus Aufgabe 3.
 - Liefert: `gruppiere(kacheln: KachelAnzeige[]): { gruppe: string | null; kacheln: KachelAnzeige[] }[]`. Aufeinanderfolgende Kacheln
-  derselben Gruppe bilden einen Block, die Reihenfolge bleibt. `Kachel` bekommt `gross?: boolean` für den Titel in 34 px.
+  derselben Gruppe bilden einen Block, die Reihenfolge bleibt. `Kachel` zeigt ohne Gruppe den großen Titel (`<h2>`, 34 px), in einer Gruppe den kleinen (`<h3>`).
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - `kacheln-gruppen`: `[BL(Sport), PL(Sport), CL(Sport), KI]` → `[{Sport: BL, PL, CL}, {null: KI}]`.
   - `page`: In der Region „Sport“ stehen Bundesliga und Premier League, KI-News steht außerhalb, ihr Titel ist eine Überschrift der Ebene 2.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [ ] **Schritt 3: Umsetzen.** Gruppe als `<section aria-label>` mit `<h2>` „Sport“, darin die Kacheln ab 900 px in drei Spalten.
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 3: Umsetzen.** Gruppe als `<section aria-label>` mit `<h2>` „Sport“, darin die Kacheln ab 900 px in drei Spalten.
   Kacheln ohne Gruppe nehmen die ganze Breite und tragen ihren Titel als `<h2>`.
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Group football tiles under Sport"`
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Group football tiles under Sport"`
 
 ### Aufgabe 5: Absender in eigener Spalte
 
@@ -164,14 +164,14 @@ Claude und Hacker News nur im Quadrat (Variante B2 und D, E wurden verworfen).
 - Liefert: `AbsenderStand.aussehen: Aussehen`. Jeder Absender ist ein `<section aria-label={name}>` mit `--farbe` und `--marke`, Name als
   Überschrift in der linken Spalte.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - `ki-news-laden`: Der Stand eines Absenders trägt das Aussehen seiner Einstellung, auch wenn er nicht erreichbar ist.
   - `ki-news-ansicht`: Der Abschnitt „Anthropic“ setzt `--farbe: #E8E6DC` und `--marke: #D97757`.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [ ] **Schritt 3: Umsetzen.** Raster nach den festen Vorgaben, Container Query bei 600 px. Ruhige Absender stehen wie bisher am Ende,
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 3: Umsetzen.** Raster nach den festen Vorgaben, Container Query bei 600 px. Ruhige Absender stehen wie bisher am Ende,
   im selben Raster, Name in `gedaempft`.
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Show news senders in a coloured column"`
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: Prüfen und committen** `npm run check`, `git commit -m "Show news senders in a coloured column"`
 
 ### Aufgabe 6: Feinschliff, Doku und Abnahme
 
@@ -180,8 +180,8 @@ Claude und Hacker News nur im Quadrat (Variante B2 und D, E wurden verworfen).
 - Ändern: `lib/kacheln/ki-news/ansicht.tsx` (Knopf der Zusammenfassung als Text „Zusammenfassung“ unter dem Titel, Kasten als Linie links)
 - Ändern: `docs/Projektvision.md` (Schritt 2 erledigt, Nachtrag Aussehen F, Hausfarben, Orange), `docs/Glossar.md` falls ein Begriff fehlt
 
-- [ ] **Schritt 1: Maße umsetzen.** Bestehende Tests bleiben grün, Namen von Knöpfen nur ändern, wenn der Test mitzieht. `npm run check`.
-- [ ] **Schritt 2: Doku nachtragen und committen** `git commit -m "Tighten rows, document new look"`
+- [x] **Schritt 1: Maße umsetzen.** Bestehende Tests bleiben grün, Namen von Knöpfen nur ändern, wenn der Test mitzieht. `npm run check`.
+- [x] **Schritt 2: Doku nachtragen und committen** `git commit -m "Tighten rows, document new look"`
 - [ ] **Schritt 3: Abnahme durch den Entwickler** in der Vorschau von Vercel auf Mac und iPhone: Gruppe Sport, Linien, Absender getrennt,
   auf dem iPhone kein waagrechtes Scrollen.
 

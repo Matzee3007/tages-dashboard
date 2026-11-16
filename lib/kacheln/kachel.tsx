@@ -10,10 +10,8 @@ export function Abschnitt({
   children: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <h3 className="text-xs font-semibold tracking-[0.08em] text-gedaempft uppercase">
-        {titel}
-      </h3>
+    <div className="flex flex-col gap-1">
+      <h4 className="text-[13px] font-semibold text-gedaempft">{titel}</h4>
       {children}
     </div>
   );
