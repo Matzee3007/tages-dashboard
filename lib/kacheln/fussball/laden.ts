@@ -42,13 +42,31 @@ async function ladeTag(
   );
 }
 
+// Tage mit Spielen und Spielplan. Bei der Champions League sind die Tage die des Spielplans (Einstellung kalender).
+async function ladeKalender(einstellung: FussballEinstellung, jetzt: Date) {
+  if (einstellung.kalender.art === "spielplan") {
+    const spielplan = await ladeSpielplan(einstellung, [], jetzt);
+    return {
+      kalender: spielplan ? [...spielplan.keys()].sort() : [],
+      spielplan,
+    };
+  }
+  const kalender = leseKalender(
+    await holeJson(
+      espnAdresse("scoreboard", einstellung.espn),
+      { sekunden: TAG_SEKUNDEN, etikett: einstellung.id },
+      jetzt,
+    ),
+  );
+  return {
+    kalender,
+    spielplan: await ladeSpielplan(einstellung, kalender, jetzt),
+  };
+}
+
 // Der Spielplan kommt vor der Wahl: Steigt die Nummer, trennt er Spieltage ohne Lücke.
-async function ladeSpieltag(
-  einstellung: FussballEinstellung,
-  kalender: string[],
-  jetzt: Date,
-) {
-  const spielplan = await ladeSpielplan(einstellung, kalender, jetzt);
+async function ladeSpieltag(einstellung: FussballEinstellung, jetzt: Date) {
+  const { kalender, spielplan } = await ladeKalender(einstellung, jetzt);
   const tage = waehleSpieltag(kalender, spielplan, jetzt);
   const partienJeTag = await Promise.all(
     tage.map((tag) => ladeTag(einstellung, tag, jetzt)),
@@ -60,16 +78,8 @@ export async function ladeFussball(
   einstellung: FussballEinstellung,
   jetzt: Date,
 ): Promise<FussballDaten> {
-  const etikett = einstellung.id;
-  const kalender = leseKalender(
-    await holeJson(
-      espnAdresse("scoreboard", einstellung.espn),
-      { sekunden: TAG_SEKUNDEN, etikett },
-      jetzt,
-    ),
-  );
   const [{ spielplan, tage, partien }, normaleTabelle] = await Promise.all([
-    ladeSpieltag(einstellung, kalender, jetzt),
+    ladeSpieltag(einstellung, jetzt),
     ladeTabelle(einstellung, false, jetzt),
   ]);
   // Nur ESPN wird live nachgeholt, die Tabelle von football-data.org darf nachziehen (ADR 0011).

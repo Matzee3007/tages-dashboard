@@ -5,17 +5,19 @@ export type KiNewsEinstellung = { id: string; art: "ki-news"; titel: string };
 // Ein Team mit id bei ESPN, id bei football-data.org (falls die Liga sie braucht) und deutschem Kurznamen.
 export type Team = { espn: string; footballData?: number; name: string };
 
-// Eine Fußball-Liga: Partien immer von ESPN, Spielplan (Nummer des Spieltags) und Tabelle je nach Quelle (ADR 0011).
-// meinTeam: ids der Teams bei ESPN (Glossar: Mein Team).
+// Ein Fußball-Wettbewerb: Partien immer von ESPN, Kalender (Tage mit Spielen), Spielplan (Nummer des Spieltags) und
+// Tabelle je nach Quelle (ADR 0011). Der Kalender von ESPN kennt bei der Champions League keine Tage, dort kommen sie
+// aus dem Spielplan. meinTeam: ids der Teams bei ESPN (Glossar: Mein Team).
 export type FussballEinstellung = {
   id: string;
   art: "fussball";
   titel: string;
-  espn: "ger.1" | "eng.1";
+  espn: "ger.1" | "eng.1" | "uefa.champions";
+  kalender: { art: "espn" } | { art: "spielplan" };
   spielplan:
     | { art: "openligadb"; liga: "bl1" }
-    | { art: "football-data"; wettbewerb: "PL" };
-  tabelle: { art: "espn" } | { art: "football-data"; wettbewerb: "PL" };
+    | { art: "football-data"; wettbewerb: "PL" | "CL" };
+  tabelle: { art: "espn" } | { art: "football-data"; wettbewerb: "PL" | "CL" };
   teams: Team[];
   meinTeam: string[];
 };
@@ -77,6 +79,7 @@ export const KACHELN: KachelEinstellung[] = [
     art: "fussball",
     titel: "Bundesliga",
     espn: "ger.1",
+    kalender: { art: "espn" },
     spielplan: { art: "openligadb", liga: "bl1" },
     tabelle: { art: "espn" },
     teams: TEAMS_BUNDESLIGA,
@@ -88,6 +91,7 @@ export const KACHELN: KachelEinstellung[] = [
     art: "fussball",
     titel: "Premier League",
     espn: "eng.1",
+    kalender: { art: "espn" },
     spielplan: { art: "football-data", wettbewerb: "PL" },
     tabelle: { art: "football-data", wettbewerb: "PL" },
     teams: TEAMS_PREMIER_LEAGUE,

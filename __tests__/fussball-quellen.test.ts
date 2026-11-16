@@ -9,6 +9,7 @@ const EINSTELLUNG: FussballEinstellung = {
   art: "fussball",
   titel: "Premier League",
   espn: "eng.1",
+  kalender: { art: "espn" },
   spielplan: { art: "football-data", wettbewerb: "PL" },
   tabelle: { art: "football-data", wettbewerb: "PL" },
   teams: [
@@ -175,4 +176,91 @@ test("die Premier League steht zwischen Bundesliga und KI-News, Mein Team ist Ar
     footballData: 57,
     name: "Arsenal",
   });
+});
+
+const CL: FussballEinstellung = {
+  id: "champions-league",
+  art: "fussball",
+  titel: "Champions League",
+  espn: "uefa.champions",
+  kalender: { art: "spielplan" },
+  spielplan: { art: "football-data", wettbewerb: "CL" },
+  tabelle: { art: "football-data", wettbewerb: "CL" },
+  teams: [
+    { espn: "132", footballData: 5, name: "Bayern" },
+    { espn: "359", footballData: 57, name: "Arsenal" },
+  ],
+  meinTeam: ["132", "359"],
+};
+const CL_SCOREBOARD =
+  "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard";
+const CL_SPIELPLAN = "https://api.football-data.org/v4/competitions/CL/matches";
+const CL_TABELLE = "https://api.football-data.org/v4/competitions/CL/standings";
+
+function clTag(...partien: [id: string, date: string][]) {
+  const team = (id: string, homeAway: string) => ({
+    homeAway,
+    score: "0",
+    team: { id, shortDisplayName: id, logo: null },
+  });
+  return {
+    events: partien.map(([id, date]) => ({
+      id,
+      date,
+      status: { displayClock: "0'", type: { state: "pre" } },
+      competitions: [
+        { competitors: [team("132", "home"), team("359", "away")] },
+      ],
+    })),
+  };
+}
+
+function clAntworten(abweichend: Record<string, unknown | number> = {}) {
+  antworten({
+    [CL_SPIELPLAN]: {
+      matches: [
+        { utcDate: "2026-11-03T20:00:00Z", matchday: 4 },
+        { utcDate: "2026-11-04T20:00:00Z", matchday: 4 },
+        { utcDate: "2026-11-24T17:45:00Z", matchday: 5 },
+        { utcDate: "2026-11-25T20:00:00Z", matchday: 5 },
+        { utcDate: "2027-01-27T20:00:00Z", matchday: 8 },
+        { utcDate: "2027-01-27T20:00:00Z", matchday: 8 },
+      ],
+    },
+    [CL_TABELLE]: {
+      standings: [{ type: "TOTAL", table: [fdZeile(1, 5), fdZeile(2, 57)] }],
+    },
+    [`${CL_SCOREBOARD}?dates=20261124`]: clTag(["a", "2026-11-24T17:45Z"]),
+    [`${CL_SCOREBOARD}?dates=20261125`]: clTag(["b", "2026-11-25T20:00Z"]),
+    [`${CL_SCOREBOARD}?dates=20270127`]: clTag(
+      ["c", "2027-01-27T20:00Z"],
+      ["d", "2027-01-27T20:00Z"],
+    ),
+    ...abweichend,
+  });
+}
+
+test("Champions League: zwischen zwei Spieltagen kommt der nächste aus dem Spielplan", async () => {
+  clAntworten();
+  // Mo 16.11. 13:00 deutscher Zeit
+  const daten = await ladeFussball(CL, new Date("2026-11-16T12:00:00Z"));
+
+  expect(daten.tage).toEqual(["2026-11-24", "2026-11-25"]);
+  expect(daten.titel).toBe("5. Spieltag");
+  expect(daten.partien.map((p) => p.id).sort()).toEqual(["a", "b"]);
+  expect(abrufe(CL_SCOREBOARD)).toBe(0);
+});
+
+test("Champions League: Spieltag 8 an einem Tag mit allen Partien", async () => {
+  clAntworten();
+  const daten = await ladeFussball(CL, new Date("2027-01-27T20:00:00Z"));
+
+  expect(daten.tage).toEqual(["2027-01-27"]);
+  expect(daten.titel).toBe("8. Spieltag");
+  expect(daten.partien).toHaveLength(2);
+});
+
+test("Premier League holt die Tage weiter aus dem Kalender von ESPN", async () => {
+  await ladeFussball(EINSTELLUNG, JETZT);
+  expect(abrufe(KALENDER)).toBe(1);
 });

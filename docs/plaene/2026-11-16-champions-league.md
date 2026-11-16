@@ -98,18 +98,18 @@ Riskantestes zuerst: der neue Weg zu den Tagen.
     hat keine Saison). Bei OpenLigaDB bleibt `kalender.length === 0 → null`.
   - `ladeFussball`: bei `kalender.art === "spielplan"` kein Abruf des ESPN-Kalenders, Tage sind die Schlüssel des Spielplans, aufsteigend.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - `jetzt` = 2026-11-16 12:00Z, Spielplan `CL/matches` mit Spieltag 4 (03./04.11.), 5 (24./25.11.), 8 (27.01.2027, zwei Partien am Tag)
     → `tage` `["2026-11-24", "2026-11-25"]`, `titel` „5. Spieltag“, Partien beider Tage von `…/uefa.champions/scoreboard?dates=20261124`
     und `?dates=20261125`. Kein Abruf von `…/uefa.champions/scoreboard` ohne `?dates`.
   - `jetzt` = 2027-01-27 20:00Z → `tage` `["2027-01-27"]`, `titel` „8. Spieltag“, beide Partien.
   - Premier League (`kalender: { art: "espn" }`) ruft weiter `…/eng.1/scoreboard` ohne `?dates` ab.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
   `npx vitest run __tests__/fussball-quellen.test.ts` → FAIL (die Tests stubben den ESPN-Kalender der Champions League nicht: „Unerwartete Adresse …/uefa.champions/scoreboard“)
-- [ ] **Schritt 3: Typen in `lib/einstellungen.ts`, Kalender in `laden.ts`, `ladeSpielplan` in `quellen.ts`**
+- [x] **Schritt 3: Typen in `lib/einstellungen.ts`, Kalender in `laden.ts`, `ladeSpielplan` in `quellen.ts`**
   Bundesliga und Premier League in `KACHELN` bekommen `kalender: { art: "espn" }`.
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen** (`npm test`)
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen** (`npm test`)
+- [x] **Schritt 5: Prüfen und committen**
 
   ```bash
   npm run check
