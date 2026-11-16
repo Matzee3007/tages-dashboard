@@ -240,3 +240,35 @@ test("der Knopf zeigt auch zugeklappt auf seinen Kasten", () => {
   );
   expect(kasten?.hasAttribute("hidden")).toBe(true);
 });
+
+test("der erste Absender mit Meldungen ist die große Karte", () => {
+  render(<KiNewsAnsicht daten={DATEN} />);
+  expect(
+    screen
+      .getByRole("region", { name: "Anthropic" })
+      .hasAttribute("data-gross"),
+  ).toBe(true);
+  expect(
+    screen
+      .getByRole("region", { name: "The Decoder" })
+      .hasAttribute("data-gross"),
+  ).toBe(false);
+});
+
+test("die erste Meldung eines Absenders ist die Schlagzeile", () => {
+  render(<KiNewsAnsicht daten={DATEN} />);
+  const anthropic = screen.getByRole("region", { name: "Anthropic" });
+  expect(
+    within(anthropic)
+      .getAllByRole("heading", { level: 4 })
+      .map((ueberschrift) => ueberschrift.textContent),
+  ).toEqual(["Introducing Claude for Financial Services"]);
+});
+
+test("eine frische Meldung zeigt Neu", () => {
+  render(<KiNewsAnsicht daten={DATEN} />);
+  const link = screen.getByRole("link", { name: /Introducing Claude/ });
+  expect(within(link).getByText("Neu")).toBeDefined();
+  const alt = screen.getByRole("link", { name: /Responsible Scaling/ });
+  expect(within(alt).queryByText("Neu")).toBeNull();
+});

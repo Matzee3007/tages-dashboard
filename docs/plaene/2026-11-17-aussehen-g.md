@@ -138,14 +138,14 @@ Test `__tests__/zeit.test.ts`, `__tests__/fussball-ansicht.test.tsx`.
 
 **Dateien:** Ändern `lib/kacheln/ki-news/ansicht.tsx`. Test `__tests__/ki-news-ansicht.test.tsx`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests:**
+- [x] **Schritt 1: Fehlschlagende Tests:**
   - „der erste Absender ist die große Karte“: `data-gross` am ersten Absender mit Meldungen, nicht am zweiten.
   - „die erste Meldung eines Absenders ist die Schlagzeile“: Überschrift der Ebene 4 mit ihrem Titel, weitere Meldungen ohne.
   - „frische Meldungen zeigen Neu“ (Text „Neu“ statt nur Punkt).
-- [ ] **Schritt 2: rot**
-- [ ] **Schritt 3: Umsetzen** nach den festen Vorgaben. Absender ohne Meldung als gestrichelte Zeile am Ende.
-- [ ] **Schritt 4: grün**
-- [ ] **Schritt 5: `npm run check`, Commit** „Show news senders as cards with a lead story“
+- [x] **Schritt 2: rot**
+- [x] **Schritt 3: Umsetzen** nach den festen Vorgaben. Absender ohne Meldung als gestrichelte Zeile am Ende.
+- [x] **Schritt 4: grün**
+- [x] **Schritt 5: `npm run check`, Commit** „Show news senders as cards with a lead story“
 
 ### Aufgabe 6: Doku und Abnahme
 
