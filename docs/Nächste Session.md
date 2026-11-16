@@ -38,13 +38,6 @@ Stand vom 2026-11-16. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
 **Phase 3, Schritt 2 (Premier League und Champions League).** PR 1 Premier League ist fertig, offen sind die Punkte in der
 [[projects/tages-dashboard/docs/Projektvision|Projektvision]] unter Schritt 2.
 
-Anstehende Entscheidungen, zuerst klären:
-
-- **Zwei „ungefragt“-Zeilen im Journal** bestätigen oder umdrehen: Aufgabe 4 vor Aufgabe 3 gebaut; Nahtstellen bekommen die ganze
-  Einstellung (`ladeSpielplan(einstellung, tage, jetzt)`, `ladeTabelle(einstellung, frisch, jetzt)`).
-
-Dann:
-
 1. **Verschmolzene Spieltage** (Fund 2 aus PR #73, eigener kleiner PR mit `tdd`): Spielt die Premier League Samstag bis Montag und gleich
    Dienstag wieder, macht `waehleSpieltag` daraus einen Block. Vorschlag: Blöcke dort trennen, wo die Nummer im Spielplan wechselt. Das
    ändert die Regel „Wechsel des Spieltags“ in der Projektvision, also erst mit dem Entwickler klären, dann Nachtrag und Test.
