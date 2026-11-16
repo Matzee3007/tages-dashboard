@@ -6,12 +6,26 @@ import { abmelden } from "@/app/login/actions";
 import { holeDashboard } from "@/lib/kacheln/abruf";
 import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
 import { gruppiere } from "@/lib/kacheln/gruppen";
-import { FehlerHinweis, Kachel } from "@/lib/kacheln/kachel";
+import { FehlerHinweis, GrosserTitel, Kachel } from "@/lib/kacheln/kachel";
 import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
 import { neuerStand } from "@/lib/kacheln/stand";
 import type { KachelAnzeige, KachelDaten } from "@/lib/kacheln/typen";
 import { useAktualisierung } from "@/lib/kacheln/use-aktualisierung";
 import { datum, uhrzeit } from "@/lib/zeit";
+
+// „Sonntag, 22. November“ → Wochentag klein darüber, Datum groß (Mock G). Den ganzen Namen trägt die Überschrift als aria-label.
+function Datum({ zeit }: { zeit: string | null }) {
+  if (!zeit) return <>Heute</>;
+  const [wochentag, rest] = datum(zeit).split(", ");
+  return (
+    <>
+      <span className="block text-[15px] font-semibold tracking-normal text-gedaempft">
+        {wochentag}
+      </span>
+      {rest}
+    </>
+  );
+}
 
 // ebene: die der Abschnitte, eine unter dem Kacheltitel.
 function KachelInhalt({ daten, ebene }: { daten: KachelDaten; ebene: 3 | 4 }) {
@@ -69,29 +83,28 @@ export function Dashboard() {
   useAktualisierung(erneutVersuchen);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-10 px-[18px] pt-[22px] pb-9 min-[600px]:gap-[52px] min-[600px]:px-9 min-[600px]:pt-[30px] min-[600px]:pb-12">
-      <header className="flex items-center justify-between gap-x-4 gap-y-2">
-        <div className="flex flex-col gap-x-3 min-[600px]:flex-row min-[600px]:items-baseline">
-          <h1 className="text-[17px] font-[650] tracking-[-0.005em]">
-            {zeit ? datum(zeit) : "Heute"}
-          </h1>
-          {zeit && (
-            <span className="text-[17px] text-gedaempft">
-              Aktualisiert {uhrzeit(zeit)}
-            </span>
-          )}
+    <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-9 px-3.5 pt-[22px] pb-9 min-[600px]:gap-11 min-[600px]:px-7 min-[600px]:pt-[30px] min-[600px]:pb-12">
+      <header className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2.5">
+        <h1
+          aria-label={zeit ? datum(zeit) : "Heute"}
+          className="text-[30px] leading-[1.05] font-[780] tracking-[-0.025em] min-[600px]:text-[34px]"
+        >
+          <Datum zeit={zeit} />
+        </h1>
+        <div className="flex items-center gap-3 text-[13.5px] text-gedaempft">
+          {zeit && <span>Aktualisiert {uhrzeit(zeit)}</span>}
+          <form action={abmelden}>
+            <button
+              type="submit"
+              className="min-h-11 cursor-pointer rounded-full bg-karte px-[18px] font-semibold text-text hover:bg-knopf"
+            >
+              Abmelden
+            </button>
+          </form>
         </div>
-        <form action={abmelden}>
-          <button
-            type="submit"
-            className="min-h-11 cursor-pointer rounded-lg px-3.5 font-medium text-gedaempft hover:bg-knopf hover:text-text"
-          >
-            Abmelden
-          </button>
-        </form>
       </header>
 
-      <main className="flex flex-col gap-10 min-[600px]:gap-[52px]">
+      <main className="flex flex-col gap-9 min-[600px]:gap-11">
         {!geladen && <p className="text-gedaempft">Lädt …</p>}
         {geladen && kacheln.length === 0 && (
           <FehlerHinweis
@@ -123,12 +136,10 @@ export function Dashboard() {
             <section
               key={`gruppe-${imBlock[0].id}`}
               aria-label={gruppe}
-              className="@container flex flex-col gap-[18px]"
+              className="@container flex flex-col gap-3.5"
             >
-              <h2 className="text-[30px] leading-none font-[280] tracking-[-0.02em] min-[600px]:text-[34px]">
-                {gruppe}
-              </h2>
-              <div className="grid items-start gap-11 @[900px]:grid-cols-3 @[900px]:gap-12">
+              <GrosserTitel>{gruppe}</GrosserTitel>
+              <div className="grid items-start gap-4 @[900px]:grid-cols-3">
                 {liste}
               </div>
             </section>

@@ -57,6 +57,23 @@ test("die Kachel trägt ihre Hausfarbe, das Quadrat die Marke", () => {
   expect(kachel.style.getPropertyValue("--marke")).toBe("#D97757");
 });
 
+test("in einer Gruppe zeigt die Marke das Kürzel", () => {
+  render(
+    <Kachel
+      kachel={{
+        ...KACHEL,
+        gruppe: "Sport",
+        aussehen: { farbe: "#E3343F", kuerzel: "BL" },
+      }}
+      erneutVersuchen={() => {}}
+    />,
+  );
+  expect(screen.getByText("BL")).toBeDefined();
+  expect(
+    screen.getByRole("heading", { level: 3, name: "Testkachel" }),
+  ).toBeDefined();
+});
+
 test("bei einem Fehler bleibt der Inhalt, dazu kommt der letzte Stand", () => {
   render(
     <Kachel kachel={{ ...KACHEL, fehler: true }} erneutVersuchen={() => {}}>

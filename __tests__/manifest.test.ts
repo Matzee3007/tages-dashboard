@@ -10,8 +10,8 @@ test("nennt Namen, Start und Farben", () => {
     short_name: "Heute",
     start_url: "/",
     display: "standalone",
-    background_color: "#171B22",
-    theme_color: "#171B22",
+    background_color: "#0F1318",
+    theme_color: "#0F1318",
   });
 });
 

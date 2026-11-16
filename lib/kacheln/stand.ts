@@ -1,4 +1,8 @@
-import type { DashboardAntwort, KachelAnzeige } from "@/lib/kacheln/typen";
+import {
+  kopfVon,
+  type DashboardAntwort,
+  type KachelAnzeige,
+} from "@/lib/kacheln/typen";
 
 // antwort null heißt: Der Abruf ist gescheitert, keine Kachel hat neue Daten.
 export function neuerStand(
@@ -10,8 +14,8 @@ export function neuerStand(
   }
 
   return antwort.kacheln.map((kachel) => {
-    const { id, titel, aussehen, gruppe } = kachel;
-    const kopf = { id, titel, aussehen, ...(gruppe && { gruppe }) };
+    const kopf = kopfVon(kachel);
+    const { id } = kachel;
     if (kachel.status === "ok") {
       const { zusatz, daten, stand } = kachel;
       return { ...kopf, zusatz, daten, stand, fehler: false };

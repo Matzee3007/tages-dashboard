@@ -1,10 +1,11 @@
 import { KACHELN, type KachelEinstellung } from "@/lib/einstellungen";
 import { ladeFussballKachel } from "@/lib/kacheln/fussball/kachel";
 import { ladeKiNewsKachel } from "@/lib/kacheln/ki-news/kachel";
-import type {
-  DashboardAntwort,
-  KachelAntwort,
-  KachelDaten,
+import {
+  kopfVon,
+  type DashboardAntwort,
+  type KachelAntwort,
+  type KachelDaten,
 } from "@/lib/kacheln/typen";
 import { mitZeitlimit } from "@/lib/zeitlimit";
 
@@ -27,8 +28,8 @@ async function ladeKachel(
   einstellung: KachelEinstellung,
   jetzt: Date,
 ): Promise<KachelAntwort> {
-  const { id, titel, aussehen, gruppe } = einstellung;
-  const kopf = { id, titel, aussehen, ...(gruppe && { gruppe }) };
+  const kopf = kopfVon(einstellung);
+  const { id } = einstellung;
   try {
     const ergebnis = await mitZeitlimit(
       lade(einstellung, jetzt),

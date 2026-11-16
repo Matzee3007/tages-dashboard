@@ -2,7 +2,8 @@ import type { SeitenArt } from "@/lib/kacheln/ki-news/seiten";
 
 // Hausfarbe einer Quelle als Akzent (Name, Grenzlinie). marke: Farbe des kleinen Quadrats, wenn sie anders ist, z. B. weil die
 // Hausfarbe nahe an Orange liegt, das Mein Team, Live und „neu“ gehört (Mock F vom 2026-11-16).
-export type Aussehen = { farbe: string; marke?: string };
+// kuerzel: Text in der Marke einer Kachel (z. B. „BL“), Mock G.
+export type Aussehen = { farbe: string; marke?: string; kuerzel?: string };
 
 // Ein Bereich der Tabelle mit derselben Bedeutung (z. B. Plätze 1–4: Champions League). Zwischen zwei Zonen steht eine Linie.
 // Grundverteilung der Saison, von Hand geprüft (Projektvision „Plätze der Linien“). Farben und Namen aus Mock G vom 2026-11-17.
@@ -150,7 +151,7 @@ export const KACHELN: KachelEinstellung[] = [
     id: "bundesliga",
     art: "fussball",
     titel: "Bundesliga",
-    aussehen: { farbe: "#E3343F" },
+    aussehen: { farbe: "#E3343F", kuerzel: "BL" },
     gruppe: "Sport",
     espn: "ger.1",
     kalender: { art: "espn" },
@@ -171,7 +172,7 @@ export const KACHELN: KachelEinstellung[] = [
     id: "premier-league",
     art: "fussball",
     titel: "Premier League",
-    aussehen: { farbe: "#B061D1" },
+    aussehen: { farbe: "#B061D1", kuerzel: "PL" },
     gruppe: "Sport",
     espn: "eng.1",
     kalender: { art: "espn" },
@@ -191,7 +192,7 @@ export const KACHELN: KachelEinstellung[] = [
     id: "champions-league",
     art: "fussball",
     titel: "Champions League",
-    aussehen: { farbe: "#5B8DEF" },
+    aussehen: { farbe: "#5B8DEF", kuerzel: "CL" },
     gruppe: "Sport",
     espn: "uefa.champions",
     kalender: { art: "spielplan" },
@@ -208,7 +209,7 @@ export const KACHELN: KachelEinstellung[] = [
     id: "ki-news",
     art: "ki-news",
     titel: "KI-News",
-    aussehen: { farbe: "#8E99A8" },
+    aussehen: { farbe: "#8E99A8", kuerzel: "KI" },
   },
 ];
 

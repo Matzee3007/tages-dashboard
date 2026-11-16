@@ -110,12 +110,12 @@ Grenze `data-linie`.
 Kürzel. Funde 6 und 8 aus dem Review von PR #80 hier mit erledigen: ein Typ `KachelKopf` für die vier Kopffelder und eine Komponente
 `GrosserTitel` für Gruppentitel und großen Kacheltitel.
 
-- [ ] **Schritt 1: Tests anpassen und ergänzen:** Grund `#0f1318` in CSS, `themeColor` und Manifest `#0F1318`. „die Marke zeigt das
+- [x] **Schritt 1: Tests anpassen und ergänzen:** Grund `#0f1318` in CSS, `themeColor` und Manifest `#0F1318`. „die Marke zeigt das
   Kürzel“: Kachel mit `kuerzel: "BL"` zeigt „BL“. `page`: Wochentag und Datum stehen getrennt („Sonntag“, „8. November“).
-- [ ] **Schritt 2: rot**
-- [ ] **Schritt 3: Umsetzen** nach den festen Vorgaben. Kachel als Karte, Fehlerhinweis im Kasten `flaeche` innerhalb der Karte.
-- [ ] **Schritt 4: grün**
-- [ ] **Schritt 5: `npm run check`, Commit** „Put tiles on cards with marks“
+- [x] **Schritt 2: rot**
+- [x] **Schritt 3: Umsetzen** nach den festen Vorgaben. Kachel als Karte, Fehlerhinweis im Kasten `flaeche` innerhalb der Karte.
+- [x] **Schritt 4: grün**
+- [x] **Schritt 5: `npm run check`, Commit** „Put tiles on cards with marks“
 
 ### Aufgabe 4: Partien nach Tag, symmetrisch
 
