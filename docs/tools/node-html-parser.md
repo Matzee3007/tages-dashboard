@@ -31,7 +31,9 @@ reguläre Ausdrücke direkt auf dem Text wären schwerer zu lesen.
 
 ## Wie haben wir es eingerichtet?
 
-Mit fester Version `9.0.5`: 9.0.6 und 9.0.7 waren am 2026-11-07 jünger als zwei Wochen. Wir nutzen nur `parse`, `querySelector`,
+Mit fester Version `9.0.5`: 9.0.6 und 9.0.7 waren am 2026-11-07 jünger als zwei Wochen. Seit PR #56 (Dependabot, 2026-11-16) `9.0.7`.
+Ab 9.0.6 entschlüsselt `getAttribute` Werte nach den HTML-Regeln für Attribute (`&amp;` → `&`, `&copy=` bleibt), Test in
+`__tests__/ki-news-seiten.test.ts`. Wir nutzen nur `parse`, `querySelector`,
 `querySelectorAll`, `closest`, `getAttribute` und `.text`.
 
 | Bauart | Wo der Leser sucht |
