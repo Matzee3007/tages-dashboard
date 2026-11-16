@@ -57,11 +57,18 @@ Aus dem `/code-review` von PR #73, bewusst offen:
   nach etwa 1 Uhr deutscher Zeit. Champions League am 2026-11-16 geprüft: Anstöße 18:45 und 21:00, nicht betroffen.
 - **K.-o.-Phase der Champions League:** Partien ohne `matchday` überspringt `leseFdSpielplan`. Nach dem 27.1.2027 bleibt die Kachel
   deshalb auf Spieltag 8 stehen (Parkplatz in der Projektvision).
-- **↻ und die Grenze:** Jeder Druck auf ↻ holt die Tabelle neu, ab etwa 6 Drücken in einer Minute droht 429. Dann erscheint „Tabelle
+- **↻ und die Grenze:** Jeder Druck auf ↻ holt die Tabelle seiner Kachel neu (Premier League oder Champions League), ab etwa 6 Drücken
+  in einer Minute droht 429. Dann erscheint „Tabelle
   gerade nicht erreichbar“.
 - **Spieltage ohne Pause** (Samstag bis Montag, dann Dienstag): behoben am 2026-11-16, `waehleSpieltag` trennt, wo der `matchday` steigt
   (ADR 0012). Fällt der Spielplan aus (auch bei 429, das nicht gespeichert wird), verschmelzen sie wieder zu einem Block, bis er zurück
   ist. Die Kachel kann dann zwischen beiden Ansichten springen.
+- **Gescheiterte Abrufe werden nicht gespeichert** (Fund 2 aus PR #79, nicht geprüft, ob Next.js sie wirklich nicht speichert): Jeder
+  Takt (60 s) jedes offenen Geräts fragt dann wieder an, mit Premier League und Champions League 4 Abrufe. Bei 3 offenen Geräten wären
+  das 12 pro Minute, über der Grenze, ein 429 könnte sich so selbst halten. Erst beheben, wenn es auftritt (z. B. Fehler kurz merken).
+- **Hängender Dienst** (Fund 3 aus PR #79): Antwortet football-data.org erst nach dem Zeitlimit von 5 s, kommen bei der Champions League
+  noch der Ersatzabruf und die Tage von ESPN dazu. Das kann die 8 s je Kachel reißen, dann zeigt sie ihren Fehlerzustand. Ein 429 kommt
+  sofort und ist nicht betroffen.
 - **Zwei Spieltage an einem Tag** (z. B. über Weihnachten die letzten Partien des 18. und die ersten des 19.): Der Spielplan merkt sich je
   Tag nur die höchste Nummer, der Tag zählt ganz zum 19. Spieltag, der 18. verschwindet um 0 Uhr. Erst beheben, wenn es auftritt.
 

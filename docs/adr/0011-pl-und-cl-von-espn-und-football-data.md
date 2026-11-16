@@ -57,7 +57,7 @@ Geprüft am 2026-11-15:
 
 Fehlt ein Team in der Liste, steht in den Partien der Name von ESPN. Die Tabelle von football-data.org kennt keinen Namen von ESPN, dort
 steht der `shortName` von football-data.org, die Zeile bekommt die id `fd-<id>` und wird nicht als Mein Team erkannt. Der Fehler steht im
-Server-Log (`Team <id> fehlt in der Liste`). Die Listen heißen `TEAMS_BUNDESLIGA` und `TEAMS_PREMIER_LEAGUE` (`lib/einstellungen.ts`).
+Server-Log (`Team <id> fehlt in der Liste`). Die Listen heißen `TEAMS_BUNDESLIGA`, `TEAMS_PREMIER_LEAGUE` und `TEAMS_CHAMPIONS_LEAGUE` (`lib/einstellungen.ts`).
 Vom `plan-pruefer` gemeldet, vom Entwickler bestätigt.
 
 ## Nachtrag 2026-11-16: Tage der Champions League aus dem Spielplan
@@ -65,8 +65,9 @@ Vom `plan-pruefer` gemeldet, vom Entwickler bestätigt.
 ESPN liefert für `uefa.champions` im Kalender nur Phasen („League Phase“ 2026-08-27 bis 2027-02-15) statt Tagen, Zeiträume
 (`?dates=20261101-20261130`) beantwortet ESPN mit Status 400 (Versuch vom 2026-11-16). Die Tage der Champions League kommen deshalb aus dem
 Spielplan von football-data.org (`CL/matches`, Einstellung `kalender: { art: "spielplan" }`), die Ligen behalten den Kalender von ESPN.
-Fällt football-data.org aus, nimmt die Kachel die Tage aus dem Standardabruf von ESPN ohne Datum (aktueller oder nächster Spieltag) und
-zeigt sie ohne Nummer. So gilt weiter: Partien laufen, auch wenn football-data.org ausfällt.
+Fällt football-data.org aus oder ist sein Spielplan leer, nimmt die Kachel die Tage aus dem Standardabruf von ESPN ohne Datum und zeigt
+sie ohne Nummer. Der liefert nur **einen Tag** (den aktuellen oder nächsten mit Spielen), bei einem Spieltag an zwei Abenden also 9 statt
+18 Partien. Vom Entwickler am 2026-11-16 so akzeptiert. So gilt weiter: Partien laufen, auch wenn football-data.org ausfällt.
 
 Verworfen: **nur Spielplan** (bei Ausfall zeigte die Kachel ihren Fehlerzustand, gegen diese ADR) und **ESPN Tag für Tag** um heute herum
 (rund 14 Abrufe je Laden, die meisten leer). Im Gespräch vom 2026-11-16 vom Entwickler entschieden, Plan:

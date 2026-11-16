@@ -74,6 +74,9 @@ cargo test --manifest-path src-tauri/Cargo.toml   # Tests der Mac-App
 
 Vor jedem Commit: `npm run check` (Linter, Formatierung, Typen, Tests).
 
+Vor dem ersten Abruf eines Dienstes in einer Session seine Notiz in `docs/tools/` lesen (Abschnitte Abrufe und Fehler): Dort stehen
+Fallen, die schon einmal passiert sind (z. B. ESPN: Zeiträume geben 400, Antworten kommen mit gzip).
+
 ## Dokumentation
 
 Allgemeine Konventionen (ADRs, Lernjournale, Tool-Notizen, Skills, Tools für später) stehen in

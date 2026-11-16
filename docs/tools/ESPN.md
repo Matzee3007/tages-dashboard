@@ -45,8 +45,8 @@ Partien der Champions League (`uefa.champions`), Tage, Nummer und Tabelle von fo
 | Tabelle (nur Bundesliga) | `https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
 
 Für die Premier League dieselben Adressen mit `eng.1`. Die Champions League (`uefa.champions`) ruft keinen Kalender und keine Tabelle ab,
-nur die Partien eines Tages. Fehlt der Spielplan von football-data.org, holt sie `…/uefa.champions/scoreboard` ohne Datum (aktueller oder
-nächster Spieltag, 15 Min.) und nimmt dessen Tage. Alle mit `User-Agent: Tages-Dashboard`, 5 Sekunden Zeitlimit und der id der
+nur die Partien eines Tages. Fehlt der Spielplan von football-data.org oder ist er leer, holt sie `…/uefa.champions/scoreboard` ohne Datum
+(15 Min.) und nimmt dessen Tage. Das ist nur ein Tag (der aktuelle oder nächste mit Spielen), bei zwei Abenden also nur einer davon. Alle mit `User-Agent: Tages-Dashboard`, 5 Sekunden Zeitlimit und der id der
 Kachel als Etikett für den Knopf ↻ (`bundesliga`, `premier-league`, `champions-league`, ADR 0008). Eine gespeicherte
 Antwort darf höchstens doppelt so alt sein wie ihre Speicherzeit, mindestens 1 Stunde, sonst gilt sie als Ausfall (wie ADR 0005).
 
