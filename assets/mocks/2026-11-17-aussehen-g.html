@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mock Runde 3: Aussehen Tages-Dashboard (G, H)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:#5f656e;font-family:system-ui,sans-serif;line-height:1.35;color:#111}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid #8fc1ff;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Mock-Rahmen (nicht Teil des Entwurfs) ---------- */
+.mock-kopf{background:#262a31;color:#e9ecf0;padding:14px 16px 12px;display:flex;flex-direction:column;gap:10px}
+.mock-kopf h1{font-size:17px;font-weight:600}
+.mock-kopf p{font-size:13px;color:#b5bcc6;max-width:900px}
+.mock-kopf .beispiel{display:inline-block;background:#ffd166;color:#1f232a;font-weight:600;border-radius:4px;padding:0 6px;margin-right:6px}
+.schalter{display:flex;flex-wrap:wrap;gap:8px 18px}
+.schalter-gruppe{display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:13px}
+.schalter-gruppe>span{color:#b5bcc6;margin-right:4px}
+.schalter-gruppe button{border:1px solid #4a505c;border-radius:8px;min-height:36px;padding:0 10px;font-size:13px;color:#e9ecf0}
+.schalter-gruppe button.an{background:#e9ecf0;color:#1f232a;border-color:#e9ecf0;font-weight:600}
+.variante-block{padding:28px 0 8px}
+.variante-titel{max-width:1200px;margin:0 auto 12px;padding:0 16px;color:#fff}
+.variante-titel h2{font-size:22px;font-weight:600}
+.variante-titel p{font-size:14px;color:#eef0f3;max-width:820px}
+.geraet{container:g / inline-size;margin:0 auto;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.3);overflow:hidden}
+.breite-1200 .geraet{max-width:1200px}
+.breite-390 .geraet{max-width:390px}
+.nur-eine .geraet{box-shadow:none}
+.zust-hinweis{font:13px/1.4 system-ui,sans-serif;color:#aab;border-top:1px dashed #556;padding-top:10px}
+
+/* ---------- Gemeinsam ---------- */
+.kz{display:inline-grid;place-items:center;border-radius:50%;flex-shrink:0;font-style:normal;font-weight:650;background:var(--kz-grund);color:var(--kz-text);width:22px;height:22px;font-size:7px;letter-spacing:.02em;font-family:system-ui,sans-serif}
+.name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.neu-laden{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;font-size:19px;flex-shrink:0}
+.zf-knopf{display:inline-flex;align-items:center;gap:6px;min-height:44px;white-space:nowrap;font-weight:600;font-size:13px}
+.zf-knopf svg{width:12px;height:12px;transition:transform .15s}
+.zf-knopf[aria-expanded=true] svg{transform:rotate(180deg)}
+.zf a{display:inline-flex;align-items:center;min-height:44px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.fehler-knopf{min-height:44px;padding:0 16px;margin-top:10px;font-weight:600}
+.puls{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--or);animation:puls 1.6s ease-in-out infinite;flex-shrink:0}
+@keyframes puls{50%{opacity:.3}}
+/* Tabelle: Zonenbalken an der Platzziffer */
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font-size:11.5px;font-weight:500;color:var(--rauch);text-align:right;padding-bottom:4px}
+th.t-team{text-align:left}
+td.pl{width:36px;color:var(--ged);font-weight:600;font-size:12.5px}
+td.pl span{display:flex;align-items:center;gap:9px}
+td.pl span::before{content:"";width:3px;height:18px;border-radius:2px;background:var(--z,transparent)}
+td.t-team{max-width:0}
+td.t-team>span{display:flex;align-items:center;gap:8px;min-width:0}
+td.z{width:34px;text-align:right;color:var(--ged)}
+td.pk{width:36px;text-align:right;font-weight:720}
+tr.mein td{background:var(--or-grund)}
+tr.mein .name{color:var(--or);font-weight:700}
+tr.grenze td{border-bottom:1px solid var(--grenze)}
+tr.luecke td{height:18px;padding:0;text-align:center;color:var(--rauch);letter-spacing:.3em;font-size:12px}
+.legende{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:11.5px;color:var(--ged);margin-top:10px}
+.legende span{display:inline-flex;align-items:center;gap:6px}
+.legende i{width:8px;height:8px;border-radius:2px;background:var(--z)}
+
+/* ================= G: Spielfeld + Zeitung ================= */
+.vg{--seite:#0F1318;--karte:#1A1F27;--karte2:#222831;--linie:#2A313B;--grenze:#4A5260;--text:#E8EBF0;--ged:#939CAA;--rauch:#6C7583;--or:#FF8A3D;--or-grund:rgba(255,138,61,.10);--info:#86ABF5;--fehler:#F59A90;--kz-grund:#2C333E;--kz-text:#C3CAD5;
+  background:var(--seite);color:var(--text);font-family:Commissioner,system-ui,sans-serif;font-weight:400;line-height:1.4;font-variant-numeric:tabular-nums}
+.vg .dash{padding:30px 28px 48px;display:flex;flex-direction:column;gap:44px}
+.vg .g-kopf{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px 16px}
+.vg .g-tag{font-size:15px;font-weight:600;color:var(--ged)}
+.vg .g-datum{font-size:34px;font-weight:780;letter-spacing:-.025em;line-height:1.05}
+.vg .g-rechts{display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--ged)}
+.vg .g-abm{min-height:44px;padding:0 18px;border-radius:22px;background:var(--karte);color:var(--text);font-weight:600}
+.vg .g-gk{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.vg h2{font-size:28px;font-weight:780;letter-spacing:-.022em;line-height:1.1}
+.vg .g-raster{display:grid;gap:16px;align-items:start}
+@container g (min-width:900px){.vg .g-raster{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.vg .g-karte{background:var(--karte);border-radius:16px;overflow:hidden;min-width:0}
+.vg .g-kk{display:flex;align-items:center;gap:12px;padding:12px 4px 12px 14px}
+.vg .g-marke{width:34px;height:34px;border-radius:10px;background:var(--c);color:#fff;font-size:12.5px;font-weight:800;display:grid;place-items:center;flex-shrink:0;letter-spacing:-.01em}
+.vg .g-kk div{flex:1;min-width:0}
+.vg .g-kk h3{font-size:16.5px;font-weight:740;letter-spacing:-.01em;line-height:1.2}
+.vg .g-kk p{font-size:12.5px;color:var(--ged)}
+.vg .neu-laden{color:var(--ged)}
+.vg .g-tagzeile{background:var(--karte2);padding:6px 14px;font-size:12.5px;font-weight:650;color:var(--ged)}
+.vg .g-p{display:grid;grid-template-columns:36px minmax(0,1fr) 58px minmax(0,1fr);column-gap:8px;align-items:center;padding:9px 12px 9px 6px;min-height:52px;border-top:1px solid var(--linie)}
+.vg .g-tagzeile+.g-p{border-top:0}
+.vg .g-st{font-size:11.5px;font-weight:600;color:var(--rauch);text-align:center;line-height:1.1}
+.vg .g-p.live .g-st{color:var(--or);display:flex;flex-direction:column;align-items:center;gap:3px}
+.vg .g-team{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px;font-weight:500}
+.vg .g-heim{justify-content:flex-end;text-align:right}
+.vg .g-team.mein .name{color:var(--or);font-weight:720}
+.vg .g-box{justify-self:center;min-width:54px;height:30px;padding:0 6px;border-radius:8px;display:grid;place-items:center;font-size:15.5px;font-weight:760;letter-spacing:.01em;white-space:nowrap}
+.vg .g-box.erg{background:var(--karte2)}
+.vg .g-box.zeit{font-size:13.5px;font-weight:600;color:var(--ged)}
+.vg .g-p.live .g-box{background:var(--or-grund);color:var(--or);box-shadow:inset 0 0 0 1px rgba(255,138,61,.45)}
+.vg .g-p.mein{background:var(--or-grund)}
+.vg .g-tore{grid-row:2;font-size:11.5px;color:var(--rauch);line-height:1.45;margin-top:4px;min-width:0}
+.vg .g-tore.h{grid-column:2;text-align:right}
+.vg .g-tore.g{grid-column:4}
+.vg .g-tore span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vg .g-tab{border-top:1px solid var(--linie);padding:12px 14px 14px}
+.vg .g-tab h4{font-size:13.5px;font-weight:720;margin-bottom:6px}
+.vg table{font-size:13.5px}
+.vg td{height:32px;padding:3px 0}
+.vg .g-fehlt{font-size:13.5px;color:var(--ged);padding:12px 14px 16px;border-top:1px solid var(--linie)}
+.vg .g-fehler{margin:0 14px 14px;padding:14px;border-radius:12px;background:var(--karte2);font-size:14px;color:var(--ged)}
+.vg .g-fehler b{color:var(--fehler);font-weight:650}
+.vg .g-fehler .fehler-knopf{border-radius:22px;background:var(--linie);color:var(--text)}
+/* KI-News */
+.vg .g-news{display:grid;gap:16px;align-items:start}
+@container g (min-width:640px){.vg .g-news{grid-template-columns:repeat(2,minmax(0,1fr))}.vg .g-abs.gross{grid-column:1/-1}}
+@container g (min-width:900px){.vg .g-news{grid-template-columns:repeat(3,minmax(0,1fr))}.vg .g-abs.gross{grid-column:span 2}}
+.vg .g-abs{background:var(--karte);border-radius:16px;padding:16px 18px 8px;min-width:0;display:flex;flex-direction:column}
+.vg .g-von{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:780;color:var(--c);letter-spacing:-.012em}
+.vg .g-von i{width:10px;height:10px;border-radius:3px;background:var(--m);flex-shrink:0}
+.vg a.g-titel{display:block;padding:10px 0 6px}
+.vg .g-titel b{display:block;font-size:20px;font-weight:720;line-height:1.24;letter-spacing:-.012em;padding:0 0 6px}
+.vg .g-alter{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ged)}
+.vg .g-neu{color:var(--or);font-weight:650}
+.vg .g-neu::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--or);margin-right:6px;vertical-align:.08em}
+.vg .zf-knopf{color:var(--info)}
+.vg .zf{margin:2px 0 10px;padding:12px 14px;border-radius:12px;background:var(--karte2);font-size:14.5px;line-height:1.55;color:#C9D0DA;max-width:66ch}
+.vg .zf .k{display:inline-block;font-size:11.5px;font-weight:650;color:var(--info);background:rgba(134,171,245,.12);border-radius:6px;padding:1px 7px;margin-bottom:6px}
+.vg .zf a{color:var(--text);text-decoration-color:var(--rauch)}
+.vg .g-weitere{margin-top:8px}
+.vg .g-w{border-top:1px solid var(--linie);padding:0 0 8px}
+.vg .g-w a.g-titel{padding:10px 0 4px}
+.vg .g-w .g-titel b{font-size:15px;font-weight:600;line-height:1.32;padding:0 0 4px;letter-spacing:0}
+.vg .g-abs.gross{padding:20px 22px 10px}
+.vg .g-abs.gross .g-lead .g-titel b{font-size:28px;font-weight:760;letter-spacing:-.022em;line-height:1.14;max-width:22ch;padding-top:4px}
+@container g (min-width:900px){
+  .vg .g-abs.gross .g-innen{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);column-gap:28px}
+  .vg .g-abs.gross .g-weitere{margin-top:4px}
+  .vg .g-abs.gross .g-w:first-child{border-top:0}
+}
+.vg .g-aus{grid-column:1/-1;border:1px dashed var(--linie);border-radius:16px;padding:14px 18px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px}
+.vg .g-aus b{font-size:15px;font-weight:780;color:var(--ged)}
+.vg .g-aus span{font-size:14px;color:var(--fehler)}
+@container g (max-width:600px){
+  .vg .dash{padding:22px 14px 36px;gap:36px}
+  .vg .g-datum{font-size:30px}
+  .vg h2{font-size:26px}
+  .vg .g-p{grid-template-columns:32px minmax(0,1fr) 52px minmax(0,1fr);column-gap:6px;padding-right:10px}
+  .vg .g-team{font-size:13.5px;gap:6px}
+  .vg .g-box{min-width:48px}
+  .vg .g-abs.gross .g-lead .g-titel b{font-size:24px}
+  .vg .g-abs{padding:14px 16px 6px}
+}
+
+/* ================= H: Ein System ================= */
+.vh{--seite:#171B22;--karte:#1E232B;--kante:#2B313C;--linie:#29303A;--grenze:#4A5260;--text:#E4E7EC;--ged:#8C95A3;--rauch:#69727F;--or:#FF8A3D;--or-grund:rgba(255,138,61,.09);--info:#86ABF5;--fehler:#F59A90;--kz-grund:#2B313C;--kz-text:#B8C0CC;
+  background:var(--seite);color:var(--text);font-family:Commissioner,system-ui,sans-serif;font-weight:390;line-height:1.4;font-variant-numeric:tabular-nums}
+.vh .dash{padding:28px 28px 48px;display:flex;flex-direction:column;gap:40px}
+.vh .h-kopf{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 16px}
+.vh .h-datum{font-size:17px;font-weight:650}
+.vh .h-datum span{color:var(--ged);font-weight:390;margin-left:12px}
+.vh .h-abm{min-height:44px;padding:0 14px;color:var(--ged);font-weight:550;border-radius:10px;border:1px solid var(--kante)}
+.vh .h-gk{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;min-height:44px}
+.vh h2{font-size:22px;font-weight:700;letter-spacing:-.015em}
+.vh .neu-laden{color:var(--rauch)}
+.vh .h-raster{display:grid;gap:14px;align-items:start}
+@container g (min-width:640px){.vh .h-raster.news{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container g (min-width:900px){.vh .h-raster{grid-template-columns:repeat(3,minmax(0,1fr))}.vh .h-raster.news{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.vh .h-karte{background:var(--karte);border:1px solid var(--kante);border-radius:12px;min-width:0;overflow:hidden}
+.vh .h-kk{display:flex;align-items:center;gap:10px;min-height:52px;padding:4px 4px 4px 16px}
+.vh .h-kk i{width:10px;height:10px;border-radius:3px;background:var(--m);flex-shrink:0}
+.vh .h-kk h3{font-size:15px;font-weight:720;color:var(--c);flex:1;min-width:0;letter-spacing:-.005em}
+.vh .h-meta{font-size:12.5px;color:var(--ged);white-space:nowrap;padding-right:12px}
+.vh .h-kk .neu-laden+.h-meta,.vh .h-kk .h-meta:has(+.neu-laden){padding-right:0}
+.vh .h-z{display:grid;grid-template-columns:62px minmax(0,1fr);column-gap:10px;padding:9px 14px 9px 16px;border-top:1px solid var(--linie);min-height:44px}
+.vh .h-links{font-size:12px;color:var(--ged);line-height:1.35;padding-top:2px}
+.vh .h-links b{display:block;font-weight:600;color:var(--rauch)}
+.vh .h-team{display:grid;grid-template-columns:minmax(0,1fr) 22px;align-items:center;min-height:26px;font-size:14px}
+.vh .h-team>span{display:flex;align-items:center;gap:8px;min-width:0}
+.vh .h-team .kz{width:20px;height:20px;font-size:6.5px}
+.vh .h-team em{font-style:normal;text-align:right;font-weight:700}
+.vh .h-team.verlierer em{color:var(--ged);font-weight:500}
+.vh .h-team.mein .name{color:var(--or);font-weight:700}
+.vh .h-z.mein{background:var(--or-grund);box-shadow:inset 3px 0 0 var(--or)}
+.vh .h-z.live .h-links{color:var(--or);font-weight:650}
+.vh .h-z.live .h-links span{display:flex;align-items:center;gap:5px}
+.vh .h-z.live em{color:var(--or)}
+.vh .h-tore{font-size:11.5px;color:var(--rauch);display:flex;flex-wrap:wrap;gap:0 10px;margin-top:2px;padding-left:28px}
+.vh .h-tab{border-top:1px solid var(--linie);padding:10px 14px 14px 16px}
+.vh .h-tab h4{font-size:13px;font-weight:650;color:var(--ged);margin-bottom:4px}
+.vh table{font-size:13.5px}
+.vh td{height:30px;padding:2px 0}
+.vh .h-fehlt{font-size:13.5px;color:var(--ged);padding:12px 16px 14px;border-top:1px solid var(--linie)}
+.vh .h-fehler{padding:12px 16px 14px;border-top:1px solid var(--linie);font-size:14px;color:var(--ged)}
+.vh .h-fehler b{color:var(--fehler);font-weight:600}
+.vh .h-fehler .fehler-knopf{padding:0 14px;margin-left:-14px;color:var(--info);border-radius:10px}
+/* News im selben Aufbau */
+.vh .h-alter{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.vh .h-alter.neu{color:var(--or);font-weight:650}
+.vh .h-alter.neu::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--or);flex-shrink:0}
+.vh .h-z.h-m{padding-top:0;padding-bottom:0}
+.vh .h-m .h-links{padding-top:14px}
+.vh .h-m a.h-titel{display:block;font-size:15px;font-weight:560;line-height:1.36;padding:12px 0}
+.vh .h-m .zf{margin-bottom:12px}
+.vh .zf-knopf{color:var(--info)}
+.vh .zf{margin:0 0 6px;padding:2px 0 2px 12px;border-left:2px solid var(--info);font-size:14px;line-height:1.55;color:#C3CAD5}
+.vh .zf .k{font-size:11.5px;font-weight:650;color:var(--info);margin-bottom:2px}
+.vh .zf a{color:var(--text);text-decoration-color:var(--rauch)}
+.vh .h-karte.aus .h-kk h3{color:var(--ged)}
+.vh .h-karte.aus .h-kk i{background:var(--rauch)}
+.vh .h-karte.aus p{padding:10px 16px 14px;border-top:1px solid var(--linie);font-size:14px;color:var(--fehler)}
+@container g (max-width:600px){
+  .vh .dash{padding:22px 14px 36px;gap:34px}
+  .vh .h-datum span{display:block;margin-left:0}
+  .vh .h-kopf{flex-wrap:nowrap}
+  .vh .h-z{grid-template-columns:58px minmax(0,1fr);padding-left:14px;padding-right:12px}
+}
+</style>
+</head>
+<body>
+<div class="mock-kopf" id="mock-kopf">
+  <h1>Mock Runde 3: Aussehen des Tages-Dashboards, Varianten G und H (nur dunkel, mit Karten)</h1>
+  <p><span class="beispiel">Beispieldaten</span>Alle Spiele, Tabellen, Torschützen und Meldungen sind erfunden (Stand angenommen: Sonntag, 22. November 2026, 17:42), übernommen aus Mock F. Teams als neutrale Kürzel-Kreise, in der App stehen dort die echten Logos.</p>
+  <div class="schalter">
+    <div class="schalter-gruppe" data-schalter="v"><span>Variante</span><button data-wert="alle">Beide</button><button data-wert="g">G Spielfeld + Zeitung</button><button data-wert="h">H Ein System</button></div>
+    <div class="schalter-gruppe" data-schalter="b"><span>Breite</span><button data-wert="1200">Mac/iPad 1200</button><button data-wert="390">iPhone 390</button></div>
+  </div>
+</div>
+<div id="buehne"></div>
+
+<script>
+const VARIANTEN = [
+  {id:"g", name:"G: Spielfeld + Zeitung", text:"Sport wie eine Fußball-App: Karte je Wettbewerb, Partien nach Tag gegliedert und symmetrisch um ein Ergebnisfeld, Zonen der Tabelle als Farbbalken mit Legende. KI-News wie eine Nachrichten-App: Karte je Absender, die neueste Meldung des Tages groß."},
+  {id:"h", name:"H: Ein System", text:"Ein Kartenaufbau für alles: Kopf mit Marke, Name und Stand, darunter Zeilen mit fester linker Spalte für Zeit oder Alter. Sport und KI-News im selben Drei-Spalten-Raster, ruhiger, alle Schlagzeilen gleich groß."},
+];
+
+// [Akzent (Name), Marke falls abweichend] – Werte aus lib/einstellungen.ts
+const FARBEN = {
+  "Bundesliga":["#E3343F"],"Premier League":["#B061D1"],"Champions League":["#5B8DEF"],
+  "Anthropic":["#E8E6DC","#D97757"],"Claude Updates":["#9AAE7E","#C15F3C"],"OpenAI":["#ECECEC"],
+  "Google DeepMind":["#4285F4"],"The Verge":["#9479FF"],"Hacker News":["#B5B5AA","#FF6600"],
+  "The Decoder":["#7FA8AE"],"Andrej Karpathy":["#8F9AAD"],"Matt Pocock":["#A3A08F"]};
+const MARKEN = {"Bundesliga":"BL","Premier League":"PL","Champions League":"CL"};
+const KZ = {"Man City":"MCI","Man United":"MUN","Aston Villa":"AVL","Crystal Palace":"CRY","Real Madrid":"RMA","Inter Milan":"INT","AS Roma":"ROM","Club Brugge":"BRU","S Bratislava":"SBR","Slavia Prague":"SLA","LASK Linz":"LAS","AEK Athens":"AEK","FC Porto":"POR","Bodo/Glimt":"BOD","Leverkusen":"B04","Gladbach":"BMG","Frankfurt":"SGE","Hoffenheim":"TSG","Tottenham":"TOT","Nottingham":"NFO","Bayern":"FCB","Dortmund":"BVB","Leipzig":"RBL","Stuttgart":"VFB","Liverpool":"LIV","Chelsea":"CHE","Arsenal":"ARS","Brighton":"BHA","Viking FK":"VIK"};
+const kz = n => KZ[n] || n.normalize("NFD").replace(/[̀-ͯ]/g,"").slice(0,3).toUpperCase();
+
+// Zonen: Bedeutung und Farbe (neu gegenüber F, Annahme des Mocks)
+const ZONEN = {
+  cl:["Champions League","#4C8DF6"], el:["Europa League","#22B8CF"], ecl:["Conference League","#4CC38A"],
+  rel:["Relegation","#E2B93B"], ab:["Abstieg","#E5484D"], af:["Achtelfinale","#4CC38A"], po:["Play-offs","#22B8CF"]};
+const TAGNAME = {Fr:"Freitag, 20. November",Sa:"Samstag, 21. November",So:"Sonntag, 22. November",Mo:"Montag, 23. November",Di:"Dienstag, 24. November",Mi:"Mittwoch, 25. November"};
+
+// Partie: [Tag, Zeit oder "live 56'", Heim, Gast, Ergebnis, Tore Heim, Tore Gast]
+const WETTBEWERBE = [
+  {titel:"Bundesliga", mein:["Bayern"], linien:[4,5,6,15,16], zonen:[[1,4,"cl"],[5,5,"el"],[6,6,"ecl"],[16,16,"rel"],[17,18,"ab"]],
+   nr:"11. Spieltag", tage:"Fr 20. bis So 22. November",
+   partien:[
+    ["Fr","20:30","Dortmund","Leipzig","2:1",["Guirassy 12', 67'"],["Openda 40'"]],
+    ["Sa","15:30","Bayern","Freiburg","3:0",["Kane 8', 54'","Olise 71'"],[]],
+    ["Sa","15:30","Leverkusen","Bremen","1:1",["Schick 33'"],["Grüll 81'"]],
+    ["Sa","15:30","Stuttgart","HSV","2:0",["Demirović 19'","Undav 88'"],[]],
+    ["Sa","15:30","Mainz","Elversberg","0:0",[],[]],
+    ["Sa","18:30","Frankfurt","Gladbach","2:2",["Burkardt 5'","Uzun 90+2'"],["Kleindienst 28', 60'"]],
+    ["So","live 56'","Hoffenheim","Union","1:0",["Kramarić 23'"],[]],
+    ["So","15:30","Augsburg","Paderborn","1:0",["Claude-Maurice 77'"],[]],
+    ["So","19:30","Schalke","Köln","",[],[]]],
+   tabelle:[[1,"Dortmund",11,"+14",26],null,[3,"Leipzig",11,"+9",22],[4,"Leverkusen",11,"+7",21],[5,"Bayern",11,"+10",20],[6,"Stuttgart",11,"+4",19],[7,"Frankfurt",11,"+2",17]]},
+  {titel:"Premier League", mein:["Arsenal"], linien:[4,5,6,17], zonen:[[1,4,"cl"],[5,5,"el"],[6,6,"ecl"],[18,20,"ab"]],
+   nr:"12. Spieltag", tage:"Sa 21. bis Mo 23. November",
+   partien:[
+    ["Sa","13:30","Chelsea","Everton","2:0",["Palmer 22'","João Pedro 64'"],[]],
+    ["Sa","16:00","Arsenal","Tottenham","3:1",["Saka 14'","Ødegaard 38'","Gyökeres 76'"],["Kudus 52'"]],
+    ["Sa","16:00","Brighton","Leeds","1:1",["Welbeck 9'"],["Calvert-Lewin 70'"]],
+    ["Sa","16:00","Fulham","Hull","2:0",["Iwobi 31'","Jiménez 58'"],[]],
+    ["Sa","18:30","Man City","Newcastle","1:0",["Haaland 44'"],[]],
+    ["So","live 71'","Brentford","Bournemouth","1:1",["Thiago 12'"],["Kluivert 49'"]],
+    ["So","15:00","Liverpool","Aston Villa","2:2",["Salah 17'","Isak 85'"],["Watkins 40', 66'"]],
+    ["So","15:00","Ipswich","Coventry","0:1",[],["Wright 61'"]],
+    ["Mo","21:00","Nottingham","Crystal Palace","",[],[]],
+    ["Mo","21:00","Sunderland","Man United","",[],[]]],
+   tabelle:[[1,"Man City",12,"+15",28],[2,"Liverpool",12,"+12",25],[3,"Arsenal",12,"+13",25],[4,"Chelsea",12,"+8",22],[5,"Brighton",12,"+5",21]]},
+  {titel:"Champions League", mein:["Bayern","Arsenal"], linien:[8,24], zonen:[[1,8,"af"],[9,24,"po"]],
+   nr:"5. Spieltag", tage:"Di 24. bis Mi 25. November",
+   partien:[
+    ["Di","18:45","Bodo/Glimt","Sporting"],["Di","18:45","Sabah","Lille"],
+    ["Di","21:00","Bayern","PSG"],["Di","21:00","Barcelona","Napoli"],["Di","21:00","Liverpool","Atlético"],["Di","21:00","Dortmund","Villarreal"],
+    ["Di","21:00","PSV","Galatasaray"],["Di","21:00","Club Brugge","Leipzig"],["Di","21:00","Slavia Prague","Man City"],
+    ["Mi","18:45","Fenerbahce","Como"],["Mi","18:45","Viking FK","Shakhtar"],
+    ["Mi","21:00","Arsenal","Inter Milan"],["Mi","21:00","Real Madrid","Aston Villa"],["Mi","21:00","Stuttgart","FC Porto"],["Mi","21:00","AS Roma","Feyenoord"],
+    ["Mi","21:00","Lens","Man United"],["Mi","21:00","Betis","AEK Athens"],["Mi","21:00","LASK Linz","S Bratislava"]],
+   tabelle:[[1,"Liverpool",4,"+10",12],[2,"Arsenal",4,"+8",10],[3,"Real Madrid",4,"+7",10],[4,"Inter Milan",4,"+6",9],null,[7,"PSG",4,"+3",8],[8,"Man City",4,"+3",7],[9,"Bayern",4,"+2",7],[10,"Dortmund",4,"+1",7],[11,"Napoli",4,"0",6]]},
+];
+
+// min = Minuten vor 17:42
+const KI = {
+  aktiv:[
+    {name:"Anthropic", meldungen:[
+      {t:"Introducing Claude for Life Sciences 2", a:"vor 4 Std.", min:242, neu:true},
+      {t:"Measuring agent reliability over long tasks", a:"vor 2 Tagen", min:2950}]},
+    {name:"Claude Updates", meldungen:[
+      {t:"Claude Code 2.4: background agents for all plans", a:"vor 3 Std.", min:186, neu:true, z:"Claude Code kann Aufgaben jetzt in allen Tarifen im Hintergrund weiterlaufen lassen. Ergebnisse erscheinen als Benachrichtigung, sobald der Agent fertig ist."},
+      {t:"API: Message Batches now keep results for 7 days", a:"gestern", min:1580},
+      {t:"Shared projects for Claude Team", a:"vor 3 Tagen", min:4400}]},
+    {name:"OpenAI", meldungen:[
+      {t:"Introducing GPT-5.5 mini", a:"vor 5 Std.", min:302, neu:true, z:"Ein kleineres, günstigeres Modell der GPT-5.5-Reihe, gedacht für schnelle Antworten in Apps. Laut OpenAI nahe am großen Modell bei Programmieraufgaben."},
+      {t:"Codex now runs in your browser", a:"vor 4 Tagen", min:5800}]},
+    {name:"Google DeepMind", meldungen:[
+      {t:"Gemini 3 Ultra: thinking at scale", a:"vor 9 Std.", min:545, neu:true},
+      {t:"AlphaFold 4 opens protein complexes to researchers", a:"vor 2 Tagen", min:3010}]},
+    {name:"Andrej Karpathy", meldungen:[
+      {t:"Software 3.5", a:"gestern", min:1650, neu:true},
+      {t:"Let's build a tokenizer, revisited (video)", a:"vor 6 Tagen", min:8700}]},
+    {name:"The Decoder", meldungen:[
+      {t:"Anthropic stellt neues Modell für Unternehmen vor", a:"vor 40 Min.", min:40, neu:true},
+      {t:"EU AI Act: Was ab Januar für Anbieter gilt", a:"vor 7 Std.", min:425, neu:true},
+      {t:"Studie: KI-Agenten scheitern oft an langen Aufgaben", a:"gestern", min:1520}]},
+    {name:"The Verge", meldungen:[
+      {t:"Apple's Siri overhaul arrives in iOS 27.2 beta", a:"vor 2 Std.", min:118, neu:true},
+      {t:"Meta's new glasses translate conversations in real time", a:"gestern", min:1460}]},
+    {name:"Hacker News", meldungen:[
+      {t:"Show HN: A local-first notebook for LLM experiments", a:"vor 1 Std.", min:61, neu:true}]},
+  ],
+  aus:[{name:"Matt Pocock", text:"Gerade nicht erreichbar, neuer Versuch in 5 Minuten."}],
+};
+const ABSENDER = [...KI.aktiv].sort((x,y)=>Math.min(...x.meldungen.map(m=>m.min))-Math.min(...y.meldungen.map(m=>m.min)));
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const stil = n => { const f = FARBEN[n] || ["#8E99A8"]; return `--c:${f[0]};--m:${f[1]||f[0]}`; };
+const istLive = z => z.startsWith("live");
+const minute = z => z.slice(5);
+const NEU_LADEN = t => `<button class="neu-laden" aria-label="${t} neu laden" title="Frisch von den Quellen holen">↻</button>`;
+const PFEIL = `<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const fehlerText = t => `<b>${t} gerade nicht erreichbar.</b> Letzter Versuch 17:41, nächster in einer Minute.`;
+let zfNr = 0;
+function zusammenfassung(m, label){
+  if (!m.z) return "";
+  const id = "zf" + (++zfNr);
+  return `<button class="zf-knopf" aria-expanded="false" aria-controls="${id}">Zusammenfassung${PFEIL}</button>
+    <div class="zf" id="${id}" hidden><p class="k">${label}</p><p>${esc(m.z)}</p><a href="#">Artikel öffnen</a></div>`;
+}
+
+/* ---------- Tabelle (beide Varianten) ---------- */
+const zoneVon = (w, platz) => { const z = w.zonen.find(([a,b]) => platz >= a && platz <= b); return z ? z[2] : null; };
+const grenzeNach = (w, z, i) => { const n = w.tabelle[i+1]; return w.linien.includes(z[0]) && n && n[0] === z[0]+1; };
+function tabelle(w){
+  const zeilen = w.tabelle.map((z,i) => {
+    if (!z) return `<tr class="luecke"><td colspan="5" aria-label="Plätze ausgelassen">···</td></tr>`;
+    const mein = w.mein.includes(z[1]), zo = zoneVon(w, z[0]);
+    return `<tr class="${mein?"mein ":""}${grenzeNach(w,z,i)?"grenze":""}"><td class="pl"><span style="${zo?`--z:${ZONEN[zo][1]}`:""}"${zo?` title="${ZONEN[zo][0]}"`:""}>${z[0]}</span></td><td class="t-team"><span><i class="kz">${kz(z[1])}</i><span class="name">${esc(z[1])}</span></span></td><td class="z">${z[2]}</td><td class="z">${z[3]}</td><td class="pk">${z[4]}</td></tr>`;
+  }).join("");
+  const da = [...new Set(w.tabelle.filter(Boolean).map(z => zoneVon(w,z[0])).filter(Boolean))];
+  return `<table><thead><tr><th></th><th class="t-team"></th><th>Sp</th><th>+/−</th><th>Pkt</th></tr></thead><tbody>${zeilen}</tbody></table>
+    <p class="legende">${da.map(k=>`<span style="--z:${ZONEN[k][1]}"><i></i>${ZONEN[k][0]}</span>`).join("")}</p>`;
+}
+const ohneTabelle = () => ({...WETTBEWERBE[2], tabelle:null, partien:WETTBEWERBE[2].partien.slice(2,4)});
+
+/* ---------- G ---------- */
+function gPartie(p, w){
+  const [tag,zeit,h,g,erg="",tH=[],tG=[]] = p; const live = istLive(zeit);
+  const mH = w.mein.includes(h), mG = w.mein.includes(g);
+  const st = live ? `<span class="puls"></span>${minute(zeit)}` : (erg ? "Ende" : "");
+  const box = erg ? `<span class="g-box erg">${erg.replace(":"," – ")}</span>` : `<span class="g-box zeit">${zeit}</span>`;
+  return `<div class="g-p${mH||mG?" mein":""}${live?" live":""}"><span class="g-st">${st}</span>
+    <span class="g-team g-heim${mH?" mein":""}"><span class="name">${esc(h)}</span><i class="kz">${kz(h)}</i></span>${box}
+    <span class="g-team g-gast${mG?" mein":""}"><i class="kz">${kz(g)}</i><span class="name">${esc(g)}</span></span>
+    ${tH.length||tG.length?`<span class="g-tore h">${tH.map(t=>`<span>${esc(t)}</span>`).join("")}</span><span class="g-tore g">${tG.map(t=>`<span>${esc(t)}</span>`).join("")}</span>`:""}</div>`;
+}
+function gKachel(w, fehler){
+  let h = "", tag = "";
+  for (const p of w.partien){ if (p[0] !== tag){ tag = p[0]; h += `<p class="g-tagzeile">${TAGNAME[tag]}</p>`; } h += gPartie(p, w); }
+  return `<section class="g-karte" style="${stil(w.titel)}" aria-label="${w.titel}">
+    <header class="g-kk"><span class="g-marke" aria-hidden="true">${MARKEN[w.titel]}</span><div><h3>${w.titel}</h3><p>${w.nr}, ${w.tage}</p></div>${NEU_LADEN(w.titel)}</header>
+    ${fehler?`<div class="g-fehler" role="status">${fehlerText(w.titel)}<br><button class="fehler-knopf">Jetzt neu laden</button></div>`:""}
+    ${h}${fehler?"":(w.tabelle?`<div class="g-tab"><h4>Tabelle</h4>${tabelle(w)}</div>`:`<p class="g-fehlt">Tabelle gerade nicht erreichbar</p>`)}</section>`;
+}
+const neuAlter = m => `<span class="g-alter">${m.neu?'<span class="g-neu">Neu</span>':""}<span>${m.a}</span></span>`;
+function gAbsender(a, i){
+  const [lead, ...rest] = a.meldungen;
+  return `<section class="g-abs${i===0?" gross":""}" style="${stil(a.name)}" aria-label="${a.name}">
+    <h3 class="g-von"><i aria-hidden="true"></i>${a.name}</h3>
+    <div class="g-innen"><div class="g-lead"><a href="#" class="g-titel"><b>${esc(lead.t)}</b>${neuAlter(lead)}</a>${zusammenfassung(lead,"KI-generiert")}</div>
+    ${rest.length?`<div class="g-weitere">${rest.map(m=>`<div class="g-w"><a href="#" class="g-titel"><b>${esc(m.t)}</b>${neuAlter(m)}</a>${zusammenfassung(m,"KI-generiert")}</div>`).join("")}</div>`:""}</div></section>`;
+}
+function gDash(){
+  return `<div class="dash">
+    <header class="g-kopf"><div><p class="g-tag">Sonntag</p><p class="g-datum">22. November</p></div><div class="g-rechts"><span>Stand 17:42</span><button class="g-abm">Abmelden</button></div></header>
+    <section aria-label="Sport"><div class="g-gk"><h2>Sport</h2></div><div class="g-raster">${WETTBEWERBE.map(w=>gKachel(w)).join("")}</div></section>
+    <section aria-label="KI-News"><div class="g-gk"><h2>KI-News</h2>${NEU_LADEN("KI-News")}</div>
+      <div class="g-news">${ABSENDER.map(gAbsender).join("")}
+      ${KI.aus.map(r=>`<section class="g-aus" aria-label="${r.name}"><b>${r.name}</b><span>${r.text}</span></section>`).join("")}</div></section>
+    <p class="zust-hinweis">Weitere Zustände (Beispiel): Kachel ohne Daten, Kachel ohne Tabelle</p>
+    <div class="g-raster">${gKachel({...WETTBEWERBE[1], partien:[]}, true)}${gKachel(ohneTabelle())}</div>
+  </div>`;
+}
+
+/* ---------- H ---------- */
+function hPartie(p, w){
+  const [tag,zeit,h,g,erg="",tH=[],tG=[]] = p; const live = istLive(zeit);
+  const mH = w.mein.includes(h), mG = w.mein.includes(g);
+  const [eh,eg] = erg ? erg.split(":").map(Number) : [null,null];
+  const links = live ? `<span><span class="puls"></span>${minute(zeit)}</span>` : (erg ? `${tag} ${zeit}<b>Ende</b>` : `${tag}<br>${zeit}`);
+  const zeile = (n,t,m,verl) => `<div class="h-team${m?" mein":""}${verl?" verlierer":""}"><span><i class="kz">${kz(n)}</i><span class="name">${esc(n)}</span></span><em>${t ?? ""}</em></div>`;
+  const tore = [...tH, ...tG];
+  return `<div class="h-z${mH||mG?" mein":""}${live?" live":""}"><span class="h-links">${links}</span><div>
+    ${zeile(h,eh,mH,!live&&erg&&eh<eg)}${zeile(g,eg,mG,!live&&erg&&eg<eh)}
+    ${tore.length?`<p class="h-tore">${tore.map(t=>`<span>${esc(t)}</span>`).join("")}</p>`:""}</div></div>`;
+}
+function hKachel(w, fehler){
+  return `<section class="h-karte" style="${stil(w.titel)}" aria-label="${w.titel}">
+    <header class="h-kk"><i aria-hidden="true"></i><h3>${w.titel}</h3><span class="h-meta">${w.nr}</span>${NEU_LADEN(w.titel)}</header>
+    ${fehler?`<div class="h-fehler" role="status">${fehlerText(w.titel)}<br><button class="fehler-knopf">Jetzt neu laden</button></div>`:""}
+    ${w.partien.map(p=>hPartie(p,w)).join("")}
+    ${fehler?"":(w.tabelle?`<div class="h-tab"><h4>Tabelle</h4>${tabelle(w)}</div>`:`<p class="h-fehlt">Tabelle gerade nicht erreichbar</p>`)}</section>`;
+}
+const kurzAlter = a => a.replace("vor ","").replace(" Tagen"," Tage");
+function hAbsender(a){
+  return `<section class="h-karte" style="${stil(a.name)}" aria-label="${a.name}">
+    <header class="h-kk"><i aria-hidden="true"></i><h3>${a.name}</h3><span class="h-meta">${a.meldungen.length} ${a.meldungen.length===1?"Meldung":"Meldungen"}</span></header>
+    ${a.meldungen.map(m=>`<div class="h-z h-m"><span class="h-links"><span class="h-alter${m.neu?" neu":""}"${m.neu?' aria-label="neu, '+m.a+'"':""}>${kurzAlter(m.a)}</span></span><div><a href="#" class="h-titel">${esc(m.t)}</a>${zusammenfassung(m,"KI-generiert")}</div></div>`).join("")}</section>`;
+}
+function hDash(){
+  return `<div class="dash">
+    <header class="h-kopf"><p class="h-datum">Sonntag, 22. November<span>Stand 17:42</span></p><button class="h-abm">Abmelden</button></header>
+    <section aria-label="Sport"><div class="h-gk"><h2>Sport</h2></div><div class="h-raster">${WETTBEWERBE.map(w=>hKachel(w)).join("")}</div></section>
+    <section aria-label="KI-News"><div class="h-gk"><h2>KI-News</h2>${NEU_LADEN("KI-News")}</div>
+      <div class="h-raster news">${ABSENDER.map(hAbsender).join("")}
+      ${KI.aus.map(r=>`<section class="h-karte aus" aria-label="${r.name}"><header class="h-kk"><i aria-hidden="true"></i><h3>${r.name}</h3></header><p>${r.text}</p></section>`).join("")}</div></section>
+    <p class="zust-hinweis">Weitere Zustände (Beispiel): Kachel ohne Daten, Kachel ohne Tabelle</p>
+    <div class="h-raster">${hKachel({...WETTBEWERBE[1], partien:[]}, true)}${hKachel(ohneTabelle())}</div>
+  </div>`;
+}
+
+const DASH = {g:gDash, h:hDash};
+const q = new URLSearchParams(location.search);
+const stand = {v:q.get("v")||"alle", b:q.get("b")||"1200"};
+if (q.get("ohnekopf")) document.getElementById("mock-kopf").style.display = "none";
+
+function zeichnen(){
+  zfNr = 0;
+  const liste = stand.v === "alle" ? VARIANTEN : VARIANTEN.filter(x => x.id === stand.v);
+  const b = document.getElementById("buehne");
+  b.className = `breite-${stand.b}${stand.v==="alle"?"":" nur-eine"}`;
+  b.innerHTML = liste.map(x => `<div class="variante-block"><div class="variante-titel"><h2>${x.name}</h2><p>${x.text}</p></div><div class="geraet"><div class="v${x.id}">${DASH[x.id]()}</div></div></div>`).join("");
+  document.querySelectorAll(".schalter-gruppe").forEach(g => g.querySelectorAll("button").forEach(k => k.classList.toggle("an", k.dataset.wert === stand[g.dataset.schalter])));
+  // Erste Zusammenfassung je Variante offen, damit sie im Bild steht.
+  b.querySelectorAll(".variante-block").forEach(bl => { const k = bl.querySelector(".zf-knopf"); if (k) oeffnen(k); });
+}
+function oeffnen(k){ const kasten = document.getElementById(k.getAttribute("aria-controls")); const offen = k.getAttribute("aria-expanded") !== "true"; k.setAttribute("aria-expanded", offen); kasten.hidden = !offen; }
+document.addEventListener("click", e => {
+  const s = e.target.closest(".schalter-gruppe button");
+  if (s){ stand[s.parentElement.dataset.schalter] = s.dataset.wert; zeichnen(); return; }
+  const k = e.target.closest(".zf-knopf"); if (k){ oeffnen(k); return; }
+  if (e.target.closest("a[href='#']")) e.preventDefault();
+});
+zeichnen();
+// Prüfhilfe für die Screenshots: Höhe, Überstand nach rechts, zu kleine Tippflächen
+if (q.get("pruef")) setTimeout(()=>{const ueber=[];document.querySelectorAll(".geraet").forEach(gr=>{const g=gr.getBoundingClientRect();gr.querySelectorAll("*").forEach(e=>{const r=e.getBoundingClientRect();if(r.width&&r.right>g.right+0.5&&!e.closest(".name"))ueber.push(e.className||e.tagName)})});const klein=[];document.querySelectorAll(".geraet button,.geraet a").forEach(e=>{const r=e.getBoundingClientRect();if(r.height<43.5)klein.push((e.className||"a")+":"+Math.round(r.height))});const p=document.createElement("pre");p.id="pruefung";p.textContent="H"+document.documentElement.scrollHeight+" U"+ueber.length+" "+ueber.slice(0,5).join("|")+" K"+klein.length+" "+[...new Set(klein)].slice(0,8).join("|");document.body.appendChild(p);},1500);
+</script>
+</body>
+</html>
