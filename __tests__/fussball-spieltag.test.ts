@@ -91,6 +91,19 @@ test("ein Nachholspiel direkt nach dem Spieltag bleibt in seinem Block", () => {
   ).toEqual(tage);
 });
 
+test("fehlt ein Tag im Spielplan, zählt die letzte bekannte Nummer des Blocks", () => {
+  // Sonntag fehlt im Spielplan, Montag beginnt der 13. Spieltag
+  const tage = ["2026-11-28", "2026-11-29", "2026-11-30"];
+  const spielplan = new Map([
+    ["2026-11-28", 12],
+    ["2026-11-30", 13],
+  ]);
+  // So 29.11. 20:00 deutscher Zeit
+  expect(
+    waehleSpieltag(tage, spielplan, new Date("2026-11-29T19:00:00Z")),
+  ).toEqual(["2026-11-28", "2026-11-29"]);
+});
+
 const SPIELPLAN = new Map([
   ["2026-11-06", 9],
   ["2026-11-07", 9],

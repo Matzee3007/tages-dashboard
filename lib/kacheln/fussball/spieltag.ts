@@ -3,16 +3,18 @@ import { folgetag, heute } from "@/lib/zeit";
 
 // Spieltag wählen und benennen (Projektvision, Entscheidungen der Befragung vom 2026-11-08).
 
-// Steigt die Nummer, beginnt ein neuer Spieltag. Ein Nachholspiel (kleinere Nummer) oder ein Tag ohne Nummer gehört
-// zum laufenden Block.
+// Steigt die Nummer über die höchste bekannte des Blocks, beginnt ein neuer Spieltag. Ein Nachholspiel (kleinere
+// Nummer) oder ein Tag ohne Nummer gehört zum laufenden Block.
 function nummerSteigt(
   spielplan: Map<string, number> | null,
-  vortag: string,
+  block: string[],
   tag: string,
 ): boolean {
-  const vorher = spielplan?.get(vortag);
   const jetzt = spielplan?.get(tag);
-  return vorher !== undefined && jetzt !== undefined && jetzt > vorher;
+  const bisher = block.flatMap((frueher) => spielplan?.get(frueher) ?? []);
+  return (
+    jetzt !== undefined && bisher.length > 0 && jetzt > Math.max(...bisher)
+  );
 }
 
 // Aufeinanderfolgende Tage mit Spielen bilden einen Block (tage aufsteigend sortiert).
@@ -29,7 +31,7 @@ function bloecke(
       letzter &&
       vortag &&
       folgetag(vortag) === tag &&
-      !nummerSteigt(spielplan, vortag, tag)
+      !nummerSteigt(spielplan, letzter, tag)
     )
       letzter.push(tag);
     else ergebnis.push([tag]);
