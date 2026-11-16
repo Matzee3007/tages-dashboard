@@ -80,7 +80,7 @@ OpenLigaDB (356 KB), der seit 2026-11-09 gespeichert läuft.
 | `lib/kacheln/fussball/football-data.ts` (neu) | Lesefunktionen für Spielplan und Tabelle von football-data.org |
 | `lib/kacheln/fussball/quellen.ts` (neu) | die beiden Nahtstellen: `ladeSpielplan`, `ladeTabelle` |
 | `lib/einstellungen.ts` | `FussballEinstellung`, `Team`, `TEAMS_BUNDESLIGA` (aus `TEAMNAMEN`), `TEAMS_PREMIER_LEAGUE`, neue Kachel |
-| `lib/kacheln/typen.ts`, `lib/kacheln/laden.ts`, `app/dashboard.tsx` | Art `bundesliga` → `liga` |
+| `lib/kacheln/typen.ts`, `lib/kacheln/laden.ts`, `app/dashboard.tsx` | Art `bundesliga` → `fussball` |
 | `__tests__/bundesliga-*.test.ts(x)` → `__tests__/fussball-*.test.ts(x)` | ziehen mit um, neue Tests dazu |
 | `.github/workflows/*` | nur falls dort Umgebungsvariablen stehen (keine nötig: Tests stubben `fetch`) |
 
@@ -144,7 +144,7 @@ kommt mit Aufgabe 4, die deshalb vor Aufgabe 3 läuft.
     meinTeam: string[] }` (ersetzt `BundesligaEinstellung`).
   - `TEAMS_BUNDESLIGA: Team[]` aus `TEAMNAMEN` (gleiche ids und Namen, `footballData` leer). `TEAMNAMEN` entfällt.
   - `FussballDaten = { art: "fussball"; titel: string | null; tage: string[]; partien: Partie[]; tabelle: (TabellenZeile | null)[] | null;
-    meinTeam: string[] }` (ersetzt `BundesligaDaten`; `null` nutzt erst Aufgabe 3).
+    meinTeam: string[] }` (ersetzt `BundesligaDaten`; `null` kam mit Aufgabe 4, siehe Abweichung).
   - `ladeFussball(einstellung: FussballEinstellung, jetzt: Date): Promise<FussballDaten>`, `ladeFussballKachel(...)`, `FussballAnsicht`.
   - `holeJson(url: string, speicher: Speicher, jetzt: Date, header?: Record<string, string>): Promise<unknown>` in `abruf.ts`.
   - `leseTag(json, jetzt, teams: Team[])` und `leseTabelle(json, teams: Team[])` in `espn.ts`: Name aus `teams`, sonst ESPN.
@@ -177,11 +177,11 @@ Die Tests gehen über `ladeFussball` (`__tests__/fussball-quellen.test.ts`).
 **Schnittstellen:**
 - Nutzt: Aufgabe 1 und 2.
 - Liefert:
-  - `ladeSpielplan(quelle: FussballEinstellung["spielplan"], tage: string[], jetzt: Date): Promise<Map<string, number> | null>`: OpenLigaDB
+  - `ladeSpielplan(einstellung: FussballEinstellung, tage: string[], jetzt: Date): Promise<Map<string, number> | null>`: OpenLigaDB
     wie bisher (`getmatchdata/bl1/<saison>`), football-data.org `https://api.football-data.org/v4/competitions/<wettbewerb>/matches`.
     Bei Fehler `null` und `console.error`.
-  - `ladeTabelle(quelle: FussballEinstellung["tabelle"], teams: Team[], laeuft: boolean, etikett: string, jetzt: Date):
-    Promise<TabellenZeile[] | null>`: ESPN wie bisher (frisch bei `laeuft`, Fehler wirft weiter, die Kachel zeigt dann Fehler);
+  - `ladeTabelle(einstellung: FussballEinstellung, frisch: boolean, jetzt: Date):
+    Promise<TabellenZeile[] | null>`: ESPN wie bisher (frisch bei `frisch`, Fehler wirft weiter, die Kachel zeigt dann Fehler);
     football-data.org `…/competitions/<wettbewerb>/standings`, nie frisch, bei Fehler `null` und `console.error`.
   - `TEAMS_PREMIER_LEAGUE: Team[]` mit den 20 Teams der Saison 2026/27 (Liste unten).
   - Kachel `{ id: "premier-league", art: "fussball", titel: "Premier League", espn: "eng.1", spielplan: { art: "football-data",
@@ -253,7 +253,10 @@ Die Tests gehen über `ladeFussball` (`__tests__/fussball-quellen.test.ts`).
 
 ### Aufgabe 6: Abnahme online
 
-- [ ] **Schritt 1:** PR öffnen, `/code-review`, Funde mit dem Entwickler durchgehen.
+- [x] **Schritt 1:** PR öffnen, `/code-review`, Funde mit dem Entwickler durchgehen. PR #73, Review (high) mit 9 Funden, `plan-pruefer`
+  ERFÜLLT. Behoben: 4 (Tabelle streng lesen), 7 und 8 (Doppeltes zusammengeführt). Bekannte Grenzen in der Tool-Notiz: 1, 3, 5. Fund 2
+  (Spieltage verschmelzen Montag/Dienstag) als eigener PR danach, Fund 6 und 9 bewusst offen (9 bei der Champions League). Drift des
+  `plan-pruefer` als Nachträge in ADR 0008 (Spielplan ohne Etikett) und ADR 0011 (Name in der Tabelle).
 - [ ] **Schritt 2: Abnahme in der Vorschau von Vercel** (Entwickler): einloggen, Premier League steht zwischen Bundesliga und KI-News,
   Überschrift „12. Spieltag · …“ (Nummer aus football-data.org, also vom Server bei Vercel aus erreichbar), Tabelle mit Arsenal und je
   2 Plätzen darum, deutsche Kurznamen, Logos. Bundesliga sieht aus wie vorher.

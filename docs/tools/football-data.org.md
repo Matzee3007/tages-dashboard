@@ -44,6 +44,18 @@ Beide mit `X-Auth-Token`, `User-Agent: Tages-Dashboard` und 5 Sekunden Zeitlimit
 steht der Fehler im Server-Log, die Kachel zeigt den Spieltag ohne Nummer bzw. „Tabelle gerade nicht erreichbar“. Rechnung zur Grenze von
 10 Abrufen pro Minute: [[projects/tages-dashboard/docs/plaene/2026-11-16-premier-league|Plan der Premier League]], „Fremde Dienste“.
 
+## Bekannte Grenzen
+
+Aus dem `/code-review` von PR #73, bewusst offen:
+
+- **Vorgezogenes Spiel:** Behält eine vorgezogene Partie ihren alten `matchday`, gelten die Spieltage dazwischen als „Nachholspiel“, weil
+  `spieltagTitel` die höchste frühere Nummer vergleicht (gilt auch für OpenLigaDB). Selten.
+- **Tagesgrenze:** `leseFdSpielplan` ordnet nach deutschem Kalendertag, die Tage von ESPN folgen einer US-Tagesgrenze. Trifft nur Anstöße
+  nach etwa 1 Uhr deutscher Zeit. Bei der Champions League (PR 2) erneut prüfen.
+- **↻ und die Grenze:** Jeder Druck auf ↻ holt die Tabelle neu, ab etwa 6 Drücken in einer Minute droht 429. Dann erscheint „Tabelle
+  gerade nicht erreichbar“.
+- **Verschmolzene Spieltage** (Samstag bis Montag, dann Dienstag): eigener PR nach #73, siehe Plan der Premier League.
+
 ## Wie haben wir es eingerichtet?
 
 2026-11-16 mit einem Assistenten (Skill `assistent-bauen`, einmalig im Scratchpad, nicht im Repo):

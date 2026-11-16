@@ -256,7 +256,8 @@ Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
   nur, wenn beide Nachbarplätze im Ausschnitt stehen. Gilt auch für die schon gebaute Bundesliga.
 - **Tabelle verzögert:** Der Spielstand ist live (ESPN), die Tabelle von football-data.org zieht nach.
 - **Teams zusammenführen:** je Wettbewerb eine Liste im Code mit id bei ESPN, id bei football-data.org und deutschem Kurznamen, wie
-  `TEAMNAMEN` der Bundesliga. Fehlt ein Eintrag, steht der Name von ESPN da.
+  `TEAMS_BUNDESLIGA` (früher `TEAMNAMEN`). Fehlt ein Eintrag, steht der Name von ESPN da, in der Tabelle von football-data.org deren
+  Kurzname (Nachtrag in ADR 0011).
 - **football-data.org fällt aus:** Partien und Live-Stand kommen weiter, der Spieltag erscheint ohne Nummer, statt der Tabelle die Zeile
   „Tabelle gerade nicht erreichbar“.
 - **Sport als Gruppe** (Glossar): Die Fußball-Kacheln bleiben eigenständige Kacheln (Architekturprinzip 3), stehen aber sichtbar zusammen

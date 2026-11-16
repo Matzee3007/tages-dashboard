@@ -52,3 +52,10 @@ Geprüft am 2026-11-15:
 - **Grenze von 10 Abrufen pro Minute:** Tabelle und Spieltag ändern sich selten. Der Zwischenspeicher wird im Plan so gewählt, dass beide
   Kacheln zusammen weit darunter bleiben.
 - **Ausfall von ESPN** trifft weiter alle Fußball-Kacheln. Dann bliebe nur die Tabelle von football-data.org.
+
+## Nachtrag 2026-11-16: Name eines Teams ohne Eintrag in der Tabelle
+
+Fehlt ein Team in der Liste, steht in den Partien der Name von ESPN. Die Tabelle von football-data.org kennt keinen Namen von ESPN, dort
+steht der `shortName` von football-data.org, die Zeile bekommt die id `fd-<id>` und wird nicht als Mein Team erkannt. Der Fehler steht im
+Server-Log (`Team <id> fehlt in der Liste`). Die Listen heißen `TEAMS_BUNDESLIGA` und `TEAMS_PREMIER_LEAGUE` (`lib/einstellungen.ts`).
+Vom `plan-pruefer` gemeldet, vom Entwickler bestätigt.
