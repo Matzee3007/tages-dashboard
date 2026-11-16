@@ -116,7 +116,7 @@ function PartieZeile({
     <div
       data-testid={`partie-${partie.id}`}
       data-mein-team={mein || undefined}
-      className={`grid min-h-[52px] grid-cols-[34px_minmax(0,1fr)_58px_minmax(0,1fr)] items-center gap-x-2 border-t border-rand py-[9px] pr-3 pl-1.5 text-sm font-medium first:border-t-0 ${
+      className={`grid min-h-[52px] grid-cols-[36px_minmax(0,1fr)_58px_minmax(0,1fr)] items-center gap-x-2 border-t border-rand py-[9px] pr-3 pl-1.5 text-sm font-medium [[aria-hidden]+&]:border-t-0 ${
         mein ? MEIN_TEAM_GRUND : ""
       }`}
     >

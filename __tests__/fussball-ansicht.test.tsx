@@ -215,6 +215,7 @@ test("Mein Team an der Grenze hat Markierung und Linie", () => {
   const reihe = screen.getByRole("row", { name: /Vier/ });
   expect(reihe.hasAttribute("data-mein-team")).toBe(true);
   expect(reihe.hasAttribute("data-linie")).toBe(true);
+  expect(reihe.getAttribute("data-zone")).toBe("Champions League");
 });
 
 test("jede Zeile trägt ihre Zone", () => {
