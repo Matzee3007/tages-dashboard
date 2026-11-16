@@ -42,6 +42,20 @@ async function ladeTag(
   );
 }
 
+// Der Spielplan kommt vor der Wahl: Steigt die Nummer, trennt er Spieltage ohne Lücke.
+async function ladeSpieltag(
+  einstellung: FussballEinstellung,
+  kalender: string[],
+  jetzt: Date,
+) {
+  const spielplan = await ladeSpielplan(einstellung, kalender, jetzt);
+  const tage = waehleSpieltag(kalender, spielplan, jetzt);
+  const partienJeTag = await Promise.all(
+    tage.map((tag) => ladeTag(einstellung, tag, jetzt)),
+  );
+  return { spielplan, tage, partien: partienJeTag.flat() };
+}
+
 export async function ladeFussball(
   einstellung: FussballEinstellung,
   jetzt: Date,
@@ -54,14 +68,10 @@ export async function ladeFussball(
       jetzt,
     ),
   );
-  // Der Spielplan kommt vor der Wahl: Wechselt die Nummer, trennt er Spieltage ohne Lücke.
-  const spielplan = await ladeSpielplan(einstellung, kalender, jetzt);
-  const tage = waehleSpieltag(kalender, spielplan, jetzt);
-  const [partienJeTag, normaleTabelle] = await Promise.all([
-    Promise.all(tage.map((tag) => ladeTag(einstellung, tag, jetzt))),
+  const [{ spielplan, tage, partien }, normaleTabelle] = await Promise.all([
+    ladeSpieltag(einstellung, kalender, jetzt),
     ladeTabelle(einstellung, false, jetzt),
   ]);
-  const partien = partienJeTag.flat();
   // Nur ESPN wird live nachgeholt, die Tabelle von football-data.org darf nachziehen (ADR 0011).
   const tabelle =
     laeuftEine(partien) && einstellung.tabelle.art === "espn"
