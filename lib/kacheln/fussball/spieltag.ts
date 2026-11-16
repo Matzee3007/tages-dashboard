@@ -4,19 +4,33 @@ import { folgetag, heute } from "@/lib/zeit";
 // Spieltag wählen und benennen (Projektvision, Entscheidungen der Befragung vom 2026-11-08).
 
 // Aufeinanderfolgende Tage mit Spielen bilden einen Block (tage aufsteigend sortiert).
-function bloecke(tage: string[]): string[][] {
+// Wechselt die Nummer im Spielplan, beginnt ein neuer Block, auch ohne Lücke.
+function bloecke(
+  tage: string[],
+  spielplan: Map<string, number> | null,
+): string[][] {
   const ergebnis: string[][] = [];
   for (const tag of tage) {
     const letzter = ergebnis.at(-1);
-    if (letzter && folgetag(letzter.at(-1)!) === tag) letzter.push(tag);
+    const vortag = letzter?.at(-1);
+    const gleicheNummer =
+      spielplan?.get(vortag!) === undefined ||
+      spielplan.get(tag) === undefined ||
+      spielplan.get(vortag!) === spielplan.get(tag);
+    if (letzter && folgetag(vortag!) === tag && gleicheNummer)
+      letzter.push(tag);
     else ergebnis.push([tag]);
   }
   return ergebnis;
 }
 
 // Ein Spieltag bleibt bis Mitternacht (deutsche Zeit) des Tages nach seinem letzten Spiel aktuell.
-export function waehleSpieltag(tage: string[], jetzt: Date): string[] {
-  const alle = bloecke(tage);
+export function waehleSpieltag(
+  tage: string[],
+  spielplan: Map<string, number> | null,
+  jetzt: Date,
+): string[] {
+  const alle = bloecke(tage, spielplan);
   return (
     alle.find((block) => heute(jetzt) <= folgetag(block.at(-1)!)) ??
     alle.at(-1) ??

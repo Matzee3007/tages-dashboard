@@ -54,7 +54,7 @@ export async function ladeFussball(
       jetzt,
     ),
   );
-  const tage = waehleSpieltag(kalender, jetzt);
+  const tage = waehleSpieltag(kalender, null, jetzt);
   const [partienJeTag, normaleTabelle, spielplan] = await Promise.all([
     Promise.all(tage.map((tag) => ladeTag(einstellung, tag, jetzt))),
     ladeTabelle(einstellung, false, jetzt),
