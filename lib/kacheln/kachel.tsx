@@ -78,13 +78,22 @@ export function Kachel({
       className="flex min-w-0 flex-col gap-3"
     >
       <div className="-mr-3 flex min-h-11 items-center gap-2.5">
-        <span
-          aria-hidden
-          className="size-[9px] shrink-0 rounded-[2px] bg-(--marke)"
-        />
-        <h2 className="flex-1 text-base font-[720] tracking-[-0.005em]">
-          {kachel.titel}
-        </h2>
+        {/* In einer Gruppe ist die Kachel eine von mehreren unter deren Überschrift, sonst trägt sie selbst den großen Titel. */}
+        {kachel.gruppe ? (
+          <>
+            <span
+              aria-hidden
+              className="size-[9px] shrink-0 rounded-[2px] bg-(--marke)"
+            />
+            <h3 className="flex-1 text-base font-[720] tracking-[-0.005em]">
+              {kachel.titel}
+            </h3>
+          </>
+        ) : (
+          <h2 className="flex-1 text-[30px] leading-none font-[280] tracking-[-0.02em] min-[600px]:text-[34px]">
+            {kachel.titel}
+          </h2>
+        )}
         <div className="flex items-center gap-1">
           {kachel.zusatz && (
             <span className="text-[13px] text-gedaempft">{kachel.zusatz}</span>

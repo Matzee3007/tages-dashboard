@@ -5,6 +5,7 @@ import { useCallback, useRef, useState } from "react";
 import { abmelden } from "@/app/login/actions";
 import { holeDashboard } from "@/lib/kacheln/abruf";
 import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
+import { gruppiere } from "@/lib/kacheln/gruppen";
 import { FehlerHinweis, Kachel } from "@/lib/kacheln/kachel";
 import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
 import { neuerStand } from "@/lib/kacheln/stand";
@@ -89,7 +90,7 @@ export function Dashboard() {
         </form>
       </header>
 
-      <main className="flex flex-col gap-4">
+      <main className="flex flex-col gap-10 min-[600px]:gap-[52px]">
         {!geladen && <p className="text-gedaempft">Lädt …</p>}
         {geladen && kacheln.length === 0 && (
           <FehlerHinweis
@@ -98,8 +99,8 @@ export function Dashboard() {
             laedt={laedt}
           />
         )}
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(320px,100%),1fr))] items-start gap-4">
-          {kacheln.map((kachel) => (
+        {gruppiere(kacheln).map(({ gruppe, kacheln: imBlock }) => {
+          const liste = imBlock.map((kachel) => (
             <Kachel
               key={kachel.id}
               kachel={kachel}
@@ -110,8 +111,23 @@ export function Dashboard() {
             >
               {kachel.daten && <KachelInhalt daten={kachel.daten} />}
             </Kachel>
-          ))}
-        </div>
+          ));
+          if (gruppe === null) return liste;
+          return (
+            <section
+              key={`gruppe-${gruppe}`}
+              aria-label={gruppe}
+              className="@container flex flex-col gap-[18px]"
+            >
+              <h2 className="text-[30px] leading-none font-[280] tracking-[-0.02em] min-[600px]:text-[34px]">
+                {gruppe}
+              </h2>
+              <div className="grid items-start gap-11 @[900px]:grid-cols-3 @[900px]:gap-12">
+                {liste}
+              </div>
+            </section>
+          );
+        })}
       </main>
     </div>
   );

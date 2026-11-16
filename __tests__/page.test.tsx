@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import Page from "@/app/page";
@@ -213,4 +214,30 @@ test("zeigt die Bundesliga-Kachel", async () => {
   expect(
     screen.getByRole("heading", { level: 2, name: "KI-News" }),
   ).toBeDefined();
+});
+
+test("die Fußball-Kacheln stehen unter Sport, die KI-News für sich", async () => {
+  const fussball = (id: string, titel: string) => ({
+    id,
+    titel,
+    aussehen: { farbe: "#E3343F" },
+    gruppe: "Sport",
+    status: "fehler" as const,
+  });
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      fussball("bundesliga", "Bundesliga"),
+      fussball("premier-league", "Premier League"),
+      ...OK.kacheln,
+    ],
+  });
+  render(<Page />);
+
+  const sport = await screen.findByRole("region", { name: "Sport" });
+  expect(within(sport).getByRole("heading", { level: 2, name: "Sport" }));
+  expect(within(sport).getByRole("heading", { level: 3, name: "Bundesliga" }));
+  expect(within(sport).getByRole("heading", { name: "Premier League" }));
+  expect(within(sport).queryByRole("heading", { name: "KI-News" })).toBeNull();
+  expect(screen.getByRole("heading", { level: 2, name: "KI-News" }));
 });
