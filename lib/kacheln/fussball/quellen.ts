@@ -31,17 +31,18 @@ function fdHeader(): Record<string, string> {
 
 // Ohne Etikett: Der Spielplan ändert sich selten, ↻ soll ihn nicht jedes Mal neu laden.
 // Ohne Spielplan fehlt nur die Nummer des Spieltags, die Kachel läuft weiter.
+// kalender: alle Tage mit Spielen von ESPN, der erste bestimmt die Saison.
 export async function ladeSpielplan(
   einstellung: FussballEinstellung,
-  tage: string[],
+  kalender: string[],
   jetzt: Date,
 ): Promise<Map<string, number> | null> {
-  if (tage.length === 0) return null;
+  if (kalender.length === 0) return null;
   const quelle = einstellung.spielplan;
   const speicher = { sekunden: TAG_SEKUNDEN };
   try {
     if (quelle.art === "openligadb") {
-      const url = `https://api.openligadb.de/getmatchdata/${quelle.liga}/${saison(tage[0])}`;
+      const url = `https://api.openligadb.de/getmatchdata/${quelle.liga}/${saison(kalender[0])}`;
       return leseSpielplan(await holeJson(url, speicher, jetzt));
     }
     const url = `${FOOTBALL_DATA}/${quelle.wettbewerb}/matches`;

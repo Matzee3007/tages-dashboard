@@ -3,6 +3,17 @@ import { folgetag, heute } from "@/lib/zeit";
 
 // Spieltag wählen und benennen (Projektvision, Entscheidungen der Befragung vom 2026-11-08).
 
+// Fehlt einer der beiden Tage im Spielplan, zählt die Nummer als gleich.
+function gleicheNummer(
+  spielplan: Map<string, number> | null,
+  vortag: string,
+  tag: string,
+): boolean {
+  const vorher = spielplan?.get(vortag);
+  const jetzt = spielplan?.get(tag);
+  return vorher === undefined || jetzt === undefined || vorher === jetzt;
+}
+
 // Aufeinanderfolgende Tage mit Spielen bilden einen Block (tage aufsteigend sortiert).
 // Wechselt die Nummer im Spielplan, beginnt ein neuer Block, auch ohne Lücke.
 function bloecke(
@@ -13,11 +24,12 @@ function bloecke(
   for (const tag of tage) {
     const letzter = ergebnis.at(-1);
     const vortag = letzter?.at(-1);
-    const gleicheNummer =
-      spielplan?.get(vortag!) === undefined ||
-      spielplan.get(tag) === undefined ||
-      spielplan.get(vortag!) === spielplan.get(tag);
-    if (letzter && folgetag(vortag!) === tag && gleicheNummer)
+    if (
+      letzter &&
+      vortag &&
+      folgetag(vortag) === tag &&
+      gleicheNummer(spielplan, vortag, tag)
+    )
       letzter.push(tag);
     else ergebnis.push([tag]);
   }
@@ -34,10 +46,13 @@ export function waehleSpieltag(
   const alle = bloecke(tage, spielplan);
   const tag = heute(jetzt);
   return (
-    alle.find(
-      (block, index) =>
-        tag <= folgetag(block.at(-1)!) && !(tag >= alle[index + 1]?.[0]),
-    ) ??
+    alle.find((block, index) => {
+      const naechsterBeginn = alle[index + 1]?.[0];
+      return (
+        tag <= folgetag(block.at(-1)!) &&
+        (naechsterBeginn === undefined || tag < naechsterBeginn)
+      );
+    }) ??
     alle.at(-1) ??
     []
   );
