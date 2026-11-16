@@ -1,3 +1,5 @@
+import type { Zone } from "@/lib/einstellungen";
+
 export type TeamStand = {
   id: string;
   name: string;
@@ -40,6 +42,5 @@ export type FussballDaten = {
   partien: Partie[];
   tabelle: (TabellenZeile | null)[] | null;
   meinTeam: string[];
-  // Plätze, nach denen eine Linie für Weiterkommen oder Abstieg steht.
-  linien: number[];
+  zonen: Zone[];
 };

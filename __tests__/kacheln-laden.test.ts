@@ -143,7 +143,7 @@ test("die Bundesliga-Kachel ruft ladeFussball mit Einstellung und Zeit", async (
     tabelle: { art: "espn" as const },
     teams: TEAMS_BUNDESLIGA,
     meinTeam: ["132"],
-    linien: [],
+    zonen: [],
   };
   const daten: FussballDaten = {
     art: "fussball",
@@ -152,7 +152,7 @@ test("die Bundesliga-Kachel ruft ladeFussball mit Einstellung und Zeit", async (
     partien: [],
     tabelle: [],
     meinTeam: ["132"],
-    linien: [],
+    zonen: [],
   };
   vi.mocked(ladeFussball).mockResolvedValue(daten);
 

@@ -1,4 +1,5 @@
 import { Abschnitt } from "@/lib/kacheln/kachel";
+import type { Zone } from "@/lib/einstellungen";
 import type {
   FussballDaten,
   Partie,
@@ -99,13 +100,54 @@ function PartieZeile({
   );
 }
 
+function zoneVon(zonen: Zone[], platz: number): Zone | undefined {
+  return zonen.find((zone) => platz >= zone.von && platz <= zone.bis);
+}
+
+// Eine Linie trennt zwei Zonen, nur wenn die nächste Zeile direkt folgt (keine Lücke). Höher statt genau +1: Bei gleichem
+// Platz (4, 4, 6) steht sie unter dem letzten der beiden.
+function grenzeNach(
+  zonen: Zone[],
+  zeile: TabellenZeile,
+  naechste: TabellenZeile | null | undefined,
+): boolean {
+  return (
+    !!naechste &&
+    naechste.platz > zeile.platz &&
+    zoneVon(zonen, zeile.platz) !== zoneVon(zonen, naechste.platz)
+  );
+}
+
+function Legende({ zonen }: { zonen: Zone[] }) {
+  if (zonen.length === 0) return null;
+  return (
+    <ul
+      aria-label="Zonen"
+      className="mt-2.5 flex flex-wrap gap-x-3.5 gap-y-0.5 text-[11.5px] text-gedaempft"
+    >
+      {zonen.map((zone) => (
+        <li key={zone.name} className="inline-flex items-center gap-1.5">
+          <span
+            aria-hidden
+            className="size-2 rounded-[2px]"
+            style={{ background: zone.farbe }}
+          />
+          {zone.name}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function TabellenZeilen({
   zeile,
   meinTeam,
+  zone,
   linie,
 }: {
   zeile: TabellenZeile | null;
   meinTeam: string[];
+  zone: Zone | undefined;
   linie: boolean;
 }) {
   if (!zeile) {
@@ -122,16 +164,27 @@ function TabellenZeilen({
   }
   const mein = meinTeam.includes(zeile.id);
   const zelle = `h-[30px] py-[3px] ${mein ? "bg-akzent/8" : ""} ${
-    linie ? "border-b-[1.5px] border-b-(--farbe)" : ""
+    linie ? "border-b border-b-grenze" : ""
   }`;
   return (
-    <tr data-mein-team={mein || undefined} data-linie={linie || undefined}>
+    <tr
+      data-mein-team={mein || undefined}
+      data-zone={zone?.name}
+      data-linie={linie || undefined}
+    >
       <td
-        className={`${zelle} w-[26px] pr-2.5 text-right text-rauch ${
-          mein ? "rounded-l-md shadow-[inset_3px_0_0_var(--color-akzent)]" : ""
+        className={`${zelle} w-9 text-[12.5px] font-semibold text-gedaempft ${
+          mein ? "rounded-l-md" : ""
         }`}
       >
-        {zeile.platz}
+        <span className="flex items-center gap-[9px]">
+          <span
+            aria-hidden
+            className="h-[18px] w-[3px] rounded-[2px]"
+            style={{ background: zone?.farbe ?? "transparent" }}
+          />
+          {zeile.platz}
+        </span>
       </td>
       <td className={`${zelle} max-w-0`}>
         <Team team={{ ...zeile, tore: null }} mein={mein} />
@@ -179,32 +232,39 @@ export function FussballAnsicht({
         {daten.tabelle === null ? (
           <p className="text-gedaempft">Tabelle gerade nicht erreichbar</p>
         ) : (
-          <table className="w-full border-collapse text-[13.5px]">
-            <thead>
-              <tr className="text-xs text-rauch">
-                <th className="pb-1 pr-2.5 text-right font-medium">#</th>
-                <th className="pb-1 text-left font-medium">Team</th>
-                <th className="pb-1 text-right font-medium">Sp</th>
-                <th className="pb-1 text-right font-medium">+/−</th>
-                <th className="pb-1 text-right font-medium">Pkt</th>
-              </tr>
-            </thead>
-            <tbody>
-              {daten.tabelle.map((zeile, index, alle) => (
-                <TabellenZeilen
-                  key={zeile?.id ?? `luecke-${index}`}
-                  zeile={zeile}
-                  meinTeam={daten.meinTeam}
-                  linie={
-                    zeile !== null &&
-                    daten.linien.includes(zeile.platz) &&
-                    // Höher statt genau +1: Bei gleichem Platz (4, 4, 6) steht die Linie unter dem letzten der beiden.
-                    (alle[index + 1]?.platz ?? 0) > zeile.platz
-                  }
-                />
-              ))}
-            </tbody>
-          </table>
+          <>
+            <table className="w-full border-collapse text-[13.5px]">
+              <thead>
+                <tr className="text-xs text-rauch">
+                  <th className="pb-1 pr-2.5 text-right font-medium">#</th>
+                  <th className="pb-1 text-left font-medium">Team</th>
+                  <th className="pb-1 text-right font-medium">Sp</th>
+                  <th className="pb-1 text-right font-medium">+/−</th>
+                  <th className="pb-1 text-right font-medium">Pkt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {daten.tabelle.map((zeile, index, alle) => (
+                  <TabellenZeilen
+                    key={zeile?.id ?? `luecke-${index}`}
+                    zeile={zeile}
+                    meinTeam={daten.meinTeam}
+                    zone={zeile ? zoneVon(daten.zonen, zeile.platz) : undefined}
+                    linie={
+                      !!zeile && grenzeNach(daten.zonen, zeile, alle[index + 1])
+                    }
+                  />
+                ))}
+              </tbody>
+            </table>
+            <Legende
+              zonen={daten.zonen.filter((zone) =>
+                daten.tabelle?.some(
+                  (zeile) => zeile && zoneVon([zone], zeile.platz),
+                ),
+              )}
+            />
+          </>
         )}
       </Abschnitt>
     </>

@@ -18,7 +18,7 @@ test("eine Tabelle von football-data.org verlangt die ids von football-data.org"
     tabelle: { art: "football-data", wettbewerb: "CL" },
     teams: [{ espn: "132", name: "Bayern" }],
     meinTeam: ["132"],
-    linien: [],
+    zonen: [],
   };
   expect(einstellung.teams).toHaveLength(1);
 });

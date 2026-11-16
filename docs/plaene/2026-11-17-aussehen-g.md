@@ -72,12 +72,12 @@ keine neuen. ESPN wird wie bisher abgerufen, gelesen wird ein Feld mehr (`detail
 
 **Schnittstellen:** Liefert `Tor = { text: string; seite: "heim" | "gast" }`. Fehlt das Team oder passt es zu keinem Teilnehmer, gilt `"heim"`.
 
-- [ ] **Schritt 1: Fehlschlagender Test:** „ein Tor gehört zum Team aus details“: Gast-Tor (team.id des Gasts) → `seite: "gast"`,
+- [x] **Schritt 1: Fehlschlagender Test:** „ein Tor gehört zum Team aus details“: Gast-Tor (team.id des Gasts) → `seite: "gast"`,
   Eigentor eines Gast-Spielers mit team.id des Heimteams → `seite: "heim"`, Text endet auf „(ET)“.
-- [ ] **Schritt 2: rot laufen lassen** `npx vitest run __tests__/fussball-espn.test.ts`
-- [ ] **Schritt 3: Umsetzen** in `leseTag`: `team.id` des Details mit `id` von Heim und Gast vergleichen.
-- [ ] **Schritt 4: grün**
-- [ ] **Schritt 5: `npm run check`, Commit** „Assign goals to home or away team“
+- [x] **Schritt 2: rot laufen lassen** `npx vitest run __tests__/fussball-espn.test.ts`
+- [x] **Schritt 3: Umsetzen** in `leseTag`: `team.id` des Details mit `id` von Heim und Gast vergleichen.
+- [x] **Schritt 4: grün**
+- [x] **Schritt 5: `npm run check`, Commit** „Assign goals to home or away team“
 
 ### Aufgabe 2: Zonen statt Linien
 
@@ -88,17 +88,17 @@ keine neuen. ESPN wird wie bisher abgerufen, gelesen wird ein Feld mehr (`detail
 `FussballEinstellung.zonen: Zone[]` und `FussballDaten.zonen: Zone[]` ersetzen `linien`. Zeile trägt `data-zone={name}` und bei einer
 Grenze `data-linie`.
 
-- [ ] **Schritt 1: Tests umschreiben und ergänzen:**
+- [x] **Schritt 1: Tests umschreiben und ergänzen:**
   - Die drei Linien-Tests bleiben, mit `zonen` statt `linien` (z. B. Zone 1–4 → Linie nach 4).
   - „Platz 5 trägt die Zone Europa League“ (`data-zone`).
   - „die Legende nennt nur die Zonen im Ausschnitt“: Ausschnitt 1, ···, 4, 5, 6 mit BL-Zonen → Legende „Champions League“, „Europa
     League“, „Conference League“, nicht „Abstieg“.
   - `fussball-laden`: `ladeFussball` gibt `zonen` der Einstellung zurück.
-- [ ] **Schritt 2: rot**
-- [ ] **Schritt 3: Umsetzen.** Linie, wenn das nächste Element des Ausschnitts eine Zeile ist, deren Platz höher ist und deren Zone
+- [x] **Schritt 2: rot**
+- [x] **Schritt 3: Umsetzen.** Linie, wenn das nächste Element des Ausschnitts eine Zeile ist, deren Platz höher ist und deren Zone
   (Name oder keine) anders ist. Zonen in `KACHELN` nach den festen Vorgaben, `linien` entfällt.
-- [ ] **Schritt 4: grün**
-- [ ] **Schritt 5: `npm run check`, Commit** „Replace table lines with zones and legend“
+- [x] **Schritt 4: grün**
+- [x] **Schritt 5: `npm run check`, Commit** „Replace table lines with zones and legend“
 
 ### Aufgabe 3: Grundlage und Karten
 

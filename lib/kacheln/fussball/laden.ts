@@ -101,6 +101,6 @@ export async function ladeFussball(
     partien: sortierePartien(partien, einstellung.meinTeam),
     tabelle: tabelle && tabellenAusschnitt(tabelle, einstellung.meinTeam),
     meinTeam: einstellung.meinTeam,
-    linien: einstellung.linien,
+    zonen: einstellung.zonen,
   };
 }

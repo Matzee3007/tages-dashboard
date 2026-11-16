@@ -1,5 +1,12 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { afterEach, expect, test } from "vitest";
+import type { Zone } from "@/lib/einstellungen";
 import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
 import type {
   FussballDaten,
@@ -58,7 +65,7 @@ const DATEN: FussballDaten = {
   partien: [MAINZ_BAYERN, KOELN_LEVERKUSEN, FREIBURG_UNION],
   tabelle: [zeile(1, "132", "Bayern"), null, zeile(4, "126", "Freiburg")],
   meinTeam: ["132"],
-  linien: [],
+  zonen: [],
 };
 
 test("Überschrift mit Nummer und Tagen", () => {
@@ -110,12 +117,20 @@ test("Mein Team ist markiert", () => {
   expect(bayernZeile.hasAttribute("data-mein-team")).toBe(true);
 });
 
+const CL = { name: "Champions League", farbe: "#4C8DF6" };
+const ZONEN_BL: Zone[] = [
+  { von: 1, bis: 4, ...CL },
+  { von: 5, bis: 5, name: "Europa League", farbe: "#22B8CF" },
+  { von: 6, bis: 6, name: "Conference League", farbe: "#4CC38A" },
+  { von: 17, bis: 18, name: "Abstieg", farbe: "#E5484D" },
+];
+
 function mitLinien(
   tabelle: (TabellenZeile | null)[],
-  linien: number[],
+  zonen: Zone[],
   meinTeam: string[] = [],
 ) {
-  render(<FussballAnsicht daten={{ ...DATEN, tabelle, linien, meinTeam }} />);
+  render(<FussballAnsicht daten={{ ...DATEN, tabelle, zonen, meinTeam }} />);
   return screen
     .getAllByRole("row")
     .filter((reihe) => reihe.hasAttribute("data-linie"))
@@ -130,7 +145,7 @@ test("nach Platz 4 kommt eine Linie, wenn Platz 5 folgt", () => {
     zeile(4, "4", "Vier"),
     zeile(5, "5", "Fünf"),
   ];
-  expect(mitLinien(tabelle, [4])).toEqual(["4"]);
+  expect(mitLinien(tabelle, [{ von: 1, bis: 4, ...CL }])).toEqual(["4"]);
 });
 
 test("keine Linie über eine Lücke", () => {
@@ -141,7 +156,7 @@ test("keine Linie über eine Lücke", () => {
     null,
     zeile(7, "7", "Sieben"),
   ];
-  expect(mitLinien(tabelle, [4])).toEqual([]);
+  expect(mitLinien(tabelle, [{ von: 1, bis: 4, ...CL }])).toEqual([]);
 });
 
 test("bei gleichem Platz steht die Linie unter dem letzten Team davon", () => {
@@ -151,17 +166,47 @@ test("bei gleichem Platz steht die Linie unter dem letzten Team davon", () => {
     zeile(4, "44", "AuchVier"),
     zeile(6, "6", "Sechs"),
   ];
-  expect(mitLinien(tabelle, [4])).toEqual(["4"]);
+  expect(mitLinien(tabelle, [{ von: 1, bis: 4, ...CL }])).toEqual(["4"]);
   expect(
     screen.getByRole("row", { name: /AuchVier/ }).hasAttribute("data-linie"),
   ).toBe(true);
 });
 
 test("Mein Team an der Grenze hat Markierung und Linie", () => {
-  mitLinien([zeile(4, "4", "Vier"), zeile(5, "5", "Fünf")], [4], ["4"]);
+  mitLinien(
+    [zeile(4, "4", "Vier"), zeile(5, "5", "Fünf")],
+    [{ von: 1, bis: 4, ...CL }],
+    ["4"],
+  );
   const reihe = screen.getByRole("row", { name: /Vier/ });
   expect(reihe.hasAttribute("data-mein-team")).toBe(true);
   expect(reihe.hasAttribute("data-linie")).toBe(true);
+});
+
+test("jede Zeile trägt ihre Zone", () => {
+  mitLinien([zeile(4, "4", "Vier"), zeile(5, "5", "Fünf")], ZONEN_BL);
+  expect(
+    screen.getByRole("row", { name: /Fünf/ }).getAttribute("data-zone"),
+  ).toBe("Europa League");
+});
+
+test("die Legende nennt nur die Zonen im Ausschnitt", () => {
+  mitLinien(
+    [
+      zeile(1, "1", "Eins"),
+      null,
+      zeile(4, "4", "Vier"),
+      zeile(5, "5", "Fünf"),
+      zeile(6, "6", "Sechs"),
+    ],
+    ZONEN_BL,
+  );
+  const legende = screen.getByRole("list", { name: "Zonen" });
+  expect(
+    within(legende)
+      .getAllByRole("listitem")
+      .map((eintrag) => eintrag.textContent),
+  ).toEqual(["Champions League", "Europa League", "Conference League"]);
 });
 
 test("Lücke in der Tabelle", () => {

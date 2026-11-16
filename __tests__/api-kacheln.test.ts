@@ -22,7 +22,7 @@ beforeEach(() => {
     partien: [],
     tabelle: [],
     meinTeam: [],
-    linien: [],
+    zonen: [],
   });
 });
 

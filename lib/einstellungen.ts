@@ -4,6 +4,18 @@ import type { SeitenArt } from "@/lib/kacheln/ki-news/seiten";
 // Hausfarbe nahe an Orange liegt, das Mein Team, Live und „neu“ gehört (Mock F vom 2026-11-16).
 export type Aussehen = { farbe: string; marke?: string };
 
+// Ein Bereich der Tabelle mit derselben Bedeutung (z. B. Plätze 1–4: Champions League). Zwischen zwei Zonen steht eine Linie.
+// Grundverteilung der Saison, von Hand geprüft (Projektvision „Plätze der Linien“). Farben und Namen aus Mock G vom 2026-11-17.
+export type Zone = { von: number; bis: number; name: string; farbe: string };
+
+const CHAMPIONS_LEAGUE: Omit<Zone, "von" | "bis"> = {
+  name: "Champions League",
+  farbe: "#4C8DF6",
+};
+const EUROPA_LEAGUE = { name: "Europa League", farbe: "#22B8CF" };
+const CONFERENCE_LEAGUE = { name: "Conference League", farbe: "#4CC38A" };
+const ABSTIEG = { name: "Abstieg", farbe: "#E5484D" };
+
 // gruppe: Kacheln mit derselben Gruppe stehen zusammen unter ihrer Überschrift (Glossar: Gruppe).
 type KachelBasis = {
   id: string;
@@ -31,8 +43,7 @@ export type FussballEinstellung = KachelBasis & {
     | { art: "openligadb"; liga: "bl1" }
     | { art: "football-data"; wettbewerb: "PL" | "CL" };
   meinTeam: string[];
-  // Plätze, nach denen in der Tabelle eine Linie steht. Grundverteilung der Saison, von Hand geprüft (Projektvision).
-  linien: number[];
+  zonen: Zone[];
 } & (
     | { tabelle: { art: "espn" }; teams: Team[] }
     | {
@@ -147,7 +158,13 @@ export const KACHELN: KachelEinstellung[] = [
     tabelle: { art: "espn" },
     teams: TEAMS_BUNDESLIGA,
     meinTeam: ["132"],
-    linien: [4, 5, 6, 15, 16],
+    zonen: [
+      { von: 1, bis: 4, ...CHAMPIONS_LEAGUE },
+      { von: 5, bis: 5, ...EUROPA_LEAGUE },
+      { von: 6, bis: 6, ...CONFERENCE_LEAGUE },
+      { von: 16, bis: 16, name: "Relegation", farbe: "#E2B93B" },
+      { von: 17, bis: 18, ...ABSTIEG },
+    ],
   },
   // 359 ist Arsenal bei ESPN.
   {
@@ -162,7 +179,12 @@ export const KACHELN: KachelEinstellung[] = [
     tabelle: { art: "football-data", wettbewerb: "PL" },
     teams: TEAMS_PREMIER_LEAGUE,
     meinTeam: ["359"],
-    linien: [4, 5, 6, 17],
+    zonen: [
+      { von: 1, bis: 4, ...CHAMPIONS_LEAGUE },
+      { von: 5, bis: 5, ...EUROPA_LEAGUE },
+      { von: 6, bis: 6, ...CONFERENCE_LEAGUE },
+      { von: 18, bis: 20, ...ABSTIEG },
+    ],
   },
   // Ligaphase: Tage aus dem Spielplan, weil ESPN dort keine Tage im Kalender hat (ADR 0011). 132 Bayern, 359 Arsenal.
   {
@@ -177,7 +199,10 @@ export const KACHELN: KachelEinstellung[] = [
     tabelle: { art: "football-data", wettbewerb: "CL" },
     teams: TEAMS_CHAMPIONS_LEAGUE,
     meinTeam: ["132", "359"],
-    linien: [8, 24],
+    zonen: [
+      { von: 1, bis: 8, name: "Achtelfinale", farbe: "#4CC38A" },
+      { von: 9, bis: 24, name: "Play-offs", farbe: "#22B8CF" },
+    ],
   },
   {
     id: "ki-news",
