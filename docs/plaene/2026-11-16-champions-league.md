@@ -1,6 +1,6 @@
 ---
 titel: "Plan: Champions League"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-16
 tags: [plan, kacheln, sport, champions-league, football-data, phase-3]
 ---
@@ -185,8 +185,9 @@ Riskantestes zuerst: der neue Weg zu den Tagen.
 
 ### Aufgabe 4: Abnahme in der Vorschau von Vercel (Entwickler)
 
-- [ ] **Schritt 1:** PR öffnen, `/code-review <PR-Nummer>`, Funde mit dem Entwickler durchgehen, `plan-pruefer`.
-- [ ] **Schritt 2:** In der Vorschau einloggen: Champions League steht zwischen Premier League und KI-News, Titel „5. Spieltag“ mit
+- [x] **Schritt 1:** PR #79 öffnen, `/code-review` (10 Funde, mit dem Entwickler durchgegangen: behoben 1 und 6, Grenzen 2–5 notiert),
+  `plan-pruefer` ERFÜLLT.
+- [x] **Schritt 2 (Entwickler, bestanden am 2026-11-16):** In der Vorschau einloggen: Champions League steht zwischen Premier League und KI-News, Titel „5. Spieltag“ mit
   Di 24. – Mi 25. November, 18 Partien mit Anstoßzeit, Bayern und Arsenal oben, Tabelle mit Platz 1 und je 2 Plätzen um Bayern und Arsenal.
-- [ ] **Schritt 3 (24.11., abends, nach dem Merge):** live: Minute mit orangem Punkt, Spielstand und Torschützen innerhalb von rund
+- [ ] **Schritt 3 (24.11., abends, nach dem Merge, offen, steht in der Übergabe):** live: Minute mit orangem Punkt, Spielstand und Torschützen innerhalb von rund
   2 Minuten nach einem Tor.
