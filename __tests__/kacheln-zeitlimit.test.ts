@@ -12,7 +12,12 @@ const JETZT = new Date("2026-11-08T13:32:07Z");
 const DATEN = { daten: { art: "ki-news" as const, absender: [] } };
 
 function kachel(id: string): KachelEinstellung {
-  return { id, art: "ki-news", titel: `Kachel ${id}` };
+  return {
+    id,
+    art: "ki-news",
+    titel: `Kachel ${id}`,
+    aussehen: { farbe: "#8E99A8" },
+  };
 }
 
 beforeEach(() => {
@@ -34,7 +39,12 @@ test("eine hängende Kachel wird nach 8 Sekunden zum Fehler, die andere bleibt",
   await vi.advanceTimersByTimeAsync(8000);
   const { kacheln } = await antwort;
 
-  expect(kacheln[0]).toEqual({ id: "a", titel: "Kachel a", status: "fehler" });
+  expect(kacheln[0]).toEqual({
+    id: "a",
+    titel: "Kachel a",
+    aussehen: { farbe: "#8E99A8" },
+    status: "fehler",
+  });
   expect(kacheln[1].status).toBe("ok");
 });
 

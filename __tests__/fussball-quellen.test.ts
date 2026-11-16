@@ -7,6 +7,7 @@ import { ladeFussball } from "@/lib/kacheln/fussball/laden";
 const EINSTELLUNG: FussballEinstellung = {
   id: "premier-league",
   art: "fussball",
+  aussehen: { farbe: "#8E99A8" },
   titel: "Premier League",
   espn: "eng.1",
   kalender: { art: "espn" },
@@ -17,6 +18,7 @@ const EINSTELLUNG: FussballEinstellung = {
     { espn: "367", footballData: 73, name: "Tottenham" },
   ],
   meinTeam: ["359"],
+  linien: [],
 };
 // Sa 21.11. 18:00 deutscher Zeit
 const JETZT = new Date("2026-11-21T17:00:00Z");
@@ -186,6 +188,7 @@ test("Reihenfolge Bundesliga, Premier League, Champions League, KI-News mit Mein
 const CL: FussballEinstellung = {
   id: "champions-league",
   art: "fussball",
+  aussehen: { farbe: "#8E99A8" },
   titel: "Champions League",
   espn: "uefa.champions",
   kalender: { art: "spielplan" },
@@ -196,6 +199,7 @@ const CL: FussballEinstellung = {
     { espn: "359", footballData: 57, name: "Arsenal" },
   ],
   meinTeam: ["132", "359"],
+  linien: [],
 };
 const CL_SCOREBOARD =
   "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard";

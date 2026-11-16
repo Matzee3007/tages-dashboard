@@ -127,7 +127,7 @@ test("fasst Kanäle zusammen und zeigt die neuesten 3 zuerst", async () => {
   });
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a", "b"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a", "b"] },
     JETZT,
     "ki-news",
   );
@@ -147,7 +147,7 @@ test("zeigt nur Meldungen der letzten 7 Tage", async () => {
   });
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a"] },
     JETZT,
     "ki-news",
   );
@@ -163,7 +163,7 @@ test("gleicher Link erscheint nur einmal, die neuere Fassung bleibt", async () =
   });
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a", "b"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a", "b"] },
     JETZT,
     "ki-news",
   );
@@ -181,7 +181,7 @@ test("gleicher Titel erscheint nur einmal, die neueste Meldung bleibt", async ()
   });
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a"] },
     JETZT,
     "ki-news",
   );
@@ -197,7 +197,7 @@ test("gleicher Titel auf verschiedenen Websites bleibt zweimal", async () => {
   });
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a", "b"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a", "b"] },
     JETZT,
     "ki-news",
   );
@@ -212,13 +212,14 @@ test("ohne neue Meldung bleibt das Alter der letzten", async () => {
   feedsAntworten({ a: [["alt", "2026-10-16T12:00:00Z"]] });
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a"] },
     JETZT,
     "ki-news",
   );
 
   expect(stand).toEqual({
     name: "X",
+    aussehen: { farbe: "#8E99A8" },
     meldungen: [],
     letzteMeldung: "2026-10-16T12:00:00.000Z",
     erreichbar: true,
@@ -229,7 +230,7 @@ test("eine Meldung aus der Zukunft zählt nicht", async () => {
   feedsAntworten({ a: [["zukunft", "2026-11-08T12:00:01Z"]] });
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a"] },
     JETZT,
     "ki-news",
   );
@@ -238,13 +239,31 @@ test("eine Meldung aus der Zukunft zählt nicht", async () => {
   expect(stand.letzteMeldung).toBeNull();
 });
 
+test("der Stand trägt das Aussehen des Absenders, auch wenn er nicht erreichbar ist", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  feedsAntworten({});
+
+  const stand = await ladeAbsender(
+    {
+      name: "Anthropic",
+      aussehen: { farbe: "#E8E6DC", marke: "#D97757" },
+      feeds: ["weg"],
+    },
+    JETZT,
+    "ki-news",
+  );
+
+  expect(stand.erreichbar).toBe(false);
+  expect(stand.aussehen).toEqual({ farbe: "#E8E6DC", marke: "#D97757" });
+});
+
 test("fällt ein Kanal aus, zeigt der Absender still den Rest", async () => {
   const log = vi.spyOn(console, "error").mockImplementation(() => {});
   const ausgefallen = "https://example.org/ausgefallen";
   feedsAntworten({ b: [["da", "2026-11-07T12:00:00Z"]] });
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: [ausgefallen, "b"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: [ausgefallen, "b"] },
     JETZT,
     "ki-news",
   );
@@ -275,7 +294,7 @@ test("ein hängender Kanal fällt nach dem Zeitlimit aus, die anderen laufen wei
   });
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["haengt", "b"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["haengt", "b"] },
     JETZT,
     "ki-news",
   );
@@ -293,7 +312,7 @@ test("ist die gespeicherte Antwort zu alt, zeigt der Absender den Ausfall", asyn
   );
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a"] },
     JETZT,
     "ki-news",
   );
@@ -306,13 +325,14 @@ test("fallen alle Kanäle aus, ist der Absender nicht erreichbar", async () => {
   feedsAntworten({});
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a", "b"] },
+    { name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a", "b"] },
     JETZT,
     "ki-news",
   );
 
   expect(stand).toEqual({
     name: "X",
+    aussehen: { farbe: "#8E99A8" },
     meldungen: [],
     letzteMeldung: null,
     erreichbar: false,
@@ -330,11 +350,11 @@ test("ladeKiNews sortiert nach der neuesten Meldung, nicht Erreichbare und Leere
 
   const staende = await ladeKiNews(
     [
-      { name: "Weg", feeds: ["weg"] },
-      { name: "Leer", feeds: ["leer"] },
-      { name: "Alt", feeds: ["alt"] },
-      { name: "Neu", feeds: ["neu"] },
-      { name: "Mitte", feeds: ["mitte"] },
+      { name: "Weg", aussehen: { farbe: "#8E99A8" }, feeds: ["weg"] },
+      { name: "Leer", aussehen: { farbe: "#8E99A8" }, feeds: ["leer"] },
+      { name: "Alt", aussehen: { farbe: "#8E99A8" }, feeds: ["alt"] },
+      { name: "Neu", aussehen: { farbe: "#8E99A8" }, feeds: ["neu"] },
+      { name: "Mitte", aussehen: { farbe: "#8E99A8" }, feeds: ["mitte"] },
     ],
     JETZT,
     "ki-news",
@@ -354,7 +374,11 @@ test("ladeKiNews wirft, wenn kein Absender erreichbar ist", async () => {
   feedsAntworten({});
 
   await expect(
-    ladeKiNews([{ name: "X", feeds: ["a"] }], JETZT, "ki-news"),
+    ladeKiNews(
+      [{ name: "X", aussehen: { farbe: "#8E99A8" }, feeds: ["a"] }],
+      JETZT,
+      "ki-news",
+    ),
   ).rejects.toThrow();
 });
 
@@ -364,8 +388,8 @@ test("ladeKiNews läuft weiter, wenn nur ein Absender ausfällt", async () => {
 
   const staende = await ladeKiNews(
     [
-      { name: "A", feeds: ["a"] },
-      { name: "B", feeds: ["b"] },
+      { name: "A", aussehen: { farbe: "#8E99A8" }, feeds: ["a"] },
+      { name: "B", aussehen: { farbe: "#8E99A8" }, feeds: ["b"] },
     ],
     JETZT,
     "ki-news",
@@ -398,6 +422,7 @@ test("ein Absender fasst Feeds und Seiten zusammen", async () => {
   const stand = await ladeAbsender(
     {
       name: "X",
+      aussehen: { farbe: "#8E99A8" },
       feeds: ["a"],
       seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
     },
@@ -423,7 +448,12 @@ test("ein Seiten-Kanal fällt aus, die Feeds laufen weiter", async () => {
   );
 
   const stand = await ladeAbsender(
-    { name: "X", feeds: ["a"], seiten: [{ url: seite, art: "anthropic" }] },
+    {
+      name: "X",
+      aussehen: { farbe: "#8E99A8" },
+      feeds: ["a"],
+      seiten: [{ url: seite, art: "anthropic" }],
+    },
     JETZT,
     "ki-news",
   );
@@ -456,6 +486,7 @@ test("eine Seiten-Meldung ohne Uhrzeit zählt wie vom Ende ihres Tages, höchste
   const stand = await ladeAbsender(
     {
       name: "X",
+      aussehen: { farbe: "#8E99A8" },
       feeds: ["a"],
       seiten: [
         { url: "https://www.anthropic.com/news", art: "anthropic" },
@@ -487,6 +518,7 @@ test("ohne Uhrzeit steht eine Meldung vor den Feed-Meldungen ihres Tages", async
   const stand = await ladeAbsender(
     {
       name: "X",
+      aussehen: { farbe: "#8E99A8" },
       feeds: ["a"],
       seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
     },
@@ -507,6 +539,7 @@ test("ohne Uhrzeit zählt für die 7 Tage das Ende des Tages", async () => {
   const stand = await ladeAbsender(
     {
       name: "X",
+      aussehen: { farbe: "#8E99A8" },
       feeds: [],
       seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
     },
@@ -528,9 +561,10 @@ test("ladeKiNews sortiert eine Seiten-Meldung von heute wie innerhalb des Absend
 
   const staende = await ladeKiNews(
     [
-      { name: "OpenAI", feeds: ["openai"] },
+      { name: "OpenAI", aussehen: { farbe: "#8E99A8" }, feeds: ["openai"] },
       {
         name: "Anthropic",
+        aussehen: { farbe: "#8E99A8" },
         feeds: [],
         seiten: [{ url: "https://www.anthropic.com/news", art: "anthropic" }],
       },

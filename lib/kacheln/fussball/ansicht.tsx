@@ -8,7 +8,7 @@ import type {
 import { anstossText, tageText } from "@/lib/zeit";
 
 const MEIN_TEAM_STIL =
-  "rounded-[10px] bg-akzent/8 shadow-[inset_3px_0_0_var(--color-akzent)]";
+  "rounded-md bg-akzent/8 shadow-[inset_3px_0_0_var(--color-akzent)]";
 
 // Direkt von ESPN, ohne next/image (Projektvision: Logos lädt der Browser beim Anbieter). Fehlt das Bild, bleibt der Platz.
 function Logo({ url }: { url: string | null }) {
@@ -33,7 +33,9 @@ function Team({ team, mein }: { team: TeamStand; mein: boolean }) {
   return (
     <span className="inline-flex min-w-0 items-center gap-1.5">
       <Logo url={team.logo} />
-      <span className={mein ? "font-semibold" : undefined}>{team.name}</span>
+      <span className={`truncate ${mein ? "font-[650] text-akzent" : ""}`}>
+        {team.name}
+      </span>
     </span>
   );
 }
@@ -54,44 +56,42 @@ function PartieZeile({
     <div
       data-testid={`partie-${partie.id}`}
       data-mein-team={mein || undefined}
-      className={`flex min-h-11 flex-col justify-center border-t border-rand py-1.5 first:border-t-0 ${
-        mein ? `-mx-2.5 border-t-transparent px-2.5 ${MEIN_TEAM_STIL}` : ""
+      className={`-mx-2 grid min-h-9 grid-cols-[58px_minmax(0,1fr)_34px] items-center gap-x-2 px-2 py-[3px] ${
+        mein ? MEIN_TEAM_STIL : ""
       }`}
     >
-      <div className="flex items-center gap-2.5">
-        <span
-          className={`w-[58px] shrink-0 text-[13px] whitespace-nowrap ${
-            live ? "font-semibold text-akzent" : "text-gedaempft"
-          }`}
-        >
-          {live ? (
-            <>
-              <span aria-label="live" role="img">
-                ●
-              </span>{" "}
-              {partie.minute ?? ""}
-            </>
-          ) : partie.status === "abgesagt" ? (
-            "abgesagt"
-          ) : (
-            anstossText(partie.anstoss)
-          )}
-        </span>
-        <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[15px] font-medium whitespace-nowrap">
-          <Team team={partie.heim} mein={meinTeam.includes(partie.heim.id)} />
-          <span className="text-gedaempft">–</span>
-          <Team team={partie.gast} mein={meinTeam.includes(partie.gast.id)} />
-        </span>
-        <span
-          className={`min-w-[30px] shrink-0 text-right text-[15px] font-semibold whitespace-nowrap tabular-nums ${
-            live ? "text-akzent" : ""
-          }`}
-        >
-          {ergebnis}
-        </span>
-      </div>
+      <span
+        className={`text-[12.5px] whitespace-nowrap ${
+          live ? "font-[650] text-akzent" : "text-gedaempft"
+        }`}
+      >
+        {live ? (
+          <>
+            <span aria-label="live" role="img">
+              ●
+            </span>{" "}
+            {partie.minute ?? ""}
+          </>
+        ) : partie.status === "abgesagt" ? (
+          "abgesagt"
+        ) : (
+          anstossText(partie.anstoss)
+        )}
+      </span>
+      <span className="flex min-w-0 items-center gap-[5px] text-sm font-[420] whitespace-nowrap">
+        <Team team={partie.heim} mein={meinTeam.includes(partie.heim.id)} />
+        <span className="text-rauch">–</span>
+        <Team team={partie.gast} mein={meinTeam.includes(partie.gast.id)} />
+      </span>
+      <span
+        className={`text-right text-sm font-bold whitespace-nowrap ${
+          live ? "text-akzent" : ""
+        }`}
+      >
+        {ergebnis}
+      </span>
       {partie.tore.length > 0 && (
-        <p className="mt-0.5 ml-[68px] text-[13px] text-gedaempft">
+        <p className="col-span-2 col-start-2 -mt-0.5 text-[12.5px] text-rauch">
           {partie.tore.map((tor) => tor.text).join(" · ")}
         </p>
       )}
@@ -102,16 +102,18 @@ function PartieZeile({
 function TabellenZeilen({
   zeile,
   meinTeam,
+  linie,
 }: {
   zeile: TabellenZeile | null;
   meinTeam: string[];
+  linie: boolean;
 }) {
   if (!zeile) {
     return (
       <tr>
         <td
           colSpan={5}
-          className="h-[18px] text-center text-[13px] tracking-[.3em] text-gedaempft"
+          className="h-4 text-center text-xs tracking-[.3em] text-rauch"
         >
           ···
         </td>
@@ -119,19 +121,19 @@ function TabellenZeilen({
     );
   }
   const mein = meinTeam.includes(zeile.id);
-  const zelle = `h-[34px] border-t border-rand py-1.5 ${mein ? "bg-akzent/8" : ""}`;
+  const zelle = `h-[30px] py-[3px] ${mein ? "bg-akzent/8" : ""} ${
+    linie ? "border-b-[1.5px] border-b-(--farbe)" : ""
+  }`;
   return (
-    <tr data-mein-team={mein || undefined}>
+    <tr data-mein-team={mein || undefined} data-linie={linie || undefined}>
       <td
-        className={`${zelle} w-[26px] text-right text-gedaempft ${
-          mein
-            ? "rounded-l-lg pl-2 shadow-[inset_3px_0_0_var(--color-akzent)]"
-            : ""
+        className={`${zelle} w-[26px] pr-2.5 text-right text-rauch ${
+          mein ? "rounded-l-md shadow-[inset_3px_0_0_var(--color-akzent)]" : ""
         }`}
       >
         {zeile.platz}
       </td>
-      <td className={`${zelle} pl-2`}>
+      <td className={`${zelle} max-w-0`}>
         <Team team={{ ...zeile, tore: null }} mein={mein} />
       </td>
       <td className={`${zelle} w-[34px] text-right text-gedaempft`}>
@@ -141,8 +143,8 @@ function TabellenZeilen({
         {zeile.differenz > 0 ? `+${zeile.differenz}` : zeile.differenz}
       </td>
       <td
-        className={`${zelle} w-[38px] text-right font-semibold ${
-          mein ? "rounded-r-lg pr-2" : ""
+        className={`${zelle} w-[34px] text-right font-bold ${
+          mein ? "rounded-r-md pr-2" : ""
         }`}
       >
         {zeile.punkte}
@@ -151,12 +153,18 @@ function TabellenZeilen({
   );
 }
 
-export function FussballAnsicht({ daten }: { daten: FussballDaten }) {
+export function FussballAnsicht({
+  daten,
+  ebene = 4,
+}: {
+  daten: FussballDaten;
+  ebene?: 3 | 4;
+}) {
   const tage = daten.tage.length > 0 ? tageText(daten.tage) : "";
   const ueberschrift = [daten.titel, tage].filter(Boolean).join(" · ");
   return (
     <>
-      <Abschnitt titel={ueberschrift || "Spieltag"}>
+      <Abschnitt titel={ueberschrift || "Spieltag"} ebene={ebene}>
         <div className="flex flex-col">
           {daten.partien.map((partie) => (
             <PartieZeile
@@ -167,26 +175,32 @@ export function FussballAnsicht({ daten }: { daten: FussballDaten }) {
           ))}
         </div>
       </Abschnitt>
-      <Abschnitt titel="Tabelle">
+      <Abschnitt titel="Tabelle" ebene={ebene}>
         {daten.tabelle === null ? (
           <p className="text-gedaempft">Tabelle gerade nicht erreichbar</p>
         ) : (
-          <table className="w-full border-collapse text-sm tabular-nums">
+          <table className="w-full border-collapse text-[13.5px]">
             <thead>
-              <tr className="text-[11px] font-semibold tracking-[0.08em] text-gedaempft uppercase">
-                <th className="pb-1 text-right font-semibold">#</th>
-                <th className="pb-1 pl-2 text-left font-semibold">Team</th>
-                <th className="pb-1 text-right font-semibold">Sp</th>
-                <th className="pb-1 text-right font-semibold">+/−</th>
-                <th className="pb-1 text-right font-semibold">Pkt</th>
+              <tr className="text-xs text-rauch">
+                <th className="pb-1 pr-2.5 text-right font-medium">#</th>
+                <th className="pb-1 text-left font-medium">Team</th>
+                <th className="pb-1 text-right font-medium">Sp</th>
+                <th className="pb-1 text-right font-medium">+/−</th>
+                <th className="pb-1 text-right font-medium">Pkt</th>
               </tr>
             </thead>
             <tbody>
-              {daten.tabelle.map((zeile, index) => (
+              {daten.tabelle.map((zeile, index, alle) => (
                 <TabellenZeilen
                   key={zeile?.id ?? `luecke-${index}`}
                   zeile={zeile}
                   meinTeam={daten.meinTeam}
+                  linie={
+                    zeile !== null &&
+                    daten.linien.includes(zeile.platz) &&
+                    // Höher statt genau +1: Bei gleichem Platz (4, 4, 6) steht die Linie unter dem letzten der beiden.
+                    (alle[index + 1]?.platz ?? 0) > zeile.platz
+                  }
                 />
               ))}
             </tbody>

@@ -14,6 +14,7 @@ const JETZT = new Date("2026-11-08T13:32:07Z");
 
 const ANTHROPIC: AbsenderStand = {
   name: "Anthropic",
+  aussehen: { farbe: "#8E99A8" },
   meldungen: [
     {
       titel: "Introducing Claude",
@@ -26,7 +27,12 @@ const ANTHROPIC: AbsenderStand = {
 };
 
 function kachel(id: string): KachelEinstellung {
-  return { id, art: "ki-news", titel: `Kachel ${id}` };
+  return {
+    id,
+    art: "ki-news",
+    titel: `Kachel ${id}`,
+    aussehen: { farbe: "#8E99A8" },
+  };
 }
 
 afterEach(() => {
@@ -38,7 +44,14 @@ test("die KI-News-Kachel liefert die Absender aus den Einstellungen", async () =
   vi.mocked(ladeKiNews).mockResolvedValue([ANTHROPIC]);
 
   const antwort = await ladeDashboard(
-    [{ id: "ki-news", art: "ki-news", titel: "KI-News" }],
+    [
+      {
+        id: "ki-news",
+        art: "ki-news",
+        titel: "KI-News",
+        aussehen: { farbe: "#8E99A8" },
+      },
+    ],
     JETZT,
   );
 
@@ -47,6 +60,7 @@ test("die KI-News-Kachel liefert die Absender aus den Einstellungen", async () =
     {
       id: "ki-news",
       titel: "KI-News",
+      aussehen: { farbe: "#8E99A8" },
       status: "ok",
       daten: { art: "ki-news", absender: [ANTHROPIC] },
       stand: "2026-11-08T13:32:07.000Z",
@@ -64,15 +78,45 @@ test("eine fehlerhafte Kachel stört die andere nicht, die Reihenfolge bleibt", 
 
   expect(antwort.zeit).toBe("2026-11-08T13:32:07.000Z");
   expect(antwort.kacheln).toEqual([
-    { id: "a", titel: "Kachel a", status: "fehler" },
+    {
+      id: "a",
+      titel: "Kachel a",
+      aussehen: { farbe: "#8E99A8" },
+      status: "fehler",
+    },
     {
       id: "b",
       titel: "Kachel b",
+      aussehen: { farbe: "#8E99A8" },
       status: "ok",
       daten: { art: "ki-news", absender: [ANTHROPIC] },
       stand: "2026-11-08T13:32:07.000Z",
     },
   ]);
+});
+
+test("Aussehen und Gruppe kommen bei Erfolg und bei Fehler aus der Einstellung", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  vi.mocked(ladeKiNews)
+    .mockRejectedValueOnce(new Error("Testfehler"))
+    .mockResolvedValueOnce([ANTHROPIC]);
+  const sport = {
+    ...kachel("a"),
+    aussehen: { farbe: "#E3343F" },
+    gruppe: "Sport",
+  };
+  const antwort = await ladeDashboard([sport, kachel("b")], JETZT);
+
+  expect(antwort.kacheln[0]).toMatchObject({
+    status: "fehler",
+    aussehen: { farbe: "#E3343F" },
+    gruppe: "Sport",
+  });
+  expect(antwort.kacheln[1]).toMatchObject({
+    status: "ok",
+    aussehen: { farbe: "#8E99A8" },
+  });
+  expect(antwort.kacheln[1].gruppe).toBeUndefined();
 });
 
 test("der Fehlertext bleibt auf dem Server", async () => {
@@ -92,12 +136,14 @@ test("die Bundesliga-Kachel ruft ladeFussball mit Einstellung und Zeit", async (
     id: "bundesliga",
     art: "fussball" as const,
     titel: "Bundesliga",
+    aussehen: { farbe: "#8E99A8" },
     espn: "ger.1" as const,
     kalender: { art: "espn" as const },
     spielplan: { art: "openligadb" as const, liga: "bl1" as const },
     tabelle: { art: "espn" as const },
     teams: TEAMS_BUNDESLIGA,
     meinTeam: ["132"],
+    linien: [],
   };
   const daten: FussballDaten = {
     art: "fussball",
@@ -106,6 +152,7 @@ test("die Bundesliga-Kachel ruft ladeFussball mit Einstellung und Zeit", async (
     partien: [],
     tabelle: [],
     meinTeam: ["132"],
+    linien: [],
   };
   vi.mocked(ladeFussball).mockResolvedValue(daten);
 

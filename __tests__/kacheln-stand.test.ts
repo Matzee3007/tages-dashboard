@@ -12,7 +12,15 @@ const NEU = "2026-11-08T13:32:00.000Z";
 function daten(name: string): KachelDaten {
   return {
     art: "ki-news",
-    absender: [{ name, meldungen: [], letzteMeldung: null, erreichbar: true }],
+    absender: [
+      {
+        name,
+        aussehen: { farbe: "#8E99A8" },
+        meldungen: [],
+        letzteMeldung: null,
+        erreichbar: true,
+      },
+    ],
   };
 }
 
@@ -20,6 +28,7 @@ function anzeige(id: string, name = "Alt"): KachelAnzeige {
   return {
     id,
     titel: id,
+    aussehen: { farbe: "#8E99A8" },
     zusatz: "Server",
     daten: daten(name),
     stand: ALT,
@@ -31,6 +40,7 @@ function ok(id: string): DashboardAntwort["kacheln"][number] {
   return {
     id,
     titel: id,
+    aussehen: { farbe: "#8E99A8" },
     status: "ok",
     zusatz: "Server",
     daten: daten("Neu"),
@@ -39,7 +49,7 @@ function ok(id: string): DashboardAntwort["kacheln"][number] {
 }
 
 function fehler(id: string): DashboardAntwort["kacheln"][number] {
-  return { id, titel: id, status: "fehler" };
+  return { id, titel: id, aussehen: { farbe: "#8E99A8" }, status: "fehler" };
 }
 
 describe("neuerStand", () => {
@@ -68,10 +78,26 @@ describe("neuerStand", () => {
     expect(kachel).toEqual({
       id: "a",
       titel: "a",
+      aussehen: { farbe: "#8E99A8" },
       daten: null,
       stand: null,
       fehler: true,
     });
+  });
+
+  test("ein Fehler ohne bisherigen Stand behält Farbe und Gruppe", () => {
+    const [kachel] = neuerStand([], {
+      zeit: NEU,
+      kacheln: [
+        {
+          ...fehler("a"),
+          aussehen: { farbe: "#5B8DEF" },
+          gruppe: "Sport",
+        },
+      ],
+    });
+    expect(kachel.aussehen).toEqual({ farbe: "#5B8DEF" });
+    expect(kachel.gruppe).toBe("Sport");
   });
 
   test("ein gescheiterter Abruf markiert alle Kacheln und behält die Daten", () => {

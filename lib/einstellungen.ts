@@ -1,6 +1,18 @@
 import type { SeitenArt } from "@/lib/kacheln/ki-news/seiten";
 
-export type KiNewsEinstellung = { id: string; art: "ki-news"; titel: string };
+// Hausfarbe einer Quelle als Akzent (Name, Grenzlinie). marke: Farbe des kleinen Quadrats, wenn sie anders ist, z. B. weil die
+// Hausfarbe nahe an Orange liegt, das Mein Team, Live und „neu“ gehört (Mock F vom 2026-11-16).
+export type Aussehen = { farbe: string; marke?: string };
+
+// gruppe: Kacheln mit derselben Gruppe stehen zusammen unter ihrer Überschrift (Glossar: Gruppe).
+type KachelBasis = {
+  id: string;
+  titel: string;
+  aussehen: Aussehen;
+  gruppe?: string;
+};
+
+export type KiNewsEinstellung = KachelBasis & { art: "ki-news" };
 
 // Ein Team mit id bei ESPN, id bei football-data.org (falls die Liga sie braucht) und deutschem Kurznamen.
 export type Team = { espn: string; footballData?: number; name: string };
@@ -11,23 +23,23 @@ export type FdTeam = Team & { footballData: number };
 // Ein Fußball-Wettbewerb: Partien immer von ESPN, Kalender (Tage mit Spielen), Spielplan (Nummer des Spieltags) und
 // Tabelle je nach Quelle (ADR 0011). Der Kalender von ESPN kennt bei der Champions League keine Tage, dort kommen sie
 // aus dem Spielplan. meinTeam: ids der Teams bei ESPN (Glossar: Mein Team).
-export type FussballEinstellung = {
-  id: string;
+export type FussballEinstellung = KachelBasis & {
   art: "fussball";
-  titel: string;
   espn: "ger.1" | "eng.1" | "uefa.champions";
   kalender: { art: "espn" } | { art: "spielplan" };
   spielplan:
     | { art: "openligadb"; liga: "bl1" }
     | { art: "football-data"; wettbewerb: "PL" | "CL" };
   meinTeam: string[];
+  // Plätze, nach denen in der Tabelle eine Linie steht. Grundverteilung der Saison, von Hand geprüft (Projektvision).
+  linien: number[];
 } & (
-  | { tabelle: { art: "espn" }; teams: Team[] }
-  | {
-      tabelle: { art: "football-data"; wettbewerb: "PL" | "CL" };
-      teams: FdTeam[];
-    }
-);
+    | { tabelle: { art: "espn" }; teams: Team[] }
+    | {
+        tabelle: { art: "football-data"; wettbewerb: "PL" | "CL" };
+        teams: FdTeam[];
+      }
+  );
 
 export type KachelEinstellung = KiNewsEinstellung | FussballEinstellung;
 
@@ -127,44 +139,59 @@ export const KACHELN: KachelEinstellung[] = [
     id: "bundesliga",
     art: "fussball",
     titel: "Bundesliga",
+    aussehen: { farbe: "#E3343F" },
+    gruppe: "Sport",
     espn: "ger.1",
     kalender: { art: "espn" },
     spielplan: { art: "openligadb", liga: "bl1" },
     tabelle: { art: "espn" },
     teams: TEAMS_BUNDESLIGA,
     meinTeam: ["132"],
+    linien: [4, 5, 6, 15, 16],
   },
   // 359 ist Arsenal bei ESPN.
   {
     id: "premier-league",
     art: "fussball",
     titel: "Premier League",
+    aussehen: { farbe: "#B061D1" },
+    gruppe: "Sport",
     espn: "eng.1",
     kalender: { art: "espn" },
     spielplan: { art: "football-data", wettbewerb: "PL" },
     tabelle: { art: "football-data", wettbewerb: "PL" },
     teams: TEAMS_PREMIER_LEAGUE,
     meinTeam: ["359"],
+    linien: [4, 5, 6, 17],
   },
   // Ligaphase: Tage aus dem Spielplan, weil ESPN dort keine Tage im Kalender hat (ADR 0011). 132 Bayern, 359 Arsenal.
   {
     id: "champions-league",
     art: "fussball",
     titel: "Champions League",
+    aussehen: { farbe: "#5B8DEF" },
+    gruppe: "Sport",
     espn: "uefa.champions",
     kalender: { art: "spielplan" },
     spielplan: { art: "football-data", wettbewerb: "CL" },
     tabelle: { art: "football-data", wettbewerb: "CL" },
     teams: TEAMS_CHAMPIONS_LEAGUE,
     meinTeam: ["132", "359"],
+    linien: [8, 24],
   },
-  { id: "ki-news", art: "ki-news", titel: "KI-News" },
+  {
+    id: "ki-news",
+    art: "ki-news",
+    titel: "KI-News",
+    aussehen: { farbe: "#8E99A8" },
+  },
 ];
 
 export type SeitenEinstellung = { url: string; art: SeitenArt };
 
 export type AbsenderEinstellung = {
   name: string;
+  aussehen: Aussehen;
   feeds: string[];
   seiten?: SeitenEinstellung[];
 };
@@ -172,6 +199,7 @@ export type AbsenderEinstellung = {
 export const ABSENDER: AbsenderEinstellung[] = [
   {
     name: "Anthropic",
+    aussehen: { farbe: "#E8E6DC", marke: "#D97757" },
     feeds: [
       "https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA",
       "https://transformer-circuits.pub/feed.xml",
@@ -189,6 +217,7 @@ export const ABSENDER: AbsenderEinstellung[] = [
   },
   {
     name: "Claude Updates",
+    aussehen: { farbe: "#9AAE7E", marke: "#C15F3C" },
     feeds: ["https://platform.claude.com/docs/en/release-notes/feed.xml"],
     seiten: [
       {
@@ -197,10 +226,19 @@ export const ABSENDER: AbsenderEinstellung[] = [
       },
     ],
   },
-  { name: "OpenAI", feeds: ["https://openai.com/news/rss.xml"] },
-  { name: "Google DeepMind", feeds: ["https://deepmind.google/blog/rss.xml"] },
+  {
+    name: "OpenAI",
+    aussehen: { farbe: "#ECECEC" },
+    feeds: ["https://openai.com/news/rss.xml"],
+  },
+  {
+    name: "Google DeepMind",
+    aussehen: { farbe: "#4285F4" },
+    feeds: ["https://deepmind.google/blog/rss.xml"],
+  },
   {
     name: "Andrej Karpathy",
+    aussehen: { farbe: "#8F9AAD" },
     feeds: [
       "https://karpathy.bearblog.dev/feed/",
       "https://karpathy.github.io/feed.xml",
@@ -209,20 +247,27 @@ export const ABSENDER: AbsenderEinstellung[] = [
   },
   {
     name: "Matt Pocock",
+    aussehen: { farbe: "#A3A08F" },
     feeds: [
       "https://www.youtube.com/feeds/videos.xml?channel_id=UCswG6FSbgZjbWtdf_hMLaow",
       "https://www.aihero.dev/rss.xml",
     ],
   },
-  { name: "The Decoder", feeds: ["https://the-decoder.de/feed/"] },
+  {
+    name: "The Decoder",
+    aussehen: { farbe: "#7FA8AE" },
+    feeds: ["https://the-decoder.de/feed/"],
+  },
   {
     name: "The Verge",
+    aussehen: { farbe: "#9479FF" },
     feeds: [
       "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
     ],
   },
   {
     name: "Hacker News",
+    aussehen: { farbe: "#B5B5AA", marke: "#FF6600" },
     feeds: ["https://hnrss.org/newest?q=AI&points=100"],
   },
 ];

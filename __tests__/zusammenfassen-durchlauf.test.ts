@@ -41,6 +41,7 @@ beforeEach(() => {
   vi.mocked(ladeKiNews).mockResolvedValue([
     {
       name: "Anthropic",
+      aussehen: { farbe: "#8E99A8" },
       meldungen: [meldung(1), meldung(2), meldung(3)],
       letzteMeldung: "2026-11-15T10:00:00.000Z",
       erreichbar: true,

@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import Page from "@/app/page";
@@ -22,12 +23,14 @@ const OK: DashboardAntwort = {
     {
       id: "ki-news",
       titel: "KI-News",
+      aussehen: { farbe: "#8E99A8" },
       status: "ok",
       daten: {
         art: "ki-news",
         absender: [
           {
             name: "Anthropic",
+            aussehen: { farbe: "#8E99A8" },
             meldungen: [
               {
                 titel: "Introducing Claude",
@@ -123,7 +126,14 @@ test("während des erneuten Versuchs ist der Knopf gesperrt und sagt das", async
 test("wenn alle Kacheln scheitern, behauptet der Kopf keine Aktualisierung", async () => {
   vi.mocked(holeDashboard).mockResolvedValue({
     zeit: ZEIT,
-    kacheln: [{ id: "ki-news", titel: "KI-News", status: "fehler" }],
+    kacheln: [
+      {
+        id: "ki-news",
+        titel: "KI-News",
+        aussehen: { farbe: "#8E99A8" },
+        status: "fehler",
+      },
+    ],
   });
   render(<Page />);
 
@@ -138,6 +148,7 @@ test("eine Kachel unbekannter Art bittet ums Neuladen", async () => {
       {
         id: "neu",
         titel: "Neu",
+        aussehen: { farbe: "#8E99A8" },
         status: "ok",
         daten: { art: "unbekannt" } as unknown as KachelDaten,
         stand: ZEIT,
@@ -177,6 +188,7 @@ test("zeigt die Bundesliga-Kachel", async () => {
       {
         id: "bundesliga",
         titel: "Bundesliga",
+        aussehen: { farbe: "#8E99A8" },
         status: "ok",
         daten: {
           art: "fussball",
@@ -185,6 +197,7 @@ test("zeigt die Bundesliga-Kachel", async () => {
           partien: [],
           tabelle: [],
           meinTeam: ["132"],
+          linien: [],
         },
         stand: ZEIT,
       },
@@ -202,4 +215,54 @@ test("zeigt die Bundesliga-Kachel", async () => {
   expect(
     screen.getByRole("heading", { level: 2, name: "KI-News" }),
   ).toBeDefined();
+});
+
+test("die Fußball-Kacheln stehen unter Sport, die KI-News für sich", async () => {
+  const fussball = (id: string, titel: string) => ({
+    id,
+    titel,
+    aussehen: { farbe: "#E3343F" },
+    gruppe: "Sport",
+    status: "fehler" as const,
+  });
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      fussball("bundesliga", "Bundesliga"),
+      fussball("premier-league", "Premier League"),
+      ...OK.kacheln,
+    ],
+  });
+  render(<Page />);
+
+  const sport = await screen.findByRole("region", { name: "Sport" });
+  expect(within(sport).getByRole("heading", { level: 2, name: "Sport" }));
+  expect(within(sport).getByRole("heading", { level: 3, name: "Bundesliga" }));
+  expect(within(sport).getByRole("heading", { name: "Premier League" }));
+  expect(within(sport).queryByRole("heading", { name: "KI-News" })).toBeNull();
+  expect(screen.getByRole("heading", { level: 2, name: "KI-News" }));
+});
+
+test("eine Gruppe, die zweimal vorkommt, bekommt zwei eigene Abschnitte", async () => {
+  const fehlerLog = vi.spyOn(console, "error").mockImplementation(() => {});
+  const sport = (id: string) => ({
+    id,
+    titel: id,
+    aussehen: { farbe: "#E3343F" },
+    gruppe: "Sport",
+    status: "fehler" as const,
+  });
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [sport("bl"), ...OK.kacheln, sport("pl")],
+  });
+  render(<Page />);
+
+  expect(await screen.findAllByRole("region", { name: "Sport" })).toHaveLength(
+    2,
+  );
+  expect(
+    fehlerLog.mock.calls.some((aufruf) => String(aufruf[0]).includes("key")),
+  ).toBe(false);
+  fehlerLog.mockRestore();
 });

@@ -39,4 +39,6 @@ export type FussballDaten = {
   partien: Partie[];
   tabelle: (TabellenZeile | null)[] | null;
   meinTeam: string[];
+  // Plätze, nach denen eine Linie für Weiterkommen oder Abstieg steht.
+  linien: number[];
 };

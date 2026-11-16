@@ -4,13 +4,13 @@ import { expect, test, vi } from "vitest";
 import { metadata, viewport } from "@/app/layout";
 
 vi.mock("next/font/google", () => ({
-  Barlow: () => ({ variable: "" }),
-  Barlow_Condensed: () => ({ variable: "" }),
+  Commissioner: () => ({ variable: "" }),
 }));
 
 test("globals.css legt die Design-Token fest", () => {
   const css = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
-  expect(css).toContain("--color-grund: #0e1013");
+  expect(css).toContain("--color-grund: #171b22");
+  expect(css).toContain("--color-rauch: #69727f");
   expect(css).toContain("--color-akzent: #ff8a3d");
 });
 
@@ -24,7 +24,7 @@ test("meldet die App bei Apple-Geräten an", () => {
     icon: "/icons/favicon-32.png",
     apple: "/icons/icon-180.png",
   });
-  expect(viewport.themeColor).toBe("#0E1013");
+  expect(viewport.themeColor).toBe("#171B22");
 });
 
 // Die Breite steht in jeder PNG-Datei ab Byte 16, die Höhe ab Byte 20.

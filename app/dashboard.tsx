@@ -5,6 +5,7 @@ import { useCallback, useRef, useState } from "react";
 import { abmelden } from "@/app/login/actions";
 import { holeDashboard } from "@/lib/kacheln/abruf";
 import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
+import { gruppiere } from "@/lib/kacheln/gruppen";
 import { FehlerHinweis, Kachel } from "@/lib/kacheln/kachel";
 import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
 import { neuerStand } from "@/lib/kacheln/stand";
@@ -12,12 +13,13 @@ import type { KachelAnzeige, KachelDaten } from "@/lib/kacheln/typen";
 import { useAktualisierung } from "@/lib/kacheln/use-aktualisierung";
 import { datum, uhrzeit } from "@/lib/zeit";
 
-function KachelInhalt({ daten }: { daten: KachelDaten }) {
+// ebene: die der Abschnitte, eine unter dem Kacheltitel.
+function KachelInhalt({ daten, ebene }: { daten: KachelDaten; ebene: 3 | 4 }) {
   switch (daten.art) {
     case "ki-news":
       return <KiNewsAnsicht daten={daten} />;
     case "fussball":
-      return <FussballAnsicht daten={daten} />;
+      return <FussballAnsicht daten={daten} ebene={ebene} />;
     // Eine seit dem letzten Deploy offene Seite kennt eine neue Kachel-Art noch nicht.
     default:
       return (
@@ -67,35 +69,29 @@ export function Dashboard() {
   useAktualisierung(erneutVersuchen);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-5 px-4 pt-6 pb-8">
-      <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[13px] font-semibold tracking-[0.08em] text-gedaempft uppercase">
-            Tages-Dashboard
-          </span>
-          <h1 className="font-titel text-[40px] leading-none font-bold tracking-[0.01em]">
+    <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-10 px-[18px] pt-[22px] pb-9 min-[600px]:gap-[52px] min-[600px]:px-9 min-[600px]:pt-[30px] min-[600px]:pb-12">
+      <header className="flex items-center justify-between gap-x-4 gap-y-2">
+        <div className="flex flex-col gap-x-3 min-[600px]:flex-row min-[600px]:items-baseline">
+          <h1 className="text-[17px] font-[650] tracking-[-0.005em]">
             {zeit ? datum(zeit) : "Heute"}
           </h1>
-        </div>
-        <div className="flex items-center gap-4">
           {zeit && (
-            <span className="flex items-center gap-2 text-[13px] text-gedaempft">
-              <span className="size-2 rounded-full bg-info" />
-              <span>Aktualisiert {uhrzeit(zeit)}</span>
+            <span className="text-[17px] text-gedaempft">
+              Aktualisiert {uhrzeit(zeit)}
             </span>
           )}
-          <form action={abmelden}>
-            <button
-              type="submit"
-              className="min-h-11 cursor-pointer rounded-[10px] border border-rand-stark px-4 text-sm"
-            >
-              Abmelden
-            </button>
-          </form>
         </div>
+        <form action={abmelden}>
+          <button
+            type="submit"
+            className="min-h-11 cursor-pointer rounded-lg px-3.5 font-medium text-gedaempft hover:bg-knopf hover:text-text"
+          >
+            Abmelden
+          </button>
+        </form>
       </header>
 
-      <main className="flex flex-col gap-4">
+      <main className="flex flex-col gap-10 min-[600px]:gap-[52px]">
         {!geladen && <p className="text-gedaempft">Lädt …</p>}
         {geladen && kacheln.length === 0 && (
           <FehlerHinweis
@@ -104,8 +100,8 @@ export function Dashboard() {
             laedt={laedt}
           />
         )}
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(320px,100%),1fr))] items-start gap-4">
-          {kacheln.map((kachel) => (
+        {gruppiere(kacheln).map(({ gruppe, kacheln: imBlock }) => {
+          const liste = imBlock.map((kachel) => (
             <Kachel
               key={kachel.id}
               kachel={kachel}
@@ -114,10 +110,30 @@ export function Dashboard() {
               laedt={laedt}
               holtFrisch={frischId === kachel.id}
             >
-              {kachel.daten && <KachelInhalt daten={kachel.daten} />}
+              {kachel.daten && (
+                <KachelInhalt
+                  daten={kachel.daten}
+                  ebene={kachel.gruppe ? 4 : 3}
+                />
+              )}
             </Kachel>
-          ))}
-        </div>
+          ));
+          if (gruppe === null) return liste;
+          return (
+            <section
+              key={`gruppe-${imBlock[0].id}`}
+              aria-label={gruppe}
+              className="@container flex flex-col gap-[18px]"
+            >
+              <h2 className="text-[30px] leading-none font-[280] tracking-[-0.02em] min-[600px]:text-[34px]">
+                {gruppe}
+              </h2>
+              <div className="grid items-start gap-11 @[900px]:grid-cols-3 @[900px]:gap-12">
+                {liste}
+              </div>
+            </section>
+          );
+        })}
       </main>
     </div>
   );

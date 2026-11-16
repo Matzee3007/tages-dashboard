@@ -11,6 +11,7 @@ import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
 
 const ANTHROPIC: AbsenderStand = {
   name: "Anthropic",
+  aussehen: { farbe: "#E8E6DC", marke: "#D97757" },
   meldungen: [
     {
       titel: "Introducing Claude for Financial Services",
@@ -29,6 +30,7 @@ const ANTHROPIC: AbsenderStand = {
 
 const DECODER: AbsenderStand = {
   name: "The Decoder",
+  aussehen: { farbe: "#7FA8AE" },
   meldungen: [
     {
       titel: "Europäische KI-Verordnung: Was sich ab Januar ändert",
@@ -42,6 +44,7 @@ const DECODER: AbsenderStand = {
 
 const OPENAI_RUHIG: AbsenderStand = {
   name: "OpenAI",
+  aussehen: { farbe: "#8E99A8" },
   meldungen: [],
   letzteMeldung: "2026-10-30T12:00:00.000Z",
   erreichbar: true,
@@ -49,6 +52,7 @@ const OPENAI_RUHIG: AbsenderStand = {
 
 const POCOCK_OHNE: AbsenderStand = {
   name: "Matt Pocock",
+  aussehen: { farbe: "#8E99A8" },
   meldungen: [],
   letzteMeldung: null,
   erreichbar: true,
@@ -56,6 +60,7 @@ const POCOCK_OHNE: AbsenderStand = {
 
 const HACKER_NEWS_WEG: AbsenderStand = {
   name: "Hacker News",
+  aussehen: { farbe: "#8E99A8" },
   meldungen: [],
   letzteMeldung: null,
   erreichbar: false,
@@ -93,6 +98,15 @@ test("zeigt je Absender mit Meldung einen Abschnitt mit Links zum Original", () 
   expect(
     screen.getByText("Europäische KI-Verordnung: Was sich ab Januar ändert"),
   ).toBeDefined();
+});
+
+test("jeder Absender trägt seine Hausfarbe, das Quadrat die Marke", () => {
+  render(<KiNewsAnsicht daten={DATEN} />);
+  const anthropic = screen.getByRole("region", { name: "Anthropic" });
+  expect(anthropic.style.getPropertyValue("--farbe")).toBe("#E8E6DC");
+  expect(anthropic.style.getPropertyValue("--marke")).toBe("#D97757");
+  const decoder = screen.getByRole("region", { name: "The Decoder" });
+  expect(decoder.style.getPropertyValue("--marke")).toBe("#7FA8AE");
 });
 
 test("nur frische Meldungen tragen den Punkt", () => {
@@ -144,6 +158,7 @@ test("ohne neue Meldung gibt es keinen leeren Abschnitt", () => {
 test("eine Meldung ohne Uhrzeit zeigt Kalendertage und von gestern den Punkt", () => {
   const seite: AbsenderStand = {
     name: "Anthropic",
+    aussehen: { farbe: "#8E99A8" },
     meldungen: [
       {
         titel: "Teaching AI to build scientific models",

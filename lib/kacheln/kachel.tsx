@@ -1,19 +1,32 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import type { Aussehen } from "@/lib/einstellungen";
 import type { KachelAnzeige } from "@/lib/kacheln/typen";
 import { standText } from "@/lib/zeit";
 
+// Farbe nur als Akzent: Quadrat (--marke), Grenzlinie und Name des Absenders (--farbe), Mock F.
+export function farbVariablen(aussehen: Aussehen): CSSProperties {
+  return {
+    "--farbe": aussehen.farbe,
+    "--marke": aussehen.marke ?? aussehen.farbe,
+  } as CSSProperties;
+}
+
+// ebene: eine unter dem Kacheltitel (h3 ohne Gruppe, h4 in einer Gruppe).
 export function Abschnitt({
   titel,
+  ebene = 4,
   children,
 }: {
   titel: string;
+  ebene?: 3 | 4;
   children: ReactNode;
 }) {
+  const Ueberschrift = ebene === 3 ? "h3" : "h4";
   return (
-    <div className="flex flex-col gap-1.5">
-      <h3 className="text-xs font-semibold tracking-[0.08em] text-gedaempft uppercase">
+    <div className="flex flex-col gap-1">
+      <Ueberschrift className="text-[13px] font-semibold text-gedaempft">
         {titel}
-      </h3>
+      </Ueberschrift>
       {children}
     </div>
   );
@@ -29,12 +42,11 @@ export function FehlerHinweis({
   laedt?: boolean;
 }) {
   return (
-    <div
-      role="status"
-      className="flex flex-col gap-2.5 rounded-xl border border-dashed border-rand-stark p-3.5"
-    >
-      <span className="font-semibold">Daten gerade nicht erreichbar.</span>
-      <span className="text-[13px] text-gedaempft">
+    <div role="status" className="flex flex-col items-start text-sm">
+      <span className="font-semibold text-fehler">
+        Daten gerade nicht erreichbar.
+      </span>
+      <span className="text-gedaempft">
         {stand
           ? `Letzter Stand von ${standText(stand)}, neuer Versuch in 1 Minute.`
           : "Neuer Versuch in 1 Minute."}
@@ -43,7 +55,7 @@ export function FehlerHinweis({
         type="button"
         onClick={erneutVersuchen}
         disabled={laedt}
-        className="min-h-11 cursor-pointer self-start rounded-[10px] border border-rand-stark bg-knopf px-4 text-sm disabled:cursor-default disabled:opacity-50"
+        className="-ml-3.5 min-h-11 cursor-pointer rounded-lg px-3.5 font-semibold text-info hover:bg-knopf disabled:cursor-default disabled:opacity-50"
       >
         {laedt ? "Wird versucht …" : "Jetzt erneut versuchen"}
       </button>
@@ -70,12 +82,26 @@ export function Kachel({
   return (
     <section
       aria-label={kachel.titel}
-      className="flex flex-col gap-3.5 rounded-2xl border border-rand bg-flaeche p-4"
+      style={farbVariablen(kachel.aussehen)}
+      className="flex min-w-0 flex-col gap-3"
     >
-      <div className="flex items-baseline justify-between gap-2">
-        <h2 className="font-titel text-[22px] font-bold tracking-[0.03em] uppercase">
-          {kachel.titel}
-        </h2>
+      <div className="-mr-3 flex min-h-11 items-center gap-2.5">
+        {/* In einer Gruppe ist die Kachel eine von mehreren unter deren Überschrift, sonst trägt sie selbst den großen Titel. */}
+        {kachel.gruppe ? (
+          <>
+            <span
+              aria-hidden
+              className="size-[9px] shrink-0 rounded-[2px] bg-(--marke)"
+            />
+            <h3 className="flex-1 text-base font-[720] tracking-[-0.005em]">
+              {kachel.titel}
+            </h3>
+          </>
+        ) : (
+          <h2 className="flex-1 text-[30px] leading-none font-[280] tracking-[-0.02em] min-[600px]:text-[34px]">
+            {kachel.titel}
+          </h2>
+        )}
         <div className="flex items-center gap-1">
           {kachel.zusatz && (
             <span className="text-[13px] text-gedaempft">{kachel.zusatz}</span>
@@ -87,7 +113,7 @@ export function Kachel({
               disabled={laedt}
               aria-label={`${kachel.titel} aktualisieren`}
               title="Frisch von den Quellen holen"
-              className="-my-2 -mr-2 grid size-11 cursor-pointer place-items-center rounded-full text-xl text-gedaempft hover:bg-knopf disabled:cursor-default"
+              className="grid size-11 cursor-pointer place-items-center rounded-lg text-lg text-rauch hover:bg-knopf hover:text-text disabled:cursor-default"
             >
               <span
                 aria-hidden
