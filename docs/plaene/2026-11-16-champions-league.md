@@ -127,19 +127,19 @@ Riskantestes zuerst: der neue Weg zu den Tagen.
 - Liefert: `leseTageDerPartien(json: unknown): string[]` in `espn.ts`: Tage der Partien (`events[].date`) nach deutscher Zeit
   (`heute`), ohne Doppelte, aufsteigend. Ohne `events`-Array wirft sie „Unerwartete Antwort von ESPN“.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - `leseTageDerPartien({ events: [{ date: "2026-11-25T20:00Z" }, { date: "2026-11-24T17:45Z" }, { date: "2026-11-24T20:00Z" }] })`
     → `["2026-11-24", "2026-11-25"]`; `{}` → wirft.
   - `ladeFussball` (Champions League), `CL/matches` antwortet 429 → Abruf `…/uefa.champions/scoreboard` ohne `?dates` mit
     `next: { revalidate: 900, tags: ["champions-league"] }`, `tage` `["2026-11-24"]`, `titel: null`, `tabelle: null` (Tabelle auch 429),
     Partien des 24.11.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [ ] **Schritt 3: `leseTageDerPartien` in `espn.ts`, Ersatz in `laden.ts`**
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: Nachtrag in ADR 0011** („Nachtrag 2026-11-16“): ESPN liefert für die Champions League keine Tage, sie kommen aus dem
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 3: `leseTageDerPartien` in `espn.ts`, Ersatz in `laden.ts`**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: Nachtrag in ADR 0011** („Nachtrag 2026-11-16“): ESPN liefert für die Champions League keine Tage, sie kommen aus dem
   Spielplan von football-data.org, bei Ausfall der Standardabruf von ESPN. Alternativen aus dem Gespräch: nur Spielplan (Fehler bei
   Ausfall), ESPN Tag für Tag (viele leere Abrufe).
-- [ ] **Schritt 6: Prüfen und committen**
+- [x] **Schritt 6: Prüfen und committen**
 
   ```bash
   npm run check

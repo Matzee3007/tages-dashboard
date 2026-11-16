@@ -264,3 +264,22 @@ test("Premier League holt die Tage weiter aus dem Kalender von ESPN", async () =
   await ladeFussball(EINSTELLUNG, JETZT);
   expect(abrufe(KALENDER)).toBe(1);
 });
+
+test("Champions League: ohne Spielplan kommen die Tage aus dem Standardabruf von ESPN", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  clAntworten({
+    [CL_SPIELPLAN]: 429,
+    [CL_TABELLE]: 429,
+    [CL_SCOREBOARD]: clTag(["a", "2026-11-24T17:45Z"]),
+  });
+  const daten = await ladeFussball(CL, new Date("2026-11-16T12:00:00Z"));
+
+  expect(optionen(CL_SCOREBOARD).next).toEqual({
+    revalidate: 900,
+    tags: ["champions-league"],
+  });
+  expect(daten.tage).toEqual(["2026-11-24"]);
+  expect(daten.titel).toBeNull();
+  expect(daten.tabelle).toBeNull();
+  expect(daten.partien.map((p) => p.id)).toEqual(["a"]);
+});
