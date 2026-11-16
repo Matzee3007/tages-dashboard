@@ -74,12 +74,16 @@ Im Code: `proxy.ts` (Schutz und Erneuerung), `lib/supabase/server.ts` (Client f�
 
 ## Bekannte Grenzen
 
+**Abmelden bei einem Ausfall** (seit 2026-11-16, PR #75): Seit supabase-js 2.119.0 löscht `signOut()` das Cookie nicht mehr, wenn der
+Server scheitert. `abmelden` meldet dann mit `signOut({ scope: "local" })` wenigstens auf dem Gerät ab und führt zum Login. Grenzen:
+
+- Das Refresh-Token bleibt beim Server gültig. Ohne Zeitlimit für Sitzungen (Supabase: Auth → Sessions) läuft es nicht von selbst ab.
+  Ein späteres erfolgreiches Abmelden (global) beendet alle Sitzungen des Kontos, auch diese.
+- Auch `scope: "local"` schickt nach dem Löschen noch eine Anfrage an den Server. Hängt Supabase, wartet der Knopf zweimal.
+- Beide Fehler stehen im Server-Log (`Abmelden beim Server gescheitert`, `Auch lokales Abmelden gescheitert`).
+
 Aus dem `/code-review` von PR #12, bewusst nicht behoben:
 
-- **Abmelden bei einem Ausfall** (seit 2026-11-16 behoben bis auf die Grenze): Seit supabase-js 2.119.0 löscht `signOut()` das Cookie
-  nicht mehr, wenn der Server scheitert. `abmelden` meldet dann mit `signOut({ scope: "local" })` wenigstens auf dem Gerät ab und führt
-  zum Login. **Grenze:** Die Sitzung beim Server bleibt gültig, bis sie von selbst abläuft. Der Fehler steht im Server-Log
-  (`Abmelden beim Server gescheitert`).
 - **Ausfall sieht aus wie abgemeldet (nur noch bei Seiten):** Beim Aufruf einer Seite leitet `proxy.ts` auch bei einem Fehler von
   `getClaims()` zu `/login`. Die Seite bleibt zu, die Ursache zeigt erst der Anmeldeversuch. Schnittstellen unter `/api/` antworten
   seit PR #27 bei einem kurzen Ausfall mit 503, eine offene Seite bleibt also stehen.
@@ -108,7 +112,7 @@ Aus dem `/code-review` von PR #12, bewusst nicht behoben:
 # Einstellungen abfragen, Werte aus .env.local (öffentlich)
 /usr/bin/curl -s -H "apikey: <publishable-key>" 'https://<ref>.supabase.co/auth/v1/settings'
 # Installation mit festen Versionen
-npm install --save-exact @supabase/ssr@0.12.7 @supabase/supabase-js@2.118.0   # seit PR #56 (Dependabot) 2.119.0
+npm install --save-exact @supabase/ssr@0.12.7 @supabase/supabase-js@2.119.0   # 2.119.0 seit PR #56 (Dependabot)
 
 # Supabase-CLI (Homebrew, 2.121.0): einmal anmelden, nur in einem eigenen Terminal-Fenster (siehe Fehler)
 supabase login
