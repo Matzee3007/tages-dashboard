@@ -76,6 +76,21 @@ test("am Tag nach dem letzten Spiel gilt schon der nächste Spieltag, wenn er da
   ).toEqual(["2026-12-01"]);
 });
 
+test("ein Nachholspiel direkt nach dem Spieltag bleibt in seinem Block", () => {
+  // Bundesliga: 10. Spieltag Fr–So, am Montag ein Nachholspiel vom 5.
+  const tage = ["2026-11-27", "2026-11-28", "2026-11-29", "2026-11-30"];
+  const spielplan = new Map([
+    ["2026-11-27", 10],
+    ["2026-11-28", 10],
+    ["2026-11-29", 10],
+    ["2026-11-30", 5],
+  ]);
+  // Mo 30.11. 12:00 deutscher Zeit
+  expect(
+    waehleSpieltag(tage, spielplan, new Date("2026-11-30T11:00:00Z")),
+  ).toEqual(tage);
+});
+
 const SPIELPLAN = new Map([
   ["2026-11-06", 9],
   ["2026-11-07", 9],
