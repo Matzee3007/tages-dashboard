@@ -71,3 +71,13 @@ test("abmelden beendet die Sitzung und führt zum Login", async () => {
   expect(signOut).toHaveBeenCalled();
   expect(redirect).toHaveBeenCalledWith("/login");
 });
+
+test("scheitert der Server, meldet abmelden wenigstens auf dem Gerät ab", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  signOut
+    .mockResolvedValueOnce({ error: { message: "Server nicht erreichbar" } })
+    .mockResolvedValueOnce({ error: null });
+  await abmelden();
+  expect(signOut).toHaveBeenLastCalledWith({ scope: "local" });
+  expect(redirect).toHaveBeenCalledWith("/login");
+});
