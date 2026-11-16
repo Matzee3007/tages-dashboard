@@ -93,6 +93,7 @@ test("die Bundesliga-Kachel ruft ladeFussball mit Einstellung und Zeit", async (
     art: "fussball" as const,
     titel: "Bundesliga",
     espn: "ger.1" as const,
+    kalender: { art: "espn" as const },
     spielplan: { art: "openligadb" as const, liga: "bl1" as const },
     tabelle: { art: "espn" as const },
     teams: TEAMS_BUNDESLIGA,

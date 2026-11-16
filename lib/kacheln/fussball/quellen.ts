@@ -31,14 +31,15 @@ function fdHeader(): Record<string, string> {
 
 // Ohne Etikett: Der Spielplan ändert sich selten, ↻ soll ihn nicht jedes Mal neu laden.
 // Ohne Spielplan fehlt nur die Nummer des Spieltags, die Kachel läuft weiter.
-// kalender: alle Tage mit Spielen von ESPN, der erste bestimmt die Saison.
+// kalender: alle Tage mit Spielen von ESPN, der erste bestimmt die Saison bei OpenLigaDB. football-data.org braucht ihn
+// nicht, die Adresse nennt keine Saison.
 export async function ladeSpielplan(
   einstellung: FussballEinstellung,
   kalender: string[],
   jetzt: Date,
 ): Promise<Map<string, number> | null> {
-  if (kalender.length === 0) return null;
   const quelle = einstellung.spielplan;
+  if (quelle.art === "openligadb" && kalender.length === 0) return null;
   const speicher = { sekunden: TAG_SEKUNDEN };
   try {
     if (quelle.art === "openligadb") {
@@ -55,6 +56,16 @@ export async function ladeSpielplan(
   }
 }
 
+// TypeScript grenzt den Typ nicht über tabelle.art ein, der Guard sagt ihm, dass dann auch teams FdTeam[] ist.
+function hatFdTabelle(
+  einstellung: FussballEinstellung,
+): einstellung is Extract<
+  FussballEinstellung,
+  { tabelle: { art: "football-data" } }
+> {
+  return einstellung.tabelle.art === "football-data";
+}
+
 // ESPN: frisch auf Wunsch, ein Fehler lässt die Kachel scheitern (wie bisher).
 // football-data.org: frisch zählt nicht (10 Abrufe pro Minute), bei einem Fehler null, die Partien laufen weiter.
 export async function ladeTabelle(
@@ -62,20 +73,19 @@ export async function ladeTabelle(
   frisch: boolean,
   jetzt: Date,
 ): Promise<TabellenZeile[] | null> {
-  const { tabelle: quelle, teams, id: etikett } = einstellung;
-  const speicher = { sekunden: NORMAL_SEKUNDEN, etikett };
-  if (quelle.art === "espn") {
+  const speicher = { sekunden: NORMAL_SEKUNDEN, etikett: einstellung.id };
+  if (!hatFdTabelle(einstellung)) {
     const url = espnAdresse("standings", einstellung.espn);
     return leseTabelle(
       await holeJson(url, frisch ? "frisch" : speicher, jetzt),
-      teams,
+      einstellung.teams,
     );
   }
   try {
-    const url = `${FOOTBALL_DATA}/${quelle.wettbewerb}/standings`;
+    const url = `${FOOTBALL_DATA}/${einstellung.tabelle.wettbewerb}/standings`;
     return leseFdTabelle(
       await holeJson(url, speicher, jetzt, fdHeader()),
-      teams,
+      einstellung.teams,
     );
   } catch (fehler) {
     console.error(

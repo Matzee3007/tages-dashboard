@@ -4,6 +4,7 @@ import type {
   TabellenZeile,
   TeamStand,
 } from "@/lib/kacheln/fussball/typen";
+import { heute } from "@/lib/zeit";
 
 // Liest die inoffizielle Schnittstelle von ESPN (ADR 0009). Felder laut Antworten vom 2026-11-08.
 
@@ -34,6 +35,17 @@ export function leseKalender(json: unknown): string[] {
     .map((eintrag) => (typeof eintrag === "string" ? eintrag : falscheForm()))
     .map((eintrag) => eintrag.slice(0, 10))
     .sort();
+}
+
+// Tage der Partien einer Antwort nach deutscher Zeit, z. B. aus dem Standardabruf ohne Datum (aktueller oder nächster Tag).
+export function leseTageDerPartien(json: unknown): string[] {
+  const partien = (json as { events?: { date?: string }[] })?.events;
+  if (!Array.isArray(partien)) falscheForm();
+  const tage = partien.map((partie) => {
+    const zeit = Date.parse(partie.date ?? "");
+    return Number.isNaN(zeit) ? falscheForm() : heute(new Date(zeit));
+  });
+  return [...new Set(tage)].sort();
 }
 
 type EspnTeam = {

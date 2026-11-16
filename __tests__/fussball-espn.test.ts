@@ -3,6 +3,7 @@ import { expect, test, vi } from "vitest";
 import { TEAMS_BUNDESLIGA } from "@/lib/einstellungen";
 import {
   leseKalender,
+  leseTageDerPartien,
   leseTabelle,
   leseTag,
 } from "@/lib/kacheln/fussball/espn";
@@ -309,4 +310,21 @@ test("ein Kalender in anderer Form wirft", () => {
   expect(() =>
     leseKalender({ leagues: [{ calendar: [{ label: "Spieltag 9" }] }] }),
   ).toThrow("Unerwartete Antwort von ESPN");
+});
+
+test("Tage der Partien nach deutscher Zeit, ohne Doppelte, aufsteigend", () => {
+  expect(
+    leseTageDerPartien({
+      events: [
+        { date: "2026-11-25T20:00Z" },
+        { date: "2026-11-24T17:45Z" },
+        { date: "2026-11-24T20:00Z" },
+        { date: "2026-11-24T23:30Z" },
+      ],
+    }),
+  ).toEqual(["2026-11-24", "2026-11-25"]);
+  expect(() => leseTageDerPartien({})).toThrow("Unerwartete Antwort von ESPN");
+  expect(() => leseTageDerPartien({ events: [{ date: "TBD" }] })).toThrow(
+    "Unerwartete Antwort von ESPN",
+  );
 });

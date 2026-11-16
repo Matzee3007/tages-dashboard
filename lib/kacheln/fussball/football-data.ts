@@ -1,4 +1,4 @@
-import type { Team } from "@/lib/einstellungen";
+import type { FdTeam } from "@/lib/einstellungen";
 import type { TabellenZeile } from "@/lib/kacheln/fussball/typen";
 import { heute } from "@/lib/zeit";
 
@@ -34,7 +34,7 @@ type FdTabellenZeile = {
 };
 
 // id und Name über die Team-Liste, damit Mein Team (ids von ESPN) die Zeile erkennt. Nach Platz sortiert.
-export function leseFdTabelle(json: unknown, teams: Team[]): TabellenZeile[] {
+export function leseFdTabelle(json: unknown, teams: FdTeam[]): TabellenZeile[] {
   const gesamt = (
     json as { standings?: { type?: string; table?: unknown }[] }
   )?.standings?.find((stand) => stand.type === "TOTAL")?.table;
