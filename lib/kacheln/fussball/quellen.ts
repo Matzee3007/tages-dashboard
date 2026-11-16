@@ -56,6 +56,16 @@ export async function ladeSpielplan(
   }
 }
 
+// TypeScript grenzt den Typ nicht über tabelle.art ein, der Guard sagt ihm, dass dann auch teams FdTeam[] ist.
+function hatFdTabelle(
+  einstellung: FussballEinstellung,
+): einstellung is Extract<
+  FussballEinstellung,
+  { tabelle: { art: "football-data" } }
+> {
+  return einstellung.tabelle.art === "football-data";
+}
+
 // ESPN: frisch auf Wunsch, ein Fehler lässt die Kachel scheitern (wie bisher).
 // football-data.org: frisch zählt nicht (10 Abrufe pro Minute), bei einem Fehler null, die Partien laufen weiter.
 export async function ladeTabelle(
@@ -63,20 +73,19 @@ export async function ladeTabelle(
   frisch: boolean,
   jetzt: Date,
 ): Promise<TabellenZeile[] | null> {
-  const { tabelle: quelle, teams, id: etikett } = einstellung;
-  const speicher = { sekunden: NORMAL_SEKUNDEN, etikett };
-  if (quelle.art === "espn") {
+  const speicher = { sekunden: NORMAL_SEKUNDEN, etikett: einstellung.id };
+  if (!hatFdTabelle(einstellung)) {
     const url = espnAdresse("standings", einstellung.espn);
     return leseTabelle(
       await holeJson(url, frisch ? "frisch" : speicher, jetzt),
-      teams,
+      einstellung.teams,
     );
   }
   try {
-    const url = `${FOOTBALL_DATA}/${quelle.wettbewerb}/standings`;
+    const url = `${FOOTBALL_DATA}/${einstellung.tabelle.wettbewerb}/standings`;
     return leseFdTabelle(
       await holeJson(url, speicher, jetzt, fdHeader()),
-      teams,
+      einstellung.teams,
     );
   } catch (fehler) {
     console.error(

@@ -5,6 +5,9 @@ export type KiNewsEinstellung = { id: string; art: "ki-news"; titel: string };
 // Ein Team mit id bei ESPN, id bei football-data.org (falls die Liga sie braucht) und deutschem Kurznamen.
 export type Team = { espn: string; footballData?: number; name: string };
 
+// Kommt die Tabelle von football-data.org, braucht jedes Team dessen id, sonst erkennt sie Mein Team nicht.
+export type FdTeam = Team & { footballData: number };
+
 // Ein Fußball-Wettbewerb: Partien immer von ESPN, Kalender (Tage mit Spielen), Spielplan (Nummer des Spieltags) und
 // Tabelle je nach Quelle (ADR 0011). Der Kalender von ESPN kennt bei der Champions League keine Tage, dort kommen sie
 // aus dem Spielplan. meinTeam: ids der Teams bei ESPN (Glossar: Mein Team).
@@ -17,10 +20,14 @@ export type FussballEinstellung = {
   spielplan:
     | { art: "openligadb"; liga: "bl1" }
     | { art: "football-data"; wettbewerb: "PL" | "CL" };
-  tabelle: { art: "espn" } | { art: "football-data"; wettbewerb: "PL" | "CL" };
-  teams: Team[];
   meinTeam: string[];
-};
+} & (
+  | { tabelle: { art: "espn" }; teams: Team[] }
+  | {
+      tabelle: { art: "football-data"; wettbewerb: "PL" | "CL" };
+      teams: FdTeam[];
+    }
+);
 
 export type KachelEinstellung = KiNewsEinstellung | FussballEinstellung;
 
@@ -48,7 +55,7 @@ export const TEAMS_BUNDESLIGA: Team[] = [
 
 // Teams der Premier League: id bei ESPN, id bei football-data.org, Kurzname. Saison 2026/27, abgeglichen an beiden Tabellen
 // vom 2026-11-16 (ADR 0011).
-export const TEAMS_PREMIER_LEAGUE: Team[] = [
+export const TEAMS_PREMIER_LEAGUE: FdTeam[] = [
   { espn: "359", footballData: 57, name: "Arsenal" },
   { espn: "331", footballData: 397, name: "Brighton" },
   { espn: "382", footballData: 65, name: "Man City" },
@@ -69,6 +76,48 @@ export const TEAMS_PREMIER_LEAGUE: Team[] = [
   { espn: "360", footballData: 66, name: "Man United" },
   { espn: "366", footballData: 71, name: "Sunderland" },
   { espn: "384", footballData: 354, name: "Crystal Palace" },
+];
+
+// Teams der Ligaphase der Champions League: id bei ESPN, id bei football-data.org, Kurzname wie in Bundesliga und Premier
+// League, sonst der von ESPN. Saison 2026/27, abgeglichen an den Partien von ESPN und der Tabelle von football-data.org vom
+// 2026-11-16 (ADR 0011).
+export const TEAMS_CHAMPIONS_LEAGUE: FdTeam[] = [
+  { espn: "887", footballData: 1899, name: "AEK Athens" },
+  { espn: "104", footballData: 100, name: "AS Roma" },
+  { espn: "359", footballData: 57, name: "Arsenal" },
+  { espn: "362", footballData: 58, name: "Aston Villa" },
+  { espn: "1068", footballData: 78, name: "Atlético" },
+  { espn: "83", footballData: 81, name: "Barcelona" },
+  { espn: "132", footballData: 5, name: "Bayern" },
+  { espn: "244", footballData: 90, name: "Betis" },
+  { espn: "2980", footballData: 5721, name: "Bodo/Glimt" },
+  { espn: "570", footballData: 851, name: "Club Brugge" },
+  { espn: "2572", footballData: 7397, name: "Como" },
+  { espn: "124", footballData: 4, name: "Dortmund" },
+  { espn: "437", footballData: 503, name: "FC Porto" },
+  { espn: "436", footballData: 613, name: "Fenerbahce" },
+  { espn: "142", footballData: 675, name: "Feyenoord" },
+  { espn: "432", footballData: 610, name: "Galatasaray" },
+  { espn: "110", footballData: 108, name: "Inter Milan" },
+  { espn: "4411", footballData: 2016, name: "LASK Linz" },
+  { espn: "175", footballData: 546, name: "Lens" },
+  { espn: "166", footballData: 521, name: "Lille" },
+  { espn: "364", footballData: 64, name: "Liverpool" },
+  { espn: "382", footballData: 65, name: "Man City" },
+  { espn: "360", footballData: 66, name: "Man United" },
+  { espn: "114", footballData: 113, name: "Napoli" },
+  { espn: "160", footballData: 524, name: "PSG" },
+  { espn: "148", footballData: 674, name: "PSV" },
+  { espn: "11420", footballData: 721, name: "Leipzig" },
+  { espn: "86", footballData: 86, name: "Real Madrid" },
+  { espn: "521", footballData: 7509, name: "S Bratislava" },
+  { espn: "21922", footballData: 10233, name: "Sabah" },
+  { espn: "493", footballData: 1887, name: "Shakhtar" },
+  { espn: "494", footballData: 930, name: "Slavia Prague" },
+  { espn: "2250", footballData: 498, name: "Sporting" },
+  { espn: "134", footballData: 10, name: "Stuttgart" },
+  { espn: "510", footballData: 5720, name: "Viking FK" },
+  { espn: "102", footballData: 94, name: "Villarreal" },
 ];
 
 // Die Reihenfolge hier ist die Reihenfolge auf dem Bildschirm.
@@ -96,6 +145,18 @@ export const KACHELN: KachelEinstellung[] = [
     tabelle: { art: "football-data", wettbewerb: "PL" },
     teams: TEAMS_PREMIER_LEAGUE,
     meinTeam: ["359"],
+  },
+  // Ligaphase: Tage aus dem Spielplan, weil ESPN dort keine Tage im Kalender hat (ADR 0011). 132 Bayern, 359 Arsenal.
+  {
+    id: "champions-league",
+    art: "fussball",
+    titel: "Champions League",
+    espn: "uefa.champions",
+    kalender: { art: "spielplan" },
+    spielplan: { art: "football-data", wettbewerb: "CL" },
+    tabelle: { art: "football-data", wettbewerb: "CL" },
+    teams: TEAMS_CHAMPIONS_LEAGUE,
+    meinTeam: ["132", "359"],
   },
   { id: "ki-news", art: "ki-news", titel: "KI-News" },
 ];

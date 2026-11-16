@@ -161,22 +161,22 @@ Riskantestes zuerst: der neue Weg zu den Tagen.
   - `TEAMS_PREMIER_LEAGUE: FdTeam[]`, `TEAMS_CHAMPIONS_LEAGUE: FdTeam[]` mit 36 Teams der Ligaphase 2026/27.
   - Kachel wie unter „Feste Vorgaben“ zwischen Premier League und KI-News.
 
-- [ ] **Schritt 1: Teamliste erheben** (Skript im Scratchpad, nicht im Repo): ESPN `?dates=` für die 16 Tage der Ligaphase aus `CL/matches`,
+- [x] **Schritt 1: Teamliste erheben** (Skript im Scratchpad, nicht im Repo): ESPN `?dates=` für die 16 Tage der Ligaphase aus `CL/matches`,
   ids und `shortDisplayName` aller Teams; football-data.org `CL/standings` für ids und `shortName`. Paare über den Namen bilden, von Hand
   nachsehen, was nicht eindeutig passt. Name: der Kurzname aus `TEAMS_BUNDESLIGA` bzw. `TEAMS_PREMIER_LEAGUE`, sonst der von ESPN.
   Prüfen: 36 Paare, Bayern `132`/`5`, Arsenal `359`/`57`.
-- [ ] **Schritt 2: Fehlschlagende Tests schreiben**
+- [x] **Schritt 2: Fehlschlagende Tests schreiben**
   - `__tests__/einstellungen.test.ts`: Eine `FussballEinstellung` mit Tabelle von football-data.org und einem Team ohne `footballData`
     trägt `// @ts-expect-error` (wird rot in `npm run typecheck`, solange der Typ es erlaubt). Dazu: `TEAMS_CHAMPIONS_LEAGUE` hat 36 Teams
     mit verschiedenen ids, darunter `132` und `359`.
   - `KACHELN.map((k) => k.id)` ist `["bundesliga", "premier-league", "champions-league", "ki-news"]`.
   - `ladeDashboard` mit der Champions League: JSON enthält den Wert von `FOOTBALL_DATA_API_KEY` nicht.
-- [ ] **Schritt 3: Tests laufen lassen, sie müssen fehlschlagen** (`npm run typecheck` und `npm test`)
-- [ ] **Schritt 4: Typen, Liste und Kachel in `lib/einstellungen.ts`, `leseFdTabelle` auf `FdTeam[]`**
-- [ ] **Schritt 5: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 6: Doku:** Abrufe der Champions League in `docs/tools/football-data.org.md` und `docs/tools/ESPN.md` (Kalender nur mit
+- [x] **Schritt 3: Tests laufen lassen, sie müssen fehlschlagen** (`npm run typecheck` und `npm test`)
+- [x] **Schritt 4: Typen, Liste und Kachel in `lib/einstellungen.ts`, `leseFdTabelle` auf `FdTeam[]`**
+- [x] **Schritt 5: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 6: Doku:** Abrufe der Champions League in `docs/tools/football-data.org.md` und `docs/tools/ESPN.md` (Kalender nur mit
   Phasen, Zeiträume 400, Ersatzabruf), Stand in `docs/Projektvision.md` (Schritt 2: PR 2 erledigt).
-- [ ] **Schritt 7: Prüfen und committen**
+- [x] **Schritt 7: Prüfen und committen**
 
   ```bash
   npm run check

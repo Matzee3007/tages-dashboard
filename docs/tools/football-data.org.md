@@ -33,12 +33,15 @@ Live-Stand und Torschützen kommen von [[projects/tages-dashboard/docs/tools/ESP
 
 ## Abrufe
 
-Seit 2026-11-16 in `lib/kacheln/fussball/quellen.ts` (lesen: `football-data.ts`), Kachel Premier League (`PL`).
+Seit 2026-11-16 in `lib/kacheln/fussball/quellen.ts` (lesen: `football-data.ts`), Kacheln Premier League (`PL`) und Champions League
+(`CL`). Bei der Champions League liefert der Spielplan auch die Tage mit Spielen (ADR 0011, Nachtrag 2026-11-16).
 
 | Abruf | Adresse | Speicher |
 |---|---|---|
 | Spielplan der Saison | `https://api.football-data.org/v4/competitions/PL/matches` (380 Partien, 371 KB), Felder `utcDate`, `matchday` | 24 Std., ohne Etikett: ↻ lädt ihn nicht neu |
 | Tabelle | `https://api.football-data.org/v4/competitions/PL/standings`, nur `type: "TOTAL"` | 15 Min., Etikett `premier-league`, nie frisch |
+| Spielplan Champions League | `…/competitions/CL/matches` (144 Partien der Ligaphase, alle `stage: "LEAGUE_STAGE"`, 143 KB) | 24 Std., ohne Etikett |
+| Tabelle Champions League | `…/competitions/CL/standings`, ein Eintrag `TOTAL` mit 36 Zeilen | 15 Min., Etikett `champions-league`, nie frisch |
 
 Beide mit `X-Auth-Token`, `User-Agent: Tages-Dashboard` und 5 Sekunden Zeitlimit. Fällt ein Abruf aus (auch 429 oder ohne Schlüssel),
 steht der Fehler im Server-Log, die Kachel zeigt den Spieltag ohne Nummer bzw. „Tabelle gerade nicht erreichbar“. Rechnung zur Grenze von
@@ -51,7 +54,9 @@ Aus dem `/code-review` von PR #73, bewusst offen:
 - **Vorgezogenes Spiel:** Behält eine vorgezogene Partie ihren alten `matchday`, gelten die Spieltage dazwischen als „Nachholspiel“, weil
   `spieltagTitel` die höchste frühere Nummer vergleicht (gilt auch für OpenLigaDB). Selten.
 - **Tagesgrenze:** `leseFdSpielplan` ordnet nach deutschem Kalendertag, die Tage von ESPN folgen einer US-Tagesgrenze. Trifft nur Anstöße
-  nach etwa 1 Uhr deutscher Zeit. Bei der Champions League (PR 2) erneut prüfen.
+  nach etwa 1 Uhr deutscher Zeit. Champions League am 2026-11-16 geprüft: Anstöße 18:45 und 21:00, nicht betroffen.
+- **K.-o.-Phase der Champions League:** Partien ohne `matchday` überspringt `leseFdSpielplan`. Nach dem 27.1.2027 bleibt die Kachel
+  deshalb auf Spieltag 8 stehen (Parkplatz in der Projektvision).
 - **↻ und die Grenze:** Jeder Druck auf ↻ holt die Tabelle neu, ab etwa 6 Drücken in einer Minute droht 429. Dann erscheint „Tabelle
   gerade nicht erreichbar“.
 - **Spieltage ohne Pause** (Samstag bis Montag, dann Dienstag): behoben am 2026-11-16, `waehleSpieltag` trennt, wo der `matchday` steigt

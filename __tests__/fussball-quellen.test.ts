@@ -156,20 +156,25 @@ test("ohne Schlüssel kein Abruf bei football-data.org", async () => {
 });
 
 test("der Schlüssel steht nie in der Antwort an den Browser", async () => {
-  const antwort = await ladeDashboard([EINSTELLUNG], JETZT);
+  clAntworten();
+  const antwort = await ladeDashboard([EINSTELLUNG, CL], JETZT);
 
-  expect(antwort.kacheln[0].status).toBe("ok");
+  expect(antwort.kacheln.map((k) => k.status)).toEqual(["ok", "ok"]);
   expect(JSON.stringify(antwort)).not.toContain(SCHLUESSEL);
 });
 
-test("die Premier League steht zwischen Bundesliga und KI-News, Mein Team ist Arsenal", () => {
+test("Reihenfolge Bundesliga, Premier League, Champions League, KI-News mit Mein Team", () => {
   expect(KACHELN.map((kachel) => kachel.id)).toEqual([
     "bundesliga",
     "premier-league",
+    "champions-league",
     "ki-news",
   ]);
   const premierLeague = KACHELN[1] as FussballEinstellung;
   expect(premierLeague.meinTeam).toEqual(["359"]);
+  const championsLeague = KACHELN[2] as FussballEinstellung;
+  expect(championsLeague.meinTeam).toEqual(["132", "359"]);
+  expect(championsLeague.kalender).toEqual({ art: "spielplan" });
   expect(premierLeague.teams).toHaveLength(20);
   expect(premierLeague.teams).toContainEqual({
     espn: "359",

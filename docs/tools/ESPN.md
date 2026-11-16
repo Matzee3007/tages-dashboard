@@ -20,8 +20,8 @@ Schlüssel. **Inoffiziell:** ESPN dokumentiert sie nicht, sie kann sich ohne Ank
 
 Für die Fußball-Kacheln (`lib/kacheln/fussball/`): Spieltag live, Torschützen und Logos, bei der Bundesliga auch die Tabelle. Gewählt
 am 2026-11-08, weil OpenLigaDB Ergebnisse oft erst Stunden später hat. Seit 2026-11-16 auch für die Premier League (`eng.1`), deren
-Tabelle von [[projects/tages-dashboard/docs/tools/football-data.org|football-data.org]] kommt (ADR 0011). Später auch für die Champions
-League und die NFL (Phase 3, Schritte 2 und 4).
+Tabelle von [[projects/tages-dashboard/docs/tools/football-data.org|football-data.org]] kommt (ADR 0011). Seit 2026-11-16 auch für die
+Partien der Champions League (`uefa.champions`), Tage, Nummer und Tabelle von football-data.org. Später die NFL (Phase 3, Schritt 4).
 
 ## Wichtige Begriffe
 
@@ -30,7 +30,11 @@ League und die NFL (Phase 3, Schritte 2 und 4).
   verspätet, deshalb zählt `pre` nach dem Anstoß bei uns schon als laufend. Verlegte oder abgesagte Partien erkennt die Kachel am
   Statusnamen (`status.type.name`): `STATUS_POSTPONED`, `STATUS_CANCELED`.
 - **Team-id:** feste Nummer eines Teams, z. B. `132` für den FC Bayern. Damit erkennen wir Mein Team und die deutschen Kurznamen
-  (`TEAMS_BUNDESLIGA` und `TEAMS_PREMIER_LEAGUE` in `lib/einstellungen.ts`).
+  (`TEAMS_BUNDESLIGA`, `TEAMS_PREMIER_LEAGUE` und `TEAMS_CHAMPIONS_LEAGUE` in `lib/einstellungen.ts`). Ein Team hat in allen
+  Wettbewerben dieselbe id (Arsenal `359`, Dortmund `124`).
+- **Kalender der Champions League:** `leagues[0].calendar` enthält dort keine Tage, sondern ein Objekt mit Phasen (`entries`:
+  „League Phase“ 2026-08-27 bis 2027-02-15, dann K.-o.-Runden). Die Tage kommen deshalb aus dem Spielplan von football-data.org
+  (ADR 0011, Nachtrag 2026-11-16).
 
 ## Abrufe
 
@@ -40,8 +44,10 @@ League und die NFL (Phase 3, Schritte 2 und 4).
 | Partien eines Tages | `…/ger.1/scoreboard?dates=20261108` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
 | Tabelle (nur Bundesliga) | `https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
 
-Für die Premier League dieselben Adressen mit `eng.1`. Alle mit `User-Agent: Tages-Dashboard`, 5 Sekunden Zeitlimit und der id der
-Kachel als Etikett für den Knopf ↻ (`bundesliga`, `premier-league`, ADR 0008). Eine gespeicherte
+Für die Premier League dieselben Adressen mit `eng.1`. Die Champions League (`uefa.champions`) ruft keinen Kalender und keine Tabelle ab,
+nur die Partien eines Tages. Fehlt der Spielplan von football-data.org, holt sie `…/uefa.champions/scoreboard` ohne Datum (aktueller oder
+nächster Spieltag, 15 Min.) und nimmt dessen Tage. Alle mit `User-Agent: Tages-Dashboard`, 5 Sekunden Zeitlimit und der id der
+Kachel als Etikett für den Knopf ↻ (`bundesliga`, `premier-league`, `champions-league`, ADR 0008). Eine gespeicherte
 Antwort darf höchstens doppelt so alt sein wie ihre Speicherzeit, mindestens 1 Stunde, sonst gilt sie als Ausfall (wie ADR 0005).
 
 Zum Ausprobieren im Terminal:
@@ -61,3 +67,4 @@ Zum Ausprobieren im Terminal:
 
 - 2026-11-08: Vom Mac aus Status 200. Am 2026-10-24 kam bei der NFL noch 403.
 - 2026-11-09: Vom Server bei Vercel aus Status 200 in rund 60–70 ms (Versuch im Plan).
+- 2026-11-16: `uefa.champions` vom Mac aus Status 200, ein Tag (`?dates=20261124`) mit 9 Partien, Zeiträume wieder 400.
