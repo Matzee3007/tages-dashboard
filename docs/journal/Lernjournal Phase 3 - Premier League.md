@@ -39,8 +39,8 @@ Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]].
 | Prüfen | Kein Versuch vorab, ob football-data.org vom Server bei Vercel antwortet, erst die Abnahme in der Vorschau zeigt es | lokal belegt, Risiko klein | Entwickler |
 | Technik | Spielplan ohne Etikett, Ausnahme von ADR 0008 | Nachtrag in [[projects/tages-dashboard/docs/adr/0008-knopf-aktualisieren-mit-revalidatetag\|ADR 0008]] | Entwickler |
 | Technik | Ohne `FOOTBALL_DATA_API_KEY` kein Abruf, Kachel zeigt Titel ohne Nummer und keine Tabelle | Plan, Aufgetaucht | Entwickler |
-| Bauen | Aufgabe 4 vor Aufgabe 3, damit `tabelle: null` nicht ungetestetes Verhalten in der Ansicht braucht | Abweichung im Plan vermerkt | ungefragt |
-| Technik | Nahtstellen bekommen die ganze Einstellung (`ladeSpielplan(einstellung, tage, jetzt)`, `ladeTabelle(einstellung, frisch, jetzt)`) | ESPN-Tabelle braucht den Liga-Code, Bundesliga holt die Tabelle weiter gespeichert und bei laufender Partie frisch | ungefragt |
+| Bauen | Aufgabe 4 vor Aufgabe 3, damit `tabelle: null` nicht ungetestetes Verhalten in der Ansicht braucht | Abweichung im Plan vermerkt | Entwickler (nachträglich bestätigt) |
+| Technik | Nahtstellen bekommen die ganze Einstellung (`ladeSpielplan(einstellung, tage, jetzt)`, `ladeTabelle(einstellung, frisch, jetzt)`) | ESPN-Tabelle braucht den Liga-Code, Bundesliga holt die Tabelle weiter gespeichert und bei laufender Partie frisch | Entwickler (nachträglich bestätigt) |
 | Prüfen | Review PR #73: Fund 4, 7, 8 behoben, 1, 3, 5 als bekannte Grenzen, 2 als eigener PR, 6 und 9 offen (9 bei der Champions League) | Abwägung in der Session | Entwickler |
 | Betrieb | Scheitert `signOut()` beim Server, meldet `abmelden` lokal ab (`scope: "local"`) | sonst bleibt man seit supabase-js 2.119 still angemeldet | Entwickler |
 | Prüfen | Review PR #75: Fund 3 (doppeltes Warten bei hängendem Supabase) als Grenze, Fund 8 (drei Teile in einem PR) so gelassen | Übergabe hatte den gemeinsamen PR vorgesehen | Entwickler |
