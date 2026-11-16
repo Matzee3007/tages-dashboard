@@ -1,14 +1,14 @@
-import type { LigaEinstellung } from "@/lib/einstellungen";
-import { holeJson } from "@/lib/kacheln/liga/abruf";
-import { leseKalender, leseTag } from "@/lib/kacheln/liga/espn";
-import { ladeSpielplan, ladeTabelle } from "@/lib/kacheln/liga/quellen";
+import type { FussballEinstellung } from "@/lib/einstellungen";
+import { holeJson } from "@/lib/kacheln/fussball/abruf";
+import { leseKalender, leseTag } from "@/lib/kacheln/fussball/espn";
+import { ladeSpielplan, ladeTabelle } from "@/lib/kacheln/fussball/quellen";
 import {
   sortierePartien,
   spieltagTitel,
   tabellenAusschnitt,
   waehleSpieltag,
-} from "@/lib/kacheln/liga/spieltag";
-import type { LigaDaten, Partie } from "@/lib/kacheln/liga/typen";
+} from "@/lib/kacheln/fussball/spieltag";
+import type { FussballDaten, Partie } from "@/lib/kacheln/fussball/typen";
 
 const ESPN = "https://site.api.espn.com/apis";
 const kalenderUrl = (liga: string) =>
@@ -23,7 +23,7 @@ function laeuftEine(partien: Partie[]): boolean {
 }
 
 async function ladeTag(
-  einstellung: LigaEinstellung,
+  einstellung: FussballEinstellung,
   tag: string,
   jetzt: Date,
 ): Promise<Partie[]> {
@@ -42,10 +42,10 @@ async function ladeTag(
   );
 }
 
-export async function ladeLiga(
-  einstellung: LigaEinstellung,
+export async function ladeFussball(
+  einstellung: FussballEinstellung,
   jetzt: Date,
-): Promise<LigaDaten> {
+): Promise<FussballDaten> {
   const etikett = einstellung.id;
   const kalender = leseKalender(
     await holeJson(
@@ -68,7 +68,7 @@ export async function ladeLiga(
       : normaleTabelle;
 
   return {
-    art: "liga",
+    art: "fussball",
     titel: spieltagTitel(tage, spielplan),
     tage,
     partien: sortierePartien(partien, einstellung.meinTeam),

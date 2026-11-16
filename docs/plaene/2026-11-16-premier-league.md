@@ -8,9 +8,9 @@ tags: [plan, kacheln, sport, premier-league, football-data, phase-3]
 # Plan: Premier League
 
 **Ziel:** Eine Kachel „Premier League“ wie die Bundesliga (Spieltag live mit Torschützen und Logos, Tabelle um Mein Team Arsenal). Dazu
-ziehen beide Ligen ihr Gemeinsames in ein Modul `lib/kacheln/liga/`.
+ziehen beide Ligen ihr Gemeinsames in ein Modul `lib/kacheln/fussball/`.
 
-**Vorgehen:** Aus `lib/kacheln/bundesliga/` wird `lib/kacheln/liga/` mit der Kachel-Art `liga`. `ladeLiga` holt Partien immer von ESPN
+**Vorgehen:** Aus `lib/kacheln/bundesliga/` wird `lib/kacheln/fussball/` mit der Kachel-Art `fussball`. `ladeFussball` holt Partien immer von ESPN
 (Liga-Code aus der Einstellung). Zwei Nahtstellen mit je zwei Adaptern: **Spielplan** (Tag → Nummer des Spieltags) von OpenLigaDB oder
 football-data.org, **Tabelle** von ESPN oder football-data.org. Welche Adapter eine Liga nutzt, steht in ihrer Einstellung. Teams werden
 über eine Liste je Liga (id bei ESPN, id bei football-data.org, deutscher Kurzname) zusammengeführt.
@@ -24,6 +24,9 @@ vom 2026-11-16 (im Gespräch freigegeben, Mein Team Arsenal); [[projects/tages-d
 **Versuch:** keiner. Der Weg ist lokal belegt (2026-11-16: `/v4/competitions/PL/standings` und `/v4/competitions/PL/matches` mit
 Schlüssel Status 200, 380 Partien mit `matchday`, Antwort 371 KB mit `Date`-Header). Ob football-data.org auch vom Server bei Vercel
 antwortet, zeigt die Abnahme in der Vorschau (Aufgabe 6), siehe „Aufgetaucht“.
+
+**Abweichung (2026-11-16):** Das Modul hieß zuerst `liga`. Weil das Glossar „Liga“ als Sammelbegriff ausschließt und die
+Champions League keine Liga ist, heißt es nach Rückfrage `fussball` (Kachel-Art `fussball`, `ladeFussball`, `FussballEinstellung`).
 
 **Nicht in diesem PR:** Linien in den Tabellen und Gruppe „Sport“ (PR 3), Champions League (PR 2).
 
@@ -48,7 +51,7 @@ antwortet, zeigt die Abnahme in der Vorschau (Aufgabe 6), siehe „Aufgetaucht�
 3. Anstoß kurz vor Mitternacht deutscher Zeit (`utcDate` 23:30Z) → zählt zum Folgetag, wie die Tage von ESPN (Test in Aufgabe 1).
 4. Bundesliga verhält sich nach dem Umzug genau wie vorher (Titel, Nachholspiel, frische Tabelle bei laufender Partie): die bestehenden
    Tests ziehen mit um und bleiben grün (Aufgabe 2 und 3).
-5. Eine seit vor dem Deploy offene Seite bekommt die neue Art `liga` → zeigt „Neue Kachel, bitte die Seite neu laden.“ (vorhandener
+5. Eine seit vor dem Deploy offene Seite bekommt die neue Art `fussball` → zeigt „Neue Kachel, bitte die Seite neu laden.“ (vorhandener
    `default`-Zweig, Test in Aufgabe 4).
 
 Unsichtbar: Der Schlüssel erscheint nie in der Antwort an den Browser (Test in Aufgabe 3: JSON von `ladeDashboard` enthält den Wert der
@@ -72,20 +75,20 @@ OpenLigaDB (356 KB), der seit 2026-11-09 gespeichert läuft.
 
 | Datei | Aufgabe |
 |---|---|
-| `lib/kacheln/bundesliga/*` → `lib/kacheln/liga/*` | Umzug mit `git mv`: `typen.ts`, `espn.ts`, `spielplan.ts`, `spieltag.ts`, `laden.ts`, `kachel.ts`, `ansicht.tsx` |
-| `lib/kacheln/liga/abruf.ts` (neu) | `holeJson` aus `laden.ts`, dazu optionale Header |
-| `lib/kacheln/liga/football-data.ts` (neu) | Lesefunktionen für Spielplan und Tabelle von football-data.org |
-| `lib/kacheln/liga/quellen.ts` (neu) | die beiden Nahtstellen: `ladeSpielplan`, `ladeTabelle` |
-| `lib/einstellungen.ts` | `LigaEinstellung`, `Team`, `TEAMS_BUNDESLIGA` (aus `TEAMNAMEN`), `TEAMS_PREMIER_LEAGUE`, neue Kachel |
+| `lib/kacheln/bundesliga/*` → `lib/kacheln/fussball/*` | Umzug mit `git mv`: `typen.ts`, `espn.ts`, `spielplan.ts`, `spieltag.ts`, `laden.ts`, `kachel.ts`, `ansicht.tsx` |
+| `lib/kacheln/fussball/abruf.ts` (neu) | `holeJson` aus `laden.ts`, dazu optionale Header |
+| `lib/kacheln/fussball/football-data.ts` (neu) | Lesefunktionen für Spielplan und Tabelle von football-data.org |
+| `lib/kacheln/fussball/quellen.ts` (neu) | die beiden Nahtstellen: `ladeSpielplan`, `ladeTabelle` |
+| `lib/einstellungen.ts` | `FussballEinstellung`, `Team`, `TEAMS_BUNDESLIGA` (aus `TEAMNAMEN`), `TEAMS_PREMIER_LEAGUE`, neue Kachel |
 | `lib/kacheln/typen.ts`, `lib/kacheln/laden.ts`, `app/dashboard.tsx` | Art `bundesliga` → `liga` |
-| `__tests__/bundesliga-*.test.ts(x)` → `__tests__/liga-*.test.ts(x)` | ziehen mit um, neue Tests dazu |
+| `__tests__/bundesliga-*.test.ts(x)` → `__tests__/fussball-*.test.ts(x)` | ziehen mit um, neue Tests dazu |
 | `.github/workflows/*` | nur falls dort Umgebungsvariablen stehen (keine nötig: Tests stubben `fetch`) |
 
 ### Aufgabe 1: Lesefunktionen für football-data.org
 
 **Dateien:**
-- Neu: `lib/kacheln/liga/football-data.ts`
-- Test: `__tests__/liga-football-data.test.ts`
+- Neu: `lib/kacheln/fussball/football-data.ts`
+- Test: `__tests__/fussball-football-data.test.ts`
 
 **Schnittstellen:**
 - Nutzt: `heute(jetzt: Date): string` aus `lib/zeit.ts`; `TabellenZeile` aus `lib/kacheln/bundesliga/typen.ts` (zieht in Aufgabe 2 um);
@@ -106,9 +109,9 @@ OpenLigaDB (356 KB), der seit 2026-11-09 gespeichert läuft.
 
 - [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
 
-  `npx vitest run __tests__/liga-football-data.test.ts` → FAIL, Modul fehlt.
+  `npx vitest run __tests__/fussball-football-data.test.ts` → FAIL, Modul fehlt.
 
-- [x] **Schritt 3: `leseFdSpielplan` und `leseFdTabelle` in `lib/kacheln/liga/football-data.ts`, `Team` in `lib/einstellungen.ts`**
+- [x] **Schritt 3: `leseFdSpielplan` und `leseFdTabelle` in `lib/kacheln/fussball/football-data.ts`, `Team` in `lib/einstellungen.ts`**
 
   Tag aus `utcDate` mit `heute(new Date(utcDate))`.
 
@@ -121,7 +124,7 @@ OpenLigaDB (356 KB), der seit 2026-11-09 gespeichert läuft.
   git commit -m "Add football-data.org readers for schedule and table"
   ```
 
-### Aufgabe 2: Umzug nach `lib/kacheln/liga/`, Art `liga`
+### Aufgabe 2: Umzug nach `lib/kacheln/fussball/`, Art `fussball`
 
 Reiner Umbau ohne neues Verhalten. Riskant, weil die laufende Bundesliga betroffen ist, deshalb vor der Premier League.
 
@@ -129,28 +132,28 @@ Reiner Umbau ohne neues Verhalten. Riskant, weil die laufende Bundesliga betroff
 kommt mit Aufgabe 4, die deshalb vor Aufgabe 3 läuft.
 
 **Dateien:**
-- Umzug: `lib/kacheln/bundesliga/*` → `lib/kacheln/liga/*`, `__tests__/bundesliga-*` → `__tests__/liga-*` (mit `git mv`)
-- Neu: `lib/kacheln/liga/abruf.ts`
+- Umzug: `lib/kacheln/bundesliga/*` → `lib/kacheln/fussball/*`, `__tests__/bundesliga-*` → `__tests__/fussball-*` (mit `git mv`)
+- Neu: `lib/kacheln/fussball/abruf.ts`
 - Ändern: `lib/einstellungen.ts`, `lib/kacheln/typen.ts`, `lib/kacheln/laden.ts`, `app/dashboard.tsx`, `__tests__/kacheln-laden.test.ts`,
   `__tests__/api-kacheln.test.ts`, `__tests__/page.test.tsx`
 
 **Schnittstellen:**
 - Liefert:
-  - `LigaEinstellung = { id: string; art: "liga"; titel: string; espn: "ger.1" | "eng.1"; spielplan: { art: "openligadb"; liga: "bl1" }
+  - `FussballEinstellung = { id: string; art: "fussball"; titel: string; espn: "ger.1" | "eng.1"; spielplan: { art: "openligadb"; liga: "bl1" }
     | { art: "football-data"; wettbewerb: "PL" }; tabelle: { art: "espn" } | { art: "football-data"; wettbewerb: "PL" }; teams: Team[];
     meinTeam: string[] }` (ersetzt `BundesligaEinstellung`).
   - `TEAMS_BUNDESLIGA: Team[]` aus `TEAMNAMEN` (gleiche ids und Namen, `footballData` leer). `TEAMNAMEN` entfällt.
-  - `LigaDaten = { art: "liga"; titel: string | null; tage: string[]; partien: Partie[]; tabelle: (TabellenZeile | null)[] | null;
+  - `FussballDaten = { art: "fussball"; titel: string | null; tage: string[]; partien: Partie[]; tabelle: (TabellenZeile | null)[] | null;
     meinTeam: string[] }` (ersetzt `BundesligaDaten`; `null` nutzt erst Aufgabe 3).
-  - `ladeLiga(einstellung: LigaEinstellung, jetzt: Date): Promise<LigaDaten>`, `ladeLigaKachel(...)`, `LigaAnsicht`.
+  - `ladeFussball(einstellung: FussballEinstellung, jetzt: Date): Promise<FussballDaten>`, `ladeFussballKachel(...)`, `FussballAnsicht`.
   - `holeJson(url: string, speicher: Speicher, jetzt: Date, header?: Record<string, string>): Promise<unknown>` in `abruf.ts`.
   - `leseTag(json, jetzt, teams: Team[])` und `leseTabelle(json, teams: Team[])` in `espn.ts`: Name aus `teams`, sonst ESPN.
   - ESPN-Adressen aus `einstellung.espn` statt fest `ger.1`.
 
-- [x] **Schritt 1: Tests umziehen und auf die neuen Namen bringen** (`ladeLiga`, Art `liga`, Einstellung mit `espn: "ger.1"`,
+- [x] **Schritt 1: Tests umziehen und auf die neuen Namen bringen** (`ladeFussball`, Art `fussball`, Einstellung mit `espn: "ger.1"`,
   `spielplan: { art: "openligadb", liga: "bl1" }`, `tabelle: { art: "espn" }`, `teams: TEAMS_BUNDESLIGA`). Neuer Test in
-  `liga-laden.test.ts`: Einstellung mit `espn: "eng.1"` ruft `…/soccer/eng.1/scoreboard` ab.
-- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen** (Module unter `lib/kacheln/liga/` fehlen)
+  `fussball-laden.test.ts`: Einstellung mit `espn: "eng.1"` ruft `…/soccer/eng.1/scoreboard` ab.
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen** (Module unter `lib/kacheln/fussball/` fehlen)
 - [x] **Schritt 3: Code umziehen und umbenennen** wie unter „Liefert“. Erwartete Werte der alten Tests bleiben unverändert.
 - [x] **Schritt 4: `npm test`, alle müssen bestehen** (bisher 266 Tests, dazu der neue)
 - [x] **Schritt 5: Prüfen und committen**
@@ -162,40 +165,40 @@ kommt mit Aufgabe 4, die deshalb vor Aufgabe 3 läuft.
 
 ### Aufgabe 3: Nahtstellen Spielplan und Tabelle, Kachel Premier League
 
-**Abweichung (2026-11-16):** Beide Nahtstellen bekommen die ganze `LigaEinstellung` statt einzelner Teile:
+**Abweichung (2026-11-16):** Beide Nahtstellen bekommen die ganze `FussballEinstellung` statt einzelner Teile:
 `ladeSpielplan(einstellung, tage, jetzt)` und `ladeTabelle(einstellung, frisch: boolean, jetzt)`. Die ESPN-Tabelle braucht den Liga-Code,
 und die Bundesliga holt die Tabelle weiter erst gespeichert und bei laufender Partie frisch nach (Verhalten wie vorher, alter Test).
-Die Tests gehen über `ladeLiga` (`__tests__/liga-quellen.test.ts`).
+Die Tests gehen über `ladeFussball` (`__tests__/fussball-quellen.test.ts`).
 
 **Dateien:**
-- Neu: `lib/kacheln/liga/quellen.ts`, Test `__tests__/liga-quellen.test.ts`
-- Ändern: `lib/kacheln/liga/laden.ts`, `lib/einstellungen.ts`, `__tests__/liga-laden.test.ts`, `__tests__/kacheln-laden.test.ts`
+- Neu: `lib/kacheln/fussball/quellen.ts`, Test `__tests__/fussball-quellen.test.ts`
+- Ändern: `lib/kacheln/fussball/laden.ts`, `lib/einstellungen.ts`, `__tests__/fussball-laden.test.ts`, `__tests__/kacheln-laden.test.ts`
 
 **Schnittstellen:**
 - Nutzt: Aufgabe 1 und 2.
 - Liefert:
-  - `ladeSpielplan(quelle: LigaEinstellung["spielplan"], tage: string[], jetzt: Date): Promise<Map<string, number> | null>`: OpenLigaDB
+  - `ladeSpielplan(quelle: FussballEinstellung["spielplan"], tage: string[], jetzt: Date): Promise<Map<string, number> | null>`: OpenLigaDB
     wie bisher (`getmatchdata/bl1/<saison>`), football-data.org `https://api.football-data.org/v4/competitions/<wettbewerb>/matches`.
     Bei Fehler `null` und `console.error`.
-  - `ladeTabelle(quelle: LigaEinstellung["tabelle"], teams: Team[], laeuft: boolean, etikett: string, jetzt: Date):
+  - `ladeTabelle(quelle: FussballEinstellung["tabelle"], teams: Team[], laeuft: boolean, etikett: string, jetzt: Date):
     Promise<TabellenZeile[] | null>`: ESPN wie bisher (frisch bei `laeuft`, Fehler wirft weiter, die Kachel zeigt dann Fehler);
     football-data.org `…/competitions/<wettbewerb>/standings`, nie frisch, bei Fehler `null` und `console.error`.
   - `TEAMS_PREMIER_LEAGUE: Team[]` mit den 20 Teams der Saison 2026/27 (Liste unten).
-  - Kachel `{ id: "premier-league", art: "liga", titel: "Premier League", espn: "eng.1", spielplan: { art: "football-data",
+  - Kachel `{ id: "premier-league", art: "fussball", titel: "Premier League", espn: "eng.1", spielplan: { art: "football-data",
     wettbewerb: "PL" }, tabelle: { art: "football-data", wettbewerb: "PL" }, teams: TEAMS_PREMIER_LEAGUE, meinTeam: ["359"] }`
     zwischen Bundesliga und KI-News.
 
-- [x] **Schritt 1: Fehlschlagende Tests schreiben** (`fetch` gestubbt wie in `liga-laden.test.ts`)
+- [x] **Schritt 1: Fehlschlagende Tests schreiben** (`fetch` gestubbt wie in `fussball-laden.test.ts`)
   - football-data.org-Abrufe tragen `X-Auth-Token` mit dem Wert aus `process.env.FOOTBALL_DATA_API_KEY` (im Test mit `vi.stubEnv`
     gesetzt), Spielplan `next: { revalidate: 86400 }` ohne Etikett, Tabelle `next: { revalidate: 900, tags: ["premier-league"] }`.
   - Laufende Partie: ESPN-Tabelle wird frisch nachgeholt (wie bisher), football-data-Tabelle nicht (genau ein Abruf).
-  - football-data.org antwortet 429 → `ladeLiga` liefert Partien, `titel: null`, `tabelle: null`.
+  - football-data.org antwortet 429 → `ladeFussball` liefert Partien, `titel: null`, `tabelle: null`.
   - Ohne `FOOTBALL_DATA_API_KEY` → kein Abruf bei football-data.org, `titel: null`, `tabelle: null`, `console.error`
     „FOOTBALL_DATA_API_KEY fehlt“.
   - `ladeDashboard` mit beiden Fußball-Kacheln: die JSON-Antwort enthält den Wert des Schlüssels nicht.
   - `KACHELN.map((k) => k.id)` ist `["bundesliga", "premier-league", "ki-news"]`.
 - [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [x] **Schritt 3: `quellen.ts` schreiben, `ladeLiga` darauf umstellen, Teams und Kachel in `lib/einstellungen.ts`**
+- [x] **Schritt 3: `quellen.ts` schreiben, `ladeFussball` darauf umstellen, Teams und Kachel in `lib/einstellungen.ts`**
 
   `TEAMS_PREMIER_LEAGUE` (ESPN, football-data.org, Name), abgeglichen an beiden Tabellen vom 2026-11-16: 359/57 Arsenal, 331/397
   Brighton, 382/65 Man City, 364/64 Liverpool, 363/61 Chelsea, 368/62 Everton, 349/1044 Bournemouth, 337/402 Brentford, 357/341 Leeds,
@@ -212,17 +215,17 @@ Die Tests gehen über `ladeLiga` (`__tests__/liga-quellen.test.ts`).
 ### Aufgabe 4: Ansicht ohne Tabelle
 
 **Dateien:**
-- Ändern: `lib/kacheln/liga/ansicht.tsx`, Test `__tests__/liga-ansicht.test.tsx`, `__tests__/page.test.tsx`
+- Ändern: `lib/kacheln/fussball/ansicht.tsx`, Test `__tests__/fussball-ansicht.test.tsx`, `__tests__/page.test.tsx`
 
 **Schnittstellen:**
-- Nutzt: `LigaDaten` mit `tabelle: null` aus Aufgabe 2.
+- Nutzt: `FussballDaten` mit `tabelle: null` aus Aufgabe 2.
 
 - [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - `tabelle: null` → Abschnitt „Tabelle“ zeigt den Text „Tabelle gerade nicht erreichbar“, keine `<table>`.
   - Daten mit `art: "fussball-unbekannt"` in `page.test.tsx` → „Neue Kachel, bitte die Seite neu laden.“ (bestehenden Test nutzen,
     falls es ihn gibt).
 - [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [x] **Schritt 3: in `LigaAnsicht` bei `tabelle === null` statt der Tabelle `<p className="text-gedaempft">Tabelle gerade nicht
+- [x] **Schritt 3: in `FussballAnsicht` bei `tabelle === null` statt der Tabelle `<p className="text-gedaempft">Tabelle gerade nicht
   erreichbar</p>`**
 - [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
 - [x] **Schritt 5: Prüfen und committen**

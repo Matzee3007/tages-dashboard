@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { expect, test } from "vitest";
-import { leseSpielplan } from "@/lib/kacheln/liga/spielplan";
+import { leseSpielplan } from "@/lib/kacheln/fussball/spielplan";
 
 // Wie getmatchdata/bl1/2026 von OpenLigaDB: matchDateTime in deutscher Zeit, ohne Zone.
 function partie(matchDateTime: string, groupOrderID: number) {

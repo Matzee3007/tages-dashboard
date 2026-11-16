@@ -1,5 +1,5 @@
 import type { Team } from "@/lib/einstellungen";
-import type { TabellenZeile } from "@/lib/kacheln/liga/typen";
+import type { TabellenZeile } from "@/lib/kacheln/fussball/typen";
 import { heute } from "@/lib/zeit";
 
 // Liest die Schnittstelle von football-data.org, Version 4 (ADR 0011). Felder laut Antworten vom 2026-11-16.

@@ -3,7 +3,7 @@ import { expect, test, vi } from "vitest";
 import {
   leseFdSpielplan,
   leseFdTabelle,
-} from "@/lib/kacheln/liga/football-data";
+} from "@/lib/kacheln/fussball/football-data";
 
 // Wie /v4/competitions/PL/matches: utcDate in UTC.
 function partie(utcDate: string, matchday: number) {

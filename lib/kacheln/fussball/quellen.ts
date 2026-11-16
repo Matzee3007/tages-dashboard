@@ -1,12 +1,12 @@
-import type { LigaEinstellung } from "@/lib/einstellungen";
-import { holeJson } from "@/lib/kacheln/liga/abruf";
-import { leseTabelle } from "@/lib/kacheln/liga/espn";
+import type { FussballEinstellung } from "@/lib/einstellungen";
+import { holeJson } from "@/lib/kacheln/fussball/abruf";
+import { leseTabelle } from "@/lib/kacheln/fussball/espn";
 import {
   leseFdSpielplan,
   leseFdTabelle,
-} from "@/lib/kacheln/liga/football-data";
-import { leseSpielplan } from "@/lib/kacheln/liga/spielplan";
-import type { TabellenZeile } from "@/lib/kacheln/liga/typen";
+} from "@/lib/kacheln/fussball/football-data";
+import { leseSpielplan } from "@/lib/kacheln/fussball/spielplan";
+import type { TabellenZeile } from "@/lib/kacheln/fussball/typen";
 
 // Die beiden Nahtstellen einer Liga: Spielplan (Nummer des Spieltags) und Tabelle, je nach Quelle aus der Einstellung.
 
@@ -32,7 +32,7 @@ function fdHeader(): Record<string, string> {
 // Ohne Etikett: Der Spielplan ändert sich selten, ↻ soll ihn nicht jedes Mal neu laden.
 // Ohne Spielplan fehlt nur die Nummer des Spieltags, die Kachel läuft weiter.
 export async function ladeSpielplan(
-  einstellung: LigaEinstellung,
+  einstellung: FussballEinstellung,
   tage: string[],
   jetzt: Date,
 ): Promise<Map<string, number> | null> {
@@ -57,7 +57,7 @@ export async function ladeSpielplan(
 // ESPN: frisch auf Wunsch, ein Fehler lässt die Kachel scheitern (wie bisher).
 // football-data.org: frisch zählt nicht (10 Abrufe pro Minute), bei einem Fehler null, die Partien laufen weiter.
 export async function ladeTabelle(
-  einstellung: LigaEinstellung,
+  einstellung: FussballEinstellung,
   frisch: boolean,
   jetzt: Date,
 ): Promise<TabellenZeile[] | null> {

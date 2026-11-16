@@ -1,4 +1,4 @@
-// Abruf mit Zwischenspeicher für alle Quellen der Liga-Kacheln.
+// Abruf mit Zwischenspeicher für alle Quellen der Fußball-Kacheln.
 
 const ABRUF_ZEITLIMIT_MS = 5000;
 const STUNDE_MS = 60 * 60 * 1000;

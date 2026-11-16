@@ -1,7 +1,11 @@
 // @vitest-environment node
 import { expect, test, vi } from "vitest";
 import { TEAMS_BUNDESLIGA } from "@/lib/einstellungen";
-import { leseKalender, leseTabelle, leseTag } from "@/lib/kacheln/liga/espn";
+import {
+  leseKalender,
+  leseTabelle,
+  leseTag,
+} from "@/lib/kacheln/fussball/espn";
 
 // Ausschnitte echter Antworten von ESPN vom 2026-11-08, gekürzt auf die gelesenen Felder.
 

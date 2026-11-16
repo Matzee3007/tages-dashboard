@@ -3,7 +3,7 @@ import type {
   Partie,
   TabellenZeile,
   TeamStand,
-} from "@/lib/kacheln/liga/typen";
+} from "@/lib/kacheln/fussball/typen";
 
 // Liest die inoffizielle Schnittstelle von ESPN (ADR 0009). Felder laut Antworten vom 2026-11-08.
 

@@ -1,4 +1,4 @@
-import type { Partie, TabellenZeile } from "@/lib/kacheln/liga/typen";
+import type { Partie, TabellenZeile } from "@/lib/kacheln/fussball/typen";
 import { folgetag, heute } from "@/lib/zeit";
 
 // Spieltag wählen und benennen (Projektvision, Entscheidungen der Befragung vom 2026-11-08).

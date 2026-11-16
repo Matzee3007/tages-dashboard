@@ -1,12 +1,12 @@
 // @vitest-environment node
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { KACHELN, type LigaEinstellung } from "@/lib/einstellungen";
+import { KACHELN, type FussballEinstellung } from "@/lib/einstellungen";
 import { ladeDashboard } from "@/lib/kacheln/laden";
-import { ladeLiga } from "@/lib/kacheln/liga/laden";
+import { ladeFussball } from "@/lib/kacheln/fussball/laden";
 
-const EINSTELLUNG: LigaEinstellung = {
+const EINSTELLUNG: FussballEinstellung = {
   id: "premier-league",
-  art: "liga",
+  art: "fussball",
   titel: "Premier League",
   espn: "eng.1",
   spielplan: { art: "football-data", wettbewerb: "PL" },
@@ -102,7 +102,7 @@ afterEach(() => {
 });
 
 test("Premier League: Partien von ESPN, Nummer und Tabelle von football-data.org", async () => {
-  const daten = await ladeLiga(EINSTELLUNG, JETZT);
+  const daten = await ladeFussball(EINSTELLUNG, JETZT);
 
   expect(daten.titel).toBe("12. Spieltag");
   expect(daten.partien.map((p) => p.heim.name)).toEqual(["Arsenal"]);
@@ -113,7 +113,7 @@ test("Premier League: Partien von ESPN, Nummer und Tabelle von football-data.org
 });
 
 test("football-data.org bekommt den Schlüssel im Header, der Spielplan keinen Etikett", async () => {
-  await ladeLiga(EINSTELLUNG, JETZT);
+  await ladeFussball(EINSTELLUNG, JETZT);
 
   expect(optionen(SPIELPLAN).headers["X-Auth-Token"]).toBe(SCHLUESSEL);
   expect(optionen(SPIELPLAN).next).toEqual({ revalidate: 86400 });
@@ -126,7 +126,7 @@ test("football-data.org bekommt den Schlüssel im Header, der Spielplan keinen E
 
 test("bei laufender Partie wird die Tabelle von football-data.org nicht frisch nachgeholt", async () => {
   antworten({ [`${KALENDER}?dates=20261121`]: tag("in") });
-  await ladeLiga(EINSTELLUNG, JETZT);
+  await ladeFussball(EINSTELLUNG, JETZT);
 
   expect(abrufe(TABELLE)).toBe(1);
 });
@@ -134,7 +134,7 @@ test("bei laufender Partie wird die Tabelle von football-data.org nicht frisch n
 test("antwortet football-data.org mit 429, laufen die Partien ohne Nummer und Tabelle weiter", async () => {
   vi.spyOn(console, "error").mockImplementation(() => {});
   antworten({ [SPIELPLAN]: 429, [TABELLE]: 429 });
-  const daten = await ladeLiga(EINSTELLUNG, JETZT);
+  const daten = await ladeFussball(EINSTELLUNG, JETZT);
 
   expect(daten.partien).toHaveLength(1);
   expect(daten.titel).toBeNull();
@@ -144,7 +144,7 @@ test("antwortet football-data.org mit 429, laufen die Partien ohne Nummer und Ta
 test("ohne Schlüssel kein Abruf bei football-data.org", async () => {
   const fehler = vi.spyOn(console, "error").mockImplementation(() => {});
   vi.stubEnv("FOOTBALL_DATA_API_KEY", "");
-  const daten = await ladeLiga(EINSTELLUNG, JETZT);
+  const daten = await ladeFussball(EINSTELLUNG, JETZT);
 
   expect(abrufe(SPIELPLAN) + abrufe(TABELLE)).toBe(0);
   expect(daten.titel).toBeNull();
@@ -167,7 +167,7 @@ test("die Premier League steht zwischen Bundesliga und KI-News, Mein Team ist Ar
     "premier-league",
     "ki-news",
   ]);
-  const premierLeague = KACHELN[1] as LigaEinstellung;
+  const premierLeague = KACHELN[1] as FussballEinstellung;
   expect(premierLeague.meinTeam).toEqual(["359"]);
   expect(premierLeague.teams).toHaveLength(20);
   expect(premierLeague.teams).toContainEqual({

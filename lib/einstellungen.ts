@@ -7,9 +7,9 @@ export type Team = { espn: string; footballData?: number; name: string };
 
 // Eine Fußball-Liga: Partien immer von ESPN, Spielplan (Nummer des Spieltags) und Tabelle je nach Quelle (ADR 0011).
 // meinTeam: ids der Teams bei ESPN (Glossar: Mein Team).
-export type LigaEinstellung = {
+export type FussballEinstellung = {
   id: string;
-  art: "liga";
+  art: "fussball";
   titel: string;
   espn: "ger.1" | "eng.1";
   spielplan:
@@ -20,7 +20,7 @@ export type LigaEinstellung = {
   meinTeam: string[];
 };
 
-export type KachelEinstellung = KiNewsEinstellung | LigaEinstellung;
+export type KachelEinstellung = KiNewsEinstellung | FussballEinstellung;
 
 // Teams der Bundesliga mit deutschem Kurznamen nach der id von ESPN, Saison 2026/27 (Projektvision, Phase 3).
 export const TEAMS_BUNDESLIGA: Team[] = [
@@ -74,7 +74,7 @@ export const KACHELN: KachelEinstellung[] = [
   // 132 ist der FC Bayern bei ESPN.
   {
     id: "bundesliga",
-    art: "liga",
+    art: "fussball",
     titel: "Bundesliga",
     espn: "ger.1",
     spielplan: { art: "openligadb", liga: "bl1" },
@@ -85,7 +85,7 @@ export const KACHELN: KachelEinstellung[] = [
   // 359 ist Arsenal bei ESPN.
   {
     id: "premier-league",
-    art: "liga",
+    art: "fussball",
     titel: "Premier League",
     espn: "eng.1",
     spielplan: { art: "football-data", wettbewerb: "PL" },

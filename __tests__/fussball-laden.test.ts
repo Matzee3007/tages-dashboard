@@ -1,11 +1,11 @@
 // @vitest-environment node
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { TEAMS_BUNDESLIGA } from "@/lib/einstellungen";
-import { ladeLiga } from "@/lib/kacheln/liga/laden";
+import { ladeFussball } from "@/lib/kacheln/fussball/laden";
 
 const EINSTELLUNG = {
   id: "bundesliga",
-  art: "liga" as const,
+  art: "fussball" as const,
   titel: "Bundesliga",
   espn: "ger.1" as const,
   spielplan: { art: "openligadb" as const, liga: "bl1" as const },
@@ -109,9 +109,9 @@ afterEach(() => {
 });
 
 test("baut die Daten aus Kalender, Tagen, Tabelle und Spielplan", async () => {
-  const daten = await ladeLiga(EINSTELLUNG, JETZT);
+  const daten = await ladeFussball(EINSTELLUNG, JETZT);
 
-  expect(daten.art).toBe("liga");
+  expect(daten.art).toBe("fussball");
   expect(daten.titel).toBe("9. Spieltag");
   expect(daten.tage).toEqual(["2026-11-07", "2026-11-08"]);
   expect(daten.partien.map((p) => p.id)).toEqual([
@@ -124,7 +124,7 @@ test("baut die Daten aus Kalender, Tagen, Tabelle und Spielplan", async () => {
 
 test("setzt Speicher, Etikett und Zeitlimit", async () => {
   const zeitlimit = vi.spyOn(AbortSignal, "timeout");
-  await ladeLiga(EINSTELLUNG, JETZT);
+  await ladeFussball(EINSTELLUNG, JETZT);
 
   const optionen = (url: string) =>
     fetchMock.mock.calls.find(([aufgerufen]) => aufgerufen === url)?.[1];
@@ -149,7 +149,7 @@ test("setzt Speicher, Etikett und Zeitlimit", async () => {
 
 test("holt einen Tag mit laufender Partie frisch nach", async () => {
   antworten({ [`${KALENDER}?dates=20261108`]: tag("in", "2026-11-08T16:30Z") });
-  const daten = await ladeLiga(EINSTELLUNG, JETZT);
+  const daten = await ladeFussball(EINSTELLUNG, JETZT);
 
   const abrufe = (url: string) =>
     fetchMock.mock.calls
@@ -162,20 +162,20 @@ test("holt einen Tag mit laufender Partie frisch nach", async () => {
 });
 
 test("ohne laufende Partie kein zweiter Abruf", async () => {
-  await ladeLiga(EINSTELLUNG, JETZT);
+  await ladeFussball(EINSTELLUNG, JETZT);
   expect(fetchMock).toHaveBeenCalledTimes(5);
 });
 
 test("ein gescheiterter Tag lässt die Kachel scheitern", async () => {
   antworten({ [`${KALENDER}?dates=20261107`]: 500 });
-  await expect(ladeLiga(EINSTELLUNG, JETZT)).rejects.toThrow("Status 500");
+  await expect(ladeFussball(EINSTELLUNG, JETZT)).rejects.toThrow("Status 500");
 });
 
 test("ohne Spielplan keine Nummer", async () => {
   const log = vi.spyOn(console, "error").mockImplementation(() => {});
   antworten({ [SPIELPLAN]: 503 });
 
-  const daten = await ladeLiga(EINSTELLUNG, JETZT);
+  const daten = await ladeFussball(EINSTELLUNG, JETZT);
 
   expect(daten.titel).toBeNull();
   expect(daten.partien).toHaveLength(2);
@@ -196,7 +196,7 @@ test("eine zu alte gespeicherte Antwort lässt die Kachel scheitern", async () =
       },
     ),
   });
-  await expect(ladeLiga(EINSTELLUNG, JETZT)).rejects.toThrow(
+  await expect(ladeFussball(EINSTELLUNG, JETZT)).rejects.toThrow(
     "Gespeicherte Antwort",
   );
 });
@@ -206,13 +206,13 @@ test("Kalender und Spielplan dürfen bis zu zwei Tage alt sein", async () => {
   antworten({
     [KALENDER]: Response.json(ANTWORTEN[KALENDER], { headers: { Date: alt } }),
   });
-  await expect(ladeLiga(EINSTELLUNG, JETZT)).resolves.toBeDefined();
+  await expect(ladeFussball(EINSTELLUNG, JETZT)).resolves.toBeDefined();
 });
 
 test("fragt ESPN nach der Liga aus der Einstellung", async () => {
   fetchMock.mockRejectedValue(new Error("nicht erreichbar"));
   await expect(
-    ladeLiga({ ...EINSTELLUNG, espn: "eng.1" }, JETZT),
+    ladeFussball({ ...EINSTELLUNG, espn: "eng.1" }, JETZT),
   ).rejects.toThrow();
   expect(fetchMock.mock.calls[0][0]).toBe(
     "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard",
