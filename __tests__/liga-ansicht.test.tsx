@@ -134,3 +134,11 @@ test("abgesagte Partie zeigt abgesagt statt Anstoß und Ergebnis", () => {
   expect(partie.textContent).toContain("abgesagt");
   expect(partie.textContent).not.toContain("Sa 15:30");
 });
+
+test("ohne Tabelle steht ein Hinweis statt der Tabelle", () => {
+  const { container } = render(
+    <LigaAnsicht daten={{ ...DATEN, tabelle: null }} />,
+  );
+  expect(screen.getByText("Tabelle gerade nicht erreichbar")).toBeDefined();
+  expect(container.querySelector("table")).toBeNull();
+});

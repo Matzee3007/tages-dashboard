@@ -212,15 +212,15 @@ kommt mit Aufgabe 4, die deshalb vor Aufgabe 3 läuft.
 **Schnittstellen:**
 - Nutzt: `LigaDaten` mit `tabelle: null` aus Aufgabe 2.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - `tabelle: null` → Abschnitt „Tabelle“ zeigt den Text „Tabelle gerade nicht erreichbar“, keine `<table>`.
   - Daten mit `art: "fussball-unbekannt"` in `page.test.tsx` → „Neue Kachel, bitte die Seite neu laden.“ (bestehenden Test nutzen,
     falls es ihn gibt).
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [ ] **Schritt 3: in `LigaAnsicht` bei `tabelle === null` statt der Tabelle `<p className="text-gedaempft">Tabelle gerade nicht
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 3: in `LigaAnsicht` bei `tabelle === null` statt der Tabelle `<p className="text-gedaempft">Tabelle gerade nicht
   erreichbar</p>`**
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: Prüfen und committen**
 
   ```bash
   npm run check

@@ -118,7 +118,7 @@ test("baut die Daten aus Kalender, Tagen, Tabelle und Spielplan", async () => {
     "2026-11-07T14:30Z",
     "2026-11-08T14:30Z",
   ]);
-  expect(daten.tabelle.map((z) => z?.name)).toEqual(["Bayern"]);
+  expect(daten.tabelle?.map((z) => z?.name)).toEqual(["Bayern"]);
   expect(daten.meinTeam).toEqual(["132"]);
 });
 
