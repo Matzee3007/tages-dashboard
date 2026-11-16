@@ -1,6 +1,6 @@
 ---
 titel: "Plan: Premier League"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-16
 tags: [plan, kacheln, sport, premier-league, football-data, phase-3]
 ---
@@ -260,4 +260,4 @@ Die Tests gehen über `ladeFussball` (`__tests__/fussball-quellen.test.ts`).
 - [x] **Schritt 2: Abnahme in der Vorschau von Vercel** (Entwickler, bestanden am 2026-11-16): einloggen, Premier League steht zwischen Bundesliga und KI-News,
   Überschrift „12. Spieltag · …“ (Nummer aus football-data.org, also vom Server bei Vercel aus erreichbar), Tabelle mit Arsenal und je
   2 Plätzen darum, deutsche Kurznamen, Logos. Bundesliga sieht aus wie vorher.
-- [ ] **Schritt 3:** Nach dem Merge dieselbe Prüfung in Production.
+- [x] **Schritt 3:** Nach dem Merge dieselbe Prüfung in Production. Bestanden am 2026-11-16.

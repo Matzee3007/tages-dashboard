@@ -220,7 +220,9 @@ Entscheidungen aus der Befragung vom 2026-11-04:
    [[projects/tages-dashboard/docs/plaene/2026-11-08-bundesliga|Plan]]): Spieltag und Tabelle, Mein Team hervorgehoben. Die erste Sport-Kachel legt das
    Muster für die anderen fest.
 2. **Premier League und Champions League (ESPN und football-data.org, ADR 0011):** API-Schlüssel auf dem Server, Zwischenspeicher
-   für die Grenze von 10 Abrufen pro Minute.
+   für die Grenze von 10 Abrufen pro Minute. PR 1 Premier League erledigt 2026-11-16 (PR #73, siehe
+   [[projects/tages-dashboard/docs/plaene/2026-11-16-premier-league|Plan]]), gemeinsames Modul `lib/kacheln/fussball/`. Offen: Spieltage,
+   die Montag/Dienstag verschmelzen (eigener PR), PR 2 Champions League, PR 3 neues Aussehen.
 3. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
 4. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
    nicht, eine andere Gratis-Quelle suchen oder die Kachel unter „Später“ schieben.
