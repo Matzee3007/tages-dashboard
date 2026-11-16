@@ -27,6 +27,7 @@ beforeEach(() => {
   vi.mocked(ladeKiNews).mockResolvedValue([
     {
       name: "Anthropic",
+      aussehen: { farbe: "#8E99A8" },
       meldungen: [
         {
           titel: "Eins",

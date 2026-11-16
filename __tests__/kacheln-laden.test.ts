@@ -14,6 +14,7 @@ const JETZT = new Date("2026-11-08T13:32:07Z");
 
 const ANTHROPIC: AbsenderStand = {
   name: "Anthropic",
+  aussehen: { farbe: "#8E99A8" },
   meldungen: [
     {
       titel: "Introducing Claude",

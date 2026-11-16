@@ -1,5 +1,4 @@
-import { useId, useState } from "react";
-import { Abschnitt } from "@/lib/kacheln/kachel";
+import { type CSSProperties, type ReactNode, useId, useState } from "react";
 import type { AbsenderStand } from "@/lib/kacheln/ki-news/laden";
 import type { Meldung } from "@/lib/kacheln/ki-news/feed";
 import type { KiNewsDaten } from "@/lib/kacheln/typen";
@@ -126,19 +125,57 @@ function ZeileMitZusammenfassung({
   );
 }
 
+// Mock F: Der Name hängt in einer eigenen Spalte links, auf schmalen Geräten steht er über den Meldungen.
+const ZEILE =
+  "grid border-t border-rand pt-3.5 pb-4 @[600px]:grid-cols-[210px_minmax(0,1fr)] @[600px]:gap-x-9";
+const NAME =
+  "flex items-baseline gap-[9px] text-lg leading-[1.2] font-[720] tracking-[-0.01em] @[600px]:pt-2.5 @[600px]:text-[19px]";
+
+function farben(absender: AbsenderStand): CSSProperties {
+  return {
+    "--farbe": absender.aussehen.farbe,
+    "--marke": absender.aussehen.marke ?? absender.aussehen.farbe,
+  } as CSSProperties;
+}
+
+function AbsenderAbschnitt({
+  absender,
+  children,
+}: {
+  absender: AbsenderStand;
+  children: ReactNode;
+}) {
+  return (
+    <section
+      aria-label={absender.name}
+      style={farben(absender)}
+      className={ZEILE}
+    >
+      <h3 className={`${NAME} text-(--farbe)`}>
+        <span
+          aria-hidden
+          className="size-[9px] shrink-0 -translate-y-px rounded-[2px] bg-(--marke)"
+        />
+        {absender.name}
+      </h3>
+      <div className="flex max-w-[760px] min-w-0 flex-col">{children}</div>
+    </section>
+  );
+}
+
 function RuhigeZeile({ absender }: { absender: AbsenderStand }) {
   return (
-    <div className="flex justify-between gap-3 py-[5px] text-sm text-gedaempft">
-      <span className="text-xs font-semibold tracking-[0.08em] uppercase">
-        {absender.name}
+    <div className={`${ZEILE} text-sm text-gedaempft`}>
+      <span className={NAME}>{absender.name}</span>
+      <span className="pt-1 @[600px]:pt-3">
+        {!absender.erreichbar ? (
+          <span className="text-fehler">nicht erreichbar</span>
+        ) : absender.letzteMeldung ? (
+          <span>{`zuletzt ${alterText(absender.letzteMeldung)}`}</span>
+        ) : (
+          <span>noch keine Meldung</span>
+        )}
       </span>
-      {!absender.erreichbar ? (
-        <span className="text-fehler">nicht erreichbar</span>
-      ) : absender.letzteMeldung ? (
-        <span>{`zuletzt ${alterText(absender.letzteMeldung)}`}</span>
-      ) : (
-        <span>noch keine Meldung</span>
-      )}
     </div>
   );
 }
@@ -148,23 +185,17 @@ export function KiNewsAnsicht({ daten }: { daten: KiNewsDaten }) {
   const ruhig = daten.absender.filter((a) => a.meldungen.length === 0);
 
   return (
-    <>
+    <div className="@container flex flex-col">
       {aktiv.map((absender) => (
-        <Abschnitt key={absender.name} titel={absender.name}>
-          <div className="flex flex-col">
-            {absender.meldungen.map((meldung) => (
-              <MeldungsZeile key={meldung.link} meldung={meldung} />
-            ))}
-          </div>
-        </Abschnitt>
-      ))}
-      {ruhig.length > 0 && (
-        <div className="flex flex-col border-t border-rand pt-2">
-          {ruhig.map((absender) => (
-            <RuhigeZeile key={absender.name} absender={absender} />
+        <AbsenderAbschnitt key={absender.name} absender={absender}>
+          {absender.meldungen.map((meldung) => (
+            <MeldungsZeile key={meldung.link} meldung={meldung} />
           ))}
-        </div>
-      )}
-    </>
+        </AbsenderAbschnitt>
+      ))}
+      {ruhig.map((absender) => (
+        <RuhigeZeile key={absender.name} absender={absender} />
+      ))}
+    </div>
   );
 }

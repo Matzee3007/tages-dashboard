@@ -191,6 +191,7 @@ export type SeitenEinstellung = { url: string; art: SeitenArt };
 
 export type AbsenderEinstellung = {
   name: string;
+  aussehen: Aussehen;
   feeds: string[];
   seiten?: SeitenEinstellung[];
 };
@@ -198,6 +199,7 @@ export type AbsenderEinstellung = {
 export const ABSENDER: AbsenderEinstellung[] = [
   {
     name: "Anthropic",
+    aussehen: { farbe: "#E8E6DC", marke: "#D97757" },
     feeds: [
       "https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA",
       "https://transformer-circuits.pub/feed.xml",
@@ -215,6 +217,7 @@ export const ABSENDER: AbsenderEinstellung[] = [
   },
   {
     name: "Claude Updates",
+    aussehen: { farbe: "#9AAE7E", marke: "#C15F3C" },
     feeds: ["https://platform.claude.com/docs/en/release-notes/feed.xml"],
     seiten: [
       {
@@ -223,10 +226,19 @@ export const ABSENDER: AbsenderEinstellung[] = [
       },
     ],
   },
-  { name: "OpenAI", feeds: ["https://openai.com/news/rss.xml"] },
-  { name: "Google DeepMind", feeds: ["https://deepmind.google/blog/rss.xml"] },
+  {
+    name: "OpenAI",
+    aussehen: { farbe: "#ECECEC" },
+    feeds: ["https://openai.com/news/rss.xml"],
+  },
+  {
+    name: "Google DeepMind",
+    aussehen: { farbe: "#4285F4" },
+    feeds: ["https://deepmind.google/blog/rss.xml"],
+  },
   {
     name: "Andrej Karpathy",
+    aussehen: { farbe: "#8F9AAD" },
     feeds: [
       "https://karpathy.bearblog.dev/feed/",
       "https://karpathy.github.io/feed.xml",
@@ -235,20 +247,27 @@ export const ABSENDER: AbsenderEinstellung[] = [
   },
   {
     name: "Matt Pocock",
+    aussehen: { farbe: "#A3A08F" },
     feeds: [
       "https://www.youtube.com/feeds/videos.xml?channel_id=UCswG6FSbgZjbWtdf_hMLaow",
       "https://www.aihero.dev/rss.xml",
     ],
   },
-  { name: "The Decoder", feeds: ["https://the-decoder.de/feed/"] },
+  {
+    name: "The Decoder",
+    aussehen: { farbe: "#7FA8AE" },
+    feeds: ["https://the-decoder.de/feed/"],
+  },
   {
     name: "The Verge",
+    aussehen: { farbe: "#9479FF" },
     feeds: [
       "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
     ],
   },
   {
     name: "Hacker News",
+    aussehen: { farbe: "#B5B5AA", marke: "#FF6600" },
     feeds: ["https://hnrss.org/newest?q=AI&points=100"],
   },
 ];

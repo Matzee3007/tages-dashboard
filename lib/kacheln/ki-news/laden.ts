@@ -1,4 +1,4 @@
-import type { AbsenderEinstellung } from "@/lib/einstellungen";
+import type { Aussehen, AbsenderEinstellung } from "@/lib/einstellungen";
 import { leseFeed, type Meldung } from "@/lib/kacheln/ki-news/feed";
 import { leseSeite } from "@/lib/kacheln/ki-news/seiten";
 
@@ -11,6 +11,7 @@ const SPEICHER_HOECHSTALTER_MS = 60 * 60 * 1000;
 
 export type AbsenderStand = {
   name: string;
+  aussehen: Aussehen;
   meldungen: Meldung[];
   letzteMeldung: string | null;
   erreichbar: boolean;
@@ -95,6 +96,7 @@ export async function ladeAbsender(
 
   return {
     name: absender.name,
+    aussehen: absender.aussehen,
     meldungen: neuesteZuerst
       .filter(
         (meldung) =>

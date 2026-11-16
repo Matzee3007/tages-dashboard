@@ -30,6 +30,7 @@ const OK: DashboardAntwort = {
         absender: [
           {
             name: "Anthropic",
+            aussehen: { farbe: "#8E99A8" },
             meldungen: [
               {
                 titel: "Introducing Claude",

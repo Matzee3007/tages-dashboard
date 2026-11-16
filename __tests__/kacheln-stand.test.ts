@@ -12,7 +12,15 @@ const NEU = "2026-11-08T13:32:00.000Z";
 function daten(name: string): KachelDaten {
   return {
     art: "ki-news",
-    absender: [{ name, meldungen: [], letzteMeldung: null, erreichbar: true }],
+    absender: [
+      {
+        name,
+        aussehen: { farbe: "#8E99A8" },
+        meldungen: [],
+        letzteMeldung: null,
+        erreichbar: true,
+      },
+    ],
   };
 }
 
