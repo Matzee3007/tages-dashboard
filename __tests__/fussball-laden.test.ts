@@ -218,3 +218,30 @@ test("fragt ESPN nach der Liga aus der Einstellung", async () => {
     "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard",
   );
 });
+
+test("trennt Spieltage ohne Lücke mit dem Spielplan", async () => {
+  const tage = ["2026-11-28", "2026-11-29", "2026-11-30", "2026-12-01"];
+  const nummern = [12, 12, 12, 13];
+  antworten({
+    [KALENDER]: { leagues: [{ calendar: tage.map((t) => `${t}T08:00Z`) }] },
+    ...Object.fromEntries(
+      tage.map((t) => [
+        `${KALENDER}?dates=${t.replaceAll("-", "")}`,
+        tag("post", `${t}T14:30Z`),
+      ]),
+    ),
+    [SPIELPLAN]: tage.map((t, i) => ({
+      matchDateTime: `${t}T15:30:00`,
+      group: { groupOrderID: nummern[i] },
+    })),
+  });
+
+  // Mo 30.11. 20:00 deutscher Zeit
+  const daten = await ladeFussball(
+    EINSTELLUNG,
+    new Date("2026-11-30T19:00:00Z"),
+  );
+
+  expect(daten.tage).toEqual(["2026-11-28", "2026-11-29", "2026-11-30"]);
+  expect(daten.titel).toBe("12. Spieltag");
+});

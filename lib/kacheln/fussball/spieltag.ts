@@ -3,22 +3,59 @@ import { folgetag, heute } from "@/lib/zeit";
 
 // Spieltag wählen und benennen (Projektvision, Entscheidungen der Befragung vom 2026-11-08).
 
+// Steigt die Nummer über die höchste bekannte des Blocks, beginnt ein neuer Spieltag. Ein Nachholspiel (kleinere
+// Nummer) oder ein Tag ohne Nummer gehört zum laufenden Block.
+function nummerSteigt(
+  spielplan: Map<string, number> | null,
+  block: string[],
+  tag: string,
+): boolean {
+  const jetzt = spielplan?.get(tag);
+  const bisher = block.flatMap((frueher) => spielplan?.get(frueher) ?? []);
+  return (
+    jetzt !== undefined && bisher.length > 0 && jetzt > Math.max(...bisher)
+  );
+}
+
 // Aufeinanderfolgende Tage mit Spielen bilden einen Block (tage aufsteigend sortiert).
-function bloecke(tage: string[]): string[][] {
+// Steigt die Nummer im Spielplan, beginnt ein neuer Block, auch ohne Lücke.
+function bloecke(
+  tage: string[],
+  spielplan: Map<string, number> | null,
+): string[][] {
   const ergebnis: string[][] = [];
   for (const tag of tage) {
     const letzter = ergebnis.at(-1);
-    if (letzter && folgetag(letzter.at(-1)!) === tag) letzter.push(tag);
+    const vortag = letzter?.at(-1);
+    if (
+      letzter &&
+      vortag &&
+      folgetag(vortag) === tag &&
+      !nummerSteigt(spielplan, letzter, tag)
+    )
+      letzter.push(tag);
     else ergebnis.push([tag]);
   }
   return ergebnis;
 }
 
-// Ein Spieltag bleibt bis Mitternacht (deutsche Zeit) des Tages nach seinem letzten Spiel aktuell.
-export function waehleSpieltag(tage: string[], jetzt: Date): string[] {
-  const alle = bloecke(tage);
+// Ein Spieltag bleibt bis Mitternacht (deutsche Zeit) des Tages nach seinem letzten Spiel aktuell,
+// höchstens bis der nächste beginnt.
+export function waehleSpieltag(
+  tage: string[],
+  spielplan: Map<string, number> | null,
+  jetzt: Date,
+): string[] {
+  const alle = bloecke(tage, spielplan);
+  const tag = heute(jetzt);
   return (
-    alle.find((block) => heute(jetzt) <= folgetag(block.at(-1)!)) ??
+    alle.find((block, index) => {
+      const naechsterBeginn = alle[index + 1]?.[0];
+      return (
+        tag <= folgetag(block.at(-1)!) &&
+        (naechsterBeginn === undefined || tag < naechsterBeginn)
+      );
+    }) ??
     alle.at(-1) ??
     []
   );

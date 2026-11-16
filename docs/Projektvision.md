@@ -221,8 +221,8 @@ Entscheidungen aus der Befragung vom 2026-11-04:
    Muster für die anderen fest.
 2. **Premier League und Champions League (ESPN und football-data.org, ADR 0011):** API-Schlüssel auf dem Server, Zwischenspeicher
    für die Grenze von 10 Abrufen pro Minute. PR 1 Premier League erledigt 2026-11-16 (PR #73, siehe
-   [[projects/tages-dashboard/docs/plaene/2026-11-16-premier-league|Plan]]), gemeinsames Modul `lib/kacheln/fussball/`. Offen: Spieltage,
-   die Montag/Dienstag verschmelzen (eigener PR), PR 2 Champions League, PR 3 neues Aussehen.
+   [[projects/tages-dashboard/docs/plaene/2026-11-16-premier-league|Plan]]), gemeinsames Modul `lib/kacheln/fussball/`. Spieltage ohne Pause
+   dazwischen trennt seit 2026-11-16 der Spielplan (Nachtrag unten). Offen: PR 2 Champions League, PR 3 neues Aussehen.
 3. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
 4. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
    nicht, eine andere Gratis-Quelle suchen oder die Kachel unter „Später“ schieben.
@@ -231,6 +231,9 @@ Entscheidungen aus der Befragung vom 2026-11-08:
 
 - **Wechsel des Spieltags:** eigene Regel für alle Wettbewerbe statt der des Anbieters. Ein Spieltag bleibt bis Mitternacht des Tages
   nach seinem letzten Spiel stehen, danach kommt der nächste (in der Winterpause also schon mit den neuen Terminen).
+  *Nachtrag 2026-11-16 ([[projects/tages-dashboard/docs/adr/0012-spieltage-nach-nummer-trennen|ADR 0012]]):* Spieltage ohne Tag Pause
+  dazwischen (Premier League Sa–Mo, gleich Di wieder) trennt der Anstieg der Nummer im Spielplan. Beginnt der nächste Spieltag am Tag
+  nach dem letzten Spiel, gilt er ab 0 Uhr dieses Tages. Ein Nachholspiel bleibt im Block. Ohne Spielplan trennt nur eine Lücke.
 - **Tabelle als Ausschnitt:** Platz 1 und Mein Team mit je 2 Plätzen darüber und darunter. Spalten: Platz, Team, Spiele,
   Tordifferenz, Punkte.
 - **Mein Team** kann mehrere Teams umfassen (Champions League: FC Bayern und Arsenal), die Formel 1 hat vorerst keins.

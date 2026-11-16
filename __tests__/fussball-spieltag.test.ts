@@ -19,13 +19,13 @@ const TAGE = [
 
 test("wählt den Block bis Mitternacht des Folgetags", () => {
   // 9.11. 23:59 deutscher Zeit
-  expect(waehleSpieltag(TAGE, new Date("2026-11-09T22:59:00Z"))).toEqual([
+  expect(waehleSpieltag(TAGE, null, new Date("2026-11-09T22:59:00Z"))).toEqual([
     "2026-11-06",
     "2026-11-07",
     "2026-11-08",
   ]);
   // 10.11. 00:00 deutscher Zeit
-  expect(waehleSpieltag(TAGE, new Date("2026-11-09T23:00:00Z"))).toEqual([
+  expect(waehleSpieltag(TAGE, null, new Date("2026-11-09T23:00:00Z"))).toEqual([
     "2026-11-20",
     "2026-11-21",
     "2026-11-22",
@@ -33,11 +33,75 @@ test("wählt den Block bis Mitternacht des Folgetags", () => {
 });
 
 test("nach dem letzten Block bleibt der letzte", () => {
-  expect(waehleSpieltag(TAGE, new Date("2026-12-24T12:00:00Z"))).toEqual([
+  expect(waehleSpieltag(TAGE, null, new Date("2026-12-24T12:00:00Z"))).toEqual([
     "2026-11-20",
     "2026-11-21",
     "2026-11-22",
   ]);
+});
+
+// Premier League: 12. Spieltag Sa–Mo, 13. Spieltag gleich am Dienstag
+const ENGLISCHE_WOCHE = [
+  "2026-11-28",
+  "2026-11-29",
+  "2026-11-30",
+  "2026-12-01",
+];
+const SPIELPLAN_ENGLISCHE_WOCHE = new Map([
+  ["2026-11-28", 12],
+  ["2026-11-29", 12],
+  ["2026-11-30", 12],
+  ["2026-12-01", 13],
+]);
+
+test("trennt den Block, wo die Nummer des Spieltags wechselt", () => {
+  // Mo 30.11. 20:00 deutscher Zeit
+  expect(
+    waehleSpieltag(
+      ENGLISCHE_WOCHE,
+      SPIELPLAN_ENGLISCHE_WOCHE,
+      new Date("2026-11-30T19:00:00Z"),
+    ),
+  ).toEqual(["2026-11-28", "2026-11-29", "2026-11-30"]);
+});
+
+test("am Tag nach dem letzten Spiel gilt schon der nächste Spieltag, wenn er dann beginnt", () => {
+  // Di 1.12. 0:00 deutscher Zeit
+  expect(
+    waehleSpieltag(
+      ENGLISCHE_WOCHE,
+      SPIELPLAN_ENGLISCHE_WOCHE,
+      new Date("2026-11-30T23:00:00Z"),
+    ),
+  ).toEqual(["2026-12-01"]);
+});
+
+test("ein Nachholspiel direkt nach dem Spieltag bleibt in seinem Block", () => {
+  // Bundesliga: 10. Spieltag Fr–So, am Montag ein Nachholspiel vom 5.
+  const tage = ["2026-11-27", "2026-11-28", "2026-11-29", "2026-11-30"];
+  const spielplan = new Map([
+    ["2026-11-27", 10],
+    ["2026-11-28", 10],
+    ["2026-11-29", 10],
+    ["2026-11-30", 5],
+  ]);
+  // Mo 30.11. 12:00 deutscher Zeit
+  expect(
+    waehleSpieltag(tage, spielplan, new Date("2026-11-30T11:00:00Z")),
+  ).toEqual(tage);
+});
+
+test("fehlt ein Tag im Spielplan, zählt die letzte bekannte Nummer des Blocks", () => {
+  // Sonntag fehlt im Spielplan, Montag beginnt der 13. Spieltag
+  const tage = ["2026-11-28", "2026-11-29", "2026-11-30"];
+  const spielplan = new Map([
+    ["2026-11-28", 12],
+    ["2026-11-30", 13],
+  ]);
+  // So 29.11. 20:00 deutscher Zeit
+  expect(
+    waehleSpieltag(tage, spielplan, new Date("2026-11-29T19:00:00Z")),
+  ).toEqual(["2026-11-28", "2026-11-29"]);
 });
 
 const SPIELPLAN = new Map([
