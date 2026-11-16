@@ -1,4 +1,5 @@
-import { type CSSProperties, type ReactNode, useId, useState } from "react";
+import { type ReactNode, useId, useState } from "react";
+import { farbVariablen } from "@/lib/kacheln/kachel";
 import type { AbsenderStand } from "@/lib/kacheln/ki-news/laden";
 import type { Meldung } from "@/lib/kacheln/ki-news/feed";
 import type { KiNewsDaten } from "@/lib/kacheln/typen";
@@ -36,6 +37,10 @@ function MeldungsZeile({ meldung }: { meldung: Meldung }) {
   if (meldung.zusammenfassung) {
     return <ZeileMitZusammenfassung meldung={meldung} jetzt={jetzt} />;
   }
+  return <MeldungsLink meldung={meldung} jetzt={jetzt} />;
+}
+
+function MeldungsLink({ meldung, jetzt }: { meldung: Meldung; jetzt: Date }) {
   return (
     <a
       href={meldung.link}
@@ -62,15 +67,7 @@ function ZeileMitZusammenfassung({
   const kastenId = useId();
   return (
     <div>
-      <a
-        href={meldung.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group relative flex min-h-11 items-baseline gap-4 py-3"
-      >
-        <PunktUndTitel meldung={meldung} jetzt={jetzt} />
-        <Alter meldung={meldung} jetzt={jetzt} />
-      </a>
+      <MeldungsLink meldung={meldung} jetzt={jetzt} />
       <button
         type="button"
         aria-expanded={offen}
@@ -99,7 +96,7 @@ function ZeileMitZusammenfassung({
       <div
         id={kastenId}
         hidden={!offen}
-        className="mb-2.5 max-w-[66ch] border-l border-info pl-3.5 text-[14.5px] leading-[1.6] text-[#c3cad5]"
+        className="mb-2.5 max-w-[66ch] border-l border-info pl-3.5 text-[14.5px] leading-[1.6] text-lesetext"
       >
         <span className="block text-[12.5px] font-semibold text-info">
           KI-generiert
@@ -125,13 +122,6 @@ const ZEILE =
 const NAME =
   "-ml-4 flex items-baseline gap-[9px] text-lg leading-[1.2] font-[720] tracking-[-0.01em] @[600px]:ml-0 @[600px]:pt-2.5 @[600px]:text-[19px]";
 
-function farben(absender: AbsenderStand): CSSProperties {
-  return {
-    "--farbe": absender.aussehen.farbe,
-    "--marke": absender.aussehen.marke ?? absender.aussehen.farbe,
-  } as CSSProperties;
-}
-
 function AbsenderAbschnitt({
   absender,
   children,
@@ -142,7 +132,7 @@ function AbsenderAbschnitt({
   return (
     <section
       aria-label={absender.name}
-      style={farben(absender)}
+      style={farbVariablen(absender.aussehen)}
       className={ZEILE}
     >
       <h3 className={`${NAME} text-(--farbe)`}>

@@ -33,9 +33,7 @@ function Team({ team, mein }: { team: TeamStand; mein: boolean }) {
   return (
     <span className="inline-flex min-w-0 items-center gap-1.5">
       <Logo url={team.logo} />
-      <span
-        className={`truncate ${mein ? "font-[650] text-akzent" : undefined}`}
-      >
+      <span className={`truncate ${mein ? "font-[650] text-akzent" : ""}`}>
         {team.name}
       </span>
     </span>
@@ -58,7 +56,7 @@ function PartieZeile({
     <div
       data-testid={`partie-${partie.id}`}
       data-mein-team={mein || undefined}
-      className={`-mx-2 grid min-h-9 grid-cols-[50px_minmax(0,1fr)_34px] items-center gap-x-2 px-2 py-[3px] ${
+      className={`-mx-2 grid min-h-9 grid-cols-[58px_minmax(0,1fr)_34px] items-center gap-x-2 px-2 py-[3px] ${
         mein ? MEIN_TEAM_STIL : ""
       }`}
     >
@@ -155,12 +153,18 @@ function TabellenZeilen({
   );
 }
 
-export function FussballAnsicht({ daten }: { daten: FussballDaten }) {
+export function FussballAnsicht({
+  daten,
+  ebene = 4,
+}: {
+  daten: FussballDaten;
+  ebene?: 3 | 4;
+}) {
   const tage = daten.tage.length > 0 ? tageText(daten.tage) : "";
   const ueberschrift = [daten.titel, tage].filter(Boolean).join(" · ");
   return (
     <>
-      <Abschnitt titel={ueberschrift || "Spieltag"}>
+      <Abschnitt titel={ueberschrift || "Spieltag"} ebene={ebene}>
         <div className="flex flex-col">
           {daten.partien.map((partie) => (
             <PartieZeile
@@ -171,7 +175,7 @@ export function FussballAnsicht({ daten }: { daten: FussballDaten }) {
           ))}
         </div>
       </Abschnitt>
-      <Abschnitt titel="Tabelle">
+      <Abschnitt titel="Tabelle" ebene={ebene}>
         {daten.tabelle === null ? (
           <p className="text-gedaempft">Tabelle gerade nicht erreichbar</p>
         ) : (
@@ -194,7 +198,8 @@ export function FussballAnsicht({ daten }: { daten: FussballDaten }) {
                   linie={
                     zeile !== null &&
                     daten.linien.includes(zeile.platz) &&
-                    alle[index + 1]?.platz === zeile.platz + 1
+                    // Höher statt genau +1: Bei gleichem Platz (4, 4, 6) steht die Linie unter dem letzten der beiden.
+                    (alle[index + 1]?.platz ?? 0) > zeile.platz
                   }
                 />
               ))}

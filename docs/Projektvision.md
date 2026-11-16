@@ -219,11 +219,11 @@ Entscheidungen aus der Befragung vom 2026-11-04:
 1. **Bundesliga (ESPN, [[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]])** (erledigt 2026-11-09, PR #49, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-08-bundesliga|Plan]]): Spieltag und Tabelle, Mein Team hervorgehoben. Die erste Sport-Kachel legt das
    Muster für die anderen fest.
-2. **Premier League und Champions League (ESPN und football-data.org, ADR 0011):** API-Schlüssel auf dem Server, Zwischenspeicher
+2. **Premier League und Champions League (ESPN und football-data.org, ADR 0011)** (erledigt 2026-11-16, PR #73, #79, #80): API-Schlüssel auf dem Server, Zwischenspeicher
    für die Grenze von 10 Abrufen pro Minute. PR 1 Premier League erledigt 2026-11-16 (PR #73, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-16-premier-league|Plan]]), gemeinsames Modul `lib/kacheln/fussball/`. Spieltage ohne Pause
    dazwischen trennt seit 2026-11-16 der Spielplan (Nachtrag unten). PR 2 Champions League (Ligaphase) erledigt 2026-11-16, siehe
-   [[projects/tages-dashboard/docs/plaene/2026-11-16-champions-league|Plan]]. PR 3 neues Aussehen erledigt 2026-11-16, siehe
+   [[projects/tages-dashboard/docs/plaene/2026-11-16-champions-league|Plan]]. PR 3 neues Aussehen erledigt 2026-11-16 (PR #80), siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-16-neues-aussehen|Plan]] (Nachtrag unten).
 3. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
 4. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls

@@ -13,12 +13,13 @@ import type { KachelAnzeige, KachelDaten } from "@/lib/kacheln/typen";
 import { useAktualisierung } from "@/lib/kacheln/use-aktualisierung";
 import { datum, uhrzeit } from "@/lib/zeit";
 
-function KachelInhalt({ daten }: { daten: KachelDaten }) {
+// ebene: die der Abschnitte, eine unter dem Kacheltitel.
+function KachelInhalt({ daten, ebene }: { daten: KachelDaten; ebene: 3 | 4 }) {
   switch (daten.art) {
     case "ki-news":
       return <KiNewsAnsicht daten={daten} />;
     case "fussball":
-      return <FussballAnsicht daten={daten} />;
+      return <FussballAnsicht daten={daten} ebene={ebene} />;
     // Eine seit dem letzten Deploy offene Seite kennt eine neue Kachel-Art noch nicht.
     default:
       return (
@@ -109,13 +110,18 @@ export function Dashboard() {
               laedt={laedt}
               holtFrisch={frischId === kachel.id}
             >
-              {kachel.daten && <KachelInhalt daten={kachel.daten} />}
+              {kachel.daten && (
+                <KachelInhalt
+                  daten={kachel.daten}
+                  ebene={kachel.gruppe ? 4 : 3}
+                />
+              )}
             </Kachel>
           ));
           if (gruppe === null) return liste;
           return (
             <section
-              key={`gruppe-${gruppe}`}
+              key={`gruppe-${imBlock[0].id}`}
               aria-label={gruppe}
               className="@container flex flex-col gap-[18px]"
             >

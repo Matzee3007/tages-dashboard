@@ -242,3 +242,27 @@ test("die Fußball-Kacheln stehen unter Sport, die KI-News für sich", async () 
   expect(within(sport).queryByRole("heading", { name: "KI-News" })).toBeNull();
   expect(screen.getByRole("heading", { level: 2, name: "KI-News" }));
 });
+
+test("eine Gruppe, die zweimal vorkommt, bekommt zwei eigene Abschnitte", async () => {
+  const fehlerLog = vi.spyOn(console, "error").mockImplementation(() => {});
+  const sport = (id: string) => ({
+    id,
+    titel: id,
+    aussehen: { farbe: "#E3343F" },
+    gruppe: "Sport",
+    status: "fehler" as const,
+  });
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [sport("bl"), ...OK.kacheln, sport("pl")],
+  });
+  render(<Page />);
+
+  expect(await screen.findAllByRole("region", { name: "Sport" })).toHaveLength(
+    2,
+  );
+  expect(
+    fehlerLog.mock.calls.some((aufruf) => String(aufruf[0]).includes("key")),
+  ).toBe(false);
+  fehlerLog.mockRestore();
+});

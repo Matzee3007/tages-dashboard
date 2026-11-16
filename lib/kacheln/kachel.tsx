@@ -1,17 +1,32 @@
 import type { CSSProperties, ReactNode } from "react";
+import type { Aussehen } from "@/lib/einstellungen";
 import type { KachelAnzeige } from "@/lib/kacheln/typen";
 import { standText } from "@/lib/zeit";
 
+// Farbe nur als Akzent: Quadrat (--marke), Grenzlinie und Name des Absenders (--farbe), Mock F.
+export function farbVariablen(aussehen: Aussehen): CSSProperties {
+  return {
+    "--farbe": aussehen.farbe,
+    "--marke": aussehen.marke ?? aussehen.farbe,
+  } as CSSProperties;
+}
+
+// ebene: eine unter dem Kacheltitel (h3 ohne Gruppe, h4 in einer Gruppe).
 export function Abschnitt({
   titel,
+  ebene = 4,
   children,
 }: {
   titel: string;
+  ebene?: 3 | 4;
   children: ReactNode;
 }) {
+  const Ueberschrift = ebene === 3 ? "h3" : "h4";
   return (
     <div className="flex flex-col gap-1">
-      <h4 className="text-[13px] font-semibold text-gedaempft">{titel}</h4>
+      <Ueberschrift className="text-[13px] font-semibold text-gedaempft">
+        {titel}
+      </Ueberschrift>
       {children}
     </div>
   );
@@ -64,15 +79,10 @@ export function Kachel({
   holtFrisch?: boolean;
   children?: ReactNode;
 }) {
-  // Farbe nur als Akzent: Quadrat im Kopf, Grenzlinie, Name des Absenders (Mock F).
-  const farben = {
-    "--farbe": kachel.aussehen.farbe,
-    "--marke": kachel.aussehen.marke ?? kachel.aussehen.farbe,
-  } as CSSProperties;
   return (
     <section
       aria-label={kachel.titel}
-      style={farben}
+      style={farbVariablen(kachel.aussehen)}
       className="flex min-w-0 flex-col gap-3"
     >
       <div className="-mr-3 flex min-h-11 items-center gap-2.5">
