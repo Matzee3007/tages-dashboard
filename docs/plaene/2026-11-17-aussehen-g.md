@@ -119,20 +119,20 @@ Kürzel. Funde 6 und 8 aus dem Review von PR #80 hier mit erledigen: ein Typ `Ka
 
 ### Aufgabe 4: Partien nach Tag, symmetrisch
 
-**Dateien:** Ändern `lib/zeit.ts` (`tagText(iso: string): string`, z. B. „Samstag, 21. November“), `lib/kacheln/fussball/ansicht.tsx`.
+**Dateien:** Ändern `lib/kacheln/fussball/spieltag.ts` (`sortierePartien`: erst nach Tag, darin Mein Team zuerst, entschieden am 2026-11-17), `lib/kacheln/fussball/ansicht.tsx`. Die Tageszeile nutzt das vorhandene `datum()` aus `lib/zeit.ts`, `anstossText` entfällt.
 Test `__tests__/zeit.test.ts`, `__tests__/fussball-ansicht.test.tsx`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests:**
-  - `zeit`: `tagText("2026-11-21T23:30:00Z")` → „Sonntag, 22. November“.
+- [x] **Schritt 1: Fehlschlagende Tests:**
+  - `zeit`: `datum("2026-11-21T23:30:00Z")` → „Sonntag, 22. November“.
   - „Partien stehen unter ihrem Tag“: zwei Tage → zwei Tageszeilen, jede Partie unter ihrer.
   - „ein Tor steht unter seinem Team“: Heim-Tor im Bereich des Heimteams, Gast-Tor im Bereich des Gasts (`data-seite`).
   - „beendete Partie zeigt Ende und Ergebnis, offene die Anstoßzeit im Feld“, „abgesagte Partie zeigt abgesagt im Feld“.
   - Bestehende Tests („Torschützen in einer Zeile“, „eine Partie zeigt Anstoß …“) an das neue Aussehen anpassen, ihre Aussage bleibt.
-- [ ] **Schritt 2: rot**
-- [ ] **Schritt 3: Umsetzen** nach den festen Vorgaben. Reihenfolge der Partien wie bisher (`sortierePartien`), die Tageszeile
+- [x] **Schritt 2: rot**
+- [x] **Schritt 3: Umsetzen** nach den festen Vorgaben. Reihenfolge der Partien wie bisher (`sortierePartien`), die Tageszeile
   erscheint, wenn der Tag wechselt.
-- [ ] **Schritt 4: grün**
-- [ ] **Schritt 5: `npm run check`, Commit** „Show matches by day around a score box“
+- [x] **Schritt 4: grün**
+- [x] **Schritt 5: `npm run check`, Commit** „Show matches by day around a score box“
 
 ### Aufgabe 5: KI-News als Karten
 

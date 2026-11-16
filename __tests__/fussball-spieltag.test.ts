@@ -144,7 +144,7 @@ function partie(
   };
 }
 
-test("Mein Team zuerst, dann nach Anstoß und Heimteam", () => {
+test("nach Tag, darin Mein Team zuerst, dann nach Anstoß und Heimteam", () => {
   const partien = [
     partie("a", "2026-11-08T14:30Z", "Köln", "Leverkusen"),
     partie("b", "2026-11-07T14:30Z", "Paderborn", "Frankfurt"),
@@ -153,8 +153,8 @@ test("Mein Team zuerst, dann nach Anstoß und Heimteam", () => {
     partie("e", "2026-11-07T14:30Z", "Dortmund", "Elversberg"),
   ];
   expect(sortierePartien(partien, ["Bayern"]).map((p) => p.id)).toEqual([
-    "c",
     "d",
+    "c",
     "e",
     "b",
     "a",

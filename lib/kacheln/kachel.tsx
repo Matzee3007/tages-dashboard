@@ -11,27 +11,6 @@ export function farbVariablen(aussehen: Aussehen): CSSProperties {
   } as CSSProperties;
 }
 
-// ebene: eine unter dem Kacheltitel (h3 ohne Gruppe, h4 in einer Gruppe).
-export function Abschnitt({
-  titel,
-  ebene = 4,
-  children,
-}: {
-  titel: string;
-  ebene?: 3 | 4;
-  children: ReactNode;
-}) {
-  const Ueberschrift = ebene === 3 ? "h3" : "h4";
-  return (
-    <div className="flex flex-col gap-1">
-      <Ueberschrift className="text-[13px] font-semibold text-gedaempft">
-        {titel}
-      </Ueberschrift>
-      {children}
-    </div>
-  );
-}
-
 export function FehlerHinweis({
   stand,
   erneutVersuchen,

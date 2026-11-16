@@ -1,7 +1,6 @@
 import { expect, test } from "vitest";
 import {
   alterText,
-  anstossText,
   datum,
   folgetag,
   heute,
@@ -86,11 +85,6 @@ test("tageText nennt erste und letzte Tage eines Spieltags", () => {
   );
 });
 
-test("anstossText zeigt Wochentag und deutsche Uhrzeit", () => {
-  expect(anstossText("2026-11-07T14:30:00Z")).toBe("Sa 15:30");
-  expect(anstossText("2026-11-06T19:30Z")).toBe("Fr 20:30");
-});
-
 test("heute ist der Kalendertag in deutscher Zeit", () => {
   expect(heute(new Date("2026-11-09T22:59:00Z"))).toBe("2026-11-09");
   expect(heute(new Date("2026-11-09T23:00:00Z"))).toBe("2026-11-10");
@@ -98,4 +92,9 @@ test("heute ist der Kalendertag in deutscher Zeit", () => {
 
 test("folgetag zählt über das Monatsende", () => {
   expect(folgetag("2026-10-31")).toBe("2026-11-01");
+});
+
+test("Tag einer Partie in deutscher Zeit, auch nach Mitternacht", () => {
+  expect(datum("2026-11-21T14:30:00Z")).toBe("Samstag, 21. November");
+  expect(datum("2026-11-21T23:30:00Z")).toBe("Sonntag, 22. November");
 });

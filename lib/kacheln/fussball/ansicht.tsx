@@ -1,4 +1,3 @@
-import { Abschnitt } from "@/lib/kacheln/kachel";
 import type { Zone } from "@/lib/einstellungen";
 import type {
   FussballDaten,
@@ -6,10 +5,9 @@ import type {
   TabellenZeile,
   TeamStand,
 } from "@/lib/kacheln/fussball/typen";
-import { anstossText, tageText } from "@/lib/zeit";
+import { datum, tageText, uhrzeit } from "@/lib/zeit";
 
-const MEIN_TEAM_STIL =
-  "rounded-md bg-akzent/8 shadow-[inset_3px_0_0_var(--color-akzent)]";
+const MEIN_TEAM_GRUND = "bg-akzent/10";
 
 // Direkt von ESPN, ohne next/image (Projektvision: Logos lädt der Browser beim Anbieter). Fehlt das Bild, bleibt der Platz.
 function Logo({ url }: { url: string | null }) {
@@ -30,17 +28,80 @@ function Logo({ url }: { url: string | null }) {
   );
 }
 
-function Team({ team, mein }: { team: TeamStand; mein: boolean }) {
+// heim: Name vor dem Logo, rechtsbündig zum Feld hin (Mock G).
+function Team({
+  team,
+  mein,
+  heim = false,
+}: {
+  team: TeamStand;
+  mein: boolean;
+  heim?: boolean;
+}) {
   return (
-    <span className="inline-flex min-w-0 items-center gap-1.5">
+    <span
+      className={`flex min-w-0 items-center gap-2 ${heim ? "flex-row-reverse text-right" : ""}`}
+    >
       <Logo url={team.logo} />
-      <span className={`truncate ${mein ? "font-[650] text-akzent" : ""}`}>
+      <span className={`truncate ${mein ? "font-[720] text-akzent" : ""}`}>
         {team.name}
       </span>
     </span>
   );
 }
 
+function Feld({ partie }: { partie: Partie }) {
+  const live = partie.status === "laeuft";
+  const text =
+    partie.status === "abgesagt"
+      ? "abgesagt"
+      : partie.heim.tore === null
+        ? uhrzeit(partie.anstoss)
+        : `${partie.heim.tore} – ${partie.gast.tore}`;
+  const art =
+    partie.status === "abgesagt"
+      ? "text-[11.5px] font-semibold text-gedaempft"
+      : partie.heim.tore === null
+        ? "text-[13.5px] font-semibold text-gedaempft"
+        : live
+          ? "bg-akzent/10 text-[15.5px] font-[760] text-akzent ring-1 ring-akzent/45 ring-inset"
+          : "bg-flaeche text-[15.5px] font-[760]";
+  return (
+    <span
+      data-testid="feld"
+      className={`grid h-[30px] min-w-[54px] place-items-center justify-self-center rounded-lg px-1.5 whitespace-nowrap ${art}`}
+    >
+      {text}
+    </span>
+  );
+}
+
+function ToreListe({
+  partie,
+  seite,
+}: {
+  partie: Partie;
+  seite: "heim" | "gast";
+}) {
+  return (
+    <ul
+      data-seite={seite}
+      className={`mt-1 min-w-0 text-[11.5px] leading-[1.45] text-rauch ${
+        seite === "heim" ? "col-start-2 text-right" : "col-start-4"
+      }`}
+    >
+      {partie.tore
+        .filter((tor) => tor.seite === seite)
+        .map((tor, index) => (
+          <li key={index} className="truncate">
+            {tor.text}
+          </li>
+        ))}
+    </ul>
+  );
+}
+
+// Symmetrisch um das Feld mit Ergebnis oder Anstoß, Torschützen unter ihrem Team (Mock G).
 function PartieZeile({
   partie,
   meinTeam,
@@ -51,53 +112,53 @@ function PartieZeile({
   const mein =
     meinTeam.includes(partie.heim.id) || meinTeam.includes(partie.gast.id);
   const live = partie.status === "laeuft";
-  const ergebnis =
-    partie.heim.tore === null ? "" : `${partie.heim.tore}:${partie.gast.tore}`;
   return (
     <div
       data-testid={`partie-${partie.id}`}
       data-mein-team={mein || undefined}
-      className={`-mx-2 grid min-h-9 grid-cols-[58px_minmax(0,1fr)_34px] items-center gap-x-2 px-2 py-[3px] ${
-        mein ? MEIN_TEAM_STIL : ""
+      className={`grid min-h-[52px] grid-cols-[34px_minmax(0,1fr)_58px_minmax(0,1fr)] items-center gap-x-2 border-t border-rand py-[9px] pr-3 pl-1.5 text-sm font-medium first:border-t-0 ${
+        mein ? MEIN_TEAM_GRUND : ""
       }`}
     >
       <span
-        className={`text-[12.5px] whitespace-nowrap ${
-          live ? "font-[650] text-akzent" : "text-gedaempft"
+        className={`flex flex-col items-center gap-0.5 text-center text-[11.5px] leading-[1.1] font-semibold ${
+          live ? "text-akzent" : "text-rauch"
         }`}
       >
         {live ? (
           <>
             <span aria-label="live" role="img">
               ●
-            </span>{" "}
+            </span>
             {partie.minute ?? ""}
           </>
-        ) : partie.status === "abgesagt" ? (
-          "abgesagt"
-        ) : (
-          anstossText(partie.anstoss)
-        )}
+        ) : partie.status === "vorbei" ? (
+          "Ende"
+        ) : null}
       </span>
-      <span className="flex min-w-0 items-center gap-[5px] text-sm font-[420] whitespace-nowrap">
-        <Team team={partie.heim} mein={meinTeam.includes(partie.heim.id)} />
-        <span className="text-rauch">–</span>
-        <Team team={partie.gast} mein={meinTeam.includes(partie.gast.id)} />
-      </span>
-      <span
-        className={`text-right text-sm font-bold whitespace-nowrap ${
-          live ? "text-akzent" : ""
-        }`}
-      >
-        {ergebnis}
-      </span>
+      <Team team={partie.heim} mein={meinTeam.includes(partie.heim.id)} heim />
+      <Feld partie={partie} />
+      <Team team={partie.gast} mein={meinTeam.includes(partie.gast.id)} />
       {partie.tore.length > 0 && (
-        <p className="col-span-2 col-start-2 -mt-0.5 text-[12.5px] text-rauch">
-          {partie.tore.map((tor) => tor.text).join(" · ")}
-        </p>
+        <>
+          <ToreListe partie={partie} seite="heim" />
+          <ToreListe partie={partie} seite="gast" />
+        </>
       )}
     </div>
   );
+}
+
+// Aufeinanderfolgende Partien desselben deutschen Tages unter einer Tageszeile.
+function nachTagen(partien: Partie[]): { tag: string; partien: Partie[] }[] {
+  const tage: { tag: string; partien: Partie[] }[] = [];
+  for (const partie of partien) {
+    const tag = datum(partie.anstoss);
+    const letzter = tage.at(-1);
+    if (letzter?.tag === tag) letzter.partien.push(partie);
+    else tage.push({ tag, partien: [partie] });
+  }
+  return tage;
 }
 
 function zoneVon(zonen: Zone[], platz: number): Zone | undefined {
@@ -163,7 +224,7 @@ function TabellenZeilen({
     );
   }
   const mein = meinTeam.includes(zeile.id);
-  const zelle = `h-[30px] py-[3px] ${mein ? "bg-akzent/8" : ""} ${
+  const zelle = `h-8 py-[3px] ${mein ? MEIN_TEAM_GRUND : ""} ${
     linie ? "border-b border-b-grenze" : ""
   }`;
   return (
@@ -172,11 +233,7 @@ function TabellenZeilen({
       data-zone={zone?.name}
       data-linie={linie || undefined}
     >
-      <td
-        className={`${zelle} w-9 text-[12.5px] font-semibold text-gedaempft ${
-          mein ? "rounded-l-md" : ""
-        }`}
-      >
+      <td className={`${zelle} w-9 text-[12.5px] font-semibold text-gedaempft`}>
         <span className="flex items-center gap-[9px]">
           <span
             aria-hidden
@@ -195,11 +252,7 @@ function TabellenZeilen({
       <td className={`${zelle} w-[34px] text-right text-gedaempft`}>
         {zeile.differenz > 0 ? `+${zeile.differenz}` : zeile.differenz}
       </td>
-      <td
-        className={`${zelle} w-[34px] text-right font-bold ${
-          mein ? "rounded-r-md pr-2" : ""
-        }`}
-      >
+      <td className={`${zelle} w-9 pr-1 text-right font-[720]`}>
         {zeile.punkte}
       </td>
     </tr>
@@ -215,28 +268,45 @@ export function FussballAnsicht({
 }) {
   const tage = daten.tage.length > 0 ? tageText(daten.tage) : "";
   const ueberschrift = [daten.titel, tage].filter(Boolean).join(" · ");
+  const Ueberschrift = ebene === 3 ? "h3" : "h4";
   return (
     <>
-      <Abschnitt titel={ueberschrift || "Spieltag"} ebene={ebene}>
-        <div className="flex flex-col">
-          {daten.partien.map((partie) => (
-            <PartieZeile
-              key={partie.id}
-              partie={partie}
-              meinTeam={daten.meinTeam}
-            />
-          ))}
-        </div>
-      </Abschnitt>
-      <Abschnitt titel="Tabelle" ebene={ebene}>
+      <div>
+        <Ueberschrift className="-mt-2.5 pr-3.5 pb-2.5 pl-[62px] text-[12.5px] text-gedaempft">
+          {ueberschrift || "Spieltag"}
+        </Ueberschrift>
+        {nachTagen(daten.partien).map(({ tag, partien }) => (
+          <div key={tag} role="group" aria-label={tag}>
+            <div
+              aria-hidden
+              className="bg-flaeche px-3.5 py-1.5 text-[12.5px] font-[650] text-gedaempft"
+            >
+              {tag}
+            </div>
+            {partien.map((partie) => (
+              <PartieZeile
+                key={partie.id}
+                partie={partie}
+                meinTeam={daten.meinTeam}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="border-t border-rand px-3.5 pt-3 pb-3.5">
+        <Ueberschrift className="mb-1.5 text-[13.5px] font-[720]">
+          Tabelle
+        </Ueberschrift>
         {daten.tabelle === null ? (
-          <p className="text-gedaempft">Tabelle gerade nicht erreichbar</p>
+          <p className="text-[13.5px] text-gedaempft">
+            Tabelle gerade nicht erreichbar
+          </p>
         ) : (
           <>
             <table className="w-full border-collapse text-[13.5px]">
               <thead>
-                <tr className="text-xs text-rauch">
-                  <th className="pb-1 pr-2.5 text-right font-medium">#</th>
+                <tr className="text-[11.5px] text-rauch">
+                  <th className="pb-1 text-left font-medium">#</th>
                   <th className="pb-1 text-left font-medium">Team</th>
                   <th className="pb-1 text-right font-medium">Sp</th>
                   <th className="pb-1 text-right font-medium">+/−</th>
@@ -266,7 +336,7 @@ export function FussballAnsicht({
             />
           </>
         )}
-      </Abschnitt>
+      </div>
     </>
   );
 }

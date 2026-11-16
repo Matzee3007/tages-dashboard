@@ -82,13 +82,37 @@ test("Überschrift mit Nummer und Tagen", () => {
   ).toBeDefined();
 });
 
-test("eine Partie zeigt Anstoß, Teams und Ergebnis", () => {
+test("eine beendete Partie zeigt Ende, Teams und Ergebnis im Feld", () => {
   render(<FussballAnsicht daten={DATEN} />);
   const partie = screen.getByTestId("partie-1");
-  expect(partie.textContent).toContain("Sa 15:30");
+  expect(partie.textContent).toContain("Ende");
   expect(partie.textContent).toContain("Mainz");
   expect(partie.textContent).toContain("Bayern");
-  expect(partie.textContent).toContain("1:2");
+  expect(within(partie).getByTestId("feld").textContent).toBe("1 – 2");
+});
+
+test("eine offene Partie zeigt die Anstoßzeit im Feld", () => {
+  const offen: Partie = {
+    ...MAINZ_BAYERN,
+    id: "8",
+    status: "vorher",
+    heim: team("2950", "Mainz", null),
+    gast: team("132", "Bayern", null),
+  };
+  render(<FussballAnsicht daten={{ ...DATEN, partien: [offen] }} />);
+  expect(screen.getByTestId("feld").textContent).toBe("15:30");
+});
+
+test("Partien stehen unter ihrem Tag", () => {
+  render(<FussballAnsicht daten={DATEN} />);
+  const tage = screen.getAllByRole("group");
+  expect(tage.map((tag) => tag.getAttribute("aria-label"))).toEqual([
+    "Samstag, 7. November",
+    "Sonntag, 8. November",
+  ]);
+  expect(within(tage[0]).getByTestId("partie-1")).toBeDefined();
+  expect(within(tage[1]).getByTestId("partie-2")).toBeDefined();
+  expect(within(tage[1]).getByTestId("partie-3")).toBeDefined();
 });
 
 test("laufende Partie zeigt die Minute", () => {
@@ -98,11 +122,21 @@ test("laufende Partie zeigt die Minute", () => {
   expect(partie.querySelector('[aria-label="live"]')).not.toBeNull();
 });
 
-test("Torschützen in einer Zeile", () => {
+test("ein Tor steht unter seinem Team", () => {
   render(<FussballAnsicht daten={DATEN} />);
+  const partie = screen.getByTestId("partie-2");
+  const heim = partie.querySelector('[data-seite="heim"]')!;
+  const gast = partie.querySelector('[data-seite="gast"]')!;
   expect(
-    screen.getByText("García 7' · Schick 85' · El Mala 90+2'"),
-  ).toBeDefined();
+    within(heim as HTMLElement)
+      .getAllByRole("listitem")
+      .map((t) => t.textContent),
+  ).toEqual(["El Mala 90+2'"]);
+  expect(
+    within(gast as HTMLElement)
+      .getAllByRole("listitem")
+      .map((t) => t.textContent),
+  ).toEqual(["García 7'", "Schick 85'"]);
 });
 
 test("Mein Team ist markiert", () => {
@@ -231,8 +265,8 @@ test("abgesagte Partie zeigt abgesagt statt Anstoß und Ergebnis", () => {
   };
   render(<FussballAnsicht daten={{ ...DATEN, partien: [abgesagt] }} />);
   const partie = screen.getByTestId("partie-9");
-  expect(partie.textContent).toContain("abgesagt");
-  expect(partie.textContent).not.toContain("Sa 15:30");
+  expect(within(partie).getByTestId("feld").textContent).toBe("abgesagt");
+  expect(partie.textContent).not.toContain("15:30");
 });
 
 test("ohne Tabelle steht ein Hinweis statt der Tabelle", () => {

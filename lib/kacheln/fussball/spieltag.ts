@@ -86,8 +86,11 @@ export function sortierePartien(
     meinTeam.includes(partie.heim.id) || meinTeam.includes(partie.gast.id)
       ? 0
       : 1;
+  // Erst nach deutschem Tag, darin Mein Team zuerst (Mock G, Entscheidung vom 2026-11-17).
+  const tag = (partie: Partie) => heute(new Date(partie.anstoss));
   return [...partien].sort(
     (a, b) =>
+      tag(a).localeCompare(tag(b)) ||
       mitMeinTeam(a) - mitMeinTeam(b) ||
       Date.parse(a.anstoss) - Date.parse(b.anstoss) ||
       a.heim.name.localeCompare(b.heim.name, "de"),
