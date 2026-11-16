@@ -93,7 +93,7 @@ OpenLigaDB (356 KB), der seit 2026-11-09 gespeichert läuft.
 - Liefert: `leseFdSpielplan(json: unknown): Map<string, number>` und
   `leseFdTabelle(json: unknown, teams: Team[]): TabellenZeile[]`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
   - `leseFdSpielplan`: `{ matches: [{ utcDate: "2026-11-21T15:00:00Z", matchday: 12 }, { utcDate: "2026-11-21T23:30:00Z", matchday: 12 },
     { utcDate: "2026-11-24T20:00:00Z", matchday: 13 }] }` → `Map { "2026-11-21" → 12, "2026-11-22" → 12, "2026-11-24" → 13 }`
     (23:30Z ist 00:30 deutscher Zeit). Höchste Nummer je Tag wie `leseSpielplan`. Antwort ohne `matches`-Array → wirft
@@ -104,17 +104,17 @@ OpenLigaDB (356 KB), der seit 2026-11-09 gespeichert läuft.
     Nur `standings` mit `type: "TOTAL"` zählt. Team 999 fehlt in der Liste → `id: "fd-999"`, `name` = `shortName`, `console.error`
     mit „Team 999 fehlt in der Liste“. Sortiert nach `platz`.
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
 
   `npx vitest run __tests__/liga-football-data.test.ts` → FAIL, Modul fehlt.
 
-- [ ] **Schritt 3: `leseFdSpielplan` und `leseFdTabelle` in `lib/kacheln/liga/football-data.ts`, `Team` in `lib/einstellungen.ts`**
+- [x] **Schritt 3: `leseFdSpielplan` und `leseFdTabelle` in `lib/kacheln/liga/football-data.ts`, `Team` in `lib/einstellungen.ts`**
 
   Tag aus `utcDate` mit `heute(new Date(utcDate))`.
 
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
 
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 5: Prüfen und committen**
 
   ```bash
   npm run check
