@@ -54,7 +54,8 @@ Aus dem `/code-review` von PR #73, bewusst offen:
   nach etwa 1 Uhr deutscher Zeit. Bei der Champions League (PR 2) erneut prüfen.
 - **↻ und die Grenze:** Jeder Druck auf ↻ holt die Tabelle neu, ab etwa 6 Drücken in einer Minute droht 429. Dann erscheint „Tabelle
   gerade nicht erreichbar“.
-- **Verschmolzene Spieltage** (Samstag bis Montag, dann Dienstag): eigener PR nach #73, siehe Plan der Premier League.
+- **Spieltage ohne Pause** (Samstag bis Montag, dann Dienstag): behoben am 2026-11-16, `waehleSpieltag` trennt beim Wechsel des
+  `matchday`. Fällt der Spielplan aus, verschmelzen sie wieder zu einem Block, bis er zurück ist.
 
 ## Wie haben wir es eingerichtet?
 
