@@ -18,9 +18,10 @@ Schlüssel. **Inoffiziell:** ESPN dokumentiert sie nicht, sie kann sich ohne Ank
 
 ## Wofür nutzen wir es?
 
-Für die Bundesliga-Kachel (`lib/kacheln/bundesliga/`): Spieltag live, Torschützen, Logos und Tabelle. Gewählt am 2026-11-08, weil
-OpenLigaDB Ergebnisse oft erst Stunden später hat. Später vielleicht auch für NFL, Premier League und Champions League (Phase 3,
-Schritte 2 und 4).
+Für die Fußball-Kacheln (`lib/kacheln/fussball/`): Spieltag live, Torschützen und Logos, bei der Bundesliga auch die Tabelle. Gewählt
+am 2026-11-08, weil OpenLigaDB Ergebnisse oft erst Stunden später hat. Seit 2026-11-16 auch für die Premier League (`eng.1`), deren
+Tabelle von [[projects/tages-dashboard/docs/tools/football-data.org|football-data.org]] kommt (ADR 0011). Später auch für die Champions
+League und die NFL (Phase 3, Schritte 2 und 4).
 
 ## Wichtige Begriffe
 
@@ -29,7 +30,7 @@ Schritte 2 und 4).
   verspätet, deshalb zählt `pre` nach dem Anstoß bei uns schon als laufend. Verlegte oder abgesagte Partien erkennt die Kachel am
   Statusnamen (`status.type.name`): `STATUS_POSTPONED`, `STATUS_CANCELED`.
 - **Team-id:** feste Nummer eines Teams, z. B. `132` für den FC Bayern. Damit erkennen wir Mein Team und die deutschen Kurznamen
-  (`TEAMNAMEN` in `lib/einstellungen.ts`).
+  (`TEAMS_BUNDESLIGA` und `TEAMS_PREMIER_LEAGUE` in `lib/einstellungen.ts`).
 
 ## Abrufe
 
@@ -37,9 +38,10 @@ Schritte 2 und 4).
 |---|---|---|
 | Kalender (alle Tage mit Spielen) | `https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard`, Feld `leagues[0].calendar` | 24 Std. |
 | Partien eines Tages | `…/ger.1/scoreboard?dates=20261108` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
-| Tabelle | `https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
+| Tabelle (nur Bundesliga) | `https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
 
-Alle mit `User-Agent: Tages-Dashboard`, 5 Sekunden Zeitlimit und dem Etikett `bundesliga` für den Knopf ↻ (ADR 0008). Eine gespeicherte
+Für die Premier League dieselben Adressen mit `eng.1`. Alle mit `User-Agent: Tages-Dashboard`, 5 Sekunden Zeitlimit und der id der
+Kachel als Etikett für den Knopf ↻ (`bundesliga`, `premier-league`, ADR 0008). Eine gespeicherte
 Antwort darf höchstens doppelt so alt sein wie ihre Speicherzeit, mindestens 1 Stunde, sonst gilt sie als Ausfall (wie ADR 0005).
 
 Zum Ausprobieren im Terminal:

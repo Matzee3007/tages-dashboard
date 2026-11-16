@@ -16,7 +16,7 @@ Eine freie Datenbank für Fußball-Ergebnisse, die Freiwillige pflegen. Die Schn
 
 ## Wofür nutzen wir es?
 
-Nur für die **Nummer des Spieltags** der Bundesliga (`lib/kacheln/bundesliga/spielplan.ts`). Partien, Tore und Tabelle kommen von ESPN, weil
+Nur für die **Nummer des Spieltags** der Bundesliga (`lib/kacheln/fussball/spielplan.ts`). Partien, Tore und Tabelle kommen von ESPN, weil
 OpenLigaDB Ergebnisse oft erst Stunden später einträgt (2026-11-08: Köln–Leverkusen um 18:44 Uhr noch ohne Ergebnis).
 
 ## Abruf

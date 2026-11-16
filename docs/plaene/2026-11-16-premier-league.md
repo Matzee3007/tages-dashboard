@@ -240,11 +240,11 @@ Die Tests gehen über `ladeFussball` (`__tests__/fussball-quellen.test.ts`).
 **Dateien:** `CLAUDE.md` (Zeile „Datenquellen“, mit Skill `agent-texte-schreiben`), `docs/tools/ESPN.md` (Liga `eng.1`),
 `docs/tools/football-data.org.md` (Abrufe, Speicher, Stand), `docs/Glossar.md` falls „Liga“ als Kachel-Art fehlt.
 
-- [ ] **Schritt 1:** Zeile „Datenquellen“ der `CLAUDE.md` auf ADR 0011 bringen: ESPN für Partien von Bundesliga, Premier League und
+- [x] **Schritt 1:** Zeile „Datenquellen“ der `CLAUDE.md` auf ADR 0011 bringen: ESPN für Partien von Bundesliga, Premier League und
   Champions League (sowie NFL), OpenLigaDB für den Spielplan der Bundesliga, football-data.org für Spieltag und Tabelle von Premier League
   und Champions League.
-- [ ] **Schritt 2:** Tool-Notizen ergänzen (Abruf-Tabelle wie in `OpenLigaDB.md`).
-- [ ] **Schritt 3: Prüfen und committen**
+- [x] **Schritt 2:** Tool-Notizen ergänzen (Abruf-Tabelle wie in `OpenLigaDB.md`).
+- [x] **Schritt 3: Prüfen und committen**
 
   ```bash
   npm run check
