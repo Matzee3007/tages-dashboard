@@ -1,7 +1,7 @@
 import type { LigaEinstellung } from "@/lib/einstellungen";
 import { holeJson } from "@/lib/kacheln/liga/abruf";
-import { leseKalender, leseTabelle, leseTag } from "@/lib/kacheln/liga/espn";
-import { leseSpielplan } from "@/lib/kacheln/liga/spielplan";
+import { leseKalender, leseTag } from "@/lib/kacheln/liga/espn";
+import { ladeSpielplan, ladeTabelle } from "@/lib/kacheln/liga/quellen";
 import {
   sortierePartien,
   spieltagTitel,
@@ -13,18 +13,10 @@ import type { LigaDaten, Partie } from "@/lib/kacheln/liga/typen";
 const ESPN = "https://site.api.espn.com/apis";
 const kalenderUrl = (liga: string) =>
   `${ESPN}/site/v2/sports/soccer/${liga}/scoreboard`;
-const tabelleUrl = (liga: string) =>
-  `${ESPN}/v2/sports/soccer/${liga}/standings`;
 
 // Speicher in Sekunden (Projektvision, Entscheidungen vom 2026-11-08).
 const TAG_SEKUNDEN = 86_400;
 const NORMAL_SEKUNDEN = 900;
-
-// Saison 2026/27 heißt bei OpenLigaDB 2026. Sie beginnt im Juli.
-function saison(tag: string): number {
-  const [jahr, monat] = tag.split("-").map(Number);
-  return monat >= 7 ? jahr : jahr - 1;
-}
 
 function laeuftEine(partien: Partie[]): boolean {
   return partien.some((partie) => partie.status === "laeuft");
@@ -50,33 +42,14 @@ async function ladeTag(
   );
 }
 
-// Ohne Etikett: Der Spielplan ändert sich selten, ↻ soll ihn nicht jedes Mal neu laden.
-async function ladeSpielplan(
-  tage: string[],
-  jetzt: Date,
-): Promise<Map<string, number> | null> {
-  if (tage.length === 0) return null;
-  const url = `https://api.openligadb.de/getmatchdata/bl1/${saison(tage[0])}`;
-  // Ohne Spielplan fehlt nur die Nummer des Spieltags, die Kachel läuft weiter.
-  try {
-    return leseSpielplan(
-      await holeJson(url, { sekunden: TAG_SEKUNDEN }, jetzt),
-    );
-  } catch (fehler) {
-    console.error("Spielplan von OpenLigaDB ließ sich nicht laden:", fehler);
-    return null;
-  }
-}
-
 export async function ladeLiga(
   einstellung: LigaEinstellung,
   jetzt: Date,
 ): Promise<LigaDaten> {
   const etikett = einstellung.id;
-  const { espn, teams, meinTeam } = einstellung;
   const kalender = leseKalender(
     await holeJson(
-      kalenderUrl(espn),
+      kalenderUrl(einstellung.espn),
       { sekunden: TAG_SEKUNDEN, etikett },
       jetzt,
     ),
@@ -84,24 +57,22 @@ export async function ladeLiga(
   const tage = waehleSpieltag(kalender, jetzt);
   const [partienJeTag, normaleTabelle, spielplan] = await Promise.all([
     Promise.all(tage.map((tag) => ladeTag(einstellung, tag, jetzt))),
-    holeJson(
-      tabelleUrl(espn),
-      { sekunden: NORMAL_SEKUNDEN, etikett },
-      jetzt,
-    ).then((json) => leseTabelle(json, teams)),
-    ladeSpielplan(tage, jetzt),
+    ladeTabelle(einstellung, false, jetzt),
+    ladeSpielplan(einstellung, tage, jetzt),
   ]);
   const partien = partienJeTag.flat();
-  const tabelle = laeuftEine(partien)
-    ? leseTabelle(await holeJson(tabelleUrl(espn), "frisch", jetzt), teams)
-    : normaleTabelle;
+  // Nur ESPN wird live nachgeholt, die Tabelle von football-data.org darf nachziehen (ADR 0011).
+  const tabelle =
+    laeuftEine(partien) && einstellung.tabelle.art === "espn"
+      ? await ladeTabelle(einstellung, true, jetzt)
+      : normaleTabelle;
 
   return {
     art: "liga",
     titel: spieltagTitel(tage, spielplan),
     tage,
-    partien: sortierePartien(partien, meinTeam),
-    tabelle: tabellenAusschnitt(tabelle, meinTeam),
-    meinTeam,
+    partien: sortierePartien(partien, einstellung.meinTeam),
+    tabelle: tabelle && tabellenAusschnitt(tabelle, einstellung.meinTeam),
+    meinTeam: einstellung.meinTeam,
   };
 }

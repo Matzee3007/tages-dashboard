@@ -33,6 +33,7 @@ test("liefert die Kacheln und verbietet das Zwischenspeichern", async () => {
   const daten = await antwort.json();
   expect(daten.kacheln.map((k: { id: string }) => k.id)).toEqual([
     "bundesliga",
+    "premier-league",
     "ki-news",
   ]);
   expect(
@@ -48,7 +49,7 @@ test("eine fehlerhafte Kachel ändert den Status der Antwort nicht", async () =>
 
   expect(antwort.status).toBe(200);
   const daten = await antwort.json();
-  expect(daten.kacheln[1]).toMatchObject({ id: "ki-news", status: "fehler" });
+  expect(daten.kacheln[2]).toMatchObject({ id: "ki-news", status: "fehler" });
   expect(daten.kacheln[0]).toMatchObject({ id: "bundesliga", status: "ok" });
 });
 
@@ -67,7 +68,7 @@ test("POST mit frisch leert den Speicher der Kachel vor dem Laden", async () => 
   expect(antwort.status).toBe(200);
   expect(antwort.headers.get("Cache-Control")).toBe("no-store");
   const daten = await antwort.json();
-  expect(daten.kacheln[1]).toMatchObject({ id: "ki-news", status: "ok" });
+  expect(daten.kacheln[2]).toMatchObject({ id: "ki-news", status: "ok" });
   expect(ladeKiNews).toHaveBeenCalledTimes(1);
   expect(ladeKiNews).toHaveBeenCalledWith(
     expect.anything(),

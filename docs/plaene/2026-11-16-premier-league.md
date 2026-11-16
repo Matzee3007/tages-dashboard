@@ -162,6 +162,11 @@ kommt mit Aufgabe 4, die deshalb vor Aufgabe 3 läuft.
 
 ### Aufgabe 3: Nahtstellen Spielplan und Tabelle, Kachel Premier League
 
+**Abweichung (2026-11-16):** Beide Nahtstellen bekommen die ganze `LigaEinstellung` statt einzelner Teile:
+`ladeSpielplan(einstellung, tage, jetzt)` und `ladeTabelle(einstellung, frisch: boolean, jetzt)`. Die ESPN-Tabelle braucht den Liga-Code,
+und die Bundesliga holt die Tabelle weiter erst gespeichert und bei laufender Partie frisch nach (Verhalten wie vorher, alter Test).
+Die Tests gehen über `ladeLiga` (`__tests__/liga-quellen.test.ts`).
+
 **Dateien:**
 - Neu: `lib/kacheln/liga/quellen.ts`, Test `__tests__/liga-quellen.test.ts`
 - Ändern: `lib/kacheln/liga/laden.ts`, `lib/einstellungen.ts`, `__tests__/liga-laden.test.ts`, `__tests__/kacheln-laden.test.ts`
@@ -180,7 +185,7 @@ kommt mit Aufgabe 4, die deshalb vor Aufgabe 3 läuft.
     wettbewerb: "PL" }, tabelle: { art: "football-data", wettbewerb: "PL" }, teams: TEAMS_PREMIER_LEAGUE, meinTeam: ["359"] }`
     zwischen Bundesliga und KI-News.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben** (`fetch` gestubbt wie in `liga-laden.test.ts`)
+- [x] **Schritt 1: Fehlschlagende Tests schreiben** (`fetch` gestubbt wie in `liga-laden.test.ts`)
   - football-data.org-Abrufe tragen `X-Auth-Token` mit dem Wert aus `process.env.FOOTBALL_DATA_API_KEY` (im Test mit `vi.stubEnv`
     gesetzt), Spielplan `next: { revalidate: 86400 }` ohne Etikett, Tabelle `next: { revalidate: 900, tags: ["premier-league"] }`.
   - Laufende Partie: ESPN-Tabelle wird frisch nachgeholt (wie bisher), football-data-Tabelle nicht (genau ein Abruf).
@@ -189,15 +194,15 @@ kommt mit Aufgabe 4, die deshalb vor Aufgabe 3 läuft.
     „FOOTBALL_DATA_API_KEY fehlt“.
   - `ladeDashboard` mit beiden Fußball-Kacheln: die JSON-Antwort enthält den Wert des Schlüssels nicht.
   - `KACHELN.map((k) => k.id)` ist `["bundesliga", "premier-league", "ki-news"]`.
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
-- [ ] **Schritt 3: `quellen.ts` schreiben, `ladeLiga` darauf umstellen, Teams und Kachel in `lib/einstellungen.ts`**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 3: `quellen.ts` schreiben, `ladeLiga` darauf umstellen, Teams und Kachel in `lib/einstellungen.ts`**
 
   `TEAMS_PREMIER_LEAGUE` (ESPN, football-data.org, Name), abgeglichen an beiden Tabellen vom 2026-11-16: 359/57 Arsenal, 331/397
   Brighton, 382/65 Man City, 364/64 Liverpool, 363/61 Chelsea, 368/62 Everton, 349/1044 Bournemouth, 337/402 Brentford, 357/341 Leeds,
   362/58 Aston Villa, 367/73 Tottenham, 361/67 Newcastle, 306/322 Hull, 373/349 Ipswich, 370/63 Fulham, 393/351 Nottingham, 388/1076
   Coventry, 360/66 Man United, 366/71 Sunderland, 384/354 Crystal Palace.
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
-- [ ] **Schritt 5: Prüfen und committen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 5: Prüfen und committen**
 
   ```bash
   npm run check
