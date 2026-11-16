@@ -7,7 +7,8 @@ export type TeamStand = {
 };
 
 // text z. B. "García 7'".
-export type Tor = { text: string };
+// seite: das Team, dem ESPN das Tor gutschreibt, bei einem Eigentor also der Gegner des Schützen.
+export type Tor = { text: string; seite: "heim" | "gast" };
 
 export type Partie = {
   id: string;

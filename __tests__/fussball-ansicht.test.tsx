@@ -31,9 +31,9 @@ const KOELN_LEVERKUSEN: Partie = {
   heim: team("122", "Köln", 1),
   gast: team("131", "Leverkusen", 2),
   tore: [
-    { text: "García 7'" },
-    { text: "Schick 85'" },
-    { text: "El Mala 90+2'" },
+    { text: "García 7'", seite: "gast" },
+    { text: "Schick 85'", seite: "gast" },
+    { text: "El Mala 90+2'", seite: "heim" },
   ],
 };
 

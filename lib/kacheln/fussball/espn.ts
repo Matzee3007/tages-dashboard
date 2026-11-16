@@ -59,6 +59,7 @@ type EspnDetail = {
   ownGoal?: boolean;
   penaltyKick?: boolean;
   clock?: { displayValue?: string };
+  team?: { id?: string };
   athletesInvolved?: { shortName?: string }[];
 };
 
@@ -107,6 +108,7 @@ export function leseTag(json: unknown, jetzt: Date, teams: Team[]): Partie[] {
   return partien.map((roh) => {
     const wettkampf = roh.competitions?.[0];
     const teilnehmer = wettkampf?.competitors ?? [];
+    const gastId = teilnehmer.find((t) => t.homeAway === "away")?.team?.id;
     const anstoss = roh.date ?? falscheForm();
     const zustand = roh.status?.type?.state;
     // ESPN meldet den Anpfiff manchmal verspätet: pre nach dem Anstoß zählt schon als laufend.
@@ -136,7 +138,10 @@ export function leseTag(json: unknown, jetzt: Date, teams: Team[]): Partie[] {
       ),
       tore: (wettkampf?.details ?? [])
         .filter((detail) => detail.scoringPlay)
-        .map((detail) => ({ text: torText(detail) })),
+        .map((detail) => ({
+          text: torText(detail),
+          seite: detail.team?.id === gastId ? "gast" : "heim",
+        })),
     };
   });
 }

@@ -132,9 +132,9 @@ test("liest eine beendete Partie mit Toren", () => {
         tore: 2,
       },
       tore: [
-        { text: "García 7'" },
-        { text: "Schick 85'" },
-        { text: "El Mala 90+2'" },
+        { text: "García 7'", seite: "gast" },
+        { text: "Schick 85'", seite: "gast" },
+        { text: "El Mala 90+2'", seite: "heim" },
       ],
     },
   ]);
@@ -154,6 +154,17 @@ test("Eigentor und Elfmeter bekommen einen Zusatz", () => {
   expect(
     leseTag(json, JETZT, TEAMS_BUNDESLIGA)[0].tore.map((t) => t.text),
   ).toEqual(["Müller 12' (ET)", "Kane 30' (E)"]);
+});
+
+test("ein Eigentor gehört zum Team, dem ESPN es gutschreibt", () => {
+  const json = {
+    events: [
+      partie({ details: [tor("J. Tah", "12'", "122", { ownGoal: true })] }),
+    ],
+  };
+  expect(leseTag(json, JETZT, TEAMS_BUNDESLIGA)[0].tore).toEqual([
+    { text: "Tah 12' (ET)", seite: "heim" },
+  ]);
 });
 
 test("liest eine laufende Partie", () => {
