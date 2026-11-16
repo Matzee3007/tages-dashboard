@@ -34,6 +34,15 @@ export async function anmelden(
 
 export async function abmelden(): Promise<void> {
   const supabase = await erstelleClient();
-  await supabase.auth.signOut();
+  const { error } = await supabase.auth.signOut();
+  // Seit supabase-js 2.119 bleibt das Cookie, wenn der Server scheitert. Dann wenigstens auf dem Gerät abmelden.
+  // Das Refresh-Token bleibt beim Server gültig, bis ein späteres Abmelden gelingt (docs/tools/Supabase.md).
+  if (error) {
+    console.error("Abmelden beim Server gescheitert:", error);
+    const lokal = await supabase.auth.signOut({ scope: "local" });
+    if (lokal.error) {
+      console.error("Auch lokales Abmelden gescheitert:", lokal.error);
+    }
+  }
   redirect("/login");
 }

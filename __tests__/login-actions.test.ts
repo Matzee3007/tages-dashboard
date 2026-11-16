@@ -71,3 +71,29 @@ test("abmelden beendet die Sitzung und führt zum Login", async () => {
   expect(signOut).toHaveBeenCalled();
   expect(redirect).toHaveBeenCalledWith("/login");
 });
+
+test("scheitert der Server, meldet abmelden wenigstens auf dem Gerät ab", async () => {
+  const fehler = vi.spyOn(console, "error").mockImplementation(() => {});
+  signOut
+    .mockResolvedValueOnce({ error: { message: "Server nicht erreichbar" } })
+    .mockResolvedValueOnce({ error: null });
+  await abmelden();
+  // Erst global (alle Geräte), nur bei einem Fehler zusätzlich lokal.
+  expect(signOut.mock.calls).toEqual([[], [{ scope: "local" }]]);
+  expect(fehler).toHaveBeenCalledTimes(1);
+  expect(redirect).toHaveBeenCalledWith("/login");
+  fehler.mockRestore();
+});
+
+test("scheitert auch das lokale Abmelden, steht das im Log", async () => {
+  const fehler = vi.spyOn(console, "error").mockImplementation(() => {});
+  signOut.mockResolvedValue({ error: { message: "kaputt" } });
+  await abmelden();
+  expect(fehler).toHaveBeenCalledTimes(2);
+  expect(fehler).toHaveBeenLastCalledWith(
+    "Auch lokales Abmelden gescheitert:",
+    { message: "kaputt" },
+  );
+  expect(redirect).toHaveBeenCalledWith("/login");
+  fehler.mockRestore();
+});

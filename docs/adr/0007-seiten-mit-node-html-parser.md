@@ -36,3 +36,8 @@ das auf allen drei Websites (geprüft 2026-11-07). Das vorhandene `fast-xml-pars
   nur im Log von Vercel (`Kanal … ließ sich nicht laden`). Dann den Leser an das neue HTML anpassen.
 - Pro Abruf zerlegt der Server alle 6 Seiten neu. Am 2026-11-07 auf dem Mac gemessen: 25 bis 42 ms, deshalb kein eigener Speicher für die Ergebnisse.
 - Eine neue Abhängigkeit, die Dependabot mit aktualisiert.
+
+## Nachtrag 2026-11-16: Version 9.0.7
+
+Dependabot hat node-html-parser mit PR #56 von 9.0.5 auf 9.0.7 gehoben. Ab 9.0.6 entschlüsselt `getAttribute` Attributwerte nach den
+HTML-Regeln für Attribute. Links mit `&amp;` werden damit so gelesen wie im Browser. Ein Test hält das fest (`__tests__/ki-news-seiten.test.ts`).

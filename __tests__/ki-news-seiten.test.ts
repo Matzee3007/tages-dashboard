@@ -253,3 +253,17 @@ test("wirft bei claude-artikel und versionshinweise ohne Meldung", () => {
     "Keine Meldung auf der Seite gefunden",
   );
 });
+
+// Seit node-html-parser 9.0.6 werden Attribute nach den HTML-Regeln für Attribute entschlüsselt.
+test("entschlüsselt &amp; in Links wie ein Browser", () => {
+  const html = seite(
+    zeile(`<h3><a href="/news?a=1&amp;b=2">X</a></h3><time>Nov 6, 2026</time>`),
+    zeile(`<h3><a href="/news?a=1&copy=2">Y</a></h3><time>Nov 6, 2026</time>`),
+  );
+  expect(
+    leseSeite("anthropic", html, URL_NEWS).map((meldung) => meldung.link),
+  ).toEqual([
+    "https://www.anthropic.com/news?a=1&b=2",
+    "https://www.anthropic.com/news?a=1&copy=2",
+  ]);
+});
