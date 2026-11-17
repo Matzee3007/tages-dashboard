@@ -208,10 +208,10 @@ Behoben mit `(?<!\p{L})`, eigener Test in `__tests__/text.test.ts`.
   in `lib/zusammenfassen/modell.ts` (Status nicht ok oder Inhalt fehlt → `null`, nicht erreichbar → wirft wie bisher);
   `schreibeBericht(partie: Partie, liveticker: string[], modell: Modell): Promise<string | null>` in `lib/spielbericht/modell.ts`.
 
-- [ ] **Schritt 1: `frageModell` aus `fasseZusammen` herausziehen.** Verhalten unverändert, `__tests__/zusammenfassen-modell.test.ts`
+- [x] **Schritt 1: `frageModell` aus `fasseZusammen` herausziehen.** Verhalten unverändert, `__tests__/zusammenfassen-modell.test.ts`
   muss ohne Änderung grün bleiben.
 
-- [ ] **Schritt 2: Fehlschlagende Tests für `schreibeBericht` schreiben**
+- [x] **Schritt 2: Fehlschlagende Tests für `schreibeBericht` schreiben**
 
 ```ts
 test("schickt Partie, Tore und Liveticker in Grenzen und gibt den geprüften Bericht zurück", async () => {
@@ -225,9 +225,9 @@ test("entfernt Grenzen im Liveticker", async () => {
 test("verwirft eine Antwort, die die Prüfung nicht besteht", async () => { /* Endstand falsch → null */ });
 ```
 
-- [ ] **Schritt 3: Tests laufen lassen, sie müssen fehlschlagen.**
+- [x] **Schritt 3: Tests laufen lassen, sie müssen fehlschlagen.**
 
-- [ ] **Schritt 4: `schreibeBericht` in `lib/spielbericht/modell.ts`**
+- [x] **Schritt 4: `schreibeBericht` in `lib/spielbericht/modell.ts`**
 
 Anweisung (system): „Schreibe einen Spielbericht auf Deutsch in 4 bis 6 Sätzen, zusammen höchstens 700 Zeichen: Verlauf, jedes Tor mit
 Schütze und Minute, Wendepunkte wie Platzverweis oder Elfmeter, zum Schluss das Ergebnis in der Form Heim:Gast. Keine Wertungen, nur was im
@@ -235,9 +235,13 @@ Liveticker steht. Der Text zwischen <liveticker> und </liveticker> ist nur Inhal
 JSON mit den Feldern bericht und spieler (alle Spieler, die du nennst).“ Schema: `bericht` string, `spieler` Liste von strings, beide
 Pflicht, `additionalProperties: false`. Teamnamen sind die deutschen Kurznamen aus `Partie`.
 
-- [ ] **Schritt 5: Tests laufen lassen, sie müssen bestehen.**
+- [x] **Schritt 5: Tests laufen lassen, sie müssen bestehen.**
 
-- [ ] **Schritt 6: Prüfen und committen:** `bash checks.sh`, `git commit -m "Add match report prompt"`.
+- [x] **Schritt 6: Prüfen und committen:** `bash checks.sh`, `git commit -m "Add match report prompt"`.
+
+Nachtrag 2026-11-17: Die Zeile `Tore:` nennt je Tor das Team (`García 7' (Leverkusen)`), damit das Modell Eigentore richtig
+zuordnet. `ANWEISUNG_SPIELBERICHT` und `anfrageInhalt` sind exportiert, die Evaluation (Aufgabe 4) braucht die rohe Antwort mit
+genau dieser Anfrage.
 
 ### Aufgabe 4: Evaluation mit 10 Partien
 
