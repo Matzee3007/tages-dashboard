@@ -167,6 +167,16 @@ test("ein Eigentor gehört zum Team, dem ESPN es gutschreibt", () => {
   ]);
 });
 
+test("ein Tor ohne passendes Team steht beim Heimteam und wird gemeldet", () => {
+  const log = vi.spyOn(console, "error").mockImplementation(() => {});
+  const json = { events: [partie({ details: [tor("X. Y", "5'", "999")] })] };
+  expect(leseTag(json, JETZT, TEAMS_BUNDESLIGA)[0].tore[0].seite).toBe("heim");
+  expect(
+    log.mock.calls.some((aufruf) => String(aufruf[0]).includes("999")),
+  ).toBe(true);
+  log.mockRestore();
+});
+
 test("liest eine laufende Partie", () => {
   const json = {
     events: [

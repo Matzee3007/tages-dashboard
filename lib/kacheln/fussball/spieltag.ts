@@ -77,7 +77,12 @@ export function spieltagTitel(
   return `${nummer}. Spieltag`;
 }
 
-// Partien mit Mein Team zuerst, dann nach Anstoß, bei gleichem Anstoß nach Heimteam.
+// Der deutsche Kalendertag einer Partie ("YYYY-MM-DD"). Sortierung und Tageszeilen nutzen denselben Schlüssel.
+export function spieltagTag(partie: Partie): string {
+  return heute(new Date(partie.anstoss));
+}
+
+// Partien nach deutschem Tag, darin Mein Team zuerst, dann nach Anstoß, bei gleichem Anstoß nach Heimteam.
 export function sortierePartien(
   partien: Partie[],
   meinTeam: string[],
@@ -87,10 +92,9 @@ export function sortierePartien(
       ? 0
       : 1;
   // Erst nach deutschem Tag, darin Mein Team zuerst (Mock G, Entscheidung vom 2026-11-17).
-  const tag = (partie: Partie) => heute(new Date(partie.anstoss));
   return [...partien].sort(
     (a, b) =>
-      tag(a).localeCompare(tag(b)) ||
+      spieltagTag(a).localeCompare(spieltagTag(b)) ||
       mitMeinTeam(a) - mitMeinTeam(b) ||
       Date.parse(a.anstoss) - Date.parse(b.anstoss) ||
       a.heim.name.localeCompare(b.heim.name, "de"),

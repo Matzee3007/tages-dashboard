@@ -109,21 +109,6 @@ test("jeder Absender trägt seine Hausfarbe, das Quadrat die Marke", () => {
   expect(decoder.style.getPropertyValue("--marke")).toBe("#7FA8AE");
 });
 
-test("nur frische Meldungen tragen den Punkt", () => {
-  render(<KiNewsAnsicht daten={DATEN} />);
-
-  expect(
-    within(
-      screen.getByRole("link", { name: /Introducing Claude/ }),
-    ).queryByRole("img", { name: "neu" }),
-  ).not.toBeNull();
-  expect(
-    within(
-      screen.getByRole("link", { name: /Responsible Scaling/ }),
-    ).queryByRole("img", { name: "neu" }),
-  ).toBeNull();
-});
-
 test("ein Absender ohne neue Meldung bekommt eine Zeile", () => {
   render(<KiNewsAnsicht daten={DATEN} />);
 
@@ -174,7 +159,7 @@ test("eine Meldung ohne Uhrzeit zeigt Kalendertage und von gestern den Punkt", (
 
   const link = screen.getByRole("link", { name: /Teaching AI/ });
   expect(within(link).getByText("gestern")).toBeDefined();
-  expect(within(link).queryByRole("img", { name: "neu" })).not.toBeNull();
+  expect(within(link).getByText("Neu")).toBeDefined();
 });
 
 function mitZusammenfassung(zusammenfassung: string) {

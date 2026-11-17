@@ -5,6 +5,7 @@ import type {
   TabellenZeile,
   TeamStand,
 } from "@/lib/kacheln/fussball/typen";
+import { spieltagTag } from "@/lib/kacheln/fussball/spieltag";
 import { datum, tageText, uhrzeit } from "@/lib/zeit";
 
 const MEIN_TEAM_GRUND = "bg-akzent/10";
@@ -149,11 +150,11 @@ function PartieZeile({
   );
 }
 
-// Aufeinanderfolgende Partien desselben deutschen Tages unter einer Tageszeile.
+// Aufeinanderfolgende Partien desselben deutschen Tages unter einer Tageszeile, Schlüssel wie beim Sortieren.
 function nachTagen(partien: Partie[]): { tag: string; partien: Partie[] }[] {
   const tage: { tag: string; partien: Partie[] }[] = [];
   for (const partie of partien) {
-    const tag = datum(partie.anstoss);
+    const tag = spieltagTag(partie);
     const letzter = tage.at(-1);
     if (letzter?.tag === tag) letzter.partien.push(partie);
     else tage.push({ tag, partien: [partie] });
@@ -187,7 +188,10 @@ function Legende({ zonen }: { zonen: Zone[] }) {
       className="mt-2.5 flex flex-wrap gap-x-3.5 gap-y-0.5 text-[11.5px] text-gedaempft"
     >
       {zonen.map((zone) => (
-        <li key={zone.name} className="inline-flex items-center gap-1.5">
+        <li
+          key={`${zone.von}-${zone.bis}`}
+          className="inline-flex items-center gap-1.5"
+        >
           <span
             aria-hidden
             className="size-2 rounded-[2px]"
@@ -276,12 +280,12 @@ export function FussballAnsicht({
           {ueberschrift || "Spieltag"}
         </Ueberschrift>
         {nachTagen(daten.partien).map(({ tag, partien }) => (
-          <div key={tag} role="group" aria-label={tag}>
+          <div key={tag} role="group" aria-label={datum(partien[0].anstoss)}>
             <div
               aria-hidden
               className="bg-flaeche px-3.5 py-1.5 text-[12.5px] font-[650] text-gedaempft"
             >
-              {tag}
+              {datum(partien[0].anstoss)}
             </div>
             {partien.map((partie) => (
               <PartieZeile

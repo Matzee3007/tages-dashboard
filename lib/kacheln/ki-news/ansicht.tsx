@@ -42,11 +42,7 @@ function MeldungsLink({
       <span className="flex items-center gap-[7px] text-[12.5px] text-gedaempft">
         {istFrisch(meldung.zeit, jetzt, meldung.nurDatum) && (
           <span className="inline-flex items-center gap-1.5 font-[650] text-akzent">
-            <span
-              role="img"
-              aria-label="neu"
-              className="size-[7px] rounded-full bg-akzent"
-            />
+            <span aria-hidden className="size-[7px] rounded-full bg-akzent" />
             Neu
           </span>
         )}
@@ -211,17 +207,20 @@ export function KiNewsAnsicht({ daten }: { daten: KiNewsDaten }) {
 
   // Die Absender kommen nach ihrer neuesten Meldung sortiert, der erste ist also der mit der neuesten Meldung.
   return (
-    <div className="@container grid items-start gap-4 @[640px]:grid-cols-2 @[900px]:grid-cols-3">
-      {aktiv.map((absender, index) => (
-        <AbsenderKarte
-          key={absender.name}
-          absender={absender}
-          gross={index === 0}
-        />
-      ))}
-      {ruhig.map((absender) => (
-        <RuhigeZeile key={absender.name} absender={absender} />
-      ))}
+    // Container ist das umschließende Element: Eine Container-Abfrage prüft nur Vorfahren, nie das Element selbst.
+    <div className="@container">
+      <div className="grid items-start gap-4 @[640px]:grid-cols-2 @[900px]:grid-cols-3">
+        {aktiv.map((absender, index) => (
+          <AbsenderKarte
+            key={absender.name}
+            absender={absender}
+            gross={index === 0}
+          />
+        ))}
+        {ruhig.map((absender) => (
+          <RuhigeZeile key={absender.name} absender={absender} />
+        ))}
+      </div>
     </div>
   );
 }
