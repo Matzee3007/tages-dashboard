@@ -317,10 +317,10 @@ Erwartet: 10 Abschnitte in `evaluation/daten/spielberichte.md`, jeder mit Sekund
   `leseSpielberichte(client: SupabaseClient, partien: string[]): Promise<Map<string, string>>`,
   `speichereSpielbericht(client: SupabaseClient, zeile: SpielberichtZeile): Promise<void>` (`upsert` mit `onConflict: "partie"`).
 
-- [ ] **Schritt 1: SQL schreiben** nach den festen Vorgaben, Aufbau wie `supabase/zusammenfassungen.sql`.
-- [ ] **Schritt 2: Handgriff des Entwicklers:** Supabase-Dashboard → SQL Editor → Inhalt der Datei einfügen → Run (oder über die
+- [x] **Schritt 1: SQL schreiben** nach den festen Vorgaben, Aufbau wie `supabase/zusammenfassungen.sql`.
+- [x] **Schritt 2: Handgriff des Entwicklers:** Supabase-Dashboard → SQL Editor → Inhalt der Datei einfügen → Run (oder über die
   Supabase-CLI wie in `docs/tools/Supabase.md`). Erwartet: „Success. No rows returned“.
-- [ ] **Schritt 3: Als Fremder prüfen,** ohne Anmeldung, nur mit dem Publishable Key:
+- [x] **Schritt 3: Als Fremder prüfen,** ohne Anmeldung, nur mit dem Publishable Key:
 
 ```bash
 /usr/bin/curl -s -H "apikey: <publishable-key>" 'https://<ref>.supabase.co/rest/v1/spielberichte?select=partie'
@@ -331,11 +331,14 @@ Erwartet: 10 Abschnitte in `evaluation/daten/spielberichte.md`, jeder mit Sekund
 # erwartet: Fehler 42501 "new row violates row-level security policy"
 ```
 
-- [ ] **Schritt 4: Tests für `leseSpielberichte` und `speichereSpielbericht` schreiben** (Supabase-Attrappe wie in
+- [x] **Schritt 4: Tests für `leseSpielberichte` und `speichereSpielbericht` schreiben** (Supabase-Attrappe wie in
   `__tests__/zusammenfassen-durchlauf.test.ts`): Lesen liefert eine Map von `partie` auf `bericht`, ein Fehler von Supabase wird geworfen,
   Speichern ruft `upsert` mit `onConflict: "partie"`. Laufen lassen: FAIL.
-- [ ] **Schritt 5: Speicher umsetzen**, Tests laufen lassen: PASS.
-- [ ] **Schritt 6: Prüfen und committen:** `bash checks.sh`, `git commit -m "Add match reports table with row level security"`.
+- [x] **Schritt 5: Speicher umsetzen**, Tests laufen lassen: PASS.
+- [x] **Schritt 6: Prüfen und committen:** `bash checks.sh`, `git commit -m "Add match reports table with row level security"`.
+
+Nachtrag 2026-11-17: Über die Supabase-CLI eingespielt (der Entwickler meldete sich vorher in der Terminal-App an). Gegenprobe:
+`[]` und `42501 new row violates row-level security policy for table "spielberichte"`.
 
 ### Aufgabe 6: Durchlauf im Container, Takt 15 Minuten
 
