@@ -13,7 +13,8 @@ Teil der [[projects/tages-dashboard/docs/tools/Tools Übersicht|Tools Übersicht
 
 ## Wofür nutzen wir es?
 
-Ein Container auf dem Mac fasst einmal pro Stunde die Meldungen der KI-News zusammen. Das Sprachmodell dafür läuft lokal über
+Ein Container auf dem Mac fasst alle 15 Minuten die Meldungen der KI-News zusammen und schreibt Spielberichte zu beendeten Partien
+(seit 2026-11-17, vorher stündlich nur Zusammenfassungen). Das Sprachmodell dafür läuft lokal über
 **Docker Model Runner**. Das Ergebnis landet in Supabase, Vercel liest es nur.
 
 ## Begriffe
@@ -107,7 +108,7 @@ docker model unload --all && docker compose start zusammenfassen
 - **Image 1,43 GB:** `npm ci` installiert alle Abhängigkeiten des Projekts, auch Next.js.
 - **OpenAI-Artikel bleiben ohne Zusammenfassung:** openai.com antwortet dem Container mit 403 (siehe Fehler).
 - **Fehlschläge werden nicht gemerkt** (`/code-review` von PR #61, bewusst offen): Meldungen ohne Artikel oder mit verworfener Antwort
-  ruft der Durchlauf jede Stunde neu ab, solange die Kachel sie zeigt. Das kostet nur ein paar Abrufe pro Stunde.
+  ruft der Durchlauf alle 15 Minuten neu ab, solange die Kachel sie zeigt. Das kostet nur ein paar Abrufe pro Stunde.
 - **20.000 Zeichen gegen 8192 Token** (`/code-review` von PR #61, bewusst offen): Ein Artikel mit viel Code oder vielen Adressen könnte
   das Kontextfenster sprengen. Dann liefert das Modell einen Fehler und die Meldung bleibt ohne Zusammenfassung. Im Versuch ergaben
   11.447 Zeichen rund 2.400 Token.

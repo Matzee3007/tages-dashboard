@@ -71,7 +71,10 @@ async function ladeKalender(einstellung: FussballEinstellung, jetzt: Date) {
 }
 
 // Der Spielplan kommt vor der Wahl: Steigt die Nummer, trennt er Spieltage ohne Lücke.
-async function ladeSpieltag(einstellung: FussballEinstellung, jetzt: Date) {
+export async function ladeSpieltag(
+  einstellung: FussballEinstellung,
+  jetzt: Date,
+) {
   const { kalender, spielplan } = await ladeKalender(einstellung, jetzt);
   const tage = waehleSpieltag(kalender, spielplan, jetzt);
   const partienJeTag = await Promise.all(

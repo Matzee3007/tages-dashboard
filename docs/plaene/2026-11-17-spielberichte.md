@@ -353,7 +353,7 @@ Nachtrag 2026-11-17: Über die Supabase-CLI eingespielt (der Entwickler meldete 
   (Aufgabe 3), `leseSpielberichte` und `speichereSpielbericht` (Aufgabe 5).
 - Liefert: `durchlaufSpielberichte(client: SupabaseClient, modell: Modell, jetzt: Date): Promise<{ neu: number; ohne: number }>`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben** (Attrappen für `ladeSpieltag`, `ladeLiveticker`, `schreibeBericht`, Supabase):
+- [x] **Schritt 1: Fehlschlagende Tests schreiben** (Attrappen für `ladeSpieltag`, `ladeLiveticker`, `schreibeBericht`, Supabase):
 
 ```ts
 test("schreibt nur für beendete Partien ohne Bericht", ...);      // vorher, laeuft, vorbei mit Bericht → kein Aufruf; vorbei ohne → neu 1
@@ -364,13 +364,13 @@ test("Modell nicht erreichbar bricht ab", ...);                  // schreibeBeri
 test("speichert mit id der Kachel und Modellname", ...);         // { partie, wettbewerb: "bundesliga", bericht, modell: "ai/test" }
 ```
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen.**
-- [ ] **Schritt 3: `durchlaufSpielberichte` umsetzen,** nacheinander wie `durchlauf` der KI-News.
-- [ ] **Schritt 4: `zusammenfassen/lauf.ts`:** `STUNDE_MS` wird `TAKT_MS = 15 * 60 * 1000`. In `einmal()` nach `durchlauf` in einem
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen.**
+- [x] **Schritt 3: `durchlaufSpielberichte` umsetzen,** nacheinander wie `durchlauf` der KI-News.
+- [x] **Schritt 4: `zusammenfassen/lauf.ts`:** `STUNDE_MS` wird `TAKT_MS = 15 * 60 * 1000`. In `einmal()` nach `durchlauf` in einem
   eigenen `try` `durchlaufSpielberichte`, Ausgabe `Spielberichte: neu <n>, ohne <n>`. Ein Fehler der KI-News stoppt die Spielberichte
   nicht. Kommentare „stündlich“ und „in einer Stunde“ anpassen.
-- [ ] **Schritt 5: Tests laufen lassen, sie müssen bestehen.**
-- [ ] **Schritt 6: Prüfen und committen:** `bash checks.sh`, `git commit -m "Add match reports run every 15 minutes"`.
+- [x] **Schritt 5: Tests laufen lassen, sie müssen bestehen.**
+- [x] **Schritt 6: Prüfen und committen:** `bash checks.sh`, `git commit -m "Add match reports run every 15 minutes"`.
 
 ### Aufgabe 7: Knopf „Bericht“ in der Kachel
 

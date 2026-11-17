@@ -1,4 +1,4 @@
-# Zusammenfassungen der KI-News auf dem Mac (ADR 0010): docker compose up --build -d
+# Zusammenfassungen der KI-News und Spielberichte auf dem Mac (ADR 0010, ADR 0013): docker compose up --build -d
 services:
   zusammenfassen:
     build:
@@ -16,8 +16,9 @@ services:
 
 models:
   llm:
-    # Gewählt nach der Evaluation vom 2026-11-15: so gut wie ai/gemma4:e4b, fast dreimal so schnell (ADR 0010)
-    model: ai/qwen3:4b-instruct-2507
+    # Seit 2026-11-17 für beides: qwen3:4b fiel bei den Spielberichten durch, auf 16 GB passt nur ein Modell (ADR 0013).
+    # Bei den Zusammenfassungen laut Evaluation vom 2026-11-15 so gut wie qwen3:4b, nur etwa dreimal so langsam.
+    model: ai/gemma4:e4b
     context_size: 8192
 
 secrets:
