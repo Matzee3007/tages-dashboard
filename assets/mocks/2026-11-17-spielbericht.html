@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mock: Spielbericht in den Fußball-Kacheln (A–D)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:#5f656e;font-family:system-ui,sans-serif;line-height:1.35;color:#111}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid #8fc1ff;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Mock-Rahmen (nicht Teil des Entwurfs) ---------- */
+.mock-kopf{background:#262a31;color:#e9ecf0;padding:14px 16px 14px;display:flex;flex-direction:column;gap:8px}
+.mock-kopf h1{font-size:17px;font-weight:600}
+.mock-kopf p{font-size:13px;color:#b5bcc6;max-width:900px}
+.mock-kopf .beispiel{display:inline-block;background:#ffd166;color:#1f232a;font-weight:600;border-radius:4px;padding:0 6px;margin-right:6px}
+.variante-block{padding:30px 0 10px}
+.variante-titel{max-width:1200px;margin:0 auto 12px;padding:0 16px;color:#fff}
+.variante-titel h2{font-size:22px;font-weight:600}
+.variante-titel p{font-size:14px;color:#eef0f3;max-width:820px;margin-top:2px}
+.variante-titel p.pro{color:#d6f5dd}
+.variante-titel p.contra{color:#ffd9d4}
+.kontext{max-width:1200px;margin:18px auto 8px;padding:0 16px;font-size:13px;font-weight:600;color:#e9ecf0}
+.geraet{container:g / inline-size;margin:0 auto;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.3);overflow:hidden;position:relative}
+.breite-1200{max-width:1200px}
+.breite-390{max-width:390px}
+
+/* ---------- Aussehen G (aus assets/mocks/2026-11-17-aussehen-g.html und app/globals.css) ---------- */
+.vg{--seite:#0F1318;--karte:#1A1F27;--karte2:#222831;--linie:#2A313B;--grenze:#4A5260;--text:#E8EBF0;--ged:#939CAA;--lese:#C9D0DA;--rauch:#6C7583;--or:#FF8A3D;--or-grund:rgba(255,138,61,.10);--info:#86ABF5;--info-grund:rgba(134,171,245,.12);--fehler:#F59A90;--kz-grund:#2C333E;--kz-text:#C3CAD5;
+  background:var(--seite);color:var(--text);font-family:Commissioner,system-ui,sans-serif;font-weight:380;line-height:1.4;font-variant-numeric:tabular-nums}
+.vg .dash{padding:26px 28px 34px}
+.vg .g-gk{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.vg h2{font-size:28px;font-weight:780;letter-spacing:-.022em;line-height:1.1}
+.vg .g-raster{display:grid;gap:16px;align-items:start}
+@container g (min-width:900px){.vg .g-raster{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.kz{display:inline-grid;place-items:center;border-radius:50%;flex-shrink:0;font-style:normal;font-weight:650;background:var(--kz-grund);color:var(--kz-text);width:22px;height:22px;font-size:7px;letter-spacing:.02em;font-family:system-ui,sans-serif}
+.name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.neu-laden{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;font-size:19px;flex-shrink:0;color:var(--ged)}
+.puls{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--or);animation:puls 1.6s ease-in-out infinite;flex-shrink:0}
+@keyframes puls{50%{opacity:.3}}
+.vg .g-karte{background:var(--karte);border-radius:16px;overflow:hidden;min-width:0}
+.vg .g-kk{display:flex;align-items:center;gap:12px;padding:12px 4px 12px 14px}
+.vg .g-marke{width:34px;height:34px;border-radius:10px;background:var(--c);color:#fff;font-size:12.5px;font-weight:800;display:grid;place-items:center;flex-shrink:0;letter-spacing:-.01em}
+.vg .g-kk h3{flex:1;min-width:0;font-size:16.5px;font-weight:740;letter-spacing:-.01em;line-height:1.2}
+.vg .g-unter{margin-top:-10px;padding:0 14px 10px 62px;font-size:12.5px;color:var(--ged);font-weight:380}
+.vg .g-tagzeile{background:var(--karte2);padding:6px 14px;font-size:12.5px;font-weight:650;color:var(--ged)}
+.vg .g-p{position:relative;display:grid;grid-template-columns:36px minmax(0,1fr) 58px minmax(0,1fr);column-gap:8px;align-items:center;padding:9px 12px 9px 6px;min-height:52px;border-top:1px solid var(--linie);font-size:14px;font-weight:500;width:100%}
+.vg .g-tagzeile+.g-p{border-top:0}
+.vg .g-st{font-size:11.5px;font-weight:600;color:var(--rauch);text-align:center;line-height:1.1}
+.vg .g-p.live .g-st{color:var(--or);display:flex;flex-direction:column;align-items:center;gap:3px}
+.vg .g-team{display:flex;align-items:center;gap:8px;min-width:0}
+.vg .g-heim{justify-content:flex-end;text-align:right}
+.vg .g-team.mein .name{color:var(--or);font-weight:720}
+.vg .g-box{justify-self:center;min-width:54px;height:30px;padding:0 6px;border-radius:8px;display:grid;place-items:center;font-size:15.5px;font-weight:760;letter-spacing:.01em;white-space:nowrap}
+.vg .g-box.erg{background:var(--karte2)}
+.vg .g-box.zeit{font-size:13.5px;font-weight:600;color:var(--ged)}
+.vg .g-p.live .g-box{background:var(--or-grund);color:var(--or);box-shadow:inset 0 0 0 1px rgba(255,138,61,.45)}
+.vg .g-p.mein{background:var(--or-grund)}
+.vg .g-tore{grid-row:2;font-size:11.5px;color:var(--rauch);line-height:1.45;margin-top:4px;min-width:0;font-weight:380}
+.vg .g-tore.h{grid-column:2;text-align:right}
+.vg .g-tore.g{grid-column:4}
+.vg .g-tore span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vg .g-tab{border-top:1px solid var(--linie);padding:12px 14px 14px}
+.vg .g-tab h4{font-size:13.5px;font-weight:720;margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-size:11.5px;font-weight:500;color:var(--rauch);text-align:right;padding-bottom:4px}
+th.t-team,th.t-pl{text-align:left}
+td{height:32px;padding:3px 0}
+td.pl{width:36px;color:var(--ged);font-weight:600;font-size:12.5px}
+td.pl span{display:flex;align-items:center;gap:9px}
+td.pl span::before{content:"";width:3px;height:18px;border-radius:2px;background:var(--z,transparent)}
+td.t-team{max-width:0}
+td.t-team>span{display:flex;align-items:center;gap:8px;min-width:0}
+td.z{width:34px;text-align:right;color:var(--ged)}
+td.pk{width:36px;text-align:right;font-weight:720}
+tr.mein td{background:var(--or-grund)}
+tr.mein .name{color:var(--or);font-weight:720}
+tr.grenze td{border-bottom:1px solid var(--grenze)}
+
+/* KI-Markierung: bestehendes Muster aus lib/kacheln/ki-news/ansicht.tsx */
+.ki{display:inline-block;font-size:11.5px;font-weight:650;color:var(--info);background:var(--info-grund);border-radius:6px;padding:1px 7px;line-height:1.45}
+.pfeil{width:12px;height:12px;transition:transform .15s;flex-shrink:0}
+[aria-expanded=true] .pfeil{transform:rotate(180deg)}
+.bericht-kasten{grid-column:1/-1;margin:6px 0 4px 6px;padding:12px 14px;border-radius:12px;background:var(--karte2);font-size:14.5px;line-height:1.55;color:var(--lese);font-weight:380;max-width:66ch}
+.g-p.mein .bericht-kasten{background:rgba(34,40,49,.92)}
+.bericht-kasten .ki{margin-bottom:6px}
+.bericht-kasten p+p{margin-top:0}
+
+/* A und C: Knopf „Bericht“ mittig unter dem Ergebnis */
+.b-knopf{grid-column:2/5;justify-self:center;display:inline-flex;align-items:center;gap:5px;min-height:44px;margin:-6px 0 -10px;padding:0 10px;font-size:13px;font-weight:600;color:var(--info);white-space:nowrap}
+
+/* B: ganze Zeile antippbar, Blatt */
+.g-p.tippbar{cursor:pointer;text-align:left}
+.g-p.tippbar:hover{background:rgba(255,255,255,.03)}
+.g-p.tippbar.mein:hover{background:rgba(255,138,61,.14)}
+.g-p .weiter{position:absolute;right:2px;top:50%;transform:translateY(-50%);width:9px;height:12px;color:var(--rauch)}
+.g-p.tippbar{padding-right:16px}
+.schleier{position:absolute;inset:0;background:rgba(5,7,10,.62);display:flex;align-items:center;justify-content:center;padding:24px}
+.schleier.fest{position:fixed;z-index:50}
+.blatt{background:var(--karte);border-radius:20px;width:100%;max-width:540px;max-height:100%;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);color:var(--text);font-family:Commissioner,system-ui,sans-serif}
+.blatt-kopf{display:flex;align-items:center;gap:10px;padding:8px 6px 0 16px}
+.blatt-kopf .g-marke{width:26px;height:26px;border-radius:8px;font-size:10px}
+.blatt-kopf p{flex:1;min-width:0;font-size:12.5px;color:var(--ged)}
+.blatt-kopf p b{color:var(--text);font-weight:650}
+.zu{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:20px;color:var(--ged)}
+.zu:hover{background:var(--linie);color:var(--text)}
+.blatt-spiel{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);column-gap:14px;align-items:start;padding:14px 18px 16px}
+.blatt-team{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;font-size:15px;font-weight:650;min-width:0}
+.blatt-team .kz{width:46px;height:46px;font-size:12px}
+.blatt-team.mein .name{color:var(--or);font-weight:720}
+.blatt-erg{display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:6px}
+.blatt-erg b{font-size:32px;font-weight:780;letter-spacing:-.01em;line-height:1}
+.blatt-erg span{font-size:12px;font-weight:600;color:var(--rauch)}
+.blatt-tore{font-size:12.5px;font-weight:380;color:var(--ged);line-height:1.5;margin-top:8px;text-align:center}
+.blatt-tore span{display:block}
+.blatt-text{border-top:1px solid var(--linie);padding:14px 18px 20px;font-size:15px;line-height:1.6;color:var(--lese)}
+.blatt-text .ki{margin-bottom:8px}
+.blatt-text .stand{display:block;margin-top:10px;font-size:12px;color:var(--rauch)}
+.griff{display:none;width:38px;height:5px;border-radius:3px;background:var(--grenze);margin:8px auto 0}
+@container g (max-width:600px){
+  .schleier{align-items:flex-end;padding:0}
+  .blatt{border-radius:20px 20px 0 0;max-width:none;max-height:88%}
+  .griff{display:block}
+  .blatt-kopf{padding-top:4px}
+}
+.schleier.fest .blatt{max-height:90vh}
+@media (max-width:600px){
+  .schleier.fest{align-items:flex-end;padding:0}
+  .schleier.fest .blatt{border-radius:20px 20px 0 0;max-width:none}
+  .schleier.fest .griff{display:block}
+}
+.demo-bild{height:760px}
+.demo-bild.klein{height:844px}
+.demo-bild .dash{filter:saturate(.9)}
+
+/* D: Vorschau */
+.vorschau{grid-column:1/-1;display:block;margin:8px 0 0 6px;padding:8px 12px 9px;border-radius:10px;background:var(--karte2);font-size:13px;line-height:1.5;color:var(--lese);font-weight:380;text-align:left;width:calc(100% - 6px)}
+.g-p.mein .vorschau{background:rgba(34,40,49,.92)}
+.vorschau .ki{margin-right:6px;font-size:11px;padding:0 6px}
+.vorschau .text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vorschau[aria-expanded=true] .text{display:block;-webkit-line-clamp:unset;font-size:14.5px;line-height:1.55}
+.vorschau .mehr{display:block;margin-top:2px;font-weight:600;color:var(--info);font-size:12.5px}
+
+@container g (max-width:600px){
+  .vg .dash{padding:22px 14px 30px}
+  .vg h2{font-size:26px}
+  .vg .g-p{grid-template-columns:32px minmax(0,1fr) 52px minmax(0,1fr);column-gap:6px;padding-right:10px}
+  .vg .g-p.tippbar{padding-right:16px}
+  .vg .g-team{font-size:13.5px;gap:6px}
+  .vg .g-box{min-width:48px}
+  .bericht-kasten{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="mock-kopf">
+  <h1>Mock: Spielbericht in den Fußball-Kacheln, Varianten A bis D (Aussehen G, immer dunkel)</h1>
+  <p><span class="beispiel">Beispieldaten</span>Alle Partien, Torschützen und Spielberichte sind erfunden (Stand angenommen: Samstag, 21. November 2026, 18:52). Teams als neutrale Kürzel-Kreise, in der App stehen dort die echten Logos. Mein Team: FC Bayern (Bundesliga), Arsenal (Premier League).</p>
+  <p>Je Variante: Sport-Gruppe in Mac/iPad-Breite (1200 px, Bundesliga neben Premier League und Champions League) und in iPhone-Breite (390 px). Ein Spielbericht ist in allen Varianten wie die Zusammenfassung der KI-News blau als „KI-generiert“ markiert. Stuttgart – HSV hat keinen Bericht und sieht aus wie heute. Knöpfe und Zeilen lassen sich anklicken.</p>
+</div>
+<div id="buehne"></div>
+
+<script>
+const VARIANTEN = [
+  {id:"A", name:"A: Knopf „Bericht“, klappt unter der Partie auf",
+   text:"Wie „Zusammenfassung“ bei den KI-News: Unter dem Ergebnis steht ein kleiner blauer Knopf, der den Absatz direkt unter der Partie aufklappt. Im Bild ist Köln – Leverkusen aufgeklappt.",
+   pro:"Vorteil: bekanntes Muster aus den KI-News, der Bericht bleibt im Zusammenhang der Kachel, kein neues Bauteil.",
+   contra:"Nachteil: jede Partie mit Bericht wird um eine Knopfzeile höher, die Liste wird etwa ein Drittel länger."},
+  {id:"B", name:"B: Ganze Partie antippbar, Bericht im Blatt",
+   text:"Wie Spieldetails in FotMob: Die Zeile bleibt so kompakt wie heute, nur ein kleiner Pfeil rechts zeigt, dass es einen Bericht gibt. Tippen öffnet ein Blatt mit Kopf (Teams, Ergebnis, Torschützen) und Bericht, auf dem iPhone von unten, am Mac mittig.",
+   pro:"Vorteil: Kachel bleibt unverändert dicht, der Bericht hat Platz und einen klaren Kopf, ausbaufähig zu Spieldetails.",
+   contra:"Nachteil: neues Bauteil (Dialog mit Fokusführung, Schließen, Wischen), der Pfeil ist ein leiser Hinweis und leicht zu übersehen."},
+  {id:"C", name:"C: Bericht von Mein Team sofort sichtbar, andere aufklappbar",
+   text:"Die Partie von Mein Team zeigt ihren Bericht ohne Tippen direkt darunter, alle anderen Partien mit Bericht haben den Knopf aus A.",
+   pro:"Vorteil: das Wichtigste ist ohne Tippen da, passt zur Gewichtung von Mein Team in Orange.",
+   contra:"Nachteil: die Kachel wird am Spieltag von Mein Team deutlich länger (auf dem iPhone rund 10 Zeilen Text), Reihenfolge der Kacheln verschiebt sich optisch."},
+  {id:"D", name:"D (eigene Idee): Vorschau mit zwei Zeilen, Tippen zeigt alles",
+   text:"Jede Partie mit Bericht zeigt die ersten zwei Zeilen als Vorschau mit der Markierung „KI-generiert“, Tippen klappt den ganzen Absatz auf. Im Bild ist Köln – Leverkusen aufgeklappt.",
+   pro:"Vorteil: man sieht sofort, worum es ging, ohne die Kachel stark zu verlängern; die Vorschau ist selbst der Knopf.",
+   contra:"Nachteil: viel Lesetext in einer Ergebnisliste, die Partien rücken auseinander; der erste Satz sagt oft nur das Ergebnis, das schon dasteht."},
+];
+
+const FARBEN = {"Bundesliga":"#E3343F","Premier League":"#B061D1","Champions League":"#5B8DEF"};
+const MARKEN = {"Bundesliga":"BL","Premier League":"PL","Champions League":"CL"};
+const KZ = {"Bayern":"FCB","Freiburg":"SCF","Köln":"KOE","Leverkusen":"B04","Stuttgart":"VFB","HSV":"HSV","Frankfurt":"SGE","Gladbach":"BMG","Chelsea":"CHE","Everton":"EVE","Arsenal":"ARS","Tottenham":"TOT","Man City":"MCI","Newcastle":"NEW","PSG":"PSG","Inter Milan":"INT","Dortmund":"BVB","Villarreal":"VIL"};
+const kz = n => KZ[n] || n.slice(0,3).toUpperCase();
+const LANG = {"Bayern":"FC Bayern","Freiburg":"SC Freiburg","Köln":"1. FC Köln","Leverkusen":"Bayer Leverkusen","Arsenal":"Arsenal","Tottenham":"Tottenham"};
+
+const BERICHT = {
+  bayfre:"Der FC Bayern hat den SC Freiburg in der Allianz Arena mit 3:0 besiegt. Harry Kane brachte die Münchner in der 8. Minute per Kopf nach einer Ecke von Michael Olise in Führung. Freiburg hielt die Partie danach lange offen, die beste Chance der Gäste vergab Vincenzo Grifo kurz vor der Pause, als Manuel Neuer seinen Schuss parierte. In der 54. Minute erhöhte Kane per Foulelfmeter, nachdem Philipp Lienhart Luis Díaz im Strafraum zu Fall gebracht hatte. Olise traf in der 71. Minute mit einem Schuss ins lange Eck zum 3:0-Endstand.",
+  koelev:"Bayer Leverkusen hat beim 1. FC Köln mit 2:1 gewonnen. Aleix García brachte die Gäste in der 7. Minute mit einem Distanzschuss früh in Führung. Köln glich in der 38. Minute durch Jakub Kamiński aus, der eine Flanke von Linton Maina am langen Pfosten verwertete. Nach der Gelb-Roten Karte gegen Kölns Eric Martel in der 63. Minute drängte Leverkusen auf den Siegtreffer. Patrik Schick köpfte in der 85. Minute nach einer Ecke zum 2:1 ein.",
+  arstot:"Arsenal hat das Nordlondon-Derby gegen Tottenham mit 3:1 gewonnen. Bukayo Saka traf in der 14. Minute zur Führung, Martin Ødegaard erhöhte in der 38. Minute auf 2:0. Mohammed Kudus verkürzte in der 52. Minute für die Gäste. Viktor Gyökeres stellte in der 76. Minute mit einem Abstauber den Endstand von 3:1 her.",
+};
+
+// Partie: [id, Zeit oder "live 22'", Heim, Gast, Ergebnis, Tore Heim, Tore Gast, Bericht]
+const BL = {titel:"Bundesliga", mein:["Bayern"], unter:"11. Spieltag · Sa 21. November", tag:"Samstag, 21. November",
+  partien:[
+    ["bayfre","15:30","Bayern","Freiburg","3:0",["Kane 8', 54'","Olise 71'"],[],"bayfre"],
+    ["koelev","15:30","Köln","Leverkusen","1:2",["Kamiński 38'"],["García 7'","Schick 85'"],"koelev"],
+    ["vfbhsv","15:30","Stuttgart","HSV","2:0",["Demirović 19'","Undav 88'"],[],null],
+    ["sgebmg","live 22'","Frankfurt","Gladbach","1:0",["Burkardt 5'"],[],null]],
+  tabelle:[[1,"Dortmund",11,"+14",26,"#4C8DF6"],[2,"Leverkusen",11,"+9",24,"#4C8DF6"],[3,"Bayern",11,"+12",23,"#4C8DF6"],[4,"Leipzig",11,"+8",22,"#4C8DF6",1],[5,"Stuttgart",11,"+5",21,"#22B8CF"]]};
+const PL = {titel:"Premier League", mein:["Arsenal"], unter:"12. Spieltag · Sa 21. November", tag:"Samstag, 21. November",
+  partien:[
+    ["cheeve","13:30","Chelsea","Everton","2:0",["Palmer 22'","João Pedro 64'"],[],null],
+    ["arstot","16:00","Arsenal","Tottenham","3:1",["Saka 14'","Ødegaard 38'","Gyökeres 76'"],["Kudus 52'"],"arstot"],
+    ["mcinew","live 22'","Man City","Newcastle","0:0",[],[],null]],
+  tabelle:[[1,"Man City",12,"+15",28,"#4C8DF6"],[2,"Arsenal",12,"+14",28,"#4C8DF6"],[3,"Liverpool",12,"+12",25,"#4C8DF6"],[4,"Chelsea",12,"+8",22,"#4C8DF6",1],[5,"Brighton",12,"+5",21,"#22B8CF"]]};
+const CL = {titel:"Champions League", mein:["Bayern","Arsenal"], unter:"5. Spieltag · Di 24. – Mi 25. November",
+  tage:[["Dienstag, 24. November",[["c1","21:00","Bayern","PSG"],["c2","21:00","Dortmund","Villarreal"]]],["Mittwoch, 25. November",[["c3","21:00","Arsenal","Inter Milan"]]]],
+  tabelle:[[1,"Liverpool",4,"+10",12,"#4C8DF6"],[2,"Arsenal",4,"+8",10,"#4C8DF6"],[9,"Bayern",4,"+2",7,"#22B8CF"]]};
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const PFEIL = `<svg class="pfeil" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const WEITER = `<svg class="weiter" viewBox="0 0 9 12" aria-hidden="true"><path d="M2.5 2 6.5 6 2.5 10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+let nr = 0;
+
+function kopfZeile(p, w, st, live){
+  const [,zeit,h,g,erg="",tH=[],tG=[]] = p;
+  const mH = w.mein.includes(h), mG = w.mein.includes(g);
+  const box = erg ? `<span class="g-box erg">${erg.replace(":"," – ")}</span>` : `<span class="g-box zeit">${zeit}</span>`;
+  return `<span class="g-st">${st}</span>
+    <span class="g-team g-heim${mH?" mein":""}"><span class="name">${esc(h)}</span><i class="kz">${kz(h)}</i></span>${box}
+    <span class="g-team g-gast${mG?" mein":""}"><i class="kz">${kz(g)}</i><span class="name">${esc(g)}</span></span>
+    ${tH.length||tG.length?`<span class="g-tore h">${tH.map(t=>`<span>${esc(t)}</span>`).join("")}</span><span class="g-tore g">${tG.map(t=>`<span>${esc(t)}</span>`).join("")}</span>`:""}`;
+}
+
+// offen: Liste der Partie-ids, die im Bild aufgeklappt sind
+function partie(p, w, v, offen){
+  const [id,zeit,h,g,erg="",,,ber] = p;
+  const live = zeit.startsWith("live");
+  const mein = w.mein.includes(h) || w.mein.includes(g);
+  const st = live ? `<span class="puls"></span>${zeit.slice(5)}` : (erg ? "Ende" : "");
+  const kl = `g-p${mein?" mein":""}${live?" live":""}`;
+  const innen = kopfZeile(p, w, st, live);
+  if (!ber) return `<div class="${kl}">${innen}</div>`;
+  const text = esc(BERICHT[ber]);
+  const kid = "k" + (++nr);
+  if (v === "B") {
+    return `<button type="button" class="${kl} tippbar" data-blatt="${id}" aria-haspopup="dialog" aria-label="${esc(h)} gegen ${esc(g)} ${erg}, Spielbericht öffnen">${innen}${WEITER}</button>`;
+  }
+  if (v === "D") {
+    const auf = offen.includes(id);
+    return `<div class="${kl}">${innen}<button type="button" class="vorschau" aria-expanded="${auf}" aria-label="KI-Spielbericht ${auf?"zuklappen":"ganz zeigen"}"><span class="text"><span class="ki">KI-generiert</span>${text}</span><span class="mehr">${auf?"Weniger":"Ganzen Bericht lesen"}</span></button></div>`;
+  }
+  if (v === "C" && mein) {
+    return `<div class="${kl}">${innen}<div class="bericht-kasten"><span class="ki">KI-generiert · Spielbericht</span><p>${text}</p></div></div>`;
+  }
+  const auf = offen.includes(id);
+  return `<div class="${kl}">${innen}
+    <button type="button" class="b-knopf" aria-expanded="${auf}" aria-controls="${kid}" aria-label="KI-Spielbericht ${auf?"zuklappen":"aufklappen"}">Bericht${PFEIL}</button>
+    <div class="bericht-kasten" id="${kid}"${auf?"":" hidden"}><span class="ki">KI-generiert</span><p>${text}</p></div></div>`;
+}
+
+function tabelle(w){
+  return `<div class="g-tab"><h4>Tabelle</h4><table><thead><tr><th class="t-pl">#</th><th class="t-team">Team</th><th>Sp</th><th>+/−</th><th>Pkt</th></tr></thead><tbody>${
+    w.tabelle.map(z=>`<tr class="${w.mein.includes(z[1])?"mein ":""}${z[6]?"grenze":""}"><td class="pl"><span style="--z:${z[5]}">${z[0]}</span></td><td class="t-team"><span><i class="kz">${kz(z[1])}</i><span class="name">${esc(z[1])}</span></span></td><td class="z">${z[2]}</td><td class="z">${z[3]}</td><td class="pk">${z[4]}</td></tr>`).join("")
+  }</tbody></table></div>`;
+}
+
+function karte(w, v, offen){
+  const tage = w.tage || [[w.tag, w.partien]];
+  return `<section class="g-karte" style="--c:${FARBEN[w.titel]}" aria-label="${w.titel}">
+    <header class="g-kk"><span class="g-marke" aria-hidden="true">${MARKEN[w.titel]}</span><h3>${w.titel}</h3><button class="neu-laden" aria-label="${w.titel} aktualisieren">↻</button></header>
+    <p class="g-unter">${w.unter}</p>
+    ${tage.map(([t,ps])=>`<div role="group" aria-label="${t}"><p class="g-tagzeile">${t}</p>${ps.map(p=>partie(p,w,v,offen)).join("")}</div>`).join("")}
+    ${tabelle(w)}</section>`;
+}
+
+function dash(v, offen){
+  return `<div class="dash"><section aria-label="Sport"><div class="g-gk"><h2>Sport</h2></div>
+    <div class="g-raster">${karte(BL,v,offen)}${karte(PL,v,offen)}${karte(CL,v,offen)}</div></section></div>`;
+}
+
+function finde(id){
+  for (const w of [BL, PL]) { const p = w.partien.find(x => x[0] === id); if (p) return [p, w]; }
+}
+function blatt(id){
+  const [p, w] = finde(id);
+  const [,,h,g,erg,tH,tG,ber] = p;
+  const team = (n, tore) => `<div class="blatt-team${w.mein.includes(n)?" mein":""}"><i class="kz">${kz(n)}</i><span class="name">${esc(LANG[n]||n)}</span><span class="blatt-tore">${tore.map(t=>`<span>${esc(t)}</span>`).join("")}</span></div>`;
+  return `<div class="blatt" role="dialog" aria-modal="true" aria-label="Spielbericht ${esc(h)} gegen ${esc(g)}">
+    <div class="griff" aria-hidden="true"></div>
+    <div class="blatt-kopf"><span class="g-marke" style="--c:${FARBEN[w.titel]}" aria-hidden="true">${MARKEN[w.titel]}</span><p><b>${w.titel}</b> · ${w.unter.split(" · ")[0]} · ${w.tag}</p><button class="zu" data-zu aria-label="Schließen">×</button></div>
+    <div class="blatt-spiel">${team(h,tH)}<div class="blatt-erg"><b>${erg.replace(":"," – ")}</b><span>Ende</span></div>${team(g,tG)}</div>
+    <div class="blatt-text"><span class="ki">KI-generiert</span><p>${esc(BERICHT[ber])}</p><span class="stand">Erstellt 17:45 aus dem Liveticker von ESPN</span></div>
+  </div>`;
+}
+
+function block(v){
+  const offen = (v.id === "A" || v.id === "D") ? ["koelev"] : [];
+  let h = `<section class="variante-block"><div class="variante-titel"><h2>${v.name}</h2><p>${v.text}</p><p class="pro">${v.pro}</p><p class="contra">${v.contra}</p></div>
+    <p class="kontext">Mac/iPad, 1200 px</p><div class="geraet breite-1200 vg">${dash(v.id, offen)}</div>
+    <p class="kontext">iPhone, 390 px</p><div class="geraet breite-390 vg">${dash(v.id, offen)}</div>`;
+  if (v.id === "B") {
+    h += `<p class="kontext">Blatt geöffnet (Köln – Leverkusen angetippt), Mac/iPad 1200 px</p>
+      <div class="geraet breite-1200 vg demo-bild">${dash("B", [])}<div class="schleier">${blatt("koelev")}</div></div>
+      <p class="kontext">Blatt geöffnet, iPhone 390 px (von unten)</p>
+      <div class="geraet breite-390 vg demo-bild klein">${dash("B", [])}<div class="schleier">${blatt("koelev")}</div></div>`;
+  }
+  return h + `</section>`;
+}
+
+document.getElementById("buehne").innerHTML = VARIANTEN.map(block).join("");
+
+document.addEventListener("click", e => {
+  const knopf = e.target.closest(".b-knopf");
+  if (knopf){
+    const auf = knopf.getAttribute("aria-expanded") !== "true";
+    knopf.setAttribute("aria-expanded", auf);
+    knopf.setAttribute("aria-label", `KI-Spielbericht ${auf?"zuklappen":"aufklappen"}`);
+    document.getElementById(knopf.getAttribute("aria-controls")).hidden = !auf;
+    return;
+  }
+  const vs = e.target.closest(".vorschau");
+  if (vs){
+    const auf = vs.getAttribute("aria-expanded") !== "true";
+    vs.setAttribute("aria-expanded", auf);
+    vs.querySelector(".mehr").textContent = auf ? "Weniger" : "Ganzen Bericht lesen";
+    return;
+  }
+  if (e.target.closest("[data-zu]") || e.target.classList.contains("schleier")){
+    const s = e.target.closest(".schleier");
+    if (s && s.classList.contains("fest")) s.remove();
+    return;
+  }
+  const zeile = e.target.closest("[data-blatt]");
+  if (zeile){
+    const s = document.createElement("div");
+    s.className = "schleier fest vg";
+    s.innerHTML = blatt(zeile.dataset.blatt);
+    document.body.appendChild(s);
+    s.querySelector("[data-zu]").focus();
+  }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") document.querySelector(".schleier.fest")?.remove(); });
+</script>
+</body>
+</html>

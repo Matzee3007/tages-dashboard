@@ -336,7 +336,9 @@ Entscheidungen aus der Befragung zu Schritt 3 (Spielberichte) vom 2026-11-17, fe
 - **Prüfung:** jeder Bericht automatisch (Länge, Deutsch, Endstand, nur Spieler aus dem Liveticker), vorher eine Evaluation mit 10 echten
   Partien und dem Urteil des Entwicklers.
 - **Fehlt ein Bericht,** erscheint die Partie wie bisher ohne Hinweis. Ein vorhandener Bericht ist als KI-generiert gekennzeichnet.
-- **Anzeige in der Kachel:** erst Mock mit `mock-bauer`, dann Plan.
+- **Anzeige in der Kachel:** Variante A aus dem Mock (`assets/mocks/2026-11-17-spielbericht.html`, gewählt am 2026-11-17): ein Knopf
+  „Bericht“ unter dem Ergebnis klappt den Absatz unter der Partie auf, mit der Marke „KI-generiert“, wie „Zusammenfassung“ bei den
+  KI-News. Partien ohne Bericht bleiben wie bisher.
 
 ## Stolpersteine
 
