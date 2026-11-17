@@ -109,21 +109,6 @@ test("jeder Absender trägt seine Hausfarbe, das Quadrat die Marke", () => {
   expect(decoder.style.getPropertyValue("--marke")).toBe("#7FA8AE");
 });
 
-test("nur frische Meldungen tragen den Punkt", () => {
-  render(<KiNewsAnsicht daten={DATEN} />);
-
-  expect(
-    within(
-      screen.getByRole("link", { name: /Introducing Claude/ }),
-    ).queryByRole("img", { name: "neu" }),
-  ).not.toBeNull();
-  expect(
-    within(
-      screen.getByRole("link", { name: /Responsible Scaling/ }),
-    ).queryByRole("img", { name: "neu" }),
-  ).toBeNull();
-});
-
 test("ein Absender ohne neue Meldung bekommt eine Zeile", () => {
   render(<KiNewsAnsicht daten={DATEN} />);
 
@@ -174,7 +159,7 @@ test("eine Meldung ohne Uhrzeit zeigt Kalendertage und von gestern den Punkt", (
 
   const link = screen.getByRole("link", { name: /Teaching AI/ });
   expect(within(link).getByText("gestern")).toBeDefined();
-  expect(within(link).queryByRole("img", { name: "neu" })).not.toBeNull();
+  expect(within(link).getByText("Neu")).toBeDefined();
 });
 
 function mitZusammenfassung(zusammenfassung: string) {
@@ -239,4 +224,36 @@ test("der Knopf zeigt auch zugeklappt auf seinen Kasten", () => {
     `[id="${knopf.getAttribute("aria-controls")}"]`,
   );
   expect(kasten?.hasAttribute("hidden")).toBe(true);
+});
+
+test("der erste Absender mit Meldungen ist die große Karte", () => {
+  render(<KiNewsAnsicht daten={DATEN} />);
+  expect(
+    screen
+      .getByRole("region", { name: "Anthropic" })
+      .hasAttribute("data-gross"),
+  ).toBe(true);
+  expect(
+    screen
+      .getByRole("region", { name: "The Decoder" })
+      .hasAttribute("data-gross"),
+  ).toBe(false);
+});
+
+test("die erste Meldung eines Absenders ist die Schlagzeile", () => {
+  render(<KiNewsAnsicht daten={DATEN} />);
+  const anthropic = screen.getByRole("region", { name: "Anthropic" });
+  expect(
+    within(anthropic)
+      .getAllByRole("heading", { level: 4 })
+      .map((ueberschrift) => ueberschrift.textContent),
+  ).toEqual(["Introducing Claude for Financial Services"]);
+});
+
+test("eine frische Meldung zeigt Neu", () => {
+  render(<KiNewsAnsicht daten={DATEN} />);
+  const link = screen.getByRole("link", { name: /Introducing Claude/ });
+  expect(within(link).getByText("Neu")).toBeDefined();
+  const alt = screen.getByRole("link", { name: /Responsible Scaling/ });
+  expect(within(alt).queryByText("Neu")).toBeNull();
 });

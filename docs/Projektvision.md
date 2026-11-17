@@ -89,7 +89,8 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
   Originalsprache, ohne Übersetzung. Dazu kommt je Meldung eine KI-Zusammenfassung des verlinkten Artikels auf Deutsch
   ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]). Fehlt sie, erscheint die Meldung wie bisher.
 - **Sport:** eine Kachel pro Wettbewerb mit den Abschnitten Spieltag und Tabelle (Formel 1: Rennwochenende und
-  WM-Wertung). Gezeigt wird der aktuelle Spieltag, nicht nur heute. Mein Team ist hervorgehoben und steht oben.
+  WM-Wertung). Gezeigt wird der aktuelle Spieltag, nicht nur heute. Mein Team ist hervorgehoben und steht in seinem Tag oben
+  (seit 2026-11-17 nach Tagen gegliedert, Nachtrag Aussehen G).
   Uhrzeiten in deutscher Zeit.
 - **Schritte:** Schritte von heute, Tagesziel mit Fortschrittsbalken, Verlauf der letzten 7 Tage als Balken.
 
@@ -269,7 +270,8 @@ Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
   „Tabelle gerade nicht erreichbar“.
 - **Sport als Gruppe** (Glossar): Die Fußball-Kacheln bleiben eigenständige Kacheln (Architekturprinzip 3), stehen aber sichtbar zusammen
   unter „Sport“.
-- **Plätze der Linien** stehen je Wettbewerb in der Einstellungsdatei im Code und werden zu jeder Saison von Hand geprüft. Sie zeigen
+- **Plätze der Linien** stehen je Wettbewerb in der Einstellungsdatei im Code und werden zu jeder Saison von Hand geprüft. Seit 2026-11-17
+  stehen dort Zonen (`zonen`, Nachtrag Aussehen G), die Linien ergeben sich aus deren Grenzen. Sie zeigen
   die Grundverteilung, für 2026/27 geprüft am 2026-11-16: Bundesliga nach 4, 5, 6, 15, 16, Premier League nach 4, 5, 6, 17, Champions
   League nach 8 und 24. Verschieben Pokalsieger oder ein Zusatzplatz der UEFA-Wertung die Plätze, wird das am Saisonende von Hand
   nachgetragen. Quellen: [Bundesliga 2026/27](https://wiki.krisyotam.com/content/wikipedia_en_all_nopic_2026-03/2026%E2%80%9327_Bundesliga),
@@ -285,6 +287,18 @@ Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
   Einstellungsdatei. Orange gehört allein Mein Team, Live und „neu“: Bei Anthropic, Claude Updates und Hacker News steht die orange
   Hausfarbe deshalb nur im kleinen Quadrat. Die Absender hängen in einer eigenen Spalte links neben ihren Meldungen. Der Knopf für die
   KI-Zusammenfassung heißt jetzt „Zusammenfassung“, die Markierung „KI-generiert“ bleibt.
+- **Nachtrag 2026-11-17, Aussehen G „Spielfeld + Zeitung“** (`assets/mocks/2026-11-17-aussehen-g.html`, Vorbilder FotMob und Apple
+  News, ersetzt F, das dem Entwickler zu leer und zu unprofessionell war, siehe
+  [[projects/tages-dashboard/docs/plaene/2026-11-17-aussehen-g|Plan]]):
+  - Karten auf dunklem Grund `#0F1318`, Marke mit Kürzel (BL, PL, CL) im Kopf jeder Sport-Kachel. KI-News trägt wie die Gruppe Sport
+    einen großen Titel.
+  - Partien nach deutschem Tag gegliedert, darin Mein Team zuerst. Jede Partie symmetrisch: Heim rechtsbündig, Feld mit Ergebnis
+    oder Anstoß in der Mitte, Gast links. Torschützen stehen unter dem Team, dem ESPN das Tor gutschreibt (beim Eigentor der Gegner).
+  - Die Tabelle zeigt **Zonen** (Champions League, Europa League, Conference League, Relegation, Abstieg; in der Champions League
+    Achtelfinale und Play-offs) als Farbbalken an der Platzziffer, mit Legende der sichtbaren Zonen. Die Linien ergeben sich aus den
+    Zonengrenzen und sind neutral grau. Die Zonen ersetzen `linien` in der Einstellungsdatei.
+  - KI-News: eine Karte je Absender. Die erste Meldung ist die Schlagzeile, der Absender mit der neuesten Meldung bekommt die große
+    Karte. Frische Meldungen zeigen „Neu“.
 - **Aufteilung in PRs:** 1. Premier League mit football-data.org (Schlüssel, Zwischenspeicher) und dem Herausziehen des Gemeinsamen der
   Sport-Kacheln, dabei der Skill `module-entwerfen`. 2. Champions League (anderer Kalender, 36 Teams). 3. Neues Aussehen.
 - **Spieltag aus Kalendertagen:** Aufeinanderfolgende Tage mit Spielen bei ESPN bilden einen Spieltag, ein Tag ohne Spiel trennt.
@@ -304,7 +318,8 @@ Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
   Leipzig, Freiburg, Leverkusen, Bremen, Elversberg, Stuttgart, Frankfurt, HSV, Mainz, Paderborn, Augsburg, Hoffenheim, Köln, Union,
   Schalke, Gladbach. Fehlt ein Team (z. B. ein Aufsteiger), steht der Kurzname von ESPN da und im Server-Log
   `Team <id> fehlt in der Namensliste`.
-- **Aussehen nach dem Mock:** eine Zeile pro Partie (Zeit oder Minute, Logo und Kurzname je Team, Ergebnis), darunter bei jeder Partie
+- **Aussehen nach dem Mock** (abgelöst am 2026-11-17 durch den Nachtrag Aussehen G, gilt weiter für die Lücke; Mein Team hat seitdem
+  keinen Balken mehr, sondern leicht orangen Hintergrund und orangen Namen): eine Zeile pro Partie (Zeit oder Minute, Logo und Kurzname je Team, Ergebnis), darunter bei jeder Partie
   mit Toren eine graue Zeile mit den Torschützen. Mein Team mit orangem Balken links und leicht orangem Hintergrund, in Spieltag und
   Tabelle. Eine Lücke in der Tabelle zeigt eine Zeile `···`.
 - **Speicher:** Spielplan von OpenLigaDB 24 Stunden, Tabelle von ESPN wie die Partien (1 bzw. 15 Minuten).

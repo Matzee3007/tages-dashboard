@@ -1,16 +1,19 @@
 @import "tailwindcss";
 
 /* Design-Token: Farben und Schriften nur hier ändern. Das Dashboard ist immer dunkel.
-   Variante F „Instrument“ (Mock vom 2026-11-16): Ordnung über Gewicht und Größe, Farbe nur als Akzent. */
+   Variante G „Spielfeld + Zeitung“ (Mock vom 2026-11-17): Karten auf dunklem Grund, Farbe der Quellen als Akzent. */
 @theme inline {
-  --color-grund: #171b22;
-  --color-rand: #272d37;
+  --color-grund: #0f1318;
+  --color-karte: #1a1f27;
+  --color-flaeche: #222831;
+  --color-rand: #2a313b;
+  --color-grenze: #4a5260;
   --color-rand-stark: #434956;
-  --color-knopf: #272d37;
-  --color-text: #e4e7ec;
-  --color-gedaempft: #8c95a3;
-  --color-lesetext: #c3cad5;
-  --color-rauch: #69727f;
+  --color-knopf: #2a313b;
+  --color-text: #e8ebf0;
+  --color-gedaempft: #939caa;
+  --color-lesetext: #c9d0da;
+  --color-rauch: #6c7583;
   --color-akzent: #ff8a3d;
   --color-info: #86abf5;
   --color-fehler: #f59a90;

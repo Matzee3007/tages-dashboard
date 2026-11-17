@@ -68,3 +68,6 @@ Zum Ausprobieren im Terminal:
 - 2026-11-08: Vom Mac aus Status 200. Am 2026-10-24 kam bei der NFL noch 403.
 - 2026-11-09: Vom Server bei Vercel aus Status 200 in rund 60–70 ms (Versuch im Plan).
 - 2026-11-16: `uefa.champions` vom Mac aus Status 200, ein Tag (`?dates=20261124`) mit 9 Partien, Zeiträume wieder 400.
+- 2026-11-17: Jedes Tor in `competitions[0].details[]` trägt `team.id`, das Team, dem es gutgeschrieben wird. Bei einem Eigentor
+  (`ownGoal: true`) ist das der Gegner des Schützen, geprüft an 5 Eigentoren der Bundesliga und Premier League (z. B. Bischof → Freiburg).
+  Daraus liest `leseTag` die Seite des Tors (`heim` oder `gast`).

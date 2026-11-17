@@ -59,6 +59,7 @@ type EspnDetail = {
   ownGoal?: boolean;
   penaltyKick?: boolean;
   clock?: { displayValue?: string };
+  team?: { id?: string };
   athletesInvolved?: { shortName?: string }[];
 };
 
@@ -101,12 +102,26 @@ function torText(detail: EspnDetail): string {
   return `${name} ${minute}${zusatz}`;
 }
 
+// Das Team, dem ESPN das Tor gutschreibt. Passt es zu keinem Teilnehmer, steht das Tor beim Heimteam, und das Log meldet es.
+function torSeite(
+  detail: EspnDetail,
+  heimId: string | undefined,
+  gastId: string | undefined,
+): "heim" | "gast" {
+  const id = detail.team?.id;
+  if (id === gastId) return "gast";
+  if (id !== heimId) console.error(`Tor mit unbekanntem Team ${id}`);
+  return "heim";
+}
+
 export function leseTag(json: unknown, jetzt: Date, teams: Team[]): Partie[] {
   const partien = (json as { events?: EspnPartie[] })?.events;
   if (!Array.isArray(partien)) falscheForm();
   return partien.map((roh) => {
     const wettkampf = roh.competitions?.[0];
     const teilnehmer = wettkampf?.competitors ?? [];
+    const heimId = teilnehmer.find((t) => t.homeAway === "home")?.team?.id;
+    const gastId = teilnehmer.find((t) => t.homeAway === "away")?.team?.id;
     const anstoss = roh.date ?? falscheForm();
     const zustand = roh.status?.type?.state;
     // ESPN meldet den Anpfiff manchmal verspätet: pre nach dem Anstoß zählt schon als laufend.
@@ -136,7 +151,10 @@ export function leseTag(json: unknown, jetzt: Date, teams: Team[]): Partie[] {
       ),
       tore: (wettkampf?.details ?? [])
         .filter((detail) => detail.scoringPlay)
-        .map((detail) => ({ text: torText(detail) })),
+        .map((detail) => ({
+          text: torText(detail),
+          seite: torSeite(detail, heimId, gastId),
+        })),
     };
   });
 }

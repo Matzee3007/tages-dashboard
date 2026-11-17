@@ -11,27 +11,6 @@ export function farbVariablen(aussehen: Aussehen): CSSProperties {
   } as CSSProperties;
 }
 
-// ebene: eine unter dem Kacheltitel (h3 ohne Gruppe, h4 in einer Gruppe).
-export function Abschnitt({
-  titel,
-  ebene = 4,
-  children,
-}: {
-  titel: string;
-  ebene?: 3 | 4;
-  children: ReactNode;
-}) {
-  const Ueberschrift = ebene === 3 ? "h3" : "h4";
-  return (
-    <div className="flex flex-col gap-1">
-      <Ueberschrift className="text-[13px] font-semibold text-gedaempft">
-        {titel}
-      </Ueberschrift>
-      {children}
-    </div>
-  );
-}
-
 export function FehlerHinweis({
   stand,
   erneutVersuchen,
@@ -55,7 +34,7 @@ export function FehlerHinweis({
         type="button"
         onClick={erneutVersuchen}
         disabled={laedt}
-        className="-ml-3.5 min-h-11 cursor-pointer rounded-lg px-3.5 font-semibold text-info hover:bg-knopf disabled:cursor-default disabled:opacity-50"
+        className="mt-2 min-h-11 cursor-pointer rounded-full bg-knopf px-4 font-semibold disabled:cursor-default disabled:opacity-50"
       >
         {laedt ? "Wird versucht …" : "Jetzt erneut versuchen"}
       </button>
@@ -79,60 +58,87 @@ export function Kachel({
   holtFrisch?: boolean;
   children?: ReactNode;
 }) {
+  const kopfRechts = (
+    <div className="flex items-center gap-1">
+      {kachel.zusatz && (
+        <span className="text-[13px] text-gedaempft">{kachel.zusatz}</span>
+      )}
+      {aktualisieren && (
+        <button
+          type="button"
+          onClick={aktualisieren}
+          disabled={laedt}
+          aria-label={`${kachel.titel} aktualisieren`}
+          title="Frisch von den Quellen holen"
+          className="grid size-11 cursor-pointer place-items-center rounded-full text-lg text-gedaempft hover:bg-knopf hover:text-text disabled:cursor-default"
+        >
+          <span aria-hidden className={holtFrisch ? "animate-spin" : undefined}>
+            ↻
+          </span>
+        </button>
+      )}
+    </div>
+  );
+  const fehler = kachel.fehler && (
+    <FehlerHinweis
+      stand={kachel.stand}
+      erneutVersuchen={erneutVersuchen}
+      laedt={laedt}
+    />
+  );
+
+  // Ohne Gruppe trägt die Kachel selbst den großen Titel und ihre Inhalte bringen eigene Karten mit (KI-News).
+  if (!kachel.gruppe) {
+    return (
+      <section
+        aria-label={kachel.titel}
+        style={farbVariablen(kachel.aussehen)}
+        className="flex min-w-0 flex-col gap-3.5"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <GrosserTitel>{kachel.titel}</GrosserTitel>
+          {kopfRechts}
+        </div>
+        {fehler && <div className="rounded-xl bg-karte p-3.5">{fehler}</div>}
+        {children}
+      </section>
+    );
+  }
+
+  // In einer Gruppe ist die Kachel eine Karte unter der Überschrift der Gruppe (Mock G).
   return (
     <section
       aria-label={kachel.titel}
       style={farbVariablen(kachel.aussehen)}
-      className="flex min-w-0 flex-col gap-3"
+      className="flex min-w-0 flex-col overflow-hidden rounded-2xl bg-karte"
     >
-      <div className="-mr-3 flex min-h-11 items-center gap-2.5">
-        {/* In einer Gruppe ist die Kachel eine von mehreren unter deren Überschrift, sonst trägt sie selbst den großen Titel. */}
-        {kachel.gruppe ? (
-          <>
-            <span
-              aria-hidden
-              className="size-[9px] shrink-0 rounded-[2px] bg-(--marke)"
-            />
-            <h3 className="flex-1 text-base font-[720] tracking-[-0.005em]">
-              {kachel.titel}
-            </h3>
-          </>
-        ) : (
-          <h2 className="flex-1 text-[30px] leading-none font-[280] tracking-[-0.02em] min-[600px]:text-[34px]">
-            {kachel.titel}
-          </h2>
-        )}
-        <div className="flex items-center gap-1">
-          {kachel.zusatz && (
-            <span className="text-[13px] text-gedaempft">{kachel.zusatz}</span>
-          )}
-          {aktualisieren && (
-            <button
-              type="button"
-              onClick={aktualisieren}
-              disabled={laedt}
-              aria-label={`${kachel.titel} aktualisieren`}
-              title="Frisch von den Quellen holen"
-              className="grid size-11 cursor-pointer place-items-center rounded-lg text-lg text-rauch hover:bg-knopf hover:text-text disabled:cursor-default"
-            >
-              <span
-                aria-hidden
-                className={holtFrisch ? "animate-spin" : undefined}
-              >
-                ↻
-              </span>
-            </button>
-          )}
-        </div>
+      <div className="flex items-center gap-3 py-3 pr-1 pl-3.5">
+        <span
+          aria-hidden
+          className="grid size-[34px] shrink-0 place-items-center rounded-[10px] bg-(--marke) text-[12.5px] font-[800] tracking-[-0.01em] text-white"
+        >
+          {kachel.aussehen.kuerzel}
+        </span>
+        <h3 className="min-w-0 flex-1 text-[16.5px] leading-[1.2] font-[740] tracking-[-0.01em]">
+          {kachel.titel}
+        </h3>
+        {kopfRechts}
       </div>
-      {kachel.fehler && (
-        <FehlerHinweis
-          stand={kachel.stand}
-          erneutVersuchen={erneutVersuchen}
-          laedt={laedt}
-        />
+      {fehler && (
+        <div className="mx-3.5 mb-3.5 rounded-xl bg-flaeche p-3.5">
+          {fehler}
+        </div>
       )}
       {children}
     </section>
+  );
+}
+
+// Gruppentitel und Titel einer Kachel ohne Gruppe sehen gleich aus (Mock G).
+export function GrosserTitel({ children }: { children: ReactNode }) {
+  return (
+    <h2 className="text-[26px] leading-[1.1] font-[780] tracking-[-0.022em] min-[600px]:text-[28px]">
+      {children}
+    </h2>
   );
 }

@@ -1,5 +1,12 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { afterEach, expect, test } from "vitest";
+import type { Zone } from "@/lib/einstellungen";
 import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
 import type {
   FussballDaten,
@@ -31,9 +38,9 @@ const KOELN_LEVERKUSEN: Partie = {
   heim: team("122", "Köln", 1),
   gast: team("131", "Leverkusen", 2),
   tore: [
-    { text: "García 7'" },
-    { text: "Schick 85'" },
-    { text: "El Mala 90+2'" },
+    { text: "García 7'", seite: "gast" },
+    { text: "Schick 85'", seite: "gast" },
+    { text: "El Mala 90+2'", seite: "heim" },
   ],
 };
 
@@ -58,7 +65,7 @@ const DATEN: FussballDaten = {
   partien: [MAINZ_BAYERN, KOELN_LEVERKUSEN, FREIBURG_UNION],
   tabelle: [zeile(1, "132", "Bayern"), null, zeile(4, "126", "Freiburg")],
   meinTeam: ["132"],
-  linien: [],
+  zonen: [],
 };
 
 test("Überschrift mit Nummer und Tagen", () => {
@@ -75,13 +82,37 @@ test("Überschrift mit Nummer und Tagen", () => {
   ).toBeDefined();
 });
 
-test("eine Partie zeigt Anstoß, Teams und Ergebnis", () => {
+test("eine beendete Partie zeigt Ende, Teams und Ergebnis im Feld", () => {
   render(<FussballAnsicht daten={DATEN} />);
   const partie = screen.getByTestId("partie-1");
-  expect(partie.textContent).toContain("Sa 15:30");
+  expect(partie.textContent).toContain("Ende");
   expect(partie.textContent).toContain("Mainz");
   expect(partie.textContent).toContain("Bayern");
-  expect(partie.textContent).toContain("1:2");
+  expect(within(partie).getByTestId("feld").textContent).toBe("1 – 2");
+});
+
+test("eine offene Partie zeigt die Anstoßzeit im Feld", () => {
+  const offen: Partie = {
+    ...MAINZ_BAYERN,
+    id: "8",
+    status: "vorher",
+    heim: team("2950", "Mainz", null),
+    gast: team("132", "Bayern", null),
+  };
+  render(<FussballAnsicht daten={{ ...DATEN, partien: [offen] }} />);
+  expect(screen.getByTestId("feld").textContent).toBe("15:30");
+});
+
+test("Partien stehen unter ihrem Tag", () => {
+  render(<FussballAnsicht daten={DATEN} />);
+  const tage = screen.getAllByRole("group");
+  expect(tage.map((tag) => tag.getAttribute("aria-label"))).toEqual([
+    "Samstag, 7. November",
+    "Sonntag, 8. November",
+  ]);
+  expect(within(tage[0]).getByTestId("partie-1")).toBeDefined();
+  expect(within(tage[1]).getByTestId("partie-2")).toBeDefined();
+  expect(within(tage[1]).getByTestId("partie-3")).toBeDefined();
 });
 
 test("laufende Partie zeigt die Minute", () => {
@@ -91,11 +122,21 @@ test("laufende Partie zeigt die Minute", () => {
   expect(partie.querySelector('[aria-label="live"]')).not.toBeNull();
 });
 
-test("Torschützen in einer Zeile", () => {
+test("ein Tor steht unter seinem Team", () => {
   render(<FussballAnsicht daten={DATEN} />);
+  const partie = screen.getByTestId("partie-2");
+  const heim = partie.querySelector('[data-seite="heim"]')!;
+  const gast = partie.querySelector('[data-seite="gast"]')!;
   expect(
-    screen.getByText("García 7' · Schick 85' · El Mala 90+2'"),
-  ).toBeDefined();
+    within(heim as HTMLElement)
+      .getAllByRole("listitem")
+      .map((t) => t.textContent),
+  ).toEqual(["El Mala 90+2'"]);
+  expect(
+    within(gast as HTMLElement)
+      .getAllByRole("listitem")
+      .map((t) => t.textContent),
+  ).toEqual(["García 7'", "Schick 85'"]);
 });
 
 test("Mein Team ist markiert", () => {
@@ -110,12 +151,20 @@ test("Mein Team ist markiert", () => {
   expect(bayernZeile.hasAttribute("data-mein-team")).toBe(true);
 });
 
+const CL = { name: "Champions League", farbe: "#4C8DF6" };
+const ZONEN_BL: Zone[] = [
+  { von: 1, bis: 4, ...CL },
+  { von: 5, bis: 5, name: "Europa League", farbe: "#22B8CF" },
+  { von: 6, bis: 6, name: "Conference League", farbe: "#4CC38A" },
+  { von: 17, bis: 18, name: "Abstieg", farbe: "#E5484D" },
+];
+
 function mitLinien(
   tabelle: (TabellenZeile | null)[],
-  linien: number[],
+  zonen: Zone[],
   meinTeam: string[] = [],
 ) {
-  render(<FussballAnsicht daten={{ ...DATEN, tabelle, linien, meinTeam }} />);
+  render(<FussballAnsicht daten={{ ...DATEN, tabelle, zonen, meinTeam }} />);
   return screen
     .getAllByRole("row")
     .filter((reihe) => reihe.hasAttribute("data-linie"))
@@ -130,7 +179,7 @@ test("nach Platz 4 kommt eine Linie, wenn Platz 5 folgt", () => {
     zeile(4, "4", "Vier"),
     zeile(5, "5", "Fünf"),
   ];
-  expect(mitLinien(tabelle, [4])).toEqual(["4"]);
+  expect(mitLinien(tabelle, [{ von: 1, bis: 4, ...CL }])).toEqual(["4"]);
 });
 
 test("keine Linie über eine Lücke", () => {
@@ -141,7 +190,7 @@ test("keine Linie über eine Lücke", () => {
     null,
     zeile(7, "7", "Sieben"),
   ];
-  expect(mitLinien(tabelle, [4])).toEqual([]);
+  expect(mitLinien(tabelle, [{ von: 1, bis: 4, ...CL }])).toEqual([]);
 });
 
 test("bei gleichem Platz steht die Linie unter dem letzten Team davon", () => {
@@ -151,17 +200,48 @@ test("bei gleichem Platz steht die Linie unter dem letzten Team davon", () => {
     zeile(4, "44", "AuchVier"),
     zeile(6, "6", "Sechs"),
   ];
-  expect(mitLinien(tabelle, [4])).toEqual(["4"]);
+  expect(mitLinien(tabelle, [{ von: 1, bis: 4, ...CL }])).toEqual(["4"]);
   expect(
     screen.getByRole("row", { name: /AuchVier/ }).hasAttribute("data-linie"),
   ).toBe(true);
 });
 
 test("Mein Team an der Grenze hat Markierung und Linie", () => {
-  mitLinien([zeile(4, "4", "Vier"), zeile(5, "5", "Fünf")], [4], ["4"]);
+  mitLinien(
+    [zeile(4, "4", "Vier"), zeile(5, "5", "Fünf")],
+    [{ von: 1, bis: 4, ...CL }],
+    ["4"],
+  );
   const reihe = screen.getByRole("row", { name: /Vier/ });
   expect(reihe.hasAttribute("data-mein-team")).toBe(true);
   expect(reihe.hasAttribute("data-linie")).toBe(true);
+  expect(reihe.getAttribute("data-zone")).toBe("Champions League");
+});
+
+test("jede Zeile trägt ihre Zone", () => {
+  mitLinien([zeile(4, "4", "Vier"), zeile(5, "5", "Fünf")], ZONEN_BL);
+  expect(
+    screen.getByRole("row", { name: /Fünf/ }).getAttribute("data-zone"),
+  ).toBe("Europa League");
+});
+
+test("die Legende nennt nur die Zonen im Ausschnitt", () => {
+  mitLinien(
+    [
+      zeile(1, "1", "Eins"),
+      null,
+      zeile(4, "4", "Vier"),
+      zeile(5, "5", "Fünf"),
+      zeile(6, "6", "Sechs"),
+    ],
+    ZONEN_BL,
+  );
+  const legende = screen.getByRole("list", { name: "Zonen" });
+  expect(
+    within(legende)
+      .getAllByRole("listitem")
+      .map((eintrag) => eintrag.textContent),
+  ).toEqual(["Champions League", "Europa League", "Conference League"]);
 });
 
 test("Lücke in der Tabelle", () => {
@@ -186,8 +266,8 @@ test("abgesagte Partie zeigt abgesagt statt Anstoß und Ergebnis", () => {
   };
   render(<FussballAnsicht daten={{ ...DATEN, partien: [abgesagt] }} />);
   const partie = screen.getByTestId("partie-9");
-  expect(partie.textContent).toContain("abgesagt");
-  expect(partie.textContent).not.toContain("Sa 15:30");
+  expect(within(partie).getByTestId("feld").textContent).toBe("abgesagt");
+  expect(partie.textContent).not.toContain("15:30");
 });
 
 test("ohne Tabelle steht ein Hinweis statt der Tabelle", () => {

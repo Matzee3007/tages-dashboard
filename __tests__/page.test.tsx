@@ -64,6 +64,7 @@ test("zeigt Datum, Zeit der Aktualisierung, Kachel und Abmelden", async () => {
       name: "Sonntag, 8. November",
     }),
   ).toBeDefined();
+  expect(screen.getByText("Sonntag")).toBeDefined();
   expect(screen.getByText("Aktualisiert 14:32")).toBeDefined();
   expect(
     screen.getByRole("heading", { level: 2, name: "KI-News" }),
@@ -197,7 +198,7 @@ test("zeigt die Bundesliga-Kachel", async () => {
           partien: [],
           tabelle: [],
           meinTeam: ["132"],
-          linien: [],
+          zonen: [],
         },
         stand: ZEIT,
       },
