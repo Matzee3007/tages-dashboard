@@ -58,3 +58,20 @@ und legt das Ergebnis in Supabase ab, Vercel liest nur
 - **Fremde Inhalte:** Auch der Liveticker ist fremder Text. Die Antwort wird wie bei den Zusammenfassungen gegen ein festes Format
   geprüft und nie als HTML angezeigt.
 - **Takt von 15 Minuten** gilt auch für die KI-News. Die Feeds werden vom Mac aus viermal so oft abgerufen wie vorher.
+
+## Nachtrag 2026-11-17: Evaluation mit qwen3:4b durchgefallen
+
+Erster Lauf mit dem ganzen Liveticker (`commentary`, rund 8.700 Zeichen) und einem Feld `spieler`: 0 von 10 Berichten bestanden die
+Prüfung, zwei Anfragen brauchten über 120 Sekunden. `qwen3:4b` füllte `spieler` mit allen Namen der Partie, schrieb 2 bis 11 Sätze statt 4
+bis 6, reihte meist nur Tore aneinander und verdrehte Fakten (Spieler beim falschen Team, „Ausgleichstor“ zum 1:2).
+
+Entscheidung des Entwicklers (Option A von vier: A größeres lokales Modell und weniger Eingabe, B nur weniger Eingabe, C gehostetes Modell,
+D parken):
+
+- **Eingabe:** nur die wichtigen Einträge des Livetickers (`keyEvents`: Tore, Karten, Halbzeit, Ende), ohne Wechsel, rund 1.900 statt 8.700
+  Zeichen.
+- **Prüfung:** Das Feld `spieler` und die Prüfung „jeder genannte Spieler steht im Liveticker“ entfallen. Geprüft werden Länge, Sprache,
+  Endstand und dass jeder Torschütze genannt wird. Erfundene Spieler zeigt nur die Evaluation.
+- **Modell:** Evaluation mit `ai/gemma4:e4b` (schon geladen, 6 GB). Offen, falls es besteht: Auf 16 GB passt nur ein Modell gleichzeitig.
+  Ob dann beide Texte mit `gemma4:e4b` entstehen oder die Modelle wechseln, wird nach dem Lauf entschieden.
+- **Fällt auch dieser Lauf durch,** entscheidet der Entwickler zwischen C (neues ADR gegen „Erst gratis“) und D (parken).

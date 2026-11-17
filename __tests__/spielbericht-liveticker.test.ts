@@ -5,13 +5,23 @@ import { ladeLiveticker, leseLiveticker } from "@/lib/spielbericht/liveticker";
 const JETZT = new Date("2026-11-08T19:00:00Z");
 
 const ANTWORT = {
-  commentary: [
-    { time: { displayValue: "" }, text: "First Half begins." },
+  keyEvents: [
+    { clock: { displayValue: "" }, type: { text: "Kickoff" } },
     {
-      time: { displayValue: "7'" },
+      clock: { displayValue: "7'" },
+      type: { text: "Goal - Free-kick" },
       text: "Goal! FC Cologne 0, Bayer 04 Leverkusen 1.",
     },
-    { time: { displayValue: "8'" } },
+    {
+      clock: { displayValue: "74'" },
+      type: { text: "Substitution" },
+      text: "Substitution, FC Cologne. Ísak Jóhannesson replaces Tom Krauß.",
+    },
+    {
+      clock: { displayValue: "90'+6'" },
+      type: { text: "End Regular Time" },
+      text: "Second Half ends, FC Cologne 1, Bayer 04 Leverkusen 2.",
+    },
   ],
 };
 
@@ -19,16 +29,16 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-test("macht aus jedem Eintrag des Livetickers eine Zeile mit Minute", () => {
+test("macht aus jedem wichtigen Eintrag eine Zeile mit Minute, ohne Wechsel", () => {
   expect(leseLiveticker(ANTWORT)).toEqual([
-    "First Half begins.",
     "7' Goal! FC Cologne 0, Bayer 04 Leverkusen 1.",
+    "90'+6' Second Half ends, FC Cologne 1, Bayer 04 Leverkusen 2.",
   ]);
 });
 
 test.each([
   ["Feld fehlt", {}],
-  ["leer", { commentary: [] }],
+  ["leer", { keyEvents: [] }],
   ["kein Objekt", null],
 ])("ohne Liveticker: %s", (_, json) => {
   expect(leseLiveticker(json)).toBeNull();

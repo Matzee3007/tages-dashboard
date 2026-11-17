@@ -16,7 +16,6 @@ function modellAntwortet(bericht: string) {
           message: {
             content: JSON.stringify({
               bericht,
-              spieler: ["García", "Kainz", "Schick"],
             }),
           },
         },

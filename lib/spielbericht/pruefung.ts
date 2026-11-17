@@ -11,39 +11,43 @@ function schuetze(torText: string): string {
   return torText.replace(/\s+\d.*$/, "");
 }
 
-function leseAntwort(
-  inhalt: string,
-): { bericht: string; spieler: string[] } | null {
+function leseAntwort(inhalt: string): string | null {
   let daten: unknown;
   try {
     daten = JSON.parse(inhalt);
   } catch {
     return null;
   }
-  const { bericht, spieler } = (daten ?? {}) as Record<string, unknown>;
-  if (typeof bericht !== "string" || !Array.isArray(spieler)) return null;
-  if (!spieler.every((name) => typeof name === "string")) return null;
-  return { bericht: bericht.trim(), spieler };
+  const { bericht } = (daten ?? {}) as Record<string, unknown>;
+  return typeof bericht === "string" ? bericht.trim() : null;
 }
 
-// spieler: alle Namen, die das Modell nach eigener Angabe nennt. Jeder muss im Liveticker stehen, sonst ist er erfunden.
-export function pruefeBericht(
+// Erfundene Spieler fängt die Prüfung nicht ab (ein Feld spieler füllte qwen3:4b mit allen Namen der Partie), das zeigt nur
+// die Evaluation. Der Grund steht dort neben der Antwort.
+export function pruefeMitGrund(
   inhalt: string,
   partie: Partie,
-  liveticker: string[],
-): string | null {
-  const antwort = leseAntwort(inhalt);
-  if (!antwort) return null;
-  const { bericht, spieler } = antwort;
+): { bericht: string } | { grund: string } {
+  const bericht = leseAntwort(inhalt);
+  if (bericht === null) return { grund: "kein gültiges JSON mit bericht" };
   const saetze = zaehleSaetze(bericht);
-  const ticker = liveticker.join("\n");
-  const gueltig =
-    bericht.length <= MAX_ZEICHEN &&
-    saetze >= MIN_SAETZE &&
-    saetze <= MAX_SAETZE &&
-    istDeutsch(bericht) &&
-    bericht.includes(`${partie.heim.tore}:${partie.gast.tore}`) &&
-    partie.tore.every((tor) => bericht.includes(schuetze(tor.text))) &&
-    spieler.every((name) => ticker.includes(name) && bericht.includes(name));
-  return gueltig ? bericht : null;
+  const endstand = `${partie.heim.tore}:${partie.gast.tore}`;
+  const ohneSchuetze = partie.tore
+    .map((tor) => schuetze(tor.text))
+    .filter((name) => !bericht.includes(name));
+  if (bericht.length > MAX_ZEICHEN)
+    return { grund: `${bericht.length} Zeichen` };
+  if (saetze < MIN_SAETZE || saetze > MAX_SAETZE)
+    return { grund: `${saetze} Sätze` };
+  if (!istDeutsch(bericht)) return { grund: "nicht Deutsch" };
+  if (!bericht.includes(endstand))
+    return { grund: `Endstand ${endstand} fehlt` };
+  if (ohneSchuetze.length)
+    return { grund: `Torschütze fehlt: ${ohneSchuetze.join(", ")}` };
+  return { bericht };
+}
+
+export function pruefeBericht(inhalt: string, partie: Partie): string | null {
+  const ergebnis = pruefeMitGrund(inhalt, partie);
+  return "bericht" in ergebnis ? ergebnis.bericht : null;
 }

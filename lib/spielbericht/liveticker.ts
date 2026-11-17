@@ -1,18 +1,23 @@
-// Liveticker einer Partie von ESPN (Glossar), Grundlage des Spielberichts (ADR 0013). Feld commentary laut Antworten vom 2026-11-17.
+// Liveticker einer Partie von ESPN (Glossar), Grundlage des Spielberichts (ADR 0013). Nur die wichtigen Einträge (keyEvents) ohne
+// Wechsel: Der ganze Liveticker (commentary, rund 8.700 Zeichen) überforderte qwen3:4b (Evaluation vom 2026-11-17).
 import type { FussballEinstellung } from "@/lib/einstellungen";
 import { holeJson } from "@/lib/kacheln/fussball/abruf";
 import { espnAdresse } from "@/lib/kacheln/fussball/espn";
 
-type EspnEintrag = { time?: { displayValue?: string }; text?: string };
+type EspnEintrag = {
+  clock?: { displayValue?: string };
+  type?: { text?: string };
+  text?: string;
+};
 
-// Eine Zeile je Eintrag, z. B. "7' Goal! …". Aufstellung und Anpfiff haben keine Minute. null: kein Liveticker.
+// Eine Zeile je Eintrag, z. B. "7' Goal! …". Einträge ohne Text (Anpfiff) entfallen. null: kein Liveticker.
 export function leseLiveticker(json: unknown): string[] | null {
-  const eintraege = (json as { commentary?: EspnEintrag[] } | null)?.commentary;
+  const eintraege = (json as { keyEvents?: EspnEintrag[] } | null)?.keyEvents;
   if (!Array.isArray(eintraege)) return null;
   const zeilen = eintraege
-    .filter((eintrag) => eintrag.text)
+    .filter((eintrag) => eintrag.text && eintrag.type?.text !== "Substitution")
     .map((eintrag) =>
-      `${eintrag.time?.displayValue ?? ""} ${eintrag.text}`.trim(),
+      `${eintrag.clock?.displayValue ?? ""} ${eintrag.text}`.trim(),
     );
   return zeilen.length ? zeilen : null;
 }
