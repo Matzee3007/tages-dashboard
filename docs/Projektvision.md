@@ -226,8 +226,10 @@ Entscheidungen aus der Befragung vom 2026-11-04:
    dazwischen trennt seit 2026-11-16 der Spielplan (Nachtrag unten). PR 2 Champions League (Ligaphase) erledigt 2026-11-16, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-16-champions-league|Plan]]. PR 3 neues Aussehen erledigt 2026-11-16 (PR #80), siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-16-neues-aussehen|Plan]] (Nachtrag unten).
-3. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
-4. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
+3. **Spielberichte ([[projects/tages-dashboard/docs/adr/0013-spielberichte-vom-mac|ADR 0013]]):** deutscher Spielbericht je beendeter
+   Partie der Fußball-Kacheln, vom lokalen Modell auf dem Mac aus dem Liveticker von ESPN (Entscheidungen unten).
+4. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
+5. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
    nicht, eine andere Gratis-Quelle suchen oder die Kachel unter „Später“ schieben.
 
 Entscheidungen aus der Befragung vom 2026-11-08:
@@ -250,7 +252,7 @@ Entscheidungen aus der Befragung vom 2026-11-08:
   später hat ([[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]).
 - **Torschützen:** eine graue Zeile unter jeder Partie mit Toren, Tore beider Teams nach Minute, z. B. `García 7' · Schick 85'`.
 - **Logos:** rund 20 px vor dem Teamnamen, der Browser lädt sie direkt beim Anbieter. Fehlt ein Bild, bleibt der Platz leer.
-- **NFL** bleibt Schritt 4, zuerst mit einem Testabruf vom Server bei Vercel aus.
+- **NFL** bleibt Schritt 4 (seit 2026-11-17 Schritt 5), zuerst mit einem Testabruf vom Server bei Vercel aus.
 
 Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
 
@@ -324,6 +326,18 @@ Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
   Tabelle. Eine Lücke in der Tabelle zeigt eine Zeile `···`.
 - **Speicher:** Spielplan von OpenLigaDB 24 Stunden, Tabelle von ESPN wie die Partien (1 bzw. 15 Minuten).
 
+Entscheidungen aus der Befragung zu Schritt 3 (Spielberichte) vom 2026-11-17, festgehalten in
+[[projects/tages-dashboard/docs/adr/0013-spielberichte-vom-mac|ADR 0013]]:
+
+- **Spielbericht** (Glossar): ein Absatz mit 4 bis 6 Sätzen, sachlich, auf Deutsch, aus dem Liveticker. Verlauf, Tore mit Schütze und
+  Minute, Wendepunkte, Ergebnis. Keine Wertungen.
+- **Für alle beendeten Partien,** die die Fußball-Kacheln gerade zeigen. Ein Mac, der aus war, holt nur den aktuellen Spieltag nach.
+- **Erzeugt auf dem Mac** im Container `zusammenfassen`, wie die Zusammenfassungen der KI-News. Takt für beides alle 15 Minuten.
+- **Prüfung:** jeder Bericht automatisch (Länge, Deutsch, Endstand, nur Spieler aus dem Liveticker), vorher eine Evaluation mit 10 echten
+  Partien und dem Urteil des Entwicklers.
+- **Fehlt ein Bericht,** erscheint die Partie wie bisher ohne Hinweis. Ein vorhandener Bericht ist als KI-generiert gekennzeichnet.
+- **Anzeige in der Kachel:** erst Mock mit `mock-bauer`, dann Plan.
+
 ## Stolpersteine
 
 - **Arsenal und Champions League nur verzögert:** football-data.org liefert im Gratis-Tarif verzögerte
@@ -350,7 +364,3 @@ Entscheidungen aus der Befragung zu Schritt 2 vom 2026-11-15:
 - Parkplatz: Agent mit Werkzeugen für die KI-News. Wieder aufgreifen, wenn Stufe 3 des KI-Features zwei Wochen im Alltag läuft.
 - Parkplatz: K.-o.-Phase der Champions League (Hin- und Rückspiel, keine Tabelle). Wieder aufgreifen, wenn die Ligaphase endet
   (27. Januar 2027).
-- Parkplatz: Lokale KI für die Fußball-Kacheln, z. B. ein deutscher Spielbericht nach Abpfiff aus dem englischen Liveticker von ESPN
-  (`summary?event=…` liefert `commentary` und `keyEvents`, aber keinen Bericht, gesehen am 2026-11-15 an Köln gegen Leverkusen). Wunsch
-  des Entwicklers vom 2026-11-15. Wieder aufgreifen, wenn Phase 3, Schritt 2 (Premier League und Champions League) fertig ist, dann mit
-  `/grill-with-docs` klären (Form, welche Spiele, Speicherort, Bezug zu ADR 0010).

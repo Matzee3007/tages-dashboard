@@ -31,7 +31,8 @@ Randbedingungen:
 - **Supabase speichert je Meldung nur Link, Zusammenfassung, Modellname und Zeitpunkt,** nicht den Artikel.
 - **Das Skript läuft in einem Container über Docker Compose.** Compose bindet das Modell über das Element `models` an und übergibt
   Adresse und Modellname als Umgebungsvariablen.
-- **Zeitplan:** stündlich, solange der Mac wach ist. Zusammengefasst werden nur Meldungen, die noch keine Zusammenfassung haben. Der
+- **Zeitplan:** stündlich (seit 2026-11-17 alle 15 Minuten, geändert durch
+  [[projects/tages-dashboard/docs/adr/0013-spielberichte-vom-mac|ADR 0013]]), solange der Mac wach ist. Zusammengefasst werden nur Meldungen, die noch keine Zusammenfassung haben. Der
   Container läuft dauerhaft (`restart: unless-stopped`) und arbeitet in einer Schleife, Docker Desktop startet beim Anmelden am Mac.
 - **Schreibrecht:** Das Skript meldet sich mit dem Publishable Key und dem Passwort des einzigen Nutzers an. Das Passwort liegt als
   Compose Secret in einer Datei auf dem Mac, nicht im Repo. Die Tabelle hat RLS: Lesen und Schreiben nur für Angemeldete. Der Secret Key
