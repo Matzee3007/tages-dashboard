@@ -43,6 +43,7 @@ Partien der Champions League (`uefa.champions`), Tage, Nummer und Tabelle von fo
 | Kalender (alle Tage mit Spielen) | `https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard`, Feld `leagues[0].calendar` | 24 Std. |
 | Partien eines Tages | `…/ger.1/scoreboard?dates=20261108` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
 | Tabelle (nur Bundesliga) | `https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings` | 15 Min., bei laufender Partie frisch (`cache: "no-store"`) |
+| Liveticker einer Partie (Spielberichte, ADR 0013) | `…/ger.1/summary?event=<id>`, Feld `commentary` (`time.displayValue`, `text`, englisch) | ohne, holt nur der Container auf dem Mac |
 
 Für die Premier League dieselben Adressen mit `eng.1`. Die Champions League (`uefa.champions`) ruft keinen Kalender und keine Tabelle ab,
 nur die Partien eines Tages. Fehlt der Spielplan von football-data.org oder ist er leer, holt sie `…/uefa.champions/scoreboard` ohne Datum
