@@ -21,6 +21,8 @@ export type Partie = {
   heim: TeamStand;
   gast: TeamStand;
   tore: Tor[];
+  // KI-generiert vom Mac, nur bei beendeten Partien (ADR 0013).
+  bericht?: string;
 };
 
 export type TabellenZeile = {

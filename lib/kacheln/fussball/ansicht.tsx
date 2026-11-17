@@ -1,3 +1,4 @@
+import { useId, useState } from "react";
 import type { Zone } from "@/lib/einstellungen";
 import type {
   FussballDaten,
@@ -102,6 +103,53 @@ function ToreListe({
   );
 }
 
+// Variante A aus dem Mock vom 2026-11-17: Knopf mittig unter dem Ergebnis, der Kasten klappt über die ganze Breite auf.
+// Der Bericht ist KI-generiert und reiner Text, React zeigt darin enthaltenes HTML als Zeichen (ADR 0013).
+function Spielbericht({ bericht }: { bericht: string }) {
+  const [offen, setOffen] = useState(false);
+  const kastenId = useId();
+  return (
+    <>
+      <button
+        type="button"
+        aria-expanded={offen}
+        aria-controls={kastenId}
+        aria-label={`KI-Spielbericht ${offen ? "zuklappen" : "aufklappen"}`}
+        onClick={() => setOffen(!offen)}
+        className="col-span-3 col-start-2 -mt-1.5 -mb-2.5 inline-flex min-h-11 cursor-pointer items-center gap-1 justify-self-center px-2.5 text-[13px] font-semibold text-info"
+      >
+        Bericht
+        <svg
+          aria-hidden
+          viewBox="0 0 12 12"
+          className={`size-3 transition-transform ${offen ? "rotate-180" : ""}`}
+        >
+          <path
+            d="M3 4.5 6 7.5 9 4.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      {/* Immer im DOM, damit aria-controls auch zugeklappt auf ein Element zeigt (wie bei den KI-News). */}
+      <div
+        id={kastenId}
+        hidden={!offen}
+        className="col-span-4 mt-1.5 mb-1 ml-1.5 max-w-[66ch] rounded-xl bg-flaeche px-3.5 py-3 text-[14.5px] leading-[1.55] font-normal text-lesetext"
+      >
+        <span className="mb-1.5 inline-block rounded-md bg-info/12 px-[7px] py-px text-[11.5px] font-[650] text-info">
+          KI-generiert
+        </span>
+        <br />
+        {bericht}
+      </div>
+    </>
+  );
+}
+
 // Symmetrisch um das Feld mit Ergebnis oder Anstoß, Torschützen unter ihrem Team (Mock G).
 function PartieZeile({
   partie,
@@ -146,6 +194,7 @@ function PartieZeile({
           <ToreListe partie={partie} seite="gast" />
         </>
       )}
+      {partie.bericht && <Spielbericht bericht={partie.bericht} />}
     </div>
   );
 }

@@ -383,7 +383,7 @@ test("speichert mit id der Kachel und Modellname", ...);         // { partie, we
 - Nutzt: `leseSpielberichte` (Aufgabe 5), `erstelleLeseClient` aus `lib/supabase/server.ts`, `mitZeitlimit` aus `lib/zeitlimit.ts`.
 - Liefert: `ladeFussballKachel(einstellung, jetzt)` mit `bericht` an jeder beendeten Partie, für die es einen gibt.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 ```ts
 // fussball-kachel.test.ts, Attrappen wie in ki-news-kachel.test.ts
@@ -396,17 +396,20 @@ test("Partie ohne Bericht hat keinen Knopf", ...);
 test("Bericht wird als Text gezeigt, nicht als HTML", ...);    // bericht "<b>fett</b>" → Text enthält "<b>fett</b>", kein <b>-Element
 ```
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen.**
-- [ ] **Schritt 3: `kachel.ts`:** Funktion `mitSpielberichten(daten: FussballDaten): Promise<FussballDaten>` wie `mitZusammenfassungen` in
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen.**
+- [x] **Schritt 3: `kachel.ts`:** Funktion `mitSpielberichten(daten: FussballDaten): Promise<FussballDaten>` wie `mitZusammenfassungen` in
   `lib/kacheln/ki-news/kachel.ts`, Zeitlimit 2000 ms. Ohne beendete Partie keine Anfrage an Supabase.
-- [ ] **Schritt 4: `ansicht.tsx`:** In `PartieZeile` unter den Toren eine Zeile über alle Spalten (`col-span-4`): Knopf „Bericht“ mittig
+- [x] **Schritt 4: `ansicht.tsx`:** In `PartieZeile` unter den Toren eine Zeile über alle Spalten (`col-span-4`): Knopf „Bericht“ mittig
   mit Pfeil, `aria-expanded`, `aria-controls`, `aria-label="KI-Spielbericht aufklappen"` bzw. „zuklappen“, darunter der Kasten (immer im
   DOM, `hidden` wenn zu) mit Marke „KI-generiert“ und Text. Klassen wie in `ZeileMitZusammenfassung` (`lib/kacheln/ki-news/ansicht.tsx`),
   Aufbau wie Variante A im Mock.
-- [ ] **Schritt 5: Tests laufen lassen, sie müssen bestehen.**
+- [x] **Schritt 5: Tests laufen lassen, sie müssen bestehen.**
 - [ ] **Schritt 6: Ansehen:** `npm run dev`, Dashboard am Mac und in iPhone-Breite (390 px) mit einer Partie, die einen Bericht hat.
   Erwartet: wie Variante A im Mock.
-- [ ] **Schritt 7: Prüfen und committen:** `bash checks.sh`, `git commit -m "Show match report behind a button"`.
+- [x] **Schritt 7: Prüfen und committen:** `bash checks.sh`, `git commit -m "Show match report behind a button"`.
+
+Nachtrag 2026-11-17: Schritt 6 offen. Im aktuellen Spieltag aller drei Wettbewerbe ist noch keine Partie beendet, es gibt also
+noch keinen Bericht zum Ansehen. Das Ansehen gehört zur Abnahme in Aufgabe 8 (Freitag 2026-11-20).
 
 ### Aufgabe 8: Container neu bauen und Abnahme
 

@@ -284,3 +284,44 @@ test("die Abschnitte folgen der Ebene des Kacheltitels", () => {
   rerender(<FussballAnsicht daten={DATEN} ebene={3} />);
   expect(screen.getByRole("heading", { level: 3, name: "Tabelle" }));
 });
+
+test("eine Partie mit Spielbericht zeigt den Knopf „Bericht“, der aufklappt", () => {
+  const mitBericht = {
+    ...KOELN_LEVERKUSEN,
+    bericht: "Leverkusen gewann in Köln.",
+  };
+  render(<FussballAnsicht daten={{ ...DATEN, partien: [mitBericht] }} />);
+  const knopf = screen.getByRole("button", {
+    name: "KI-Spielbericht aufklappen",
+  });
+  expect(knopf.textContent).toContain("Bericht");
+  expect(knopf.getAttribute("aria-expanded")).toBe("false");
+  const kasten = document.getElementById(
+    knopf.getAttribute("aria-controls") ?? "",
+  );
+  expect(kasten?.hidden).toBe(true);
+
+  fireEvent.click(knopf);
+
+  expect(knopf.getAttribute("aria-expanded")).toBe("true");
+  expect(knopf.getAttribute("aria-label")).toBe("KI-Spielbericht zuklappen");
+  expect(kasten?.hidden).toBe(false);
+  expect(kasten?.textContent).toContain("KI-generiert");
+  expect(kasten?.textContent).toContain("Leverkusen gewann in Köln.");
+});
+
+test("eine Partie ohne Spielbericht hat keinen Knopf", () => {
+  render(<FussballAnsicht daten={DATEN} />);
+  expect(screen.queryByRole("button", { name: /Spielbericht/ })).toBeNull();
+});
+
+test("der Spielbericht erscheint als Text, nicht als HTML", () => {
+  const mitBericht = { ...KOELN_LEVERKUSEN, bericht: "<b>fett</b>" };
+  render(<FussballAnsicht daten={{ ...DATEN, partien: [mitBericht] }} />);
+  fireEvent.click(
+    screen.getByRole("button", { name: "KI-Spielbericht aufklappen" }),
+  );
+  const partie = screen.getByTestId("partie-2");
+  expect(partie.textContent).toContain("<b>fett</b>");
+  expect(partie.querySelector("b")).toBeNull();
+});
