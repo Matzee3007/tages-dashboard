@@ -333,7 +333,7 @@ Entscheidungen aus der Befragung zu Schritt 3 (Spielberichte) vom 2026-11-17, fe
   Minute, Wendepunkte, Ergebnis. Keine Wertungen.
 - **Für alle beendeten Partien,** die die Fußball-Kacheln gerade zeigen. Ein Mac, der aus war, holt nur den aktuellen Spieltag nach.
 - **Erzeugt auf dem Mac** im Container `zusammenfassen`, wie die Zusammenfassungen der KI-News. Takt für beides alle 15 Minuten.
-- **Prüfung:** jeder Bericht automatisch (Länge, Deutsch, Endstand, nur Spieler aus dem Liveticker), vorher eine Evaluation mit 10 echten
+- **Prüfung:** jeder Bericht automatisch (Länge, Deutsch, Endstand, jeder Torschütze genannt; Nachtrag in ADR 0013), vorher eine Evaluation mit 10 echten
   Partien und dem Urteil des Entwicklers.
 - **Fehlt ein Bericht,** erscheint die Partie wie bisher ohne Hinweis. Ein vorhandener Bericht ist als KI-generiert gekennzeichnet.
 - **Anzeige in der Kachel:** Variante A aus dem Mock (`assets/mocks/2026-11-17-spielbericht.html`, gewählt am 2026-11-17): ein Knopf

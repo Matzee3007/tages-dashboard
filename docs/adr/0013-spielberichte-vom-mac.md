@@ -28,10 +28,10 @@ und legt das Ergebnis in Supabase ab, Vercel liest nur
   solange der Spieltag aktuell ist, ältere Spieltage nicht.
 - **Takt:** ein Durchlauf alle 15 Minuten für KI-News und Spielberichte zusammen (vorher stündlich, ADR 0010). Bearbeitet wird nur, was
   noch fehlt.
-- **Prüfung jedes Berichts:** Länge (4 bis 6 Sätze), Sprache (Deutsch), der Endstand stimmt im Text, jeder genannte Spieler kommt im
-  Liveticker vor. Fällt ein Bericht durch, wird er verworfen.
+- **Prüfung jedes Berichts:** Länge (4 bis 6 Sätze), Sprache (Deutsch), der Endstand stimmt im Text, jeder Torschütze wird genannt.
+  Fällt ein Bericht durch, wird er verworfen. (Die Prüfung „jeder genannte Spieler kommt im Liveticker vor“ ist aufgehoben, siehe Nachtrag vom 2026-11-17 unten.)
 - **Evaluation vor dem Betrieb:** Testsatz aus 10 echten Partien, auch schwierigen (0:0, Elfmeter, Eigentor, Platzverweis, viele Tore,
-  Champions League), mit dem Modell im Betrieb (`ai/qwen3:4b-instruct-2507`). Ob der Verlauf stimmt, urteilt der Entwickler. Ein zweites
+  Champions League), zuerst mit `ai/qwen3:4b-instruct-2507`, im Betrieb `ai/gemma4:e4b` (siehe Nachtrag vom 2026-11-17 unten). Ob der Verlauf stimmt, urteilt der Entwickler. Ein zweites
   Modell kommt nur dazu, wenn dieses durchfällt.
 - **Speicher:** eine neue Tabelle in Supabase, eine Zeile pro Partie mit ESPN-Nummer der Partie, Wettbewerb, Bericht, Modellname und
   Zeitpunkt, ohne Liveticker. RLS wie bei den Zusammenfassungen (Lesen und Schreiben nur für Angemeldete). Alte Berichte bleiben stehen.
@@ -52,7 +52,8 @@ und legt das Ergebnis in Supabase ab, Vercel liest nur
 
 - **Ist der Mac aus,** fehlen die Berichte, bis er wieder läuft, und für vergangene Spieltage ganz.
 - **Kleines Modell, fremde Sprache:** Aus englischem Liveticker entsteht deutscher Text, das Modell kann Namen oder Minuten verdrehen. Die
-  automatische Prüfung fängt falsche Endstände und erfundene Spieler ab, einen falschen Verlauf nur die Evaluation.
+  automatische Prüfung fängt falsche Endstände und fehlende Torschützen ab, erfundene Spieler und einen falschen Verlauf nur die
+  Evaluation (siehe Nachtrag vom 2026-11-17 unten).
 - **Ein Abruf mehr bei ESPN** pro beendeter Partie, vom Mac aus. Die Schnittstelle ist inoffiziell
   ([[projects/tages-dashboard/docs/adr/0009-bundesliga-von-espn|ADR 0009]]).
 - **Fremde Inhalte:** Auch der Liveticker ist fremder Text. Die Antwort wird wie bei den Zusammenfassungen gegen ein festes Format

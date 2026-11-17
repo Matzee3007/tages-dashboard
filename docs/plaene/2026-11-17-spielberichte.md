@@ -22,6 +22,12 @@ ist, ob `qwen3:4b` brauchbare Berichte schreibt. Deshalb kommt die Evaluation (A
 Schritt 3 (Spielberichte) vom 2026-11-17“; [[projects/tages-dashboard/docs/adr/0013-spielberichte-vom-mac|ADR 0013]]; Mock
 `assets/mocks/2026-11-17-spielbericht.html`, Variante A; Glossar: Partie, Liveticker, Spielbericht.
 
+**Stand nach der Evaluation (Nachtrag 2026-11-17, ADR 0013):** Die Aufgaben 1 bis 3 wurden nach dem ersten Lauf geändert. Gelesen
+werden die `keyEvents` (`clock.displayValue`, ohne Wechsel) statt `commentary`, das Feld `spieler` und die Prüfung „genannte Spieler stehen
+im Liveticker“ entfallen, `pruefeBericht(inhalt, partie)` hat keinen Parameter `liveticker` mehr. Neu sind `pruefeMitGrund` (Grund für die
+Evaluation) und die Exporte `SCHEMA_SPIELBERICHT`, `ANWEISUNG_SPIELBERICHT` und `anfrageInhalt`. Modell im Betrieb ist `ai/gemma4:e4b`. Wo
+die Aufgaben unten noch `commentary`, `spieler` oder `qwen3:4b` nennen, gilt dieser Absatz.
+
 **Versuch (2026-11-17): trägt.**
 - `ladeFussball` läuft außerhalb von Next.js mit `tsx` und `.env.local` und liefert für alle drei Kacheln Spieltag und Partien
   (Bundesliga 10., Premier League 11., Champions League 5. Spieltag). `fetch` mit `cache: "no-store"` geht unter Node 24.
@@ -35,8 +41,8 @@ Schritt 3 (Spielberichte) vom 2026-11-17“; [[projects/tages-dashboard/docs/adr
   `bundesliga`), `bericht text not null`, `modell text not null`, `erstellt timestamptz not null default now()`. RLS mit je einer Policy
   für `select`, `insert` und `update`, `auth.uid() = '19c0195a-1112-4a25-96c0-de11af74b01e'` (wie `supabase/zusammenfassungen.sql`).
 - **Form des Berichts:** 4 bis 6 Sätze, Deutsch, höchstens 900 Zeichen, Endstand in der Form `Heim:Gast` (z. B. `1:2`).
-- **Prüfung jedes Berichts:** Länge, Deutsch, Endstand, jeder Torschütze der Partie wird genannt, jeder genannte Spieler steht im
-  Liveticker. Fällt eine Prüfung durch, wird der Bericht verworfen und der nächste Durchlauf versucht es neu.
+- **Prüfung jedes Berichts:** Länge, Deutsch, Endstand, jeder Torschütze der Partie wird genannt (die Prüfung „jeder genannte
+  Spieler steht im Liveticker“ ist aufgehoben, siehe Stand oben). Fällt eine Prüfung durch, wird der Bericht verworfen und der nächste Durchlauf versucht es neu.
 - **Welche Partien:** Status `vorbei` im aktuellen Spieltag einer Fußball-Kachel aus `KACHELN`, ohne Zeile in `spielberichte`.
 - **Takt:** ein Durchlauf alle 15 Minuten, erst KI-News, dann Spielberichte. Jeder der beiden darf scheitern, ohne den anderen zu stoppen.
 - **Anzeige nach Variante A:** Knopf „Bericht“ mittig unter dem Ergebnis, klappt den Absatz unter der Partie auf. Marke „KI-generiert“,
@@ -49,8 +55,7 @@ Schritt 3 (Spielberichte) vom 2026-11-17“; [[projects/tages-dashboard/docs/adr
 ## Prüf-Schwerpunkte
 
 1. **Das Modell verdreht den Endstand oder lässt einen Torschützen weg** → Bericht verworfen, keine Zeile in der Tabelle. Test: Aufgabe 2.
-2. **Das Modell erfindet einen Spieler** → Bericht verworfen. Ein Spieler gilt als erfunden, wenn sein Name nicht im Liveticker
-   vorkommt. Test: Aufgabe 2.
+2. ~~**Das Modell erfindet einen Spieler** → Bericht verworfen.~~ Aufgehoben (Stand oben): Erfundene Spieler zeigt nur die Evaluation.
 3. **0:0 ohne Torschützen** → der Bericht wird angenommen, wenn er `0:0` enthält. Die Prüfung der Torschützen ist dann leer. Test: Aufgabe 2.
 4. **ESPN liefert für eine Partie keinen Liveticker** (Feld fehlt oder ist leer) → kein Aufruf des Modells, keine Zeile. Die Partie
    erscheint ohne Knopf. Test: Aufgabe 1 und Aufgabe 6.
@@ -292,7 +297,8 @@ Erwartet: 10 Abschnitte in `evaluation/daten/spielberichte.md`, jeder mit Sekund
   **Weiter nur, wenn mindestens 8 von 10 angenommen und mit „ja“ beurteilt sind.** Sonst anhalten: Anweisung ändern und Lauf wiederholen,
   oder mit dem Entwickler ein zweites Modell oder Englisch entscheiden (ADR 0013).
 
-- [x] **Schritt 5: Committen:** `bash checks.sh`, `git commit -m "Add evaluation for match reports"`.
+- [x] **Schritt 5: Committen:** `bash checks.sh`, `git commit -m "Add evaluation for match reports"` (tatsächlich in Commit
+  `2f2d288` „Use key events and drop player list for match reports“).
 
 **Ergebnis 2026-11-17** (Nachtrag in ADR 0013):
 
@@ -415,12 +421,15 @@ noch keinen Bericht zum Ansehen. Das Ansehen gehört zur Abnahme in Aufgabe 8 (F
 
 **Dateien:** keine neuen. Ändern: `docs/Projektvision.md` (Schritt 3 erledigt, mit PR), dieser Plan (`status: abgeschlossen`).
 
-- [ ] **Schritt 1: Container neu bauen**
+- [x] **Schritt 1: Container neu bauen**
 
 ```bash
 docker compose up --build -d          # baut das Image mit dem neuen Code und startet den Container neu
 docker compose logs -f zusammenfassen # erwartet: „Durchlauf: …“ und „Spielberichte: neu <n>, ohne <n>“, danach alle 15 Minuten
 ```
+
+Ergebnis 2026-11-17: neu gebaut mit `ai/gemma4:e4b`, erster Durchlauf `Durchlauf: neu 6, ohne 6` (OpenAI und SCMP 403, YouTube ohne
+Artikel, wie bisher) und `Spielberichte: neu 0, ohne 0` (noch keine Partie im aktuellen Spieltag beendet).
 
 - [ ] **Schritt 2: Abnahme durch den Entwickler** am nächsten Spieltag (Bundesliga Freitag 2026-11-20 ab 20:30, mit dem Live-Test aus
   der Übergabe): Etwa 20 Minuten nach Abpfiff zeigt die Partie in Production den Knopf „Bericht“, der Text passt zum Spiel. Ergebnis hier
