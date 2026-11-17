@@ -42,11 +42,20 @@ function ohneGrenzen(text: string): string {
   return text.replace(/<\s*\/?\s*artikel\s*>/gi, " ");
 }
 
+export type Modell = { url: string; name: string };
+
+export type Anfrage = {
+  anweisung: string;
+  inhalt: string;
+  schemaName: string;
+  schema: object;
+};
+
 // url und name setzt Docker Compose (MODELL_URL, MODELL_NAME), z. B. http://model-runner.docker.internal/v1/.
-export async function fasseZusammen(
-  artikel: ArtikelText,
-  titel: string,
-  modell: { url: string; name: string },
+// Liefert den Inhalt der Antwort ungeprüft. Ein Fehler des Modells ergibt null, ist es gar nicht erreichbar, wirft fetch weiter.
+export async function frageModell(
+  modell: Modell,
+  anfrage: Anfrage,
 ): Promise<string | null> {
   const antwort = await fetch(
     `${modell.url.replace(/\/$/, "")}/chat/completions`,
@@ -59,22 +68,18 @@ export async function fasseZusammen(
         response_format: {
           type: "json_schema",
           json_schema: {
-            name: "zusammenfassung",
+            name: anfrage.schemaName,
             strict: true,
-            schema: SCHEMA,
+            schema: anfrage.schema,
           },
         },
         messages: [
-          { role: "system", content: ANWEISUNG },
-          {
-            role: "user",
-            content: `Titel: ${titel}\n<artikel>\n${ohneGrenzen(artikel.text)}\n</artikel>`,
-          },
+          { role: "system", content: anfrage.anweisung },
+          { role: "user", content: anfrage.inhalt },
         ],
       }),
     },
   );
-  // Ein Fehler des Modells betrifft nur diesen Artikel. Ist das Modell gar nicht erreichbar, wirft fetch weiter.
   if (!antwort.ok) {
     console.error(`Modell: Status ${antwort.status}`, await antwort.text());
     return null;
@@ -82,5 +87,19 @@ export async function fasseZusammen(
   const daten = await antwort.json();
   // Auch mit Status 200 kann der Inhalt fehlen, z. B. bei einem Fehler im Kontextfenster.
   const inhalt = daten?.choices?.[0]?.message?.content;
-  return typeof inhalt === "string" ? pruefeAntwort(inhalt) : null;
+  return typeof inhalt === "string" ? inhalt : null;
+}
+
+export async function fasseZusammen(
+  artikel: ArtikelText,
+  titel: string,
+  modell: Modell,
+): Promise<string | null> {
+  const inhalt = await frageModell(modell, {
+    anweisung: ANWEISUNG,
+    inhalt: `Titel: ${titel}\n<artikel>\n${ohneGrenzen(artikel.text)}\n</artikel>`,
+    schemaName: "zusammenfassung",
+    schema: SCHEMA,
+  });
+  return inhalt === null ? null : pruefeAntwort(inhalt);
 }
