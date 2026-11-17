@@ -66,13 +66,14 @@ npm run lint           # ESLint
 npm run format         # Prettier: alles formatieren
 npm run typecheck      # TypeScript prüfen
 npm test               # Tests (Vitest)
-npm run check          # alles zusammen, vor jedem Commit
+npm run check          # Linter, Formatierung, Typen, Tests (so auch in GitHub Actions)
+bash checks.sh         # alles zusammen samt Tests der Mac-App, vor jedem Commit und vor /code-review
 npm run tauri -- dev   # Mac-App zum Entwickeln starten
 npm run tauri -- build # fertige Mac-App bauen
 cargo test --manifest-path src-tauri/Cargo.toml   # Tests der Mac-App
 ```
 
-Vor jedem Commit: `npm run check` (Linter, Formatierung, Typen, Tests).
+Vor jedem Commit: `bash checks.sh` (Linter, Formatierung, Typen, Tests, Tests der Mac-App).
 
 Vor dem ersten Abruf eines Dienstes in einer Session seine Notiz in `docs/tools/` lesen (Abschnitte Abrufe und Fehler): Dort stehen
 Fallen, die schon einmal passiert sind (z. B. ESPN: Zeiträume geben 400, Antworten kommen mit gzip).
