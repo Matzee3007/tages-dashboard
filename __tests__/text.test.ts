@@ -38,3 +38,9 @@ test("erkennt Deutsch, auch mit englischen Fachbegriffen", () => {
     ),
   ).toBe(false);
 });
+
+test("ein Wort mit ß oder Akzent am Satzende beendet den Satz", () => {
+  expect(
+    zaehleSaetze("Er traf per Freistoß. Dann kam García. Es blieb so."),
+  ).toBe(3);
+});

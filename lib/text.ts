@@ -3,7 +3,9 @@
 const SEGMENTER = new Intl.Segmenter("de", { granularity: "sentence" });
 // Der Segmenter sieht ein Satzende nach jedem Punkt vor einem Großbuchstaben, auch nach „z.“, „15.“ oder „bzw.“.
 // Endet ein Stück mit einem einzelnen Buchstaben, einer Zahl oder einer Abkürzung, gehört das nächste noch dazu.
-const KEIN_SATZENDE = /(\b\p{L}|\d|\b(bzw|ca|nr|dr|vgl|usw|etc))\.$/iu;
+// (?<!\p{L}) statt \b: \b kennt nur ASCII, „Freistoß.“ galt sonst als einzelner Buchstabe.
+const KEIN_SATZENDE =
+  /((?<!\p{L})\p{L}|\d|(?<!\p{L})(bzw|ca|nr|dr|vgl|usw|etc))\.$/iu;
 
 export function zaehleSaetze(text: string): number {
   let saetze = 0;

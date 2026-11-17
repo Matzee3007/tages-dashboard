@@ -108,7 +108,7 @@ Fremde Dienste (spürbar):
 - Liefert: `leseLiveticker(json: unknown): string[] | null`,
   `ladeLiveticker(liga: FussballEinstellung["espn"], partie: string, jetzt: Date): Promise<string[] | null>`.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 ```ts
 test("macht aus jedem Eintrag eine Zeile mit Minute", () => {
@@ -127,18 +127,18 @@ test("holt den Liveticker der Partie", async () => {
 });
 ```
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
 
 `npx vitest run __tests__/spielbericht-liveticker.test.ts`, erwartet: FAIL, Modul fehlt.
 
-- [ ] **Schritt 3: `leseLiveticker` und `ladeLiveticker` in `lib/spielbericht/liveticker.ts`**
+- [x] **Schritt 3: `leseLiveticker` und `ladeLiveticker` in `lib/spielbericht/liveticker.ts`**
 
 Einträge ohne `text` überspringen. Ist die Adresse von `espnAdresse` anders aufgebaut, als `summary` braucht, eine Zeile mit dem Pfad
 `site/v2/sports/soccer/<liga>/summary?event=<id>` ergänzen.
 
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen.** Erwartet: PASS.
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen.** Erwartet: PASS.
 
-- [ ] **Schritt 5: Prüfen und committen:** `bash checks.sh`, dann `git commit -m "Add live ticker from ESPN summary"`.
+- [x] **Schritt 5: Prüfen und committen:** `bash checks.sh`, dann `git commit -m "Add live ticker from ESPN summary"`.
 
 ### Aufgabe 2: Bericht prüfen
 
@@ -154,9 +154,9 @@ Einträge ohne `text` überspringen. Ist die Adresse von `espnAdresse` anders au
   `pruefeBericht(inhalt: string, partie: Partie, liveticker: string[]): string | null`. `inhalt` ist das JSON des Modells
   `{ "bericht": string, "spieler": string[] }`. Rückgabe: der getrimmte Bericht oder `null`.
 
-- [ ] **Schritt 1: `zaehleSaetze` und `istDeutsch` nach `lib/text.ts` verschieben,** Tests mitnehmen. `bash checks.sh` muss grün bleiben.
+- [x] **Schritt 1: `zaehleSaetze` und `istDeutsch` nach `lib/text.ts` verschieben,** Tests mitnehmen. `bash checks.sh` muss grün bleiben.
 
-- [ ] **Schritt 2: Fehlschlagende Tests für `pruefeBericht` schreiben.** Grundlage: Köln – Leverkusen 1:2, Tore `García 7'` (gast),
+- [x] **Schritt 2: Fehlschlagende Tests für `pruefeBericht` schreiben.** Grundlage: Köln – Leverkusen 1:2, Tore `García 7'` (gast),
   `Kainz 38'` (heim), `Schick 85'` (gast), ein Liveticker mit diesen drei Namen, ein gültiger Bericht mit 5 Sätzen.
 
 ```ts
@@ -178,17 +178,21 @@ test.each([
 test("0:0 ohne Torschützen", () => { /* Partie 0:0, tore: [], Bericht mit „0:0“ → angenommen */ });
 ```
 
-- [ ] **Schritt 3: Tests laufen lassen, sie müssen fehlschlagen.**
+- [x] **Schritt 3: Tests laufen lassen, sie müssen fehlschlagen.**
 
-- [ ] **Schritt 4: `pruefeBericht` in `lib/spielbericht/pruefung.ts`**
+- [x] **Schritt 4: `pruefeBericht` in `lib/spielbericht/pruefung.ts`**
 
 Name eines Torschützen ist `Tor.text` ohne Minute und Zusatz (`"García 7'"` → `García`, `"Bischof 30' (ET)"` → `Bischof`). Endstand:
 `${partie.heim.tore}:${partie.gast.tore}` muss im Bericht stehen. Spieler: jeder Eintrag aus `spieler` muss im Liveticker
 (Zeilen zusammen) und im Bericht vorkommen.
 
-- [ ] **Schritt 5: Tests laufen lassen, sie müssen bestehen.**
+- [x] **Schritt 5: Tests laufen lassen, sie müssen bestehen.**
 
-- [ ] **Schritt 6: Prüfen und committen:** `bash checks.sh`, `git commit -m "Add check for match reports"`.
+- [x] **Schritt 6: Prüfen und committen:** `bash checks.sh`, `git commit -m "Add check for match reports"`.
+
+Nachtrag 2026-11-17: Der Test „7 Sätze“ fand einen Fehler in `zaehleSaetze` (schon in der Evaluation vom 2026-11-15): `\b` kennt
+nur ASCII, ein Satz, der auf ein Wort mit `ß`, Umlaut oder Akzent endet („Freistoß.“), galt als Abkürzung und wurde nicht gezählt.
+Behoben mit `(?<!\p{L})`, eigener Test in `__tests__/text.test.ts`.
 
 ### Aufgabe 3: Modell schreibt den Bericht
 
