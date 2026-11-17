@@ -46,6 +46,18 @@ die Woche, in der Formel 1 das Rennwochenende. Ein Spieltag bleibt bis Mitternac
 Spiel aktuell, danach ist es der nächste.
 _Nicht verwenden_: Matchday, Runde, heute
 
+**Partie**:
+Ein einzelnes Spiel zweier Teams in einem Spieltag.
+_Nicht verwenden_: Match, Begegnung
+
+**Liveticker**:
+Die Einträge Minute für Minute, die ESPN zu einer Partie liefert (englisch).
+_Nicht verwenden_: Kommentar, Commentary
+
+**Spielbericht**:
+Ein kurzer, KI-generierter Text zu einer beendeten Partie, erzeugt aus ihrem Liveticker. Eine Partie hat höchstens einen.
+_Nicht verwenden_: Zusammenfassung (gehört zu einer Meldung), Matchreport, Spielzusammenfassung
+
 **Ligaphase**:
 Der erste Teil der Champions League bis Ende Januar: 36 Teams in einer gemeinsamen Tabelle, 8 Spieltage. Danach folgt die K.-o.-Phase
 mit Hin- und Rückspiel und ohne Tabelle.

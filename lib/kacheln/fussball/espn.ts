@@ -12,10 +12,10 @@ const ESPN = "https://site.api.espn.com/apis";
 
 // Adresse einer Liga bei ESPN, z. B. espnAdresse("scoreboard", "eng.1").
 export function espnAdresse(
-  art: "scoreboard" | "standings",
+  art: "scoreboard" | "standings" | "summary",
   liga: string,
 ): string {
-  const pfad = art === "scoreboard" ? "site/v2" : "v2";
+  const pfad = art === "standings" ? "v2" : "site/v2";
   return `${ESPN}/${pfad}/sports/soccer/${liga}/${art}`;
 }
 

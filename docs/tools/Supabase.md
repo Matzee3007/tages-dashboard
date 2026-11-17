@@ -66,6 +66,8 @@ Supabase]], mit einem Assistent-Skript (Skill `assistent-bauen`):
 7. Tabelle `zusammenfassungen` mit RLS aus `supabase/zusammenfassungen.sql`, eingespielt über die Supabase-CLI (Befehle unten).
    Drei Policies (lesen, anlegen, ändern), alle nur für `auth.uid()` gleich `BESITZER_ID`. Löschen ist nicht erlaubt.
    Gegenprobe ohne Anmeldung: `select` liefert `[]`, `insert` scheitert mit `42501`.
+8. Tabelle `spielberichte` (ADR 0013) mit RLS aus `supabase/spielberichte.sql`, am 2026-11-17 genauso eingespielt, eine Zeile je Partie
+   (`partie` = id bei ESPN). Gegenprobe ohne Anmeldung wie bei 7: `[]` und `42501`.
 
 Die CI braucht die Variablen nicht: Beim Bauen laufen weder Proxy noch Server Actions.
 
@@ -120,6 +122,7 @@ supabase projects list                       # Projekte mit Ref und Status, z. B
 # SQL über die Management API ausführen, ohne `supabase link`
 supabase db query --linked --project-ref imebsydcnchziitgccxs -f supabase/zusammenfassungen.sql
 supabase db query --linked --project-ref imebsydcnchziitgccxs "select count(*) from public.zusammenfassungen"
+supabase db query --linked --project-ref imebsydcnchziitgccxs -f supabase/spielberichte.sql
 supabase logout --yes                        # löscht das Token wieder vom Mac (ohne --yes bricht es in Claude Code ab)
 
 # Als Fremder prüfen (nur Publishable Key, ohne Anmeldung): muss [] bzw. Fehler 42501 liefern

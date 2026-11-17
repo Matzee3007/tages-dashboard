@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Modell } from "@/lib/modell";
 import { ABSENDER } from "@/lib/einstellungen";
 import type { Meldung } from "@/lib/kacheln/ki-news/feed";
 import { ladeKiNews } from "@/lib/kacheln/ki-news/laden";
@@ -12,7 +13,7 @@ import {
 // neu: gespeichert. ohne: übersprungen (kein Artikel oder Antwort verworfen), der nächste Durchlauf versucht es neu.
 export async function durchlauf(
   client: SupabaseClient,
-  modell: { url: string; name: string },
+  modell: Modell,
   jetzt: Date,
 ): Promise<{ neu: number; ohne: number }> {
   // Genau die Meldungen, die die Kachel zeigt. So holt ein Mac, der eine Woche aus war, nichts rückwirkend nach.
@@ -46,7 +47,7 @@ export async function durchlauf(
 // true: gespeichert. false: kein Artikel oder Antwort verworfen.
 async function fasseEineZusammen(
   client: SupabaseClient,
-  modell: { url: string; name: string },
+  modell: Modell,
   meldung: Meldung,
 ): Promise<boolean> {
   const artikel = await ladeArtikel(meldung.link);

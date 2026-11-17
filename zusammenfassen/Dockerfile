@@ -1,4 +1,4 @@
-# Container für die Zusammenfassungen der KI-News (ADR 0010). Start über compose.yaml im Wurzelordner.
+# Container für die Zusammenfassungen der KI-News und die Spielberichte (ADR 0010, ADR 0013). Start über compose.yaml im Wurzelordner.
 FROM node:24-slim
 WORKDIR /app
 COPY package.json package-lock.json ./
