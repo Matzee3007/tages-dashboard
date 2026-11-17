@@ -40,7 +40,8 @@ Randbedingungen:
 - **Artikel auslesen:** allgemein mit `@mozilla/readability` und `jsdom`, nicht mit eigenem Code je Website. Ohne lesbaren Text keine
   Zusammenfassung.
 - **Lange Artikel:** Das Modell bekommt nur den Anfang bis zur Grenze des Kontextfensters, die Tabelle merkt sich das im Feld „gekürzt“.
-- **Welches Modell,** entscheidet die Evaluation: zwei bis drei Kandidaten, die auf 16 GB passen, am selben Testsatz aus 15 echten
+- **Welches Modell,** entscheidet die Evaluation (seit 2026-11-17 `ai/gemma4:e4b` statt `qwen3:4b`, weil derselbe Container auch die
+  Spielberichte schreibt, siehe [[projects/tages-dashboard/docs/adr/0013-spielberichte-vom-mac|ADR 0013]]): zwei bis drei Kandidaten, die auf 16 GB passen, am selben Testsatz aus 15 echten
   Meldungen, auch schwierigen (sehr lang, deutsch, Video ohne Artikel, Seite mit eingebauter Anweisung an das Modell). Automatisch geprüft
   werden Format, Länge (2 bis 3 Sätze) und Sprache. Ob eine Zusammenfassung stimmt und die Kernaussage trifft, urteilt der Entwickler.
   Ergebnis: Trefferquote und Zeit je Zusammenfassung pro Modell.

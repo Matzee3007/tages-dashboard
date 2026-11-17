@@ -269,12 +269,12 @@ Testsatz (`TESTSATZ_SPIELBERICHTE: { liga, tag, partie, art }[]`), ids bei ESPN,
 | uefa.champions | 2026-11-04 | 401915381 | (ESPN `ARS @ SLP`) 1:2 | Champions League, Mein Team |
 | uefa.champions | 2026-11-04 | 401915305 | (ESPN `COMO @ RCL`) 1:9 | Champions League, sehr viele Tore |
 
-- [ ] **Schritt 1: Testsatz und Lauf schreiben.** `lauf.ts` holt je Partie den Tag (`scoreboard?dates=`), sucht die Partie mit `leseTag`,
+- [x] **Schritt 1: Testsatz und Lauf schreiben.** `lauf.ts` holt je Partie den Tag (`scoreboard?dates=`), sucht die Partie mit `leseTag`,
   holt den Liveticker und ruft das Modell über `frageModell` mit der Anweisung aus Aufgabe 3 auf (die rohe Antwort wird gebraucht, nicht nur
   die geprüfte). Es schreibt `evaluation/daten/spielberichte.md` (nicht im Repo): je Partie Endstand, Tore, Sekunden, rohe Antwort,
   Ergebnis der Prüfung (`angenommen` oder der Grund) und eine leere Zeile `Urteil: ` für den Entwickler.
 
-- [ ] **Schritt 2: Lauf starten**
+- [x] **Schritt 2: Lauf starten**
 
 ```bash
 docker compose stop zusammenfassen                         # Container gibt sein Modell frei
@@ -285,14 +285,25 @@ docker compose start zusammenfassen
 
 Erwartet: 10 Abschnitte in `evaluation/daten/spielberichte.md`, jeder mit Sekunden unter 120.
 
-- [ ] **Schritt 3: Handgriff des Entwicklers: urteilen.** Je Partie hinter `Urteil:` `ja` (Verlauf stimmt, Kernaussage getroffen) oder
+- [x] **Schritt 3: Handgriff des Entwicklers: urteilen.** Je Partie hinter `Urteil:` `ja` (Verlauf stimmt, Kernaussage getroffen) oder
   `nein` mit Grund. Grundlage zum Vergleich: der Spielstand und die Tore in der Datei, bei Zweifel der Liveticker bei ESPN.
 
-- [ ] **Schritt 4: Ergebnis hier eintragen:** Zahl der automatisch angenommenen, Urteile ja/nein, Median und Höchstwert der Sekunden.
+- [x] **Schritt 4: Ergebnis hier eintragen:** Zahl der automatisch angenommenen, Urteile ja/nein, Median und Höchstwert der Sekunden.
   **Weiter nur, wenn mindestens 8 von 10 angenommen und mit „ja“ beurteilt sind.** Sonst anhalten: Anweisung ändern und Lauf wiederholen,
   oder mit dem Entwickler ein zweites Modell oder Englisch entscheiden (ADR 0013).
 
-- [ ] **Schritt 5: Committen:** `bash checks.sh`, `git commit -m "Add evaluation for match reports"`.
+- [x] **Schritt 5: Committen:** `bash checks.sh`, `git commit -m "Add evaluation for match reports"`.
+
+**Ergebnis 2026-11-17** (Nachtrag in ADR 0013):
+
+- Lauf 1 und 2 mit `ai/qwen3:4b-instruct-2507` und ganzem Liveticker (`commentary`): 0 von 10 angenommen, zweimal über 120 s, Fakten
+  verdreht. Angehalten, der Entwickler wählte Option A.
+- Lauf 3 mit `ai/gemma4:e4b`, nur `keyEvents` ohne Wechsel, ohne Feld `spieler`: **9 von 10 automatisch angenommen** (Ipswich – Bournemouth
+  verworfen: Eigentor-Schütze Davis fehlt), **10 von 10 mit „ja“ beurteilt** (im Gespräch, „passt so“). Sekunden: Median 56,4, höchstens
+  61. Aufgefallen und trotzdem angenommen: Palmer „früh“ Rot statt Gelb-Rot in der 80. Minute (Chelsea – Tottenham), Reihenfolge von
+  Elfmeter und Platzverweis vertauscht (Paderborn – Frankfurt). Schwelle erreicht.
+- **Modell im Betrieb:** `ai/gemma4:e4b` für Spielberichte und Zusammenfassungen (Entscheidung des Entwicklers, nur ein Modell passt in 16
+  GB). Umsetzung in Aufgabe 6: `compose.yaml` `model: ai/gemma4:e4b`.
 
 ### Aufgabe 5: Tabelle mit RLS und Speicher
 
@@ -331,7 +342,7 @@ Erwartet: 10 Abschnitte in `evaluation/daten/spielberichte.md`, jeder mit Sekund
 **Dateien:**
 - Neu: `lib/spielbericht/durchlauf.ts`
 - Ändern: `lib/kacheln/fussball/laden.ts` (`export` vor `ladeSpieltag`), `zusammenfassen/lauf.ts`, `compose.yaml` (Kommentar oben:
-  „Zusammenfassungen der KI-News und Spielberichte (ADR 0010, 0013)“), `docs/tools/Docker Model Runner.md` (Takt)
+  „Zusammenfassungen der KI-News und Spielberichte (ADR 0010, 0013)“, `model: ai/gemma4:e4b` mit Kommentar zur Evaluation vom 2026-11-17), `docs/tools/Docker Model Runner.md` (Takt)
 - Test: `__tests__/spielbericht-durchlauf.test.ts`
 
 **Schnittstellen:**

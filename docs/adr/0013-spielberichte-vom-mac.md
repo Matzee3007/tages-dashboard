@@ -75,3 +75,11 @@ D parken):
 - **Modell:** Evaluation mit `ai/gemma4:e4b` (schon geladen, 6 GB). Offen, falls es besteht: Auf 16 GB passt nur ein Modell gleichzeitig.
   Ob dann beide Texte mit `gemma4:e4b` entstehen oder die Modelle wechseln, wird nach dem Lauf entschieden.
 - **Fällt auch dieser Lauf durch,** entscheidet der Entwickler zwischen C (neues ADR gegen „Erst gratis“) und D (parken).
+
+**Ergebnis 2026-11-17:** Mit `ai/gemma4:e4b` und `keyEvents` bestanden 9 von 10 Berichten die Prüfung, alle 10 beurteilte der Entwickler mit
+„ja“ (Median 56 s, höchstens 61 s je Bericht). Zwei kleinere Fehler im Verlauf (Zeitpunkt einer Roten Karte, Reihenfolge zweier Ereignisse)
+fing die Prüfung nicht ab.
+
+**Entscheidung:** `ai/gemma4:e4b` erzeugt im Container Spielberichte **und** Zusammenfassungen. Alternative: zwei Modelle im Wechsel (qwen3 für
+die KI-News, schneller), abgelehnt wegen mehr Code und des bekannten Speicherfehlers bei zwei geladenen Modellen. Folge: Zusammenfassungen
+dauern etwa dreimal so lang (Evaluation vom 2026-11-15: Median 46 statt 17 s), bei Qualität wie bisher.
