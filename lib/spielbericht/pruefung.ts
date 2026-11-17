@@ -11,6 +11,11 @@ function schuetze(torText: string): string {
   return torText.replace(/\s+\d.*$/, "");
 }
 
+// Ohne Akzente: „Garcia“ zählt für „García“ (Review von PR #85).
+function ohneAkzente(text: string): string {
+  return text.normalize("NFD").replace(/\p{M}/gu, "");
+}
+
 function leseAntwort(inhalt: string): string | null {
   let daten: unknown;
   try {
@@ -32,16 +37,18 @@ export function pruefeMitGrund(
   if (bericht === null) return { grund: "kein gültiges JSON mit bericht" };
   const saetze = zaehleSaetze(bericht);
   const endstand = `${partie.heim.tore}:${partie.gast.tore}`;
-  const ohneSchuetze = partie.tore
-    .map((tor) => schuetze(tor.text))
-    .filter((name) => !bericht.includes(name));
+  const vergleich = ohneAkzente(bericht);
+  const ohneSchuetze = [
+    ...new Set(partie.tore.map((tor) => schuetze(tor.text))),
+  ].filter((name) => !vergleich.includes(ohneAkzente(name)));
+  // Keine Ziffer davor oder danach: „11:2“ ist nicht „1:2“ (Review von PR #85).
+  const mitEndstand = new RegExp(`(?<!\\d)${endstand}(?!\\d)`).test(bericht);
   if (bericht.length > MAX_ZEICHEN)
     return { grund: `${bericht.length} Zeichen` };
   if (saetze < MIN_SAETZE || saetze > MAX_SAETZE)
     return { grund: `${saetze} Sätze` };
   if (!istDeutsch(bericht)) return { grund: "nicht Deutsch" };
-  if (!bericht.includes(endstand))
-    return { grund: `Endstand ${endstand} fehlt` };
+  if (!mitEndstand) return { grund: `Endstand ${endstand} fehlt` };
   if (ohneSchuetze.length)
     return { grund: `Torschütze fehlt: ${ohneSchuetze.join(", ")}` };
   return { bericht };

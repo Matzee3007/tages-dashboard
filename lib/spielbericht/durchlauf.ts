@@ -20,20 +20,22 @@ export async function durchlaufSpielberichte(
   for (const einstellung of KACHELN) {
     if (einstellung.art !== "fussball") continue;
     // Genau die Partien, die die Kachel zeigt. So holt ein Mac, der aus war, nur den aktuellen Spieltag nach.
+    // Ein Fehler bei Spieltag oder Supabase überspringt nur diesen Wettbewerb (Review von PR #85).
     let partien: Partie[];
+    let vorhanden: Map<string, string>;
     try {
       partien = (await ladeSpieltag(einstellung, jetzt)).partien.filter(
         (partie) => partie.status === "vorbei",
       );
+      if (!partien.length) continue;
+      vorhanden = await leseSpielberichte(
+        client,
+        partien.map((partie) => partie.id),
+      );
     } catch (fehler) {
-      console.error(`Spieltag ${einstellung.id} nicht geladen:`, fehler);
+      console.error(`Spielberichte ${einstellung.id} übersprungen:`, fehler);
       continue;
     }
-    if (!partien.length) continue;
-    const vorhanden = await leseSpielberichte(
-      client,
-      partien.map((partie) => partie.id),
-    );
     // Nacheinander: Das Modell auf dem Mac schafft nur eine Anfrage gleichzeitig gut.
     for (const partie of partien) {
       if (vorhanden.has(partie.id)) continue;
@@ -61,7 +63,14 @@ async function schreibeEinen(
   partie: Partie,
   jetzt: Date,
 ): Promise<boolean> {
-  const liveticker = await ladeLiveticker(einstellung.espn, partie.id, jetzt);
+  // Ein Netzfehler bei ESPN wirft auch TypeError, betrifft aber nur diese Partie, nicht das Modell (Review von PR #85).
+  const liveticker = await ladeLiveticker(
+    einstellung.espn,
+    partie.id,
+    jetzt,
+  ).catch((fehler: unknown) => {
+    throw new Error(`Liveticker ${partie.id}`, { cause: fehler });
+  });
   const bericht =
     liveticker && (await schreibeBericht(partie, liveticker, modell));
   if (!liveticker || !bericht) {

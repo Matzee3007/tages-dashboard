@@ -153,3 +153,41 @@ test("ist das Modell nicht erreichbar, bricht der Durchlauf ab", async () => {
   );
   expect(schreibeBericht).toHaveBeenCalledTimes(1);
 });
+
+test("ein Netzfehler beim Liveticker betrifft nur diese Partie (Review von PR #85)", async () => {
+  spieltage({ bundesliga: [partie("4", "vorbei"), partie("5", "vorbei")] });
+  vi.mocked(ladeLiveticker).mockRejectedValueOnce(
+    new TypeError("fetch failed"),
+  );
+  const { client: supabase } = client();
+
+  expect(await durchlaufSpielberichte(supabase, MODELL, JETZT)).toEqual({
+    neu: 1,
+    ohne: 1,
+  });
+});
+
+test("ein Fehler beim Lesen aus Supabase überspringt nur diesen Wettbewerb (Review von PR #85)", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  spieltage({
+    bundesliga: [partie("4", "vorbei")],
+    "premier-league": [partie("7", "vorbei")],
+  });
+  const upsert = vi.fn().mockResolvedValue({ error: null });
+  const inAbfrage = vi
+    .fn()
+    .mockResolvedValueOnce({ data: null, error: new Error("Zeitlimit") })
+    .mockResolvedValue({ data: [], error: null });
+  const supabase = {
+    from: () => ({ select: () => ({ in: inAbfrage }), upsert }),
+  } as unknown as SupabaseClient;
+
+  expect(await durchlaufSpielberichte(supabase, MODELL, JETZT)).toEqual({
+    neu: 1,
+    ohne: 0,
+  });
+  expect(upsert).toHaveBeenCalledWith(
+    expect.objectContaining({ partie: "7" }),
+    { onConflict: "partie" },
+  );
+});

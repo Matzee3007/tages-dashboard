@@ -36,6 +36,10 @@ test.each([
   ],
   ["Endstand verdreht", antwort({ bericht: GUELTIG.replace("1:2", "2:1") })],
   [
+    "Endstand nur als Teil einer anderen Zahl (Review von PR #85)",
+    antwort({ bericht: GUELTIG.replace("1:2", "11:2") }),
+  ],
+  [
     "Torschütze fehlt",
     antwort({ bericht: GUELTIG.replace("köpfte Schick", "köpfte ein Joker") }),
   ],
@@ -70,6 +74,28 @@ test("nennt den Grund, warum ein Spielbericht verworfen wird", () => {
         bericht: GUELTIG.replace("köpfte Schick", "köpfte ein Joker"),
       }),
       PARTIE,
+    ),
+  ).toEqual({ grund: "Torschütze fehlt: Schick" });
+});
+
+test("Torschützen werden ohne Akzente verglichen (Review von PR #85)", () => {
+  const ohneAkzent = GUELTIG.replace("García", "Garcia");
+  expect(pruefeBericht(antwort({ bericht: ohneAkzent }), PARTIE)).toBe(
+    ohneAkzent,
+  );
+});
+
+test("ein Torschütze mit mehreren Toren steht im Grund nur einmal (Review von PR #85)", () => {
+  const doppelt: Partie = {
+    ...PARTIE,
+    tore: [...PARTIE.tore, { text: "Schick 90'", seite: "gast" }],
+  };
+  expect(
+    pruefeMitGrund(
+      antwort({
+        bericht: GUELTIG.replace("köpfte Schick", "köpfte ein Joker"),
+      }),
+      doppelt,
     ),
   ).toEqual({ grund: "Torschütze fehlt: Schick" });
 });
