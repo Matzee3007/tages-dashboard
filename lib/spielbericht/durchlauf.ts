@@ -8,7 +8,7 @@ import {
   leseSpielberichte,
   speichereSpielbericht,
 } from "@/lib/spielbericht/speicher";
-import type { Modell } from "@/lib/zusammenfassen/modell";
+import type { Modell } from "@/lib/modell";
 
 // neu: gespeichert. ohne: kein Liveticker, Bericht verworfen oder Fehler; der nächste Durchlauf versucht es neu (ADR 0013).
 export async function durchlaufSpielberichte(

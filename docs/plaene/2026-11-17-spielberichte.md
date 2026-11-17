@@ -25,7 +25,8 @@ Schritt 3 (Spielberichte) vom 2026-11-17“; [[projects/tages-dashboard/docs/adr
 **Stand nach der Evaluation (Nachtrag 2026-11-17, ADR 0013):** Die Aufgaben 1 bis 3 wurden nach dem ersten Lauf geändert. Gelesen
 werden die `keyEvents` (`clock.displayValue`, ohne Wechsel) statt `commentary`, das Feld `spieler` und die Prüfung „genannte Spieler stehen
 im Liveticker“ entfallen, `pruefeBericht(inhalt, partie)` hat keinen Parameter `liveticker` mehr. Neu sind `pruefeMitGrund` (Grund für die
-Evaluation) und die Exporte `SCHEMA_SPIELBERICHT`, `ANWEISUNG_SPIELBERICHT` und `anfrageInhalt`. Modell im Betrieb ist `ai/gemma4:e4b`. Wo
+Evaluation) und `spielberichtAnfrage(partie, liveticker)` (dieselbe Anfrage für Betrieb und
+Evaluation). `frageModell`, `Modell` und `ohneGrenzen(text, grenze)` liegen seit dem Review von PR #85 in `lib/modell.ts`. Modell im Betrieb ist `ai/gemma4:e4b`. Wo
 die Aufgaben unten noch `commentary`, `spieler` oder `qwen3:4b` nennen, gilt dieser Absatz.
 
 **Versuch (2026-11-17): trägt.**
@@ -245,7 +246,7 @@ Pflicht, `additionalProperties: false`. Teamnamen sind die deutschen Kurznamen a
 - [x] **Schritt 6: Prüfen und committen:** `bash checks.sh`, `git commit -m "Add match report prompt"`.
 
 Nachtrag 2026-11-17: Die Zeile `Tore:` nennt je Tor das Team (`García 7' (Leverkusen)`), damit das Modell Eigentore richtig
-zuordnet. `ANWEISUNG_SPIELBERICHT` und `anfrageInhalt` sind exportiert, die Evaluation (Aufgabe 4) braucht die rohe Antwort mit
+zuordnet. Die Evaluation (Aufgabe 4) braucht die rohe Antwort mit
 genau dieser Anfrage.
 
 ### Aufgabe 4: Evaluation mit 10 Partien

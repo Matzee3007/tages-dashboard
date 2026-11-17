@@ -10,13 +10,9 @@ import { KACHELN } from "@/lib/einstellungen";
 import { holeJson } from "@/lib/kacheln/fussball/abruf";
 import { espnAdresse, leseTag } from "@/lib/kacheln/fussball/espn";
 import { ladeLiveticker } from "@/lib/spielbericht/liveticker";
-import {
-  ANWEISUNG_SPIELBERICHT,
-  SCHEMA_SPIELBERICHT,
-  anfrageInhalt,
-} from "@/lib/spielbericht/modell";
+import { spielberichtAnfrage } from "@/lib/spielbericht/modell";
 import { pruefeMitGrund } from "@/lib/spielbericht/pruefung";
-import { frageModell, type Modell } from "@/lib/zusammenfassen/modell";
+import { frageModell, type Modell } from "@/lib/modell";
 
 const MODELL_URL = "http://localhost:12434/engines/v1/";
 const DATEI = "evaluation/daten/spielberichte.md";
@@ -27,15 +23,6 @@ function teams(liga: string) {
       einstellung.art === "fussball" && einstellung.espn === liga,
   );
   return kachel?.art === "fussball" ? kachel.teams : [];
-}
-
-function frage(modell: Modell, inhalt: string) {
-  return frageModell(modell, {
-    anweisung: ANWEISUNG_SPIELBERICHT,
-    inhalt,
-    schemaName: "spielbericht",
-    schema: SCHEMA_SPIELBERICHT,
-  });
 }
 
 // Ein Abschnitt je Partie, gleich in die Datei: Ein Abbruch nimmt die bisherigen Antworten nicht mit.
@@ -56,7 +43,10 @@ async function einePartie(
   if (!partie || !liveticker) return "Partie oder Liveticker fehlt.";
 
   const start = performance.now();
-  const roh = await frage(modell, anfrageInhalt(partie, liveticker));
+  const roh = await frageModell(
+    modell,
+    spielberichtAnfrage(partie, liveticker),
+  );
   const sekunden = Math.round((performance.now() - start) / 100) / 10;
   const ergebnis = roh === null ? null : pruefeMitGrund(roh, partie);
   const pruefung =
@@ -96,7 +86,12 @@ async function main(name: string | undefined): Promise<void> {
   const jetzt = new Date();
 
   // Der erste Aufruf lädt das Modell in den Speicher und zählt deshalb nicht.
-  await frage(modell, "Aufwärmen");
+  await frageModell(modell, {
+    anweisung: "Antworte kurz.",
+    inhalt: "Aufwärmen",
+    schemaName: "aufwaermen",
+    schema: { type: "object", properties: { ok: { type: "string" } } },
+  });
 
   writeFileSync(DATEI, `# Evaluation Spielberichte: ${name}\n\n`);
   for (const test of TESTSATZ_SPIELBERICHTE) {
