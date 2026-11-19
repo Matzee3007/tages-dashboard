@@ -1,23 +1,23 @@
 ---
 titel: Nächste Session
 status: aktiv
-erstellt: 2026-11-17
+erstellt: 2026-11-19
 tags: [session, übergabe]
 ---
 
 # Nächste Session
 
-Stand vom 2026-11-17 (abends). Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
-[[projects/tages-dashboard/docs/journal/Lernjournal Phase 3 - Champions League und Aussehen|Lernjournal Phase 3 - Champions League und Aussehen]]
-(zweite Hälfte: Spielberichte).
+Stand vom 2026-11-19. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
+[[projects/tages-dashboard/docs/journal/Lernjournal Phase 3 - Neue KI-Quellen|Lernjournal Phase 3 - Neue KI-Quellen]].
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge von PR #86, Journal und Übergabe)
-- **Offene PRs:** keine
+- **Branch:** `main` (nach dem Merge von PR #91, Journal und Übergabe)
+- **Offene PRs:** #87, #88, #89 (Dependabot, siehe „Wartet auf dich“)
 - **Nicht committet:** nichts
-- **Supabase:** gehostet, kein lokaler Container (so gewollt). Neue Tabelle `spielberichte` mit RLS.
+- **Supabase:** gehostet, kein lokaler Container (so gewollt)
 - **Container `zusammenfassen`:** läuft mit `ai/gemma4:e4b`, alle 15 Minuten KI-News und Spielberichte (ADR 0013)
+- **KI-News:** seit PR #90 ohne The Verge, neu t3n, Ars Technica, Simon Willison, Hugging Face, Import AI, Latent Space (live geprüft)
 - **Phase 3, Schritt 3 (Spielberichte):** gebaut und gemergt (PR #85), Abnahme offen, siehe unten
 
 ## Vor dem Start
@@ -55,6 +55,10 @@ Stand vom 2026-11-17 (abends). Gehört zu [[projects/tages-dashboard/docs/Projek
   - Befehl im eigenen Terminal: `npm run tauri -- build`
   - Erwartet: Beim Öffnen der App blitzt kein anderer Farbton mehr auf.
 
+- [ ] **Dependabot-PRs #87, #88, #89 prüfen** (blockiert: nichts). Nicht gemergt, weil in dieser Session nicht reviewt.
+  - Ort: mit Claude, je PR `bash checks.sh` auf dem Branch und `/code-review low <nr>`, #89 (jsdom 31, neue Hauptversion) mit `medium`.
+  - Erwartet: Prüfungen grün, Funde durchgesprochen, dann Merge.
+
 ## Womit es weitergeht
 
 **Phase 3, Schritt 3 (Spielberichte)** ist gebaut, erledigt ist er erst nach der Abnahme am Freitag. Dann in der Projektvision als
@@ -77,6 +81,11 @@ Danach:
 
 Bekannte offene Punkte, ohne Eile:
 
+- Wackelige Tests: Beim ersten Lauf von `checks.sh` am 2026-11-19 waren 2 Tests rot (einer zu `leseArtikel`), danach grün. Mit
+  `fehler-diagnose` eingrenzen.
+- Nach PR #90 beobachten, ob die KI-News-Kachel mit 14 Absendern unter 8 Sekunden bleibt (Feed von Hugging Face rund 270 KB) und wie
+  viel länger der Durchlauf der Zusammenfassungen auf dem Mac dauert.
+
 - Hausfarben und Zonenfarben sind nicht mit den offiziellen Farben abgeglichen (Plan Aussehen G, „Aufgetaucht“).
 - Fund 6 aus dem Review von PR #81 (Tag je Partie beim Sortieren nur einmal berechnen) bewusst nicht behoben.
 - Zusammenfassungen dauern mit `gemma4:e4b` etwa dreimal so lang wie vorher (ADR 0013), im Log beobachten.
@@ -85,4 +94,4 @@ Bekannte offene Punkte, ohne Eile:
 
 - `plan-schreiben`: für den Plan der Formel 1 nach dem Mock
 - `tdd`: beim Bauen
-- `fehler-diagnose`: falls am Freitag kein Bericht erscheint
+- `fehler-diagnose`: falls am Freitag kein Bericht erscheint, und für die wackeligen Tests
