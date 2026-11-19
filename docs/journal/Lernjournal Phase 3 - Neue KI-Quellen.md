@@ -30,9 +30,9 @@ Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]].
 | Produkt | The Verge fällt weg | Artikel kostenpflichtig, also nicht lesbar | Entwickler |
 | Produkt | Neu: Ars Technica, Simon Willison, Hugging Face, Import AI, t3n, Latent Space | Auswahl aus den erreichbaren, freien Kandidaten | Entwickler |
 | Produkt | t3n und Latent Space trotz teilweise kostenpflichtiger Beiträge | Entwickler hat sie mit diesem Hinweis gewählt | Entwickler |
-| Produkt | Bei Simon Willison nur der KI-Feed `tags/ai.atom` statt des Gesamt-Feeds | Gesamt-Feed hat auch Themen ohne KI (z. B. „PostgreSQL 19 Released“) | ungefragt |
-| Design | Farben der neuen Absender: t3n `#6FB38F`, Ars Technica `#E07B4F`, Simon Willison `#B79A6B`, Hugging Face `#F2C14E`, Import AI `#A68FC9`, Latent Space `#C98BA6` | gedeckte Töne wie die bestehenden, keine Farbe doppelt | ungefragt |
-| Design | Neue Absender stehen an der Stelle von The Verge, vor Hacker News | Reihenfolge der übrigen bleibt unverändert | ungefragt |
+| Produkt | Bei Simon Willison nur der KI-Feed `tags/ai.atom` statt des Gesamt-Feeds | Gesamt-Feed hat auch Themen ohne KI (z. B. „PostgreSQL 19 Released“) | Entwickler |
+| Design | Farben der neuen Absender: t3n `#6FB38F`, Ars Technica `#E07B4F`, Simon Willison `#B79A6B`, Hugging Face `#F2C14E`, Import AI `#A68FC9`, Latent Space `#C98BA6` | gedeckte Töne wie die bestehenden, keine Farbe doppelt | Entwickler |
+| Design | Neue Absender stehen an der Stelle von The Verge, vor Hacker News | Reihenfolge der übrigen bleibt unverändert | Entwickler |
 | Prüfen | Review-Stufe `low` für PR #90 | nur Konfigurationsdaten geändert | Entwickler |
 
 ## Befehle: Feeds prüfen
