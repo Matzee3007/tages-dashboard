@@ -190,7 +190,12 @@ Absender und Kanäle (am 2026-11-04 von diesem Rechner aus abgerufen, die Seiten
 | Andrej Karpathy | `karpathy.bearblog.dev/feed/`, `karpathy.github.io/feed.xml`, YouTube `UCXUPKJO5MZQN11PqgIvyuvQ` | |
 | Matt Pocock | YouTube `UCswG6FSbgZjbWtdf_hMLaow`, `aihero.dev/rss.xml` | |
 | The Decoder | `the-decoder.de/feed/` | |
-| The Verge | `theverge.com/rss/ai-artificial-intelligence/index.xml` | |
+| t3n | `t3n.de/tag/kuenstliche-intelligenz/rss.xml` | |
+| Ars Technica | `arstechnica.com/ai/feed/` | |
+| Simon Willison | `simonwillison.net/tags/ai.atom` | |
+| Hugging Face | `huggingface.co/blog/feed.xml` | |
+| Import AI | `jack-clark.net/feed/` | |
+| Latent Space | `latent.space/feed` | |
 | Hacker News | `hnrss.org/newest?q=AI&points=100` | |
 
 YouTube-Feeds haben die Form `youtube.com/feeds/videos.xml?channel_id=<ID>`.
@@ -203,7 +208,10 @@ Entscheidungen aus der Befragung vom 2026-11-04:
   aus den 3 Zeilen verdrängen.
 - **Nicht aufgenommen:** X (bezahlt), LinkedIn (Zugang ungeklärt), Alignment-Blog (nennt nur den Monat, die 7-Tage-Regel griffe nicht),
   Claude-Code-Versionen, Statusseite, GitHub-Aktivität, Bluesky und Total TypeScript (seit 2025 oder länger still), heise (auch
-  Themen außerhalb von KI), Ars Technica (überschneidet sich mit The Verge). Simon Willison ist der erste Nachrücker.
+  Themen außerhalb von KI). Ars Technica und Simon Willison standen hier bis 2026-11-19, siehe nächsten Punkt.
+- **Neue Quellen am 2026-11-19:** The Verge ist raus, weil die Artikel hinter einer Bezahlschranke liegen. Neu sind t3n, Ars Technica,
+  Simon Willison (nur der KI-Feed, der Gesamt-Feed hat auch andere Themen), Hugging Face, Import AI und Latent Space. Bei t3n
+  (t3n Pro) und Latent Space ist ein Teil der Beiträge kostenpflichtig, das ist bewusst hingenommen. TechCrunch blockt Abrufe (403).
 - **Doppelte Meldungen:** Gleicher Link innerhalb eines Absenders erscheint einmal. Zwischen Absendern bleiben Dopplungen stehen.
 - **Ausfälle:** Ein Kanal von mehreren fällt aus: Der Abschnitt zeigt still den Rest, der Fehler steht im Server-Log. Alle Kanäle eines
   Absenders fallen aus: eine Zeile `Anthropic · gerade nicht erreichbar`. Alle Absender fallen aus: Fehlerzustand der Kachel, der letzte

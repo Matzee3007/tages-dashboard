@@ -285,11 +285,34 @@ export const ABSENDER: AbsenderEinstellung[] = [
     feeds: ["https://the-decoder.de/feed/"],
   },
   {
-    name: "The Verge",
-    aussehen: { farbe: "#9479FF" },
-    feeds: [
-      "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
-    ],
+    name: "t3n",
+    aussehen: { farbe: "#6FB38F" },
+    feeds: ["https://t3n.de/tag/kuenstliche-intelligenz/rss.xml"],
+  },
+  {
+    name: "Ars Technica",
+    aussehen: { farbe: "#E07B4F" },
+    feeds: ["https://arstechnica.com/ai/feed/"],
+  },
+  {
+    name: "Simon Willison",
+    aussehen: { farbe: "#B79A6B" },
+    feeds: ["https://simonwillison.net/tags/ai.atom"],
+  },
+  {
+    name: "Hugging Face",
+    aussehen: { farbe: "#F2C14E" },
+    feeds: ["https://huggingface.co/blog/feed.xml"],
+  },
+  {
+    name: "Import AI",
+    aussehen: { farbe: "#A68FC9" },
+    feeds: ["https://jack-clark.net/feed/"],
+  },
+  {
+    name: "Latent Space",
+    aussehen: { farbe: "#C98BA6" },
+    feeds: ["https://www.latent.space/feed"],
   },
   {
     name: "Hacker News",
