@@ -208,7 +208,7 @@ Entscheidungen aus der Befragung vom 2026-11-04:
   aus den 3 Zeilen verdrängen.
 - **Nicht aufgenommen:** X (bezahlt), LinkedIn (Zugang ungeklärt), Alignment-Blog (nennt nur den Monat, die 7-Tage-Regel griffe nicht),
   Claude-Code-Versionen, Statusseite, GitHub-Aktivität, Bluesky und Total TypeScript (seit 2025 oder länger still), heise (auch
-  Themen außerhalb von KI), Ars Technica (überschneidet sich mit The Verge). Simon Willison ist der erste Nachrücker.
+  Themen außerhalb von KI). Ars Technica und Simon Willison standen hier bis 2026-11-19, siehe nächsten Punkt.
 - **Neue Quellen am 2026-11-19:** The Verge ist raus, weil die Artikel hinter einer Bezahlschranke liegen. Neu sind t3n, Ars Technica,
   Simon Willison (nur der KI-Feed, der Gesamt-Feed hat auch andere Themen), Hugging Face, Import AI und Latent Space. Bei t3n
   (t3n Pro) und Latent Space ist ein Teil der Beiträge kostenpflichtig, das ist bewusst hingenommen. TechCrunch blockt Abrufe (403).
