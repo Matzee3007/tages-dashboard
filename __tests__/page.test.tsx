@@ -416,3 +416,52 @@ test("Heute mit einer Kachel im Fehler zeigt die übrigen", async () => {
   expect(screen.queryByRole("region", { name: "Mein Team" })).toBeNull();
   vi.useRealTimers();
 });
+
+test("aus Heute in den Reiter springen, über einen Wettbewerb bis zu seiner Kachel", async () => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date(ZEIT) });
+  const scrollIntoView = vi.fn();
+  Element.prototype.scrollIntoView = scrollIntoView;
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [BUNDESLIGA_LIVE, ...OK.kacheln],
+  });
+  render(<Page />);
+  const bereiche = await screen.findByRole("navigation", { name: "Bereiche" });
+  const aktiv = () =>
+    within(bereiche)
+      .getAllByRole("button")
+      .find((knopf) => knopf.getAttribute("aria-current") === "page")
+      ?.textContent;
+
+  const live = await screen.findByRole("region", { name: "Jetzt live" });
+  fireEvent.click(within(live).getByRole("button", { name: /Bundesliga/ }));
+  expect(aktiv()).toBe("Sport");
+  await waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
+  expect(scrollIntoView.mock.contexts[0]).toBe(
+    document.getElementById("bundesliga"),
+  );
+
+  fireEvent.click(within(bereiche).getByRole("button", { name: "Heute" }));
+  fireEvent.click(
+    screen.getByRole("button", { name: /Alle Meldungen im Reiter KI-News/ }),
+  );
+  expect(aktiv()).toMatch(/^KI-News/);
+
+  fireEvent.click(within(bereiche).getByRole("button", { name: "Heute" }));
+  fireEvent.click(
+    screen.getByRole("button", { name: /Alle Partien im Reiter Sport/ }),
+  );
+  expect(aktiv()).toMatch(/^Sport/);
+});
+
+test("Links zu Artikeln in Heute öffnen die Quelle, nicht den Reiter", async () => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date(ZEIT) });
+  vi.mocked(holeDashboard).mockResolvedValue(OK);
+  render(<Page />);
+
+  const link = await screen.findByRole("link", { name: /Introducing Claude/ });
+  expect(link.getAttribute("href")).toBe(
+    "https://www.anthropic.com/news/claude",
+  );
+  expect(link.getAttribute("target")).toBe("_blank");
+});

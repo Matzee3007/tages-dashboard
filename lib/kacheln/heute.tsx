@@ -56,18 +56,22 @@ function Weiter({ text, onClick }: { text: string; onClick: () => void }) {
   );
 }
 
-// Kleine Zeile über einer Partie: Marke und Name des Wettbewerbs, bei Bedarf der Tag.
+// Kleine Zeile über einer Partie: Marke und Name des Wettbewerbs, bei Bedarf der Tag. Ein Tipp führt zur Kachel.
 function Herkunftszeile({
   herkunft,
   zusatz,
+  waehle,
 }: {
   herkunft: Herkunft;
   zusatz?: string;
+  waehle: (reiter: string, kachelId?: string) => void;
 }) {
   return (
-    <div
+    <button
+      type="button"
+      onClick={() => waehle(herkunft.reiter, herkunft.kachelId)}
       style={farbVariablen(herkunft.aussehen)}
-      className="flex items-center gap-2 bg-flaeche px-3.5 py-1.5 text-[12.5px] font-[650] text-gedaempft"
+      className="flex min-h-8 w-full cursor-pointer items-center gap-2 bg-flaeche px-3.5 py-1.5 text-left text-[12.5px] font-[650] text-gedaempft hover:text-text"
     >
       <span
         aria-hidden
@@ -75,8 +79,11 @@ function Herkunftszeile({
       >
         {herkunft.aussehen.kuerzel}
       </span>
-      {[herkunft.titel, zusatz].filter(Boolean).join(" · ")}
-    </div>
+      <span className="flex-1">
+        {[herkunft.titel, zusatz].filter(Boolean).join(" · ")}
+      </span>
+      <span aria-hidden>›</span>
+    </button>
   );
 }
 
@@ -100,7 +107,7 @@ export function Heute({
           >
             {live.map((eintrag) => (
               <div key={eintrag.partie.id}>
-                <Herkunftszeile herkunft={eintrag} />
+                <Herkunftszeile herkunft={eintrag} waehle={waehle} />
                 <PartieZeile
                   partie={eintrag.partie}
                   meinTeam={[]}
@@ -135,6 +142,7 @@ export function Heute({
                         <Herkunftszeile
                           herkunft={wettbewerb}
                           zusatz={datum(wettbewerb.partie.anstoss)}
+                          waehle={waehle}
                         />
                         <PartieZeile
                           partie={wettbewerb.partie}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { abmelden } from "@/app/login/actions";
 import { holeDashboard } from "@/lib/kacheln/abruf";
 import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
@@ -56,6 +56,16 @@ export function Dashboard() {
   const [frischId, setFrischId] = useState<string | null>(null);
   // Beim Öffnen steht die Übersicht vorn, ein Reiter ist keine eigene Route (ADR 0014).
   const [aktiv, setAktiv] = useState(HEUTE);
+  // Ein Tipp in „Heute“ führt zur Kachel: Der Reiter wechselt, nach dem Rendern scrollt die Seite zu ihr.
+  const [ziel, setZiel] = useState<{ kachelId?: string }>({});
+  const waehle = useCallback((reiter: string, kachelId?: string) => {
+    setAktiv(reiter);
+    setZiel({ kachelId });
+  }, []);
+  useEffect(() => {
+    if (ziel.kachelId) document.getElementById(ziel.kachelId)?.scrollIntoView();
+    else document.documentElement.scrollTop = 0;
+  }, [ziel]);
   const laeuft = useRef(false);
   const router = useRouter();
 
@@ -116,7 +126,7 @@ export function Dashboard() {
       <ReiterLeiste
         reiter={reiterListe(kacheln)}
         aktiv={aktiv}
-        waehle={setAktiv}
+        waehle={waehle}
         abzeichen={abzeichen(stand)}
       />
 
@@ -130,7 +140,7 @@ export function Dashboard() {
           />
         )}
         {geladen && kacheln.length > 0 && aktiv === HEUTE && (
-          <Heute uebersicht={stand} waehle={setAktiv} />
+          <Heute uebersicht={stand} waehle={waehle} />
         )}
         {gruppiere(kacheln.filter((kachel) => reiterVon(kachel) === aktiv)).map(
           ({ gruppe, kacheln: imBlock }) => {

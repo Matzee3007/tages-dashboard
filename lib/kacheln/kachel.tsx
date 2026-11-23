@@ -91,9 +91,10 @@ export function Kachel({
   if (!kachel.gruppe) {
     return (
       <section
+        id={kachel.id}
         aria-label={kachel.titel}
         style={farbVariablen(kachel.aussehen)}
-        className="flex min-w-0 flex-col gap-3.5"
+        className="flex min-w-0 scroll-mt-4 flex-col gap-3.5"
       >
         <div className="flex items-center justify-between gap-2">
           <GrosserTitel>{kachel.titel}</GrosserTitel>
@@ -108,9 +109,10 @@ export function Kachel({
   // In einer Gruppe ist die Kachel eine Karte unter der Überschrift der Gruppe (Mock G).
   return (
     <section
+      id={kachel.id}
       aria-label={kachel.titel}
       style={farbVariablen(kachel.aussehen)}
-      className="flex min-w-0 flex-col overflow-hidden rounded-2xl bg-karte"
+      className="flex min-w-0 scroll-mt-4 flex-col overflow-hidden rounded-2xl bg-karte"
     >
       <div className="flex items-center gap-3 py-3 pr-1 pl-3.5">
         <span
