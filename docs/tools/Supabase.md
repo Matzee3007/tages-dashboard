@@ -145,3 +145,8 @@ Das Token von `supabase login` gilt für alle Projekte des Kontos, nicht nur fü
   ein `supabase link` ist dafür nicht nötig.
 - **`Invalid API key` mit Status 401** (2026-11-15) bei der Prüfung als Fremder. **Ursache:** Der Schlüssel steht in `.env.local` in
   einfachen Anführungszeichen, sie gingen mit in den Header. **Lösung:** Anführungszeichen entfernen, bevor man den Wert benutzt.
+- **`JWT expired` (Code `PGRST303`) im Container `zusammenfassen`** (2026-11-22): Partien ohne Spielbericht, ein Wettbewerb übersprungen.
+  **Ursache:** Der Mac schlief, ein Durchlauf zog sich über Stunden, Anfragen kamen mit abgelaufenem Ausweis an. `supabase-js` erneuert den
+  Ausweis zwar vor jeder Anfrage, wenn er in unter 90 Sekunden abläuft, das reicht im Ruhezustand nicht. Welcher Schritt genau scheitert,
+  ist nicht gemessen. **Lösung:** keine nötig, der nächste Durchlauf bei wachem Mac holt alles nach (ADR 0013, Nachtrag 2026-11-23).
+  Prüfen mit `pmset -g log | grep DarkWake`: Häufen sich dort Einträge zur Zeit des Fehlers, war es der Schlaf.
