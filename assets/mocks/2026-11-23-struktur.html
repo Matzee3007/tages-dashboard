@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mock: Struktur des Tages-Dashboards (A–D)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:#5f656e;font-family:system-ui,sans-serif;line-height:1.35;color:#111}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid #8fc1ff;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Mock-Rahmen (nicht Teil des Entwurfs) ---------- */
+.mock-kopf{background:#262a31;color:#e9ecf0;padding:16px 20px 14px;display:flex;flex-direction:column;gap:8px}
+.mock-kopf h1{font-size:18px;font-weight:600}
+.mock-kopf p{font-size:13.5px;color:#b5bcc6;max-width:980px}
+.mock-kopf .beispiel{display:inline-block;background:#ffd166;color:#1f232a;font-weight:600;border-radius:4px;padding:0 6px;margin-right:6px}
+.mock-kopf nav{display:flex;flex-wrap:wrap;gap:6px}
+.mock-kopf nav a{border:1px solid #4a505c;border-radius:8px;min-height:36px;padding:0 10px;display:inline-flex;align-items:center;font-size:13px}
+.variante{padding:34px 20px 20px;max-width:1240px;margin:0 auto}
+.v-titel{color:#fff;margin-bottom:14px}
+.v-titel h2{font-size:24px;font-weight:650}
+.v-titel p{font-size:14.5px;color:#eef0f3;max-width:860px;margin-top:4px}
+.etikett{font-size:12.5px;color:#e2e6ec;margin:0 0 6px;font-weight:600}
+.etikett span{font-weight:400;color:#c5cbd4}
+.mac-huelle{width:100%;overflow:hidden}
+.mac{width:1200px;height:820px;border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35);transform-origin:0 0;display:flex;flex-direction:column;background:#0F1318}
+.fenster{height:30px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 12px;background:#1d2128;border-bottom:1px solid #000}
+.fenster i{width:12px;height:12px;border-radius:50%;background:#ff5f57}.fenster i:nth-child(2){background:#febc2e}.fenster i:nth-child(3){background:#28c840}
+.fenster span{flex:1;text-align:center;font-size:12px;color:#8a919c;margin-right:52px}
+.handys{display:flex;flex-wrap:wrap;gap:28px 40px;margin-top:26px}
+.handy-platz{display:flex;flex-direction:column}
+.handy{width:410px;height:820px;border:10px solid #07090c;border-radius:50px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35);display:flex;flex-direction:column;background:#0F1318}
+.laenge{font-size:12.5px;color:#dfe3e9;margin-top:6px}
+.laenge b{color:#fff}
+.urteil{margin-top:22px;background:#2b3038;color:#e9ecf0;border-radius:12px;padding:14px 18px;font-size:14.5px;max-width:980px;display:grid;gap:6px}
+.urteil b{color:#fff}
+@media (max-width:460px){
+  .variante{padding:28px 0 16px}
+  .v-titel,.etikett,.laenge,.urteil{margin-left:14px;margin-right:14px}
+  .mac-huelle{padding:0 14px}
+  .handys{gap:28px}
+  .handy-platz{width:100%}
+  .handy{width:100%;border:0;border-radius:0;height:800px}
+}
+
+/* ================= Aussehen G (übernommen aus Mock 2026-11-17) ================= */
+.vg{--seite:#0F1318;--karte:#1A1F27;--karte2:#222831;--linie:#2A313B;--grenze:#4A5260;--text:#E8EBF0;--ged:#939CAA;--rauch:#6C7583;--or:#FF8A3D;--or-grund:rgba(255,138,61,.10);--info:#86ABF5;--info-grund:rgba(134,171,245,.12);--lese:#C9D0DA;--fehler:#F59A90;--kz-grund:#2C333E;--kz-text:#C3CAD5;
+  background:var(--seite);color:var(--text);font-family:Commissioner,system-ui,sans-serif;font-weight:400;line-height:1.4;font-variant-numeric:tabular-nums}
+.kz{display:inline-grid;place-items:center;border-radius:50%;flex-shrink:0;font-style:normal;font-weight:650;background:var(--kz-grund);color:var(--kz-text);width:22px;height:22px;font-size:7px;letter-spacing:.02em;font-family:system-ui,sans-serif}
+.name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.puls{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--or);animation:puls 1.6s ease-in-out infinite;flex-shrink:0}
+@keyframes puls{50%{opacity:.3}}
+.pfeil{width:12px;height:12px;transition:transform .15s;flex-shrink:0}
+[aria-expanded=true] .pfeil{transform:rotate(180deg)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13.5px}
+th{font-size:11.5px;font-weight:500;color:var(--rauch);text-align:right;padding-bottom:4px}
+th.t-team{text-align:left}
+td{height:32px;padding:3px 0}
+td.pl{width:36px;color:var(--ged);font-weight:600;font-size:12.5px}
+td.pl span{display:flex;align-items:center;gap:9px}
+td.pl span::before{content:"";width:3px;height:18px;border-radius:2px;background:var(--z,transparent)}
+td.t-team{max-width:0}
+td.t-team>span{display:flex;align-items:center;gap:8px;min-width:0}
+td.z{width:34px;text-align:right;color:var(--ged)}
+td.pk{width:36px;text-align:right;font-weight:720}
+tr.mein td{background:var(--or-grund)}
+tr.mein .name{color:var(--or);font-weight:700}
+tr.grenze td{border-bottom:1px solid var(--grenze)}
+tr.luecke td{height:18px;padding:0;text-align:center;color:var(--rauch);letter-spacing:.3em;font-size:12px}
+.legende{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:11.5px;color:var(--ged);margin-top:10px}
+.legende span{display:inline-flex;align-items:center;gap:6px}
+.legende i{width:8px;height:8px;border-radius:2px;background:var(--z)}
+
+.vg .dash{padding:26px 28px 40px;display:flex;flex-direction:column;gap:38px}
+.vg .g-kopf{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px 16px}
+.vg .g-tag{font-size:15px;font-weight:600;color:var(--ged)}
+.vg .g-datum{font-size:34px;font-weight:780;letter-spacing:-.025em;line-height:1.05}
+.vg .g-rechts{display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--ged)}
+.vg .g-abm{min-height:44px;padding:0 18px;border-radius:22px;background:var(--karte);color:var(--text);font-weight:600}
+.vg .g-gk{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px}
+.vg h2{font-size:28px;font-weight:780;letter-spacing:-.022em;line-height:1.1}
+.vg .g-raster{display:grid;gap:16px;align-items:start}
+@container g (min-width:640px){.vg .g-raster{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container g (min-width:1000px){.vg .g-raster{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.vg .g-karte{background:var(--karte);border-radius:16px;overflow:hidden;min-width:0}
+.vg .g-kk{display:flex;align-items:center;gap:12px;padding:12px 10px 12px 14px;min-height:58px}
+.vg .g-marke{width:34px;height:34px;border-radius:10px;background:var(--c);color:#fff;font-size:12.5px;font-weight:800;display:grid;place-items:center;flex-shrink:0;letter-spacing:-.01em}
+.vg .g-kk>div{flex:1;min-width:0}
+.vg .g-kk h3{font-size:16.5px;font-weight:740;letter-spacing:-.01em;line-height:1.2}
+.vg .g-kk p{font-size:12.5px;color:var(--ged)}
+.vg .g-tagzeile{background:var(--karte2);padding:6px 14px;font-size:12.5px;font-weight:650;color:var(--ged);display:flex;align-items:center;gap:7px}
+.vg .g-tagzeile.or{color:var(--or)}
+.vg .g-p{display:grid;grid-template-columns:36px minmax(0,1fr) 58px minmax(0,1fr);column-gap:8px;align-items:center;padding:9px 12px 9px 6px;min-height:52px;border-top:1px solid var(--linie)}
+.vg .g-tagzeile+.g-p{border-top:0}
+.vg .g-p.kurz{grid-template-columns:36px minmax(0,1fr) 68px minmax(0,1fr)}
+.vg .g-st{font-size:11.5px;font-weight:600;color:var(--rauch);text-align:center;line-height:1.1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.vg .g-p.live .g-st{color:var(--or)}
+.vg .mini-marke{width:20px;height:20px;border-radius:6px;background:var(--c);color:#fff;font-size:8px;font-weight:800;display:grid;place-items:center}
+.vg .g-team{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px;font-weight:500}
+.vg .g-heim{justify-content:flex-end;text-align:right}
+.vg .g-team.mein .name{color:var(--or);font-weight:720}
+.vg .g-box{justify-self:center;min-width:54px;height:30px;padding:0 6px;border-radius:8px;display:grid;place-items:center;font-size:15.5px;font-weight:760;letter-spacing:.01em;white-space:nowrap}
+.vg .g-box.erg{background:var(--karte2)}
+.vg .g-box.zeit{font-size:13.5px;font-weight:600;color:var(--ged)}
+.vg .g-p.live .g-box{background:var(--or-grund);color:var(--or);box-shadow:inset 0 0 0 1px rgba(255,138,61,.45)}
+.vg .g-p.mein{background:var(--or-grund)}
+.vg .g-tore{grid-row:2;font-size:11.5px;color:var(--rauch);line-height:1.45;margin-top:4px;min-width:0}
+.vg .g-tore.h{grid-column:2;text-align:right}
+.vg .g-tore.g{grid-column:4}
+.vg .g-tore span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vg .b-knopf{grid-column:2/5;justify-self:center;display:inline-flex;align-items:center;gap:5px;min-height:44px;margin:-6px 0 -10px;padding:0 10px;font-size:13px;font-weight:600;color:var(--info);white-space:nowrap}
+.vg .bericht-kasten{grid-column:1/-1;margin:8px 0 4px 6px;padding:12px 14px;border-radius:12px;background:var(--karte2);font-size:14px;line-height:1.55;color:var(--lese);max-width:66ch}
+.vg .ki{display:inline-block;font-size:11.5px;font-weight:650;color:var(--info);background:var(--info-grund);border-radius:6px;padding:1px 7px;margin-bottom:6px}
+.vg .g-tab{border-top:1px solid var(--linie);padding:12px 14px 14px}
+.vg .g-tab h4{font-size:13.5px;font-weight:720;margin-bottom:6px}
+.vg .g-leer{padding:12px 14px 16px;border-top:1px solid var(--linie);font-size:14px;color:var(--ged)}
+/* KI-News */
+.vg .g-news{display:grid;gap:16px;align-items:start}
+@container g (min-width:640px){.vg .g-news{grid-template-columns:repeat(2,minmax(0,1fr))}.vg .g-abs.gross{grid-column:1/-1}}
+@container g (min-width:900px){.vg .g-news{grid-template-columns:repeat(3,minmax(0,1fr))}.vg .g-abs.gross{grid-column:span 2}}
+.vg .g-abs{background:var(--karte);border-radius:16px;padding:16px 18px 8px;min-width:0;display:flex;flex-direction:column}
+.vg .g-von{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:780;color:var(--c);letter-spacing:-.012em}
+.vg .g-von i{width:10px;height:10px;border-radius:3px;background:var(--m);flex-shrink:0}
+.vg a.g-titel{display:block;padding:10px 0 6px}
+.vg .g-titel b{display:block;font-size:20px;font-weight:720;line-height:1.24;letter-spacing:-.012em;padding:0 0 6px}
+.vg .g-alter{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ged)}
+.vg .g-neu{color:var(--or);font-weight:650}
+.vg .g-neu::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--or);margin-right:6px;vertical-align:.08em}
+.vg .zf-knopf{display:inline-flex;align-items:center;gap:6px;min-height:44px;white-space:nowrap;font-weight:600;font-size:13px;color:var(--info)}
+.vg .zf{margin:2px 0 10px;padding:12px 14px;border-radius:12px;background:var(--karte2);font-size:14.5px;line-height:1.55;color:var(--lese);max-width:66ch}
+.vg .g-w{border-top:1px solid var(--linie);padding:0 0 8px}
+.vg .g-w a.g-titel{padding:10px 0 4px}
+.vg .g-w .g-titel b{font-size:15px;font-weight:600;line-height:1.32;padding:0 0 4px;letter-spacing:0}
+.vg .g-abs.gross{padding:20px 22px 10px}
+.vg .g-abs.gross .g-lead .g-titel b{font-size:28px;font-weight:760;letter-spacing:-.022em;line-height:1.14;max-width:22ch;padding-top:4px}
+@container g (min-width:900px){
+  .vg .g-abs.gross .g-innen{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);column-gap:28px}
+  .vg .g-abs.gross .g-w:first-child{border-top:0}
+}
+@container g (max-width:600px){
+  .vg .dash{padding:16px 14px 32px;gap:32px}
+  .vg .g-datum{font-size:30px}
+  .vg h2{font-size:26px}
+  .vg .g-p{grid-template-columns:32px minmax(0,1fr) 52px minmax(0,1fr);column-gap:6px;padding-right:10px}
+  .vg .g-p.kurz{grid-template-columns:32px minmax(0,1fr) 64px minmax(0,1fr)}
+  .vg .g-team{font-size:13.5px;gap:6px}
+  .vg .g-box{min-width:48px}
+  .vg .g-abs.gross .g-lead .g-titel b{font-size:24px}
+  .vg .g-abs{padding:14px 16px 6px}
+}
+
+/* ================= Neu in diesem Mock: Struktur ================= */
+.app{flex:1;min-height:0;display:flex;flex-direction:column}
+.scroller{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;position:relative}
+.inhalt{container:g / inline-size}
+.status{height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:15px;font-weight:650;font-family:system-ui,sans-serif}
+.status span{font-size:12px;letter-spacing:.1em;color:var(--ged)}
+.heimleiste{height:22px;flex-shrink:0;display:grid;place-items:center}
+.heimleiste::after{content:"";width:134px;height:5px;border-radius:3px;background:#e8ebf0}
+/* Kopf mit Bereichsname (Reiter-Varianten) */
+.vg .b-kopf{display:flex;align-items:flex-end;justify-content:space-between;gap:10px 16px;flex-wrap:wrap}
+.vg .b-kopf small{display:block;font-size:13.5px;font-weight:600;color:var(--ged);margin-bottom:2px}
+.vg .b-kopf h1{font-size:34px;font-weight:780;letter-spacing:-.025em;line-height:1.05}
+@container g (max-width:600px){.vg .b-kopf h1{font-size:30px}.vg .b-kopf .g-abm{display:none}}
+/* Leiste unten (iPhone) */
+.tabbar{display:flex;flex-shrink:0;border-top:1px solid var(--linie);background:rgba(22,26,33,.96);padding:6px 6px 0}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:50px;font-size:10.5px;font-weight:600;color:var(--rauch);position:relative}
+.tab svg{width:26px;height:26px}
+.tab.an{color:var(--text)}
+.tab.spaeter{opacity:.4;cursor:default}
+.tab .zahl{position:absolute;top:-2px;left:calc(50% + 7px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--or);color:#1a1206;font-size:11px;font-weight:750;display:grid;place-items:center}
+.tab .punkt{position:absolute;top:2px;left:calc(50% + 10px)}
+/* Seitenleiste (Mac, A) */
+.mit-leiste{flex:1;min-height:0;display:grid;grid-template-columns:232px minmax(0,1fr)}
+.leiste{background:#12161C;border-right:1px solid var(--linie);padding:24px 12px 16px;display:flex;flex-direction:column;gap:3px}
+.leiste .l-datum{padding:0 12px 18px}
+.leiste .l-datum small{display:block;font-size:13px;color:var(--ged);font-weight:600}
+.leiste .l-datum b{font-size:22px;font-weight:780;letter-spacing:-.02em}
+.l-item{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;font-size:15px;font-weight:620;color:var(--ged);width:100%}
+.l-item svg{width:20px;height:20px;flex-shrink:0}
+.l-item.an{background:var(--karte);color:var(--text)}
+.l-item .rechts{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12.5px}
+.l-item .zahl-or{background:var(--or);color:#1a1206;border-radius:9px;padding:0 6px;min-width:20px;text-align:center;font-weight:750;font-size:11.5px;line-height:18px}
+.l-item .live-wort{color:var(--or);font-weight:700}
+.l-trenner{font-size:11.5px;font-weight:650;color:var(--rauch);text-transform:uppercase;letter-spacing:.06em;padding:18px 12px 6px}
+.l-item.spaeter{opacity:.45;cursor:default;font-size:14px}
+.leiste .l-fuss{margin-top:auto;padding:0 12px;font-size:12.5px;color:var(--ged);display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+/* Reiter oben (Mac, D) */
+.reiter-oben{display:flex;gap:4px;background:var(--karte);border-radius:14px;padding:4px}
+.reiter-oben button{min-height:40px;padding:0 16px;border-radius:10px;font-size:14.5px;font-weight:650;color:var(--ged);display:inline-flex;align-items:center;gap:7px}
+.reiter-oben button.an{background:#2C333E;color:var(--text)}
+.reiter-oben button.spaeter{opacity:.45;cursor:default}
+.reiter-oben .zahl-or{background:var(--or);color:#1a1206;border-radius:9px;padding:0 6px;font-weight:750;font-size:11.5px;line-height:18px}
+/* Live-Marke im Kartenkopf */
+.vg .live-marke{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--or);background:var(--or-grund);border-radius:20px;padding:3px 10px;white-space:nowrap}
+.vg .neu-zahl{display:inline-flex;align-items:center;font-size:12.5px;font-weight:700;color:var(--or);white-space:nowrap}
+.vg .neu-zahl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--or);margin-right:6px}
+/* Kurzfassung einer Kachel */
+.vg .ue{cursor:pointer;transition:background .15s}
+.vg .ue:hover{background:#1E242D}
+.vg .ue .weiter{color:var(--rauch);font-size:22px;line-height:1;padding:0 4px}
+.vg .platz{display:flex;align-items:center;gap:9px;padding:10px 14px;border-top:1px solid var(--linie);font-size:13.5px;color:var(--ged);flex-wrap:wrap}
+.vg .platz i{width:3px;height:18px;border-radius:2px;background:var(--z)}
+.vg .platz b{color:var(--or);font-weight:700}
+.vg .platz strong{color:var(--text);font-weight:700}
+.vg .k-fuss{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:46px;padding:0 14px;border-top:1px solid var(--linie);font-size:13.5px;font-weight:650;color:var(--info)}
+.vg .k-fuss span{color:var(--ged);font-weight:500}
+.vg .knopf-zeile{display:flex;flex-wrap:wrap;border-top:1px solid var(--linie)}
+.vg .knopf-zeile button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;font-size:13.5px;font-weight:650;color:var(--info);white-space:nowrap;padding:0 10px}
+.vg .knopf-zeile button+button{border-left:1px solid var(--linie)}
+.vg .zu-text{font-size:13px;color:var(--ged);font-weight:500}
+.vg .kk-knopf{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;color:var(--ged);flex-shrink:0}
+.vg .kk-knopf .pfeil{width:16px;height:16px}
+/* KI-News kurz */
+.vg .n-kurz{padding:4px 18px 4px}
+.vg .n-kurz .g-von{font-size:13.5px}
+.vg .n-lead{display:block;padding:6px 0 12px}
+.vg .n-lead b{display:block;font-size:22px;font-weight:740;line-height:1.22;letter-spacing:-.015em;margin:6px 0}
+.vg .n-liste{display:grid}
+@container g (min-width:900px){.vg .n-liste.zwei{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}}
+.vg .n-z{display:block;padding:10px 0;border-top:1px solid var(--linie);min-width:0}
+.vg .n-z .g-von{font-size:12.5px;font-weight:720}
+.vg .n-z .g-von i{width:8px;height:8px}
+.vg .n-z b{display:block;font-size:15px;font-weight:600;line-height:1.32;margin:3px 0 2px}
+@container g (min-width:900px){.vg .n-gross{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);column-gap:28px}.vg .n-gross .n-liste .n-z:first-child{border-top:0}}
+/* Detailseite (B) */
+.vg .zurueck-leiste{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;padding:6px 14px;background:rgba(15,19,24,.94);border-bottom:1px solid var(--linie);backdrop-filter:blur(10px)}
+.vg .zurueck{display:inline-flex;align-items:center;gap:4px;min-height:44px;padding:0 8px 0 2px;font-size:15px;font-weight:600;color:var(--info)}
+.vg .zurueck-leiste .g-marke{width:26px;height:26px;border-radius:8px;font-size:10px}
+.vg .zurueck-leiste b{font-size:16px;font-weight:740}
+.vg .detail-zwei{display:grid;gap:16px;align-items:start}
+@container g (min-width:900px){.vg .detail-zwei{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}}
+/* Sprungleiste (C) */
+.vg .sprung{position:sticky;top:0;z-index:2;display:flex;gap:8px;padding:8px 28px;background:rgba(15,19,24,.94);border-bottom:1px solid var(--linie);backdrop-filter:blur(10px)}
+@container g (max-width:600px){.vg .sprung{padding:8px 14px}}
+.vg .sprung button{min-height:38px;padding:0 14px;border-radius:19px;background:var(--karte);font-size:14px;font-weight:650;display:inline-flex;align-items:center;gap:7px}
+.vg .sprung button.spaeter{opacity:.45;cursor:default}
+/* Platzhalter für spätere Kacheln */
+.vg .spaeter-karte{border:1.5px dashed #333B47;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;min-height:62px;color:var(--rauch)}
+.vg .spaeter-karte .g-marke{background:#2A313B;color:#7D8693;width:30px;height:30px;font-size:11px;border-radius:9px}
+.vg .spaeter-karte b{display:block;color:var(--ged);font-size:14.5px;font-weight:700}
+.vg .spaeter-karte span{font-size:12.5px}
+.vg .spaeter-reihe{display:grid;gap:12px}
+@container g (min-width:640px){.vg .spaeter-reihe{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* Heute als Übersicht (D) */
+.vg .heute-raster{display:grid;gap:16px;align-items:start}
+@container g (min-width:900px){.vg .heute-raster{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}.vg .heute-raster .links{display:grid;gap:16px}}
+.vg .heute-raster .links{display:grid;gap:16px;min-width:0}
+.vg .team-kopf{display:flex;align-items:center;gap:8px;background:var(--karte2);padding:7px 14px;font-size:13px;font-weight:700;color:var(--or)}
+.vg .chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 12px;border-top:1px solid var(--linie)}
+.vg .chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ged);background:var(--karte2);border-radius:8px;padding:4px 9px}
+.vg .chip strong{color:var(--text);font-weight:700}
+.vg .chip .mini-marke{width:16px;height:16px;font-size:7px;border-radius:4px}
+.vg .hinweis-zeile{padding:8px 14px 10px;border-top:1px solid var(--linie);font-size:13px;color:var(--ged)}
+</style>
+</head>
+<body>
+<header class="mock-kopf">
+  <h1>Mock: Struktur des Tages-Dashboards, Varianten A bis D (Aussehen G bleibt)</h1>
+  <p><span class="beispiel">Beispieldaten</span>Alle Partien, Tabellen, Torschützen, Berichte und Meldungen sind erfunden. Stand angenommen: Sonntag, 22. November 2026, 18:05 Uhr. Mein Team: FC Bayern (Bundesliga, Champions League) und Arsenal (Premier League, Champions League). Live: Bayern – Union (BL) und Brentford – Bournemouth (PL). 9 neue KI-Meldungen von 8 Absendern. Teams als Kürzel-Kreise, in der App stehen dort Logos.</p>
+  <p>Jede Variante zeigt das Mac-Fenster (1200 px) und zwei iPhones (390 px), das zweite in einem anderen Zustand. Alles ist anklickbar: Reiter, Karten, Zurück, Aufklappen, Bericht, Zusammenfassung. Jedes Gerät scrollt für sich, darunter steht, wie viele Bildschirmhöhen die gerade sichtbare Ansicht lang ist. Gestrichelte Karten halten den Platz für spätere Kacheln frei (Formel 1, NFL, Schritte).</p>
+  <nav aria-label="Varianten"><a href="#vA">A Reiter</a><a href="#vB">B Übersicht + Detailseite</a><a href="#vC">C Gruppen auf einer Seite</a><a href="#vD">D Reiter + Übersicht</a></nav>
+</header>
+<main id="buehne"></main>
+
+<script>
+/* ---------------- Beispieldaten ---------------- */
+const STAND = "18:05";
+const HEUTE = "So";
+const TAG = {Fr:"Freitag, 20. November",Sa:"Samstag, 21. November",So:"Sonntag, 22. November",Di:"Dienstag, 24. November",Mi:"Mittwoch, 25. November",Mo:"Montag, 23. November"};
+const KZ = {"Man City":"MCI","Man United":"MUN","Aston Villa":"AVL","Crystal Palace":"CRY","Real Madrid":"RMA","Inter Milan":"INT","Club Brugge":"BRU","Leverkusen":"B04","Gladbach":"BMG","Frankfurt":"SGE","Hoffenheim":"TSG","Tottenham":"TOT","Nottingham":"NFO","Bayern":"FCB","Dortmund":"BVB","Leipzig":"RBL","Stuttgart":"VFB","Liverpool":"LIV","Chelsea":"CHE","Arsenal":"ARS","Brighton":"BHA","Bournemouth":"BOU","Brentford":"BRE","Freiburg":"SCF","Union":"FCU","Atlético":"ATM","Barcelona":"FCB","Sporting":"SCP","Galatasaray":"GAL"};
+const kz = n => KZ[n] || n.normalize("NFD").replace(/[̀-ͯ]/g,"").slice(0,3).toUpperCase();
+const ZONEN = {cl:["Champions League","#4C8DF6"],el:["Europa League","#22B8CF"],ecl:["Conference League","#4CC38A"],rel:["Relegation","#E2B93B"],ab:["Abstieg","#E5484D"],af:["Achtelfinale","#4CC38A"],po:["Play-offs","#22B8CF"]};
+const B = {
+  dl:"Dortmund drehte früh auf: Guirassy traf nach Flanke von Adeyemi zum 1:0, Openda glich vor der Pause aus. Nach dem 2:1 in der 67. Minute verteidigte der BVB geschickt und bleibt Tabellenführer.",
+  fg:"Ein wildes Spiel: Kleindienst traf zweimal für Gladbach, doch Uzun rettete Frankfurt in der Nachspielzeit mit einem direkten Freistoß noch das 2:2.",
+  fh:"Hoffenheim gewann verdient in Freiburg. Kramarić und Hložek trafen jeweils nach Kontern, Freiburg hatte mehr Ballbesitz, aber kaum Chancen.",
+  at:"Arsenal gewann das Derby souverän. Saka und Ødegaard sorgten für eine 2:0-Pause, Kudus verkürzte, Gyökeres machte mit einem Kopfball alles klar.",
+  la:"Watkins traf zweimal für Villa, Liverpool kam jeweils zurück. Isak glich fünf Minuten vor Schluss aus, Salah vergab in der Nachspielzeit die Chance zum Sieg."};
+// Partie: [Tag, Zeit oder "live 35'", Heim, Gast, Ergebnis, Tore Heim, Tore Gast, Bericht]
+const WETTBEWERBE = [
+  {id:"bl", titel:"Bundesliga", marke:"BL", farbe:"#E3343F", mein:["Bayern"], linien:[4,5,6,15,16], zonen:[[1,4,"cl"],[5,5,"el"],[6,6,"ecl"],[16,16,"rel"],[17,18,"ab"]],
+   nr:"11. Spieltag", tage:"Fr 20. bis So 22. November",
+   partien:[
+    ["Fr","20:30","Dortmund","Leipzig","2:1",["Guirassy 12', 67'"],["Openda 40'"],B.dl],
+    ["Sa","15:30","Leverkusen","Bremen","1:1",["Schick 33'"],["Grüll 81'"]],
+    ["Sa","15:30","Stuttgart","HSV","2:0",["Demirović 19'","Undav 88'"],[]],
+    ["Sa","15:30","Mainz","Elversberg","0:0",[],[]],
+    ["Sa","15:30","Augsburg","Paderborn","1:0",["Claude-Maurice 77'"],[]],
+    ["Sa","18:30","Frankfurt","Gladbach","2:2",["Burkardt 5'","Uzun 90+2'"],["Kleindienst 28', 60'"],B.fg],
+    ["So","15:30","Freiburg","Hoffenheim","0:2",[],["Kramarić 23'","Hložek 71'"],B.fh],
+    ["So","live 35'","Bayern","Union","1:0",["Kane 21'"],[]],
+    ["So","19:30","Schalke","Köln"]],
+   tabelle:[[1,"Dortmund",11,"+14",26],null,[3,"Leipzig",11,"+9",22],[4,"Leverkusen",11,"+7",21],[5,"Bayern",10,"+10",20],[6,"Stuttgart",11,"+4",19],[7,"Frankfurt",11,"+2",17]],
+   voll:[[1,"Dortmund",11,"+14",26],[2,"Hoffenheim",11,"+8",23],[3,"Leipzig",11,"+9",22],[4,"Leverkusen",11,"+7",21],[5,"Bayern",10,"+10",20],[6,"Stuttgart",11,"+4",19],[7,"Frankfurt",11,"+2",17],[8,"Freiburg",11,"+1",16],[9,"Union",10,"+2",15],[10,"Bremen",11,"−2",14],[11,"Mainz",11,"−3",13],[12,"Gladbach",11,"−4",12],[13,"Augsburg",11,"−5",12],[14,"Köln",10,"−6",11],[15,"HSV",11,"−8",10],[16,"Schalke",10,"−9",9],[17,"Elversberg",11,"−9",7],[18,"Paderborn",11,"−11",5]]},
+  {id:"pl", titel:"Premier League", marke:"PL", farbe:"#B061D1", mein:["Arsenal"], linien:[4,5,6,17], zonen:[[1,4,"cl"],[5,5,"el"],[6,6,"ecl"],[18,20,"ab"]],
+   nr:"12. Spieltag", tage:"Sa 21. bis Mo 23. November",
+   partien:[
+    ["Sa","13:30","Chelsea","Everton","2:0",["Palmer 22'","João Pedro 64'"],[]],
+    ["Sa","16:00","Arsenal","Tottenham","3:1",["Saka 14'","Ødegaard 38'","Gyökeres 76'"],["Kudus 52'"],B.at],
+    ["Sa","16:00","Brighton","Leeds","1:1",["Welbeck 9'"],["Calvert-Lewin 70'"]],
+    ["Sa","16:00","Fulham","Hull","2:0",["Iwobi 31'","Jiménez 58'"],[]],
+    ["Sa","18:30","Man City","Newcastle","1:0",["Haaland 44'"],[]],
+    ["So","14:00","Liverpool","Aston Villa","2:2",["Salah 17'","Isak 85'"],["Watkins 40', 66'"],B.la],
+    ["So","15:00","Ipswich","Coventry","0:1",[],["Wright 61'"]],
+    ["So","live 78'","Brentford","Bournemouth","1:1",["Thiago 12'"],["Kluivert 49'"]],
+    ["Mo","21:00","Nottingham","Crystal Palace"],
+    ["Mo","21:00","Sunderland","Man United"]],
+   tabelle:[[1,"Man City",12,"+15",28],[2,"Arsenal",12,"+13",25],[3,"Liverpool",12,"+12",25],[4,"Chelsea",12,"+8",22],[5,"Brighton",12,"+5",21]],
+   voll:[[1,"Man City",12,"+15",28],[2,"Arsenal",12,"+13",25],[3,"Liverpool",12,"+12",25],[4,"Chelsea",12,"+8",22],[5,"Brighton",12,"+5",21],[6,"Aston Villa",12,"+4",20],[7,"Newcastle",12,"+3",19],[8,"Tottenham",12,"+2",18],[9,"Fulham",12,"0",17],[10,"Brentford",11,"−1",16],[11,"Bournemouth",11,"−2",16],[12,"Crystal Palace",11,"−2",15],[13,"Man United",11,"−3",14],[14,"Everton",12,"−4",13],[15,"Nottingham",11,"−6",12],[16,"Leeds",12,"−7",11],[17,"Sunderland",11,"−8",10],[18,"Coventry",12,"−10",9],[19,"Ipswich",12,"−8",7],[20,"Hull",12,"−11",5]]},
+  {id:"cl", titel:"Champions League", marke:"CL", farbe:"#5B8DEF", mein:["Bayern","Arsenal"], linien:[8,24], zonen:[[1,8,"af"],[9,24,"po"]],
+   nr:"Ligaphase, 5. Spieltag", tage:"Di 24. bis Mi 25. November",
+   partien:[
+    ["Di","18:45","Bodo/Glimt","Sporting"],["Di","21:00","Bayern","PSG"],["Di","21:00","Barcelona","Napoli"],["Di","21:00","Liverpool","Atlético"],["Di","21:00","Club Brugge","Leipzig"],
+    ["Mi","18:45","Fenerbahce","Como"],["Mi","21:00","Arsenal","Inter Milan"],["Mi","21:00","Real Madrid","Aston Villa"],["Mi","21:00","Stuttgart","FC Porto"],["Mi","21:00","Dortmund","Galatasaray"]],
+   tabelle:[[1,"Liverpool",4,"+10",12],[2,"Arsenal",4,"+8",10],[3,"Real Madrid",4,"+7",10],[4,"Inter Milan",4,"+6",9],null,[8,"Man City",4,"+3",7],[9,"Bayern",4,"+2",7],[10,"Dortmund",4,"+1",7],[11,"Napoli",4,"0",6]],
+   voll:null},
+];
+WETTBEWERBE.forEach(w => { w.partien = w.partien.map((p,i) => ({id:w.id+i, tag:p[0], zeit:p[1], h:p[2], g:p[3], erg:p[4]||"", tH:p[5]||[], tG:p[6]||[], ber:p[7]||"", w})); });
+const W = Object.fromEntries(WETTBEWERBE.map(w => [w.id, w]));
+const FARBEN = {"Anthropic":["#E8E6DC","#D97757"],"Claude Updates":["#9AAE7E","#C15F3C"],"OpenAI":["#ECECEC"],"Google DeepMind":["#4285F4"],"The Decoder":["#7FA8AE"],"t3n":["#6FB38F"],"Simon Willison":["#B79A6B"],"Hugging Face":["#F2C14E"],"Andrej Karpathy":["#8F9AAD"],"Matt Pocock":["#A3A08F"]};
+const KI = [
+  {name:"The Decoder", m:[{t:"Anthropic stellt neues Modell für Unternehmen vor",a:"vor 40 Min.",min:40,neu:1,z:"Das neue Modell soll vor allem lange Dokumente und Tabellen zuverlässiger auswerten. Es ist zuerst für Unternehmenskunden verfügbar, die API folgt im Dezember."},{t:"EU AI Act: Was ab Januar für Anbieter gilt",a:"vor 7 Std.",min:425,neu:1},{t:"Studie: KI-Agenten scheitern oft an langen Aufgaben",a:"gestern",min:1520}]},
+  {name:"Hugging Face", m:[{t:"SmolLM4: small models that reason step by step",a:"vor 1 Std.",min:62,neu:1},{t:"Open ASR Leaderboard: November update",a:"vor 3 Tagen",min:4300}]},
+  {name:"Simon Willison", m:[{t:"Notes on running five Claude Code agents in parallel",a:"vor 2 Std.",min:121,neu:1,z:"Willison beschreibt, wie er mehrere Agenten in getrennten Arbeitskopien laufen lässt und Ergebnisse per Pull Request einsammelt. Engpass sei nicht die KI, sondern das eigene Review."},{t:"llm 0.31 adds streaming tool calls",a:"gestern",min:1500}]},
+  {name:"Claude Updates", m:[{t:"Claude Code 2.4: background agents for all plans",a:"vor 3 Std.",min:186,neu:1},{t:"API: Message Batches now keep results for 7 days",a:"gestern",min:1580}]},
+  {name:"t3n", m:[{t:"KI-Browser im Test: Wie Agenten das Surfen verändern",a:"vor 3 Std.",min:198,neu:1},{t:"Diese 5 KI-Tools sparen Entwicklern wirklich Zeit",a:"gestern",min:1420}]},
+  {name:"Anthropic", m:[{t:"Introducing Claude for Life Sciences 2",a:"vor 4 Std.",min:242,neu:1},{t:"Measuring agent reliability over long tasks",a:"vor 2 Tagen",min:2950}]},
+  {name:"OpenAI", m:[{t:"Introducing GPT-5.5 mini",a:"vor 5 Std.",min:302,neu:1}]},
+  {name:"Google DeepMind", m:[{t:"Gemini 3 Ultra: thinking at scale",a:"vor 9 Std.",min:545,neu:1},{t:"AlphaFold 4 opens protein complexes to researchers",a:"vor 2 Tagen",min:3010}]},
+  {name:"Andrej Karpathy", m:[{t:"Software 3.5",a:"gestern",min:1650}]},
+  {name:"Matt Pocock", m:[{t:"TypeScript 6.1: the features that matter",a:"vor 4 Tagen",min:5900}]},
+];
+KI.forEach((a,i) => a.m.forEach((m,j) => { m.id = "n"+i+"-"+j; m.von = a.name; }));
+const NEUE = KI.flatMap(a => a.m.filter(m => m.neu)).sort((x,y) => x.min - y.min);
+const LIVE = WETTBEWERBE.flatMap(w => w.partien.filter(p => istLive(p.zeit)));
+const SPAETER = [["F1","Formel 1","Sport, später"],["NFL","NFL","Sport, später"],["SC","Schritte","eigene Kachel, später"]];
+
+/* ---------------- Bausteine ---------------- */
+function istLive(z){ return z.startsWith("live"); }
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const stilN = n => { const f = FARBEN[n] || ["#8E99A8"]; return `--c:${f[0]};--m:${f[1]||f[0]}`; };
+const PFEIL = `<svg class="pfeil" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const istMein = (w, n) => w.mein.includes(n);
+const zoneVon = (w, pl) => { const z = w.zonen.find(([a,b]) => pl >= a && pl <= b); return z ? z[2] : null; };
+
+function tabelle(w, zeilen){
+  const t = zeilen || w.tabelle;
+  const tr = t.map((z,i) => {
+    if (!z) return `<tr class="luecke"><td colspan="5" aria-label="Plätze ausgelassen">···</td></tr>`;
+    const zo = zoneVon(w, z[0]), n = t[i+1];
+    const grenze = w.linien.includes(z[0]) && n && n[0] === z[0]+1;
+    return `<tr class="${istMein(w,z[1])?"mein ":""}${grenze?"grenze":""}"><td class="pl"><span style="${zo?`--z:${ZONEN[zo][1]}`:""}">${z[0]}</span></td><td class="t-team"><span><i class="kz">${kz(z[1])}</i><span class="name">${esc(z[1])}</span></span></td><td class="z">${z[2]}</td><td class="z">${z[3]}</td><td class="pk">${z[4]}</td></tr>`;
+  }).join("");
+  const da = [...new Set(t.filter(Boolean).map(z => zoneVon(w,z[0])).filter(Boolean))];
+  return `<table><thead><tr><th></th><th class="t-team"></th><th>Sp</th><th>+/−</th><th>Pkt</th></tr></thead><tbody>${tr}</tbody></table>
+    <p class="legende">${da.map(k=>`<span style="--z:${ZONEN[k][1]}"><i></i>${ZONEN[k][0]}</span>`).join("")}</p>`;
+}
+
+// Eine Partie im Muster G. opt: marke (kleines Quadrat des Wettbewerbs), kurz (Tag an der Uhrzeit), ohneTore
+function partie(p, s, opt = {}){
+  const live = istLive(p.zeit), mH = istMein(p.w,p.h), mG = istMein(p.w,p.g);
+  const mm = opt.marke ? `<span class="mini-marke" style="--c:${p.w.farbe}" title="${p.w.titel}">${p.w.marke}</span>` : "";
+  const st = live ? `<span class="puls"></span>${p.zeit.slice(5)}` : (p.erg ? "Ende" : "");
+  const box = p.erg ? `<span class="g-box erg">${p.erg.replace(":"," – ")}</span>` : `<span class="g-box zeit">${opt.kurz ? p.tag+" "+p.zeit : p.zeit}</span>`;
+  const tore = !opt.ohneTore && (p.tH.length || p.tG.length) ? `<span class="g-tore h">${p.tH.map(t=>`<span>${esc(t)}</span>`).join("")}</span><span class="g-tore g">${p.tG.map(t=>`<span>${esc(t)}</span>`).join("")}</span>` : "";
+  let ber = "";
+  if (p.ber && p.erg && !live && !opt.ohneBericht){
+    const k = "b:"+p.id, offen = s.offen.has(k);
+    ber = `<button class="b-knopf" data-a="auf" data-w="${k}" aria-expanded="${offen}">Bericht${PFEIL}</button>${offen?`<div class="bericht-kasten"><p class="ki">KI-generiert</p><p>${esc(p.ber)}</p></div>`:""}`;
+  }
+  return `<div class="g-p${opt.kurz?" kurz":""}${mH||mG?" mein":""}${live?" live":""}"><span class="g-st">${mm}${st?`<span style="display:flex;align-items:center;gap:3px;flex-direction:column">${st}</span>`:""}</span>
+    <span class="g-team g-heim${mH?" mein":""}"><span class="name">${esc(p.h)}</span><i class="kz">${kz(p.h)}</i></span>${box}
+    <span class="g-team g-gast${mG?" mein":""}"><i class="kz">${kz(p.g)}</i><span class="name">${esc(p.g)}</span></span>${tore}${ber}</div>`;
+}
+function spieltag(w, s, nurHeute){
+  let h = "", tag = "";
+  for (const p of w.partien){ if (nurHeute && p.tag !== HEUTE) continue; if (p.tag !== tag){ tag = p.tag; h += `<p class="g-tagzeile">${TAG[tag]}</p>`; } h += partie(p, s); }
+  return h;
+}
+const liveIn = w => w.partien.filter(p => istLive(p.zeit));
+const stand = w => { const fertig = w.partien.filter(p => p.erg && !istLive(p.zeit)).length, l = liveIn(w).length;
+  return fertig === 0 && !l ? w.tage : `${fertig} von ${w.partien.length} beendet${l?`, ${l} live`:""}`; };
+const liveMarke = w => liveIn(w).length ? `<span class="live-marke"><span class="puls"></span>Live</span>` : "";
+function kopf(w, unter, rechts = ""){
+  return `<header class="g-kk"><span class="g-marke" style="--c:${w.farbe}" aria-hidden="true">${w.marke}</span><div><h3>${w.titel}</h3><p>${unter}</p></div>${rechts}</header>`;
+}
+// Die volle Kachel wie heute (Spieltag, Tabelle)
+function volleKachel(w, s, opt = {}){
+  if (opt.nurHeute && !w.partien.some(p => p.tag === HEUTE)){
+    const n = w.partien.filter(p => w.mein.includes(p.h) || w.mein.includes(p.g));
+    return `<section class="g-karte">${kopf(w, w.nr)}<p class="g-leer">Heute keine Partie. Nächste mit Mein Team:</p>${n.map(p => partie(p, s, {kurz:1})).join("")}</section>`;
+  }
+  return `<section class="g-karte">${kopf(w, `${w.nr}, ${opt.nurHeute ? "heute" : w.tage}`, liveMarke(w))}
+    ${spieltag(w, s, opt.nurHeute)}${opt.ohneTabelle ? "" : `<div class="g-tab"><h4>Tabelle</h4>${tabelle(w)}</div>`}</section>`;
+}
+// Das Wichtigste einer Sport-Kachel: Live, dann Mein Team (letzte und nächste Partie)
+function wichtige(w){
+  const live = liveIn(w), mein = [];
+  for (const t of w.mein){
+    if (live.some(p => p.h === t || p.g === t)) continue;
+    const eig = w.partien.filter(p => p.h === t || p.g === t);
+    const letzte = eig.filter(p => p.erg).pop(), naechste = eig.find(p => !p.erg);
+    [letzte, naechste].forEach(p => { if (p && !mein.includes(p)) mein.push(p); });
+  }
+  return {live, mein};
+}
+function platzZeilen(w){
+  const t = (w.voll || w.tabelle).filter(Boolean);
+  return w.mein.map(n => t.find(z => z[1] === n)).filter(Boolean).map(z => { const zo = zoneVon(w, z[0]);
+    return `<div class="platz"><i style="--z:${zo?ZONEN[zo][1]:"transparent"}"></i><b>${z[1]}</b><strong>Platz ${z[0]}</strong><span>${z[4]} Punkte${zo?` · ${ZONEN[zo][0]}`:""}</span></div>`; }).join("");
+}
+function kurzZeilen(w, s){
+  const {live, mein} = wichtige(w);
+  return (live.length ? `<p class="g-tagzeile or"><span class="puls"></span>Jetzt live</p>${live.map(p => partie(p, s, {kurz:1, ohneBericht:1})).join("")}` : "")
+       + (mein.length ? `<p class="g-tagzeile or">Mein Team</p>${mein.map(p => partie(p, s, {kurz:1, ohneTore:1, ohneBericht:1})).join("")}` : "");
+}
+function spaeterKarte([k, n, t]){ return `<div class="spaeter-karte"><span class="g-marke" aria-hidden="true">${k}</span><div><b>${n}</b><span>${t}</span></div></div>`; }
+
+/* KI-News */
+const neuAlter = m => `<span class="g-alter">${m.neu?'<span class="g-neu">Neu</span>':""}<span>${m.a}</span></span>`;
+function zf(m, s){
+  if (!m.z) return "";
+  const k = "z:"+m.id, offen = s.offen.has(k);
+  return `<button class="zf-knopf" data-a="auf" data-w="${k}" aria-expanded="${offen}">Zusammenfassung${PFEIL}</button>${offen?`<div class="zf"><p class="ki">KI-generiert</p><p>${esc(m.z)}</p></div>`:""}`;
+}
+function absender(a, i, s, meldungen){
+  const [lead, ...rest] = meldungen;
+  return `<section class="g-abs${i===0?" gross":""}" style="${stilN(a.name)}">
+    <h3 class="g-von"><i aria-hidden="true"></i>${a.name}</h3>
+    <div class="g-innen"><div class="g-lead"><a href="#" class="g-titel"><b>${esc(lead.t)}</b>${neuAlter(lead)}</a>${zf(lead,s)}</div>
+    ${rest.length?`<div class="g-weitere">${rest.map(m=>`<div class="g-w"><a href="#" class="g-titel"><b>${esc(m.t)}</b>${neuAlter(m)}</a>${zf(m,s)}</div>`).join("")}</div>`:""}</div></section>`;
+}
+function newsVoll(s, nurNeu){
+  const liste = KI.map(a => ({a, m: nurNeu ? a.m.filter(m => m.neu) : a.m})).filter(x => x.m.length);
+  return `<div class="g-news">${liste.map((x,i) => absender(x.a, i, s, x.m)).join("")}</div>`;
+}
+const nZeile = m => `<a href="#" class="n-z" style="${stilN(m.von)}"><span class="g-von"><i></i>${m.von}</span><b>${esc(m.t)}</b>${neuAlter(m)}</a>`;
+function newsKurz(anzahl){
+  const [lead, ...rest] = NEUE;
+  return `<div class="n-kurz n-gross"><a href="#" class="n-lead" style="${stilN(lead.von)}"><span class="g-von"><i></i>${lead.von}</span><b>${esc(lead.t)}</b>${neuAlter(lead)}</a>
+    <div class="n-liste">${rest.slice(0, anzahl).map(nZeile).join("")}</div></div>`;
+}
+const neuZahl = `<span class="neu-zahl">${NEUE.length} neu</span>`;
+
+/* Kopf und Symbole */
+function datumKopf(){ return `<header class="g-kopf"><div><p class="g-tag">Sonntag</p><p class="g-datum">22. November</p></div><div class="g-rechts"><span>Stand ${STAND}</span><button class="g-abm">Abmelden</button></div></header>`; }
+function bereichKopf(titel, rechts = ""){ return `<header class="b-kopf"><div><small>Sonntag, 22. November · Stand ${STAND}</small><h1>${titel}</h1></div>${rechts || `<button class="g-abm">Abmelden</button>`}</header>`; }
+const SYM = {
+  heute:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><circle cx="12" cy="14.5" r="1.6" fill="currentColor"/></svg>`,
+  sport:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.5"/><path d="m12 7.5 3.6 2.6-1.4 4.3H9.8L8.4 10.1z"/><path d="M12 3.5v4M15.6 10.1l4.3-1.2M14.2 14.4l2.5 3.6M9.8 14.4l-2.5 3.6M8.4 10.1 4.1 8.9"/></svg>`,
+  news:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M7.5 9h9M7.5 12.5h9M7.5 16h5"/></svg>`,
+  schritte:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="8.5" cy="9" rx="2.6" ry="4"/><ellipse cx="15.5" cy="13" rx="2.6" ry="4"/><path d="M7.5 15.5h2.2M14.5 19.5h2.2"/></svg>`,
+  f1:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V5M4 5h13l-2 4 2 4H4"/></svg>`};
+function tabbar(s){
+  const t = (id, label, extra = "") => `<button class="tab${s.tab===id?" an":""}" data-a="tab" data-w="${id}" aria-current="${s.tab===id}">${SYM[id]}${label}${extra}</button>`;
+  return `<nav class="tabbar" aria-label="Bereiche">${t("heute","Heute")}${t("sport","Sport",`<span class="puls punkt" aria-label="live"></span>`)}${t("news","KI-News",`<span class="zahl">${NEUE.length}</span>`)}<span class="tab spaeter">${SYM.schritte}Schritte</span></nav>`;
+}
+
+/* ---------------- Variante A: Reiter ---------------- */
+function aInhalt(s){
+  if (s.tab === "sport") return `${bereichKopf("Sport")}<div class="g-raster">${WETTBEWERBE.map(w => volleKachel(w, s)).join("")}</div><div class="spaeter-reihe">${SPAETER.slice(0,2).map(spaeterKarte).join("")}</div>`;
+  if (s.tab === "news") return `${bereichKopf("KI-News")}${newsVoll(s)}`;
+  return `${bereichKopf("Heute")}
+    <section><div class="g-gk"><h2>Sport heute</h2></div><div class="g-raster">${WETTBEWERBE.map(w => volleKachel(w, s, {nurHeute:1, ohneTabelle:1})).join("")}</div></section>
+    <section><div class="g-gk"><h2>KI-News von heute</h2>${neuZahl}</div>${newsVoll(s, true)}</section>`;
+}
+function aLeiste(s){
+  const i = (id, label, rechts) => `<button class="l-item${s.tab===id?" an":""}" data-a="tab" data-w="${id}">${SYM[id]}${label}<span class="rechts">${rechts}</span></button>`;
+  return `<aside class="leiste"><div class="l-datum"><small>Sonntag</small><b>22. November</b></div>
+    ${i("heute","Heute","")}${i("sport","Sport",`<span class="puls"></span><span class="live-wort">${LIVE.length} live</span>`)}${i("news","KI-News",`<span class="zahl-or">${NEUE.length}</span>`)}
+    <p class="l-trenner">Später</p><span class="l-item spaeter">${SYM.f1}Formel 1</span><span class="l-item spaeter">${SYM.sport}NFL</span><span class="l-item spaeter">${SYM.schritte}Schritte</span>
+    <div class="l-fuss"><span>Stand ${STAND}</span><button class="g-abm" style="min-height:40px">Abmelden</button></div></aside>`;
+}
+
+/* ---------------- Variante B: Übersicht + Detailseite ---------------- */
+function bKurzSport(w, s){
+  return `<section class="g-karte ue" data-a="detail" data-w="${w.id}" role="link" tabindex="0" aria-label="${w.titel} öffnen">
+    ${kopf(w, `${w.nr}, ${stand(w)}`, `${liveMarke(w)}<span class="weiter" aria-hidden="true">›</span>`)}
+    ${kurzZeilen(w, s)}${platzZeilen(w)}
+    <p class="k-fuss">Ganzer Spieltag und Tabelle<span>${w.partien.length} Partien ›</span></p></section>`;
+}
+function bStart(s){
+  return `${datumKopf()}
+    <section><div class="g-gk"><h2>Sport</h2></div><div class="g-raster">${WETTBEWERBE.map(w => bKurzSport(w, s)).join("")}</div></section>
+    <section><div class="g-gk"><h2>KI-News</h2></div>
+      <div class="g-karte ue" data-a="detail" data-w="news" role="link" tabindex="0" aria-label="KI-News öffnen">
+        <header class="g-kk"><span class="g-marke" style="--c:#8E99A8">KI</span><div><h3>KI-News</h3><p>${NEUE.length} neue Meldungen von ${new Set(NEUE.map(m=>m.von)).size} Absendern</p></div>${neuZahl}<span class="weiter" aria-hidden="true">›</span></header>
+        ${newsKurz(4)}<p class="k-fuss">Alle Meldungen<span>${KI.length} Absender ›</span></p></div></section>
+    <section><div class="g-gk"><h2 style="font-size:20px;color:#6C7583">Später</h2></div><div class="spaeter-reihe">${SPAETER.map(spaeterKarte).join("")}</div></section>`;
+}
+function bDetail(s){
+  const zur = (marke, farbe, titel) => `<div class="zurueck-leiste"><button class="zurueck" data-a="zurueck"><svg width="12" height="18" viewBox="0 0 12 18" aria-hidden="true"><path d="M10 2 3 9l7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Übersicht</button><span class="g-marke" style="--c:${farbe}">${marke}</span><b>${titel}</b></div>`;
+  if (s.detail === "news") return { leiste: zur("KI","#8E99A8","KI-News"), html: `${bereichKopf("KI-News", neuZahl)}${newsVoll(s)}` };
+  const w = W[s.detail];
+  return { leiste: zur(w.marke, w.farbe, w.titel), html: `${bereichKopf(w.titel, liveMarke(w))}
+    <div class="detail-zwei"><section class="g-karte">${kopf(w, `${w.nr}, ${w.tage}`)}${spieltag(w, s)}</section>
+    <section class="g-karte"><div class="g-tab" style="border-top:0"><h4>${w.voll ? "Tabelle" : "Tabelle (Ausschnitt)"}</h4>${tabelle(w, w.voll)}</div></section></div>` };
+}
+
+/* ---------------- Variante C: Gruppen auf einer Seite ---------------- */
+function cSport(w, s){
+  const zu = s.offen.has("zu:"+w.id), st = s.offen.has("st:"+w.id), tb = s.offen.has("tb:"+w.id);
+  const knopf = `<button class="kk-knopf" data-a="auf" data-w="zu:${w.id}" aria-expanded="${!zu}" aria-label="${w.titel} ${zu?"aufklappen":"zuklappen"}">${PFEIL}</button>`;
+  if (zu){ const l = liveIn(w)[0];
+    return `<section class="g-karte">${kopf(w, l ? `Live: ${l.h} ${l.erg} ${l.g}` : stand(w), liveMarke(w)+knopf)}</section>`; }
+  return `<section class="g-karte">${kopf(w, `${w.nr}, ${stand(w)}`, liveMarke(w)+knopf)}
+    ${st ? spieltag(w, s) : kurzZeilen(w, s)}
+    ${tb ? `<div class="g-tab"><h4>Tabelle</h4>${tabelle(w)}</div>` : platzZeilen(w)}
+    <div class="knopf-zeile"><button data-a="auf" data-w="st:${w.id}" aria-expanded="${st}">${st?"Nur das Wichtigste":`Ganzer Spieltag (${w.partien.length})`}${PFEIL}</button><button data-a="auf" data-w="tb:${w.id}" aria-expanded="${tb}">Tabelle${PFEIL}</button></div></section>`;
+}
+function cNews(s){
+  const mit = KI.filter(a => a.m.some(m => m.neu)), ohne = KI.filter(a => !a.m.some(m => m.neu));
+  const karten = mit.map((a,i) => { const k = "nw:"+i, offen = s.offen.has(k), [lead, ...rest] = a.m;
+    return `<section class="g-abs${i===0?" gross":""}" style="${stilN(a.name)}"><h3 class="g-von"><i></i>${a.name}</h3>
+      <div class="g-lead"><a href="#" class="g-titel"><b>${esc(lead.t)}</b>${neuAlter(lead)}</a>${zf(lead,s)}</div>
+      ${offen ? rest.map(m=>`<div class="g-w"><a href="#" class="g-titel"><b>${esc(m.t)}</b>${neuAlter(m)}</a></div>`).join("") : ""}
+      ${rest.length ? `<button class="zf-knopf" data-a="auf" data-w="${k}" aria-expanded="${offen}">${offen?"Weniger":`${rest.length} weitere`}${PFEIL}</button>` : ""}</section>`; }).join("");
+  const ok = s.offen.has("ohne"), ohneK = `<section class="g-abs" style="--c:#939CAA;--m:#4A5260"><h3 class="g-von"><i></i>Ohne Neues</h3>
+      <p class="g-alter" style="padding:8px 0 4px">${ohne.map(a=>a.name).join(", ")}</p>
+      ${ok ? ohne.map(a => `<div class="g-w"><a href="#" class="g-titel"><b>${esc(a.m[0].t)}</b><span class="g-alter">${a.name} · ${a.m[0].a}</span></a></div>`).join("") : ""}
+      <button class="zf-knopf" data-a="auf" data-w="ohne" aria-expanded="${ok}">${ok?"Zuklappen":"Zeigen"}${PFEIL}</button></section>`;
+  return `<div class="g-news">${karten}${ohneK}</div>`;
+}
+function cInhalt(s){
+  return `<nav class="sprung" aria-label="Springen zu"><button data-a="springe" data-w="c-sport">${SYM.sport.replace("<svg",'<svg width="18" height="18"')}Sport<span class="puls"></span></button><button data-a="springe" data-w="c-news">${SYM.news.replace("<svg",'<svg width="18" height="18"')}KI-News<span class="neu-zahl">${NEUE.length}</span></button><span class="sprung-l"></span></nav>
+   <div class="dash">${datumKopf()}
+    <section data-ziel="c-sport"><div class="g-gk"><h2>Sport</h2></div><div class="g-raster">${WETTBEWERBE.map(w => cSport(w, s)).join("")}</div>
+      <div class="spaeter-reihe" style="margin-top:12px">${SPAETER.slice(0,2).map(spaeterKarte).join("")}</div></section>
+    <section data-ziel="c-news"><div class="g-gk"><h2>KI-News</h2>${neuZahl}</div>${cNews(s)}</section>
+    <section><div class="spaeter-reihe">${spaeterKarte(SPAETER[2])}</div></section></div>`;
+}
+
+/* ---------------- Variante D: Reiter, Heute als Übersicht ---------------- */
+function dHeute(s){
+  const team = (name, kurz, eintraege, plaetze) => `<p class="team-kopf"><i class="kz">${kurz}</i>${name}</p>${eintraege}<div class="chips">${plaetze}</div>`;
+  const chip = (w, n) => { const z = (w.voll || w.tabelle).filter(Boolean).find(r => r[1] === n);
+    return `<span class="chip"><span class="mini-marke" style="--c:${w.farbe}">${w.marke}</span>Platz <strong>${z[0]}</strong> · ${z[4]} Pkt</span>`; };
+  const bl = W.bl, pl = W.pl, cl = W.cl, pb = p => partie(p, s, {marke:1, kurz:1});
+  const bayernLive = bl.partien.find(p => istLive(p.zeit) && p.h === "Bayern");
+  return `${bereichKopf("Heute")}
+   <div class="heute-raster"><div class="links">
+    <section class="g-karte"><header class="g-kk"><span class="g-marke" style="--c:#3A2A20;color:#FF8A3D"><span class="puls" style="width:10px;height:10px"></span></span><div><h3>Jetzt live</h3><p>${LIVE.length} Partien in ${new Set(LIVE.map(p=>p.w.id)).size} Wettbewerben</p></div></header>
+      ${LIVE.map(p => partie(p, s, {marke:1})).join("")}
+      <button class="k-fuss" style="width:100%" data-a="tab" data-w="sport">Alle Partien im Reiter Sport<span>›</span></button></section>
+    <section class="g-karte"><header class="g-kk"><span class="g-marke" style="--c:#3A2A20;color:#FF8A3D">★</span><div><h3>Mein Team</h3><p>Letzte und nächste Partien, Platz</p></div></header>
+      ${team("FC Bayern","FCB", `<p class="hinweis-zeile" style="border-top:0">Spielt gerade, ${bayernLive.erg.replace(":"," – ")} gegen ${bayernLive.g} (${bayernLive.zeit.slice(5)}), siehe oben.</p>${pb(cl.partien.find(p=>p.h==="Bayern"))}`, chip(bl,"Bayern")+chip(cl,"Bayern"))}
+      ${team("Arsenal","ARS", `${partie(pl.partien.find(p=>p.h==="Arsenal"), s, {marke:1})}${pb(cl.partien.find(p=>p.h==="Arsenal"))}`, chip(pl,"Arsenal")+chip(cl,"Arsenal"))}</section>
+   </div>
+    <section class="g-karte"><header class="g-kk"><span class="g-marke" style="--c:#8E99A8">KI</span><div><h3>Neu in den KI-News</h3><p>${NEUE.length} neue Meldungen, neueste zuerst</p></div>${neuZahl}</header>
+      <div class="n-kurz"><a href="#" class="n-lead" style="${stilN(NEUE[0].von)}"><span class="g-von"><i></i>${NEUE[0].von}</span><b>${esc(NEUE[0].t)}</b>${neuAlter(NEUE[0])}</a><div class="n-liste zwei">${NEUE.slice(1,7).map(nZeile).join("")}</div></div>
+      <button class="k-fuss" style="width:100%" data-a="tab" data-w="news">Alle ${NEUE.length} neuen und älteren Meldungen<span>›</span></button></section>
+   </div>
+   <div class="spaeter-reihe">${SPAETER.map(spaeterKarte).join("")}</div>`;
+}
+function dInhalt(s){
+  if (s.tab === "sport") return `${bereichKopf("Sport", s.geraet==="mac"?" ":"")}<div class="g-raster">${WETTBEWERBE.map(w => volleKachel(w, s)).join("")}</div><div class="spaeter-reihe">${SPAETER.slice(0,2).map(spaeterKarte).join("")}</div>`;
+  if (s.tab === "news") return `${bereichKopf("KI-News", s.geraet==="mac"?" ":"")}${newsVoll(s)}`;
+  return dHeute(s);
+}
+function dOben(s){
+  const t = (id, label, extra = "") => `<button class="${s.tab===id?"an":""}" data-a="tab" data-w="${id}">${label}${extra}</button>`;
+  return `<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 28px;border-bottom:1px solid #2A313B;background:#12161C">
+    <nav class="reiter-oben" aria-label="Bereiche">${t("heute","Heute")}${t("sport","Sport",'<span class="puls"></span>')}${t("news","KI-News",`<span class="zahl-or">${NEUE.length}</span>`)}<button class="spaeter" disabled>Schritte · später</button></nav>
+    <div class="g-rechts" style="display:flex;align-items:center;gap:12px;font-size:13.5px;color:#939CAA">Stand ${STAND}<button class="g-abm" style="min-height:40px;padding:0 16px;border-radius:20px;background:#1A1F27;color:#E8EBF0;font-weight:600">Abmelden</button></div></div>`;
+}
+
+/* ---------------- Geräte ---------------- */
+const STATUS = `<div class="status"><b>18:05</b><span>▂▄▆ 5G ▮▮▮</span></div>`;
+function zeichneGeraet(s){
+  const dash = h => `<div class="scroller"><div class="inhalt"><div class="dash">${h}</div></div></div>`;
+  let h;
+  if (s.v === "A") h = s.geraet === "mac" ? `<div class="mit-leiste">${aLeiste(s)}${dash(aInhalt(s))}</div>` : `${STATUS}${dash(aInhalt(s))}${tabbar(s)}`;
+  if (s.v === "B"){
+    let inner;
+    if (s.detail){ const d = bDetail(s); inner = `<div class="scroller"><div class="inhalt">${d.leiste}<div class="dash">${d.html}</div></div></div>`; }
+    else inner = dash(bStart(s));
+    h = s.geraet === "mac" ? inner : `${STATUS}${inner}<div class="heimleiste"></div>`;
+  }
+  if (s.v === "C"){ const inner = `<div class="scroller"><div class="inhalt">${cInhalt(s)}</div></div>`; h = s.geraet === "mac" ? inner : `${STATUS}${inner}<div class="heimleiste"></div>`; }
+  if (s.v === "D") h = s.geraet === "mac" ? `${dOben(s)}${dash(dInhalt(s))}` : `${STATUS}${dash(dInhalt(s))}${tabbar(s)}`;
+  return `<div class="vg app">${h}</div>`;
+}
+
+const VARIANTEN = [
+  {id:"A", name:"A: Reiter", text:"Drei Reiter trennen die Bereiche. „Heute“ zeigt nur die Partien und Meldungen von heute, aber in voller Form; „Sport“ und „KI-News“ zeigen die ganzen Kacheln. Auf dem iPhone die Leiste unten, am Mac eine Seitenleiste links.",
+   zweites:{tab:"sport", offen:["b:bl0"]}, mac:{tab:"heute"}, eins:{tab:"heute"}, zweitesName:"Reiter Sport, Bericht offen",
+   pro:"Bekanntes Muster aus iOS-Apps, jeder Bereich ist für sich kurz. Neue Kacheln wie Schritte bekommen einen eigenen Reiter, ohne die anderen zu verändern.",
+   contra:"Live und Neues verteilen sich auf mehrere Reiter, man muss wechseln. „Heute“ ist an einem Spieltag fast so lang wie heute die ganze Seite, und mehr als fünf Reiter passen auf dem iPhone nicht."},
+  {id:"B", name:"B: Übersicht + Detailseite", text:"Die Startseite zeigt je Kachel nur das Wichtigste: Live, Mein Team mit letzter oder nächster Partie, Platz in der Tabelle, bei den KI-News die neuesten Schlagzeilen. Ein Tipp auf die Karte öffnet die ganze Kachel auf eigener Seite (Spieltag, volle Tabelle, alle Artikel), mit Zurück.",
+   zweites:{detail:"bl"}, mac:{}, eins:{}, zweitesName:"Detailseite Bundesliga",
+   pro:"Die Startseite bleibt kurz und wächst mit neuen Kacheln nur um je eine kleine Karte. Jede Kachel hat eine Kurz- und eine Vollfassung, die volle Tabelle hat endlich Platz.",
+   contra:"Für Spieltag, Tabelle oder einen Bericht immer ein Tipp mehr und zurück. Live-Partien stehen in ihrer Wettbewerbskarte, eine gemeinsame Liste über alle Wettbewerbe fehlt."},
+  {id:"C", name:"C: Gruppen auf einer Seite", text:"Eine Seite bleibt, aber mit klaren Gruppen (Sport, KI-News), einer Sprungleiste oben und eingeklappten Kacheln. Offen ist nur das Wichtigste; Spieltag, Tabelle und weitere Meldungen klappen per Knopf auf, der Pfeil im Kopf klappt eine Kachel ganz zu.",
+   zweites:{offen:["st:bl","tb:bl"]}, mac:{offen:["z:n0-0"]}, eins:{}, zweitesName:"Bundesliga ganz aufgeklappt",
+   pro:"Die kleinste Umstellung: kein neues Navigationsmuster, alles bleibt mit Scrollen erreichbar, und eingeklappt ist jede Kachel deutlich kürzer als heute.",
+   contra:"Die Seite bleibt lang (auf dem iPhone über vier Bildschirmhöhen) und wächst mit jeder neuen Kachel weiter. Viele kleine Knöpfe, und es braucht eine Regel, ob Aufgeklapptes nach dem Neuladen offen bleibt."},
+  {id:"D", name:"D: Reiter, „Heute“ als Übersicht (A + B)", text:"Reiter wie in A, aber „Heute“ sammelt das Wichtigste aller Kacheln: Jetzt live (über alle Wettbewerbe), Mein Team mit nächsten Partien und Plätzen, neue KI-News. „Sport“ und „KI-News“ zeigen die vollen Kacheln wie heute. Am Mac stehen die Reiter oben.",
+   zweites:{tab:"sport"}, mac:{tab:"heute"}, eins:{tab:"heute"}, zweitesName:"Reiter Sport",
+   pro:"Live und Neues stehen ganz oben, egal aus welchem Wettbewerb, und „Heute“ ist am Mac nur etwa anderthalb Bildschirme lang. Volle Kacheln bleiben einen Tipp entfernt; Formel 1 oder Schritte bekommen später je einen Platz in „Heute“.",
+   contra:"Am meisten Bauaufwand: Jede Kachel braucht eine Kurzfassung, die „Heute“ über alle Kacheln zusammensetzt. Manche Partien stehen doppelt (in „Heute“ und im Reiter Sport)."},
+];
+
+const GERAETE = {};
+function neu(v, geraet, start, nr){
+  const s = {key:v+geraet+nr, v, geraet, tab:start.tab||"heute", detail:start.detail||null, offen:new Set(start.offen||[])};
+  GERAETE[s.key] = s; return s;
+}
+function bauen(){
+  document.getElementById("buehne").innerHTML = VARIANTEN.map(x => {
+    const m = neu(x.id,"mac",x.mac,0), h1 = neu(x.id,"handy",x.eins,1), h2 = neu(x.id,"handy",x.zweites,2);
+    return `<section class="variante" id="v${x.id}"><div class="v-titel"><h2>${x.name}</h2><p>${x.text}</p></div>
+      <p class="etikett">Mac <span>(1200 px, anklickbar)</span></p>
+      <div class="mac-huelle"><div class="mac"><div class="fenster"><i></i><i></i><i></i><span>Tages-Dashboard</span></div><div class="geraet" data-k="${m.key}" style="flex:1;min-height:0;display:flex"></div></div></div>
+      <p class="laenge" data-l="${m.key}"></p>
+      <div class="handys">
+        <div class="handy-platz"><p class="etikett">iPhone <span>(390 px, Start)</span></p><div class="handy geraet" data-k="${h1.key}"></div><p class="laenge" data-l="${h1.key}"></p></div>
+        <div class="handy-platz"><p class="etikett">iPhone <span>(${x.zweitesName})</span></p><div class="handy geraet" data-k="${h2.key}"></div><p class="laenge" data-l="${h2.key}"></p></div>
+      </div>
+      <div class="urteil"><p><b>Vorteile:</b> ${x.pro}</p><p><b>Nachteile:</b> ${x.contra}</p></div></section>`;
+  }).join("");
+  Object.values(GERAETE).forEach(s => zeichne(s));
+  skalieren();
+}
+function zeichne(s, oben){
+  const el = document.querySelector(`[data-k="${s.key}"]`);
+  const alt = el.querySelector(".scroller"), pos = alt ? alt.scrollTop : 0;
+  el.innerHTML = zeichneGeraet(s);
+  const sc = el.querySelector(".scroller");
+  sc.scrollTop = oben ? 0 : pos;
+  const l = sc.scrollHeight / sc.clientHeight;
+  document.querySelector(`[data-l="${s.key}"]`).innerHTML = `Diese Ansicht ist <b>${l.toFixed(1).replace(".",",")} Bildschirmhöhen</b> lang.`;
+}
+function skalieren(){
+  document.querySelectorAll(".mac-huelle").forEach(h => { const mac = h.firstElementChild;
+    const f = Math.min(1, h.clientWidth / 1200); mac.style.transform = `scale(${f})`; h.style.height = (820 * f) + "px"; });
+}
+addEventListener("resize", skalieren);
+document.addEventListener("click", e => {
+  const ziel = e.target.closest("[data-a]"), g = e.target.closest("[data-k]");
+  if (e.target.closest("a[href='#']")) e.preventDefault();
+  if (!ziel || !g) return;
+  const s = GERAETE[g.dataset.k], a = ziel.dataset.a, w = ziel.dataset.w;
+  if (a === "tab"){ s.tab = w; zeichne(s, true); }
+  else if (a === "detail"){ s.detail = w; zeichne(s, true); }
+  else if (a === "zurueck"){ s.detail = null; zeichne(s, true); }
+  else if (a === "auf"){ s.offen.has(w) ? s.offen.delete(w) : s.offen.add(w); zeichne(s); }
+  else if (a === "springe"){ const sc = g.querySelector(".scroller"), t = g.querySelector(`[data-ziel="${w}"]`);
+    sc.scrollTo({top: t.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - 60, behavior:"smooth"}); }
+});
+document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("[role=link][data-a]")) e.target.click(); });
+bauen();
+if (document.fonts) document.fonts.ready.then(() => Object.values(GERAETE).forEach(s => zeichne(s)));
+</script>
+</body>
+</html>

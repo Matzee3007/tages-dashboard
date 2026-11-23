@@ -17,7 +17,7 @@ const TITEL: Record<Rolle, string> = {
 };
 
 // Titel, darunter „Neu“ und das Alter (Mock G).
-function MeldungsLink({
+export function MeldungsLink({
   meldung,
   jetzt,
   rolle,

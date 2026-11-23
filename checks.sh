@@ -17,6 +17,9 @@ npm run typecheck
 # Tests (Vitest)
 npm test
 
+# Produktionsfassung bauen wie die CI: nur der Build zeigt Fehler beim Vorab-Rendern (z. B. `new Date()` beim Rendern)
+npm run build
+
 # Tests der Mac-App (Rust)
 cargo test --manifest-path src-tauri/Cargo.toml
 

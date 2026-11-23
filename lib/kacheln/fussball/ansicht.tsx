@@ -151,12 +151,15 @@ function Spielbericht({ bericht }: { bericht: string }) {
 }
 
 // Symmetrisch um das Feld mit Ergebnis oder Anstoß, Torschützen unter ihrem Team (Mock G).
-function PartieZeile({
+// mitBericht: In der Übersicht „Heute“ bleibt der Spielbericht weg, er steht in der Kachel (ADR 0014).
+export function PartieZeile({
   partie,
   meinTeam,
+  mitBericht = true,
 }: {
   partie: Partie;
   meinTeam: string[];
+  mitBericht?: boolean;
 }) {
   const mein =
     meinTeam.includes(partie.heim.id) || meinTeam.includes(partie.gast.id);
@@ -194,7 +197,9 @@ function PartieZeile({
           <ToreListe partie={partie} seite="gast" />
         </>
       )}
-      {partie.bericht && <Spielbericht bericht={partie.bericht} />}
+      {mitBericht && partie.bericht && (
+        <Spielbericht bericht={partie.bericht} />
+      )}
     </div>
   );
 }
