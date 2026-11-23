@@ -465,3 +465,97 @@ test("Links zu Artikeln in Heute öffnen die Quelle, nicht den Reiter", async ()
   );
   expect(link.getAttribute("target")).toBe("_blank");
 });
+
+test("Mein Team zeigt Name, nächste Partie mit Anstoß und Chips je Wettbewerb mit Marke", async () => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date(ZEIT) });
+  const daten = BUNDESLIGA_LIVE.status === "ok" && BUNDESLIGA_LIVE.daten;
+  if (!daten || daten.art !== "fussball") throw new Error("Testdaten");
+  const naechste = {
+    ...daten.partien[0],
+    id: "cl-naechste",
+    anstoss: "2026-11-25T20:00:00.000Z",
+    status: "vorher" as const,
+    minute: null,
+    heim: { id: "132", name: "Bayern", logo: null, tore: null },
+    gast: { id: "359", name: "Arsenal", logo: null, tore: null },
+  };
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      BUNDESLIGA_LIVE,
+      {
+        ...BUNDESLIGA_LIVE,
+        id: "champions-league",
+        titel: "Champions League",
+        aussehen: { farbe: "#5B8DEF", kuerzel: "CL" },
+        daten: { ...daten, partien: [naechste] },
+      },
+    ],
+  });
+  render(<Page />);
+
+  const meinTeam = await screen.findByRole("region", { name: "Mein Team" });
+  expect(within(meinTeam).getByText("Bayern", { selector: "p" })).toBeDefined();
+  const cl = within(meinTeam).getByTestId("partie-cl-naechste");
+  expect(within(cl).getByTestId("feld").textContent).toBe("21:00");
+  expect(within(meinTeam).getByTestId("partie-bl-live")).toBeDefined();
+  expect(within(meinTeam).getAllByText("Platz 1 · 31 Pkt")).toHaveLength(2);
+  expect(within(meinTeam).getAllByText("BL").length).toBeGreaterThan(0);
+  expect(within(meinTeam).getAllByText("CL").length).toBeGreaterThan(0);
+});
+
+test("Neu in den KI-News zeigt die neueste groß und höchstens 6 weitere", async () => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date(ZEIT) });
+  const meldungen = Array.from({ length: 9 }, (_, i) => ({
+    titel: `Meldung ${i + 1}`,
+    link: `https://example.com/${i + 1}`,
+    zeit: new Date(Date.parse(ZEIT) - (i + 1) * 60_000).toISOString(),
+  }));
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      {
+        id: "ki-news",
+        titel: "KI-News",
+        aussehen: { farbe: "#8E99A8" },
+        status: "ok",
+        daten: {
+          art: "ki-news",
+          absender: [
+            {
+              name: "Anthropic",
+              aussehen: { farbe: "#8E99A8" },
+              meldungen,
+              letzteMeldung: meldungen[0].zeit,
+              erreichbar: true,
+            },
+          ],
+        },
+        stand: ZEIT,
+      },
+    ],
+  });
+  render(<Page />);
+
+  const neu = await screen.findByRole("region", { name: "Neu in den KI-News" });
+  expect(within(neu).getByRole("heading", { name: "Meldung 1" })).toBeDefined();
+  expect(within(neu).getAllByRole("link")).toHaveLength(7);
+  expect(within(neu).queryByRole("link", { name: /Meldung 8/ })).toBeNull();
+});
+
+test("ohne neue Meldung führt der Knopf trotzdem in den Reiter KI-News", async () => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date("2026-11-20T12:00:00Z") });
+  vi.mocked(holeDashboard).mockResolvedValue(OK);
+  render(<Page />);
+
+  fireEvent.click(
+    await screen.findByRole("button", {
+      name: /Alle Meldungen im Reiter KI-News/,
+    }),
+  );
+  expect(
+    within(screen.getByRole("navigation", { name: "Bereiche" }))
+      .getByRole("button", { name: "KI-News" })
+      .getAttribute("aria-current"),
+  ).toBe("page");
+});

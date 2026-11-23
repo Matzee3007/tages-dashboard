@@ -102,6 +102,9 @@ aller Kacheln; _Nicht verwenden_: Startseite, Dashboard).
 
 `bash checks.sh`, dann `npm run dev` und in Mac- und iPhone-Breite (390 px) im Browser ansehen. Commit „Add tabs around tiles“.
 
+Nachtrag 2026-11-23: Lokal nicht angesehen, weil die Seite einen Login braucht. Das Ansehen wandert in die Vorschau von Vercel
+(Aufgabe 6, Schritt 2).
+
 ### Aufgabe 2: Kurzfassung einer Fußball-Kachel
 
 **Dateien:** Neu `lib/kacheln/fussball/kurz.ts`. Test `__tests__/fussball-kurz.test.ts`.
@@ -163,8 +166,9 @@ Abzeichen füllen). Test `__tests__/kacheln-uebersicht.test.ts`, `__tests__/page
 export type Herkunft = { kachelId: string; reiter: string; aussehen: Aussehen; titel: string };
 export type LiveEintrag = Herkunft & { partie: Partie };
 export type MeinTeamEintrag = { id: string; name: string; logo: string | null; wettbewerbe: (Herkunft & TeamKurz)[] };
-export type Uebersicht = { live: LiveEintrag[]; meinTeam: MeinTeamEintrag[]; neu: (NeueMeldung & { reiter: string })[] };
+export type Uebersicht = { live: LiveEintrag[]; meinTeam: MeinTeamEintrag[]; neu: (NeueMeldung & { reiter: string })[]; newsReiter: string | null };
 export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht;
+export function abzeichen(stand: Uebersicht): Record<string, "live" | number>;
 export function Heute({ uebersicht, waehle }: { uebersicht: Uebersicht; waehle: (reiter: string, kachelId?: string) => void });
 ```
 
@@ -180,15 +184,22 @@ export function Heute({ uebersicht, waehle }: { uebersicht: Uebersicht; waehle: 
 - [x] **Schritt 3: `uebersicht`, `Heute` umsetzen,** Aufbau und Maße nach `dHeute` im Mock (Mac: zwei Spalten, links Live und Mein Team,
       rechts KI-News; iPhone: untereinander). Partien mit der bestehenden Darstellung aus `lib/kacheln/fussball/ansicht.tsx`, ohne Bericht.
 - [x] **Schritt 4: bestehen sehen** `npm test`
-- [x] **Schritt 5:** `bash checks.sh`, ansehen in beiden Breiten, Commit „Add today overview“
+- [x] **Schritt 5:** `bash checks.sh`, ansehen in beiden Breiten, Commit „Add today overview“ (Ansehen wie bei Aufgabe 1 in die Vorschau
+      verschoben)
+
+Nachtrag 2026-11-23: Beim Bauen kamen `newsReiter` (wohin „Alle Meldungen“ führt, auch ohne neue Meldung) und `abzeichen` dazu.
 
 ### Aufgabe 5: Sprung aus „Heute“ in den Reiter
 
 **Dateien:** Ändern `lib/kacheln/heute.tsx`, `app/dashboard.tsx`. Test `__tests__/page.test.tsx`.
 
-- [x] **Schritt 1: Fehlschlagender Test:** Klick auf „Alle Partien im Reiter Sport“ macht „Sport“ aktiv; Klick auf eine Partie in
-      „Jetzt live“ macht „Sport“ aktiv und ruft `scrollIntoView` an der Kachel mit `id={kachel.id}` auf (in jsdom gemockt); Klick auf „Alle
-      neuen und älteren Meldungen“ macht „KI-News“ aktiv. Links zu Artikeln öffnen weiter die Quelle, nicht den Reiter.
+- [x] **Schritt 1: Fehlschlagender Test:** Klick auf „Alle Partien im Reiter Sport“ macht „Sport“ aktiv; Klick auf die Zeile des
+      Wettbewerbs über einer Partie in „Jetzt live“ macht „Sport“ aktiv und ruft `scrollIntoView` an der Kachel mit `id={kachel.id}` auf (in
+      jsdom gemockt); Klick auf „Alle Meldungen im Reiter KI-News“ macht „KI-News“ aktiv. Links zu Artikeln öffnen weiter die Quelle, nicht
+      den Reiter.
+
+  Nachtrag 2026-11-23: Getippt wird die Zeile des Wettbewerbs (Marke und Name, mit „›“) statt der Partie selbst. Eine ganze Partie als
+  Knopf wäre kein gültiges HTML, und Torschützen darin ließen sich schlechter lesen. Die Zeile steht auch über den Partien in „Mein Team“.
 - [x] **Schritt 2: fehlschlagen sehen**
 - [x] **Schritt 3:** `waehle(reiter, kachelId?)` in `Dashboard`: Reiter setzen, Seite nach oben, mit `kachelId` nach dem Rendern zur Kachel
       scrollen (`useEffect` auf den gewählten `kachelId`). Die Kachel bekommt `id={kachel.id}` in `lib/kacheln/kachel.tsx`.
