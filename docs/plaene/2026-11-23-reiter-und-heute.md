@@ -71,7 +71,7 @@ keine (nur Daten, die `GET /api/kacheln` schon liefert)
   abzeichen: Record<string, "live" | number> })`.
 - „Heute“ zeigt in dieser Aufgabe noch einen Platzhalter `<p>Übersicht folgt.</p>`, er fällt in Aufgabe 4 weg.
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 ```ts
 test("reiterListe: Heute zuerst, dann Gruppe oder Titel in Reihenfolge der Kacheln", () => {
@@ -83,22 +83,22 @@ In `page.test.tsx`: `test("Reiter wechseln zeigt die Kacheln des Reiters und ruf
 `aria-current="page"`; Klick auf „Sport“ zeigt die Überschrift der Bundesliga-Kachel, nicht „Introducing Claude“; Klick auf
 „KI-News“ zeigt „Introducing Claude“; `holeDashboard` wurde genau einmal aufgerufen.
 
-- [ ] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
+- [x] **Schritt 2: Tests laufen lassen, sie müssen fehlschlagen**
 
 `npm test -- __tests__/kacheln-reiter.test.ts __tests__/page.test.tsx`
 Erwartet: FAIL (Modul `@/lib/kacheln/reiter` fehlt, Knopf „Sport“ nicht gefunden)
 
-- [ ] **Schritt 3: `reiter.ts`, `ReiterLeiste`, Zustand `aktiv` in `Dashboard`**
+- [x] **Schritt 3: `reiter.ts`, `ReiterLeiste`, Zustand `aktiv` in `Dashboard`**
 
 Im Reiter „Sport“ stehen die Kacheln wie bisher mit `gruppiere`, ohne die Überschrift der Gruppe (der Reiter nennt sie schon). Glossar:
 **Reiter** (Bereich der Seite, den man oben oder unten wählt; _Nicht verwenden_: Tab, Seite) und **Übersicht** („Heute“, das Wichtigste
 aller Kacheln; _Nicht verwenden_: Startseite, Dashboard).
 
-- [ ] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
+- [x] **Schritt 4: Tests laufen lassen, sie müssen bestehen**
 
 `npm test` → Erwartet: PASS, auch die bestehenden Tests in `page.test.tsx` (gegebenenfalls erst in den passenden Reiter klicken).
 
-- [ ] **Schritt 5: Prüfen, ansehen und committen**
+- [x] **Schritt 5: Prüfen, ansehen und committen**
 
 `bash checks.sh`, dann `npm run dev` und in Mac- und iPhone-Breite (390 px) im Browser ansehen. Commit „Add tabs around tiles“.
 
@@ -117,7 +117,7 @@ export type FussballKurz = { live: Partie[]; meinTeam: TeamKurz[] };
 export function fussballKurz(daten: FussballDaten): FussballKurz;
 ```
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 - `live`: alle Partien mit `status: "laeuft"`, in der Reihenfolge der Daten.
 - `meinTeam`: je id aus `daten.meinTeam` ein Eintrag. `partie` ist die laufende Partie des Teams, sonst die nächste mit `"vorher"` (frühester
@@ -128,10 +128,10 @@ export function fussballKurz(daten: FussballDaten): FussballKurz;
 
 Beispiel: `expect(fussballKurz(spieltag).meinTeam[0]).toMatchObject({ id: "132", partie: { id: "p-live" }, platz: { platz: 1, zone: { name: "Champions League" } } })`.
 
-- [ ] **Schritt 2: fehlschlagen sehen** `npm test -- __tests__/fussball-kurz.test.ts`
-- [ ] **Schritt 3: `fussballKurz` umsetzen**
-- [ ] **Schritt 4: bestehen sehen** `npm test -- __tests__/fussball-kurz.test.ts`
-- [ ] **Schritt 5:** `bash checks.sh`, Commit „Add short form of football tiles“
+- [x] **Schritt 2: fehlschlagen sehen** `npm test -- __tests__/fussball-kurz.test.ts`
+- [x] **Schritt 3: `fussballKurz` umsetzen**
+- [x] **Schritt 4: bestehen sehen** `npm test -- __tests__/fussball-kurz.test.ts`
+- [x] **Schritt 5:** `bash checks.sh`, Commit „Add short form of football tiles“
 
 ### Aufgabe 3: Kurzfassung der KI-News
 
@@ -142,12 +142,12 @@ Beispiel: `expect(fussballKurz(spieltag).meinTeam[0]).toMatchObject({ id: "132",
 - Liefert: `export type NeueMeldung = { absender: string; aussehen: Aussehen; meldung: Meldung };`
   `export function kiNewsKurz(daten: KiNewsDaten, jetzt: Date): NeueMeldung[];`
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben:** nur Meldungen mit `istFrisch(zeit, jetzt, nurDatum)`, über alle Absender, neueste
+- [x] **Schritt 1: Fehlschlagende Tests schreiben:** nur Meldungen mit `istFrisch(zeit, jetzt, nurDatum)`, über alle Absender, neueste
       zuerst (nach `Date.parse(zeit)`), unerreichbare Absender mit ihren alten Meldungen zählen mit, wenn sie frisch sind.
-- [ ] **Schritt 2: fehlschlagen sehen** `npm test -- __tests__/ki-news-kurz.test.ts`
-- [ ] **Schritt 3: `kiNewsKurz` umsetzen**
-- [ ] **Schritt 4: bestehen sehen**
-- [ ] **Schritt 5:** `bash checks.sh`, Commit „Add short form of AI news“
+- [x] **Schritt 2: fehlschlagen sehen** `npm test -- __tests__/ki-news-kurz.test.ts`
+- [x] **Schritt 3: `kiNewsKurz` umsetzen**
+- [x] **Schritt 4: bestehen sehen**
+- [x] **Schritt 5:** `bash checks.sh`, Commit „Add short form of AI news“
 
 ### Aufgabe 4: Übersicht „Heute“
 
@@ -168,7 +168,7 @@ export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht;
 export function Heute({ uebersicht, waehle }: { uebersicht: Uebersicht; waehle: (reiter: string, kachelId?: string) => void });
 ```
 
-- [ ] **Schritt 1: Fehlschlagende Tests schreiben**
+- [x] **Schritt 1: Fehlschlagende Tests schreiben**
 
 - `uebersicht`: Kacheln mit `daten: null` werden übersprungen. `meinTeam` fasst dasselbe Team (gleiche ESPN-id, z. B. „132“ in BL und CL)
   über Wettbewerbe zusammen, Reihenfolge der ersten Nennung. Abzeichen: `live.length > 0` → Sport `"live"`, `neu.length` → KI-News.
@@ -176,24 +176,24 @@ export function Heute({ uebersicht, waehle }: { uebersicht: Uebersicht; waehle: 
   Anstoß) und Chip „Platz 1 · 30 Pkt“ je Wettbewerb mit Marke (BL, CL); Karte „Neu in den KI-News“ mit der neuesten Meldung groß und
   höchstens 6 weiteren, ohne neue Meldung der Satz „Heute nichts Neues“.
 
-- [ ] **Schritt 2: fehlschlagen sehen** `npm test -- __tests__/kacheln-uebersicht.test.ts __tests__/page.test.tsx`
-- [ ] **Schritt 3: `uebersicht`, `Heute` umsetzen,** Aufbau und Maße nach `dHeute` im Mock (Mac: zwei Spalten, links Live und Mein Team,
+- [x] **Schritt 2: fehlschlagen sehen** `npm test -- __tests__/kacheln-uebersicht.test.ts __tests__/page.test.tsx`
+- [x] **Schritt 3: `uebersicht`, `Heute` umsetzen,** Aufbau und Maße nach `dHeute` im Mock (Mac: zwei Spalten, links Live und Mein Team,
       rechts KI-News; iPhone: untereinander). Partien mit der bestehenden Darstellung aus `lib/kacheln/fussball/ansicht.tsx`, ohne Bericht.
-- [ ] **Schritt 4: bestehen sehen** `npm test`
-- [ ] **Schritt 5:** `bash checks.sh`, ansehen in beiden Breiten, Commit „Add today overview“
+- [x] **Schritt 4: bestehen sehen** `npm test`
+- [x] **Schritt 5:** `bash checks.sh`, ansehen in beiden Breiten, Commit „Add today overview“
 
 ### Aufgabe 5: Sprung aus „Heute“ in den Reiter
 
 **Dateien:** Ändern `lib/kacheln/heute.tsx`, `app/dashboard.tsx`. Test `__tests__/page.test.tsx`.
 
-- [ ] **Schritt 1: Fehlschlagender Test:** Klick auf „Alle Partien im Reiter Sport“ macht „Sport“ aktiv; Klick auf eine Partie in
+- [x] **Schritt 1: Fehlschlagender Test:** Klick auf „Alle Partien im Reiter Sport“ macht „Sport“ aktiv; Klick auf eine Partie in
       „Jetzt live“ macht „Sport“ aktiv und ruft `scrollIntoView` an der Kachel mit `id={kachel.id}` auf (in jsdom gemockt); Klick auf „Alle
       neuen und älteren Meldungen“ macht „KI-News“ aktiv. Links zu Artikeln öffnen weiter die Quelle, nicht den Reiter.
-- [ ] **Schritt 2: fehlschlagen sehen**
-- [ ] **Schritt 3:** `waehle(reiter, kachelId?)` in `Dashboard`: Reiter setzen, Seite nach oben, mit `kachelId` nach dem Rendern zur Kachel
+- [x] **Schritt 2: fehlschlagen sehen**
+- [x] **Schritt 3:** `waehle(reiter, kachelId?)` in `Dashboard`: Reiter setzen, Seite nach oben, mit `kachelId` nach dem Rendern zur Kachel
       scrollen (`useEffect` auf den gewählten `kachelId`). Die Kachel bekommt `id={kachel.id}` in `lib/kacheln/kachel.tsx`.
-- [ ] **Schritt 4: bestehen sehen** `npm test`
-- [ ] **Schritt 5:** `bash checks.sh`, Commit „Jump from today overview to tabs“
+- [x] **Schritt 4: bestehen sehen** `npm test`
+- [x] **Schritt 5:** `bash checks.sh`, Commit „Jump from today overview to tabs“
 
 ### Aufgabe 6: Plan prüfen, PR und Abnahme
 
