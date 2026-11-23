@@ -52,7 +52,10 @@ beforeEach(() => {
   vi.mocked(holeDashboard).mockReset();
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 // Die Kacheln stehen in ihren Reitern, beim Öffnen ist „Heute“ vorn (ADR 0014).
 async function oeffne(reiter: string) {
@@ -315,4 +318,101 @@ test("Reiter wechseln zeigt die Kacheln des Reiters und ruft nicht neu ab", asyn
   ).toBeDefined();
   expect(screen.queryByRole("heading", { name: "Bundesliga" })).toBeNull();
   expect(holeDashboard).toHaveBeenCalledTimes(1);
+});
+
+const BUNDESLIGA_LIVE: DashboardAntwort["kacheln"][number] = {
+  id: "bundesliga",
+  titel: "Bundesliga",
+  aussehen: { farbe: "#E3343F", kuerzel: "BL" },
+  gruppe: "Sport",
+  status: "ok",
+  daten: {
+    art: "fussball",
+    titel: "12. Spieltag",
+    tage: ["2026-11-08"],
+    partien: [
+      {
+        id: "bl-live",
+        anstoss: "2026-11-08T12:30:00.000Z",
+        status: "laeuft",
+        minute: "35'",
+        heim: { id: "132", name: "Bayern", logo: null, tore: 1 },
+        gast: { id: "28", name: "Union", logo: null, tore: 0 },
+        tore: [],
+      },
+    ],
+    tabelle: [
+      {
+        platz: 1,
+        id: "132",
+        name: "Bayern",
+        logo: null,
+        spiele: 11,
+        differenz: 30,
+        punkte: 31,
+      },
+    ],
+    meinTeam: ["132"],
+    zonen: [],
+  },
+  stand: ZEIT,
+};
+
+test("Heute zeigt Jetzt live, Mein Team mit Platz und neue KI-News", async () => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date(ZEIT) });
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [BUNDESLIGA_LIVE, ...OK.kacheln],
+  });
+  render(<Page />);
+
+  const live = await screen.findByRole("region", { name: "Jetzt live" });
+  expect(within(live).getByTestId("partie-bl-live")).toBeDefined();
+  const meinTeam = screen.getByRole("region", { name: "Mein Team" });
+  expect(within(meinTeam).getByText("Platz 1 · 31 Pkt")).toBeDefined();
+  const neu = screen.getByRole("region", { name: "Neu in den KI-News" });
+  expect(
+    within(neu).getByRole("link", { name: /Introducing Claude/ }),
+  ).toBeDefined();
+  expect(
+    within(screen.getByRole("navigation", { name: "Bereiche" })).getByLabelText(
+      "1 neu",
+    ),
+  ).toBeDefined();
+  vi.useRealTimers();
+});
+
+test("Heute ohne laufende Partie und ohne Neues: keine Karte Jetzt live, Hinweis bei den KI-News", async () => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date("2026-11-20T12:00:00Z") });
+  vi.mocked(holeDashboard).mockResolvedValue(OK);
+  render(<Page />);
+
+  const neu = await screen.findByRole("region", { name: "Neu in den KI-News" });
+  expect(within(neu).getByText("Heute nichts Neues")).toBeDefined();
+  expect(screen.queryByRole("region", { name: "Jetzt live" })).toBeNull();
+  vi.useRealTimers();
+});
+
+test("Heute mit einer Kachel im Fehler zeigt die übrigen", async () => {
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date(ZEIT) });
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      {
+        id: "bundesliga",
+        titel: "Bundesliga",
+        aussehen: { farbe: "#E3343F", kuerzel: "BL" },
+        gruppe: "Sport",
+        status: "fehler",
+      },
+      ...OK.kacheln,
+    ],
+  });
+  render(<Page />);
+
+  expect(
+    await screen.findByRole("region", { name: "Neu in den KI-News" }),
+  ).toBeDefined();
+  expect(screen.queryByRole("region", { name: "Mein Team" })).toBeNull();
+  vi.useRealTimers();
 });

@@ -5,12 +5,14 @@ import { useCallback, useRef, useState } from "react";
 import { abmelden } from "@/app/login/actions";
 import { holeDashboard } from "@/lib/kacheln/abruf";
 import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
+import { Heute } from "@/lib/kacheln/heute";
 import { gruppiere } from "@/lib/kacheln/gruppen";
 import { FehlerHinweis, Kachel } from "@/lib/kacheln/kachel";
 import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
 import { HEUTE, reiterListe, reiterVon } from "@/lib/kacheln/reiter";
 import { ReiterLeiste } from "@/lib/kacheln/reiter-leiste";
 import { neuerStand } from "@/lib/kacheln/stand";
+import { abzeichen, uebersicht } from "@/lib/kacheln/uebersicht";
 import type { KachelAnzeige, KachelDaten } from "@/lib/kacheln/typen";
 import { useAktualisierung } from "@/lib/kacheln/use-aktualisierung";
 import { datum, uhrzeit } from "@/lib/zeit";
@@ -86,6 +88,9 @@ export function Dashboard() {
 
   useAktualisierung(erneutVersuchen);
 
+  // Bei jedem Rendern neu: Die Kurzfassungen sind billig, und „Neu“ hängt an der Uhrzeit.
+  const stand = uebersicht(kacheln, new Date());
+
   return (
     <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-9 px-3.5 pt-[22px] pb-[calc(6rem+env(safe-area-inset-bottom))] min-[600px]:gap-11 min-[600px]:px-7 min-[600px]:pt-[30px] min-[600px]:pb-12">
       <header className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2.5">
@@ -112,7 +117,7 @@ export function Dashboard() {
         reiter={reiterListe(kacheln)}
         aktiv={aktiv}
         waehle={setAktiv}
-        abzeichen={{}}
+        abzeichen={abzeichen(stand)}
       />
 
       <main className="flex flex-col gap-9 min-[600px]:gap-11">
@@ -125,7 +130,7 @@ export function Dashboard() {
           />
         )}
         {geladen && kacheln.length > 0 && aktiv === HEUTE && (
-          <p className="text-gedaempft">Übersicht folgt.</p>
+          <Heute uebersicht={stand} waehle={setAktiv} />
         )}
         {gruppiere(kacheln.filter((kachel) => reiterVon(kachel) === aktiv)).map(
           ({ gruppe, kacheln: imBlock }) => {
