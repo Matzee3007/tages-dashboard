@@ -98,8 +98,9 @@ export function Dashboard() {
 
   useAktualisierung(erneutVersuchen);
 
-  // Bei jedem Rendern neu: Die Kurzfassungen sind billig, und „Neu“ hängt an der Uhrzeit.
-  const stand = uebersicht(kacheln, new Date());
+  // Bei jedem Rendern neu: Die Kurzfassungen sind billig, und „Neu“ hängt an der Uhrzeit. Die Uhr erst nach dem ersten
+  // Laden lesen: Beim Vorab-Rendern im Build ist `new Date()` verboten, und ohne Kacheln gibt es nichts zusammenzufassen.
+  const stand = uebersicht(kacheln, geladen ? new Date() : new Date(0));
 
   return (
     <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-9 px-3.5 pt-[22px] pb-[calc(6rem+env(safe-area-inset-bottom))] min-[600px]:gap-11 min-[600px]:px-7 min-[600px]:pt-[30px] min-[600px]:pb-12">
