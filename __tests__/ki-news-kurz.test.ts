@@ -83,3 +83,17 @@ test("ohne frische Meldung ist die Liste leer", () => {
     ),
   ).toEqual([]);
 });
+
+test("derselbe Artikel bei zwei Absendern zählt einmal, beim neueren Eintrag", () => {
+  const neu = kiNewsKurz(
+    {
+      art: "ki-news",
+      absender: [
+        absender("Simon Willison", [meldung("gleich", "2026-11-23T10:00:00Z")]),
+        absender("Hugging Face", [meldung("gleich", "2026-11-23T11:00:00Z")]),
+      ],
+    },
+    JETZT,
+  );
+  expect(neu.map((eintrag) => eintrag.absender)).toEqual(["Hugging Face"]);
+});

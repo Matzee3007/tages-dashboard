@@ -87,18 +87,36 @@ function Herkunftszeile({
   );
 }
 
+// jetzt: dieselbe Uhrzeit wie beim Auswählen der neuen Meldungen, damit gezählte Meldungen auch das Etikett „Neu“ tragen.
 export function Heute({
   uebersicht,
+  jetzt,
   waehle,
 }: {
   uebersicht: Uebersicht;
+  jetzt: Date;
   waehle: (reiter: string, kachelId?: string) => void;
 }) {
-  const { live, meinTeam, neu, newsReiter } = uebersicht;
+  const { live, meinTeam, neu, newsReiter, fehler } = uebersicht;
   const [erste, ...weitere] = neu;
   return (
     <div className="grid items-start gap-4 min-[900px]:grid-cols-2">
       <div className="flex min-w-0 flex-col gap-4">
+        {fehler.length > 0 && (
+          <Karte
+            titel="Gerade nicht erreichbar"
+            untertitel="Letzter Stand in der Kachel, neuer Versuch in 1 Minute"
+            marke="!"
+          >
+            {fehler.map((herkunft) => (
+              <Herkunftszeile
+                key={herkunft.kachelId}
+                herkunft={herkunft}
+                waehle={waehle}
+              />
+            ))}
+          </Karte>
+        )}
         {live.length > 0 && (
           <Karte
             titel="Jetzt live"
@@ -110,7 +128,7 @@ export function Heute({
                 <Herkunftszeile herkunft={eintrag} waehle={waehle} />
                 <PartieZeile
                   partie={eintrag.partie}
-                  meinTeam={[]}
+                  meinTeam={eintrag.meinTeam}
                   mitBericht={false}
                 />
               </div>
@@ -185,7 +203,7 @@ export function Heute({
           titel="Neu in den KI-News"
           untertitel={
             neu.length === 0
-              ? "Seit gestern keine neue Meldung"
+              ? "Keine neue Meldung"
               : `${neu.length} neue ${neu.length === 1 ? "Meldung" : "Meldungen"}, neueste zuerst`
           }
           marke="KI"
@@ -198,13 +216,13 @@ export function Heute({
                 </p>
                 <MeldungsLink
                   meldung={erste.meldung}
-                  jetzt={new Date()}
+                  jetzt={jetzt}
                   rolle="schlagzeile"
                 />
               </div>
               {weitere.slice(0, WEITERE_MELDUNGEN).map((eintrag) => (
                 <div
-                  key={eintrag.meldung.link}
+                  key={`${eintrag.absender}-${eintrag.meldung.link}`}
                   style={farbVariablen(eintrag.aussehen)}
                   className="border-t border-rand"
                 >
@@ -213,7 +231,7 @@ export function Heute({
                   </p>
                   <MeldungsLink
                     meldung={eintrag.meldung}
-                    jetzt={new Date()}
+                    jetzt={jetzt}
                     rolle="weitere"
                   />
                 </div>
@@ -221,7 +239,7 @@ export function Heute({
             </div>
           ) : (
             <p className="px-3.5 pb-3 text-[14px] text-gedaempft">
-              Heute nichts Neues
+              Gerade nichts Neues
             </p>
           )}
           <Weiter

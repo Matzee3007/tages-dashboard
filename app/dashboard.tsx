@@ -100,7 +100,8 @@ export function Dashboard() {
 
   // Bei jedem Rendern neu: Die Kurzfassungen sind billig, und „Neu“ hängt an der Uhrzeit. Die Uhr erst nach dem ersten
   // Laden lesen: Beim Vorab-Rendern im Build ist `new Date()` verboten, und ohne Kacheln gibt es nichts zusammenzufassen.
-  const stand = uebersicht(kacheln, geladen ? new Date() : new Date(0));
+  const jetzt = geladen ? new Date() : new Date(0);
+  const stand = uebersicht(kacheln, jetzt);
 
   return (
     <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-9 px-3.5 pt-[22px] pb-[calc(6rem+env(safe-area-inset-bottom))] min-[600px]:gap-11 min-[600px]:px-7 min-[600px]:pt-[30px] min-[600px]:pb-12">
@@ -141,7 +142,7 @@ export function Dashboard() {
           />
         )}
         {geladen && kacheln.length > 0 && aktiv === HEUTE && (
-          <Heute uebersicht={stand} waehle={waehle} />
+          <Heute uebersicht={stand} jetzt={jetzt} waehle={waehle} />
         )}
         {gruppiere(kacheln.filter((kachel) => reiterVon(kachel) === aktiv)).map(
           ({ gruppe, kacheln: imBlock }) => {

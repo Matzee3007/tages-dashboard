@@ -374,11 +374,16 @@ test("Heute zeigt Jetzt live, Mein Team mit Platz und neue KI-News", async () =>
   expect(
     within(neu).getByRole("link", { name: /Introducing Claude/ }),
   ).toBeDefined();
+  const bereiche = screen.getByRole("navigation", { name: "Bereiche" });
   expect(
-    within(screen.getByRole("navigation", { name: "Bereiche" })).getByLabelText(
-      "1 neu",
-    ),
+    within(bereiche).getByRole("button", { name: "KI-News, 1 neu" }),
   ).toBeDefined();
+  expect(
+    within(bereiche).getByRole("button", { name: "Sport, live" }),
+  ).toBeDefined();
+  expect(
+    within(live).getByTestId("partie-bl-live").getAttribute("data-mein-team"),
+  ).toBe("true");
   vi.useRealTimers();
 });
 
@@ -388,7 +393,8 @@ test("Heute ohne laufende Partie und ohne Neues: keine Karte Jetzt live, Hinweis
   render(<Page />);
 
   const neu = await screen.findByRole("region", { name: "Neu in den KI-News" });
-  expect(within(neu).getByText("Heute nichts Neues")).toBeDefined();
+  expect(within(neu).getByText("Gerade nichts Neues")).toBeDefined();
+  expect(within(neu).getByText("Keine neue Meldung")).toBeDefined();
   expect(screen.queryByRole("region", { name: "Jetzt live" })).toBeNull();
   vi.useRealTimers();
 });
@@ -435,7 +441,7 @@ test("aus Heute in den Reiter springen, über einen Wettbewerb bis zu seiner Kac
 
   const live = await screen.findByRole("region", { name: "Jetzt live" });
   fireEvent.click(within(live).getByRole("button", { name: /Bundesliga/ }));
-  expect(aktiv()).toBe("Sport");
+  expect(aktiv()).toMatch(/^Sport/);
   await waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
   expect(scrollIntoView.mock.contexts[0]).toBe(
     document.getElementById("bundesliga"),
@@ -558,4 +564,25 @@ test("ohne neue Meldung führt der Knopf trotzdem in den Reiter KI-News", async 
       .getByRole("button", { name: "KI-News" })
       .getAttribute("aria-current"),
   ).toBe("page");
+});
+
+test("Heute nennt Kacheln, die gerade nicht erreichbar sind, und führt zu ihnen", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      {
+        id: "ki-news",
+        titel: "KI-News",
+        aussehen: { farbe: "#8E99A8" },
+        status: "fehler",
+      },
+    ],
+  });
+  render(<Page />);
+
+  const hinweis = await screen.findByRole("region", {
+    name: "Gerade nicht erreichbar",
+  });
+  fireEvent.click(within(hinweis).getByRole("button", { name: /KI-News/ }));
+  expect(await screen.findByText("Neuer Versuch in 1 Minute.")).toBeDefined();
 });

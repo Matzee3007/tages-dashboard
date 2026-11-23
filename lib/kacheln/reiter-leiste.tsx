@@ -31,18 +31,24 @@ export function ReiterLeiste({
           >
             {name}
             {zeichen === "live" && (
-              <span
-                aria-label="live"
-                className="size-[7px] rounded-full bg-akzent"
-              />
+              <>
+                <span
+                  aria-hidden
+                  className="size-[7px] rounded-full bg-akzent"
+                />
+                <span className="sr-only">, live</span>
+              </>
             )}
             {typeof zeichen === "number" && zeichen > 0 && (
-              <span
-                aria-label={`${zeichen} neu`}
-                className="rounded-full bg-akzent px-1.5 text-[11.5px] leading-[18px] font-bold text-grund"
-              >
-                {zeichen}
-              </span>
+              <>
+                <span
+                  aria-hidden
+                  className="rounded-full bg-akzent px-1.5 text-[11.5px] leading-[18px] font-bold text-grund"
+                >
+                  {zeichen}
+                </span>
+                <span className="sr-only">, {zeichen} neu</span>
+              </>
             )}
           </button>
         );

@@ -13,7 +13,8 @@ export type Herkunft = {
   titel: string;
 };
 
-export type LiveEintrag = Herkunft & { partie: Partie };
+// meinTeam: die Teams der Kachel, damit die Partie in „Jetzt live“ hervorgehoben wird wie in der Kachel.
+export type LiveEintrag = Herkunft & { partie: Partie; meinTeam: string[] };
 
 export type MeinTeamEintrag = {
   id: string;
@@ -28,6 +29,8 @@ export type Uebersicht = {
   neu: (NeueMeldung & { reiter: string })[];
   // Wohin „Alle Meldungen“ führt, auch wenn es nichts Neues gibt. null: keine KI-News mit Daten.
   newsReiter: string | null;
+  // Kacheln, deren letzter Abruf scheiterte: „Heute“ zeigt einen Hinweis statt still zu fehlen.
+  fehler: Herkunft[];
 };
 
 // Die Kurzfassungen aller Kacheln für den Reiter „Heute“ (ADR 0014). Kacheln ohne Daten fehlen einfach.
@@ -37,26 +40,37 @@ export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht {
     meinTeam: [],
     neu: [],
     newsReiter: null,
+    fehler: [],
   };
   for (const kachel of kacheln) {
-    if (!kachel.daten) continue;
     const herkunft: Herkunft = {
       kachelId: kachel.id,
       reiter: reiterVon(kachel),
       aussehen: kachel.aussehen,
       titel: kachel.titel,
     };
+    if (kachel.fehler) ergebnis.fehler.push(herkunft);
+    if (!kachel.daten) continue;
     switch (kachel.daten.art) {
       case "fussball": {
         const kurz = fussballKurz(kachel.daten);
+        const { meinTeam } = kachel.daten;
         ergebnis.live.push(
-          ...kurz.live.map((partie) => ({ ...herkunft, partie })),
+          ...kurz.live.map((partie) => ({
+            ...herkunft,
+            partie,
+            meinTeam,
+          })),
         );
         for (const team of kurz.meinTeam) {
           const bekannt = ergebnis.meinTeam.find(({ id }) => id === team.id);
           const eintrag = { ...herkunft, ...team };
-          if (bekannt) bekannt.wettbewerbe.push(eintrag);
-          else
+          if (bekannt) {
+            bekannt.wettbewerbe.push(eintrag);
+            // Kannte der erste Wettbewerb nur die Kennung, gilt der Name eines späteren.
+            if (bekannt.name === bekannt.id) bekannt.name = team.name;
+            bekannt.logo ??= team.logo;
+          } else
             ergebnis.meinTeam.push({
               id: team.id,
               name: team.name,

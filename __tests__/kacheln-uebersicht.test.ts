@@ -180,3 +180,45 @@ test("Abzeichen: Punkt am Reiter einer laufenden Partie, Zahl der neuen Meldunge
   expect(abzeichen(ergebnis)).toEqual({ Sport: "live", "KI-News": 1 });
   expect(abzeichen(uebersicht([], JETZT))).toEqual({});
 });
+
+test("Kacheln im Fehler stehen mit Herkunft in der Liste fehler", () => {
+  const ohneDaten: KachelAnzeige = {
+    ...fussball("bundesliga", "BL", [], []),
+    daten: null,
+    fehler: true,
+  };
+  const alteDaten: KachelAnzeige = { ...kiNews, fehler: true };
+  const ergebnis = uebersicht([ohneDaten, alteDaten], JETZT);
+  expect(ergebnis.fehler.map((f) => [f.kachelId, f.reiter])).toEqual([
+    ["bundesliga", "Sport"],
+    ["ki-news", "KI-News"],
+  ]);
+  expect(uebersicht([kiNews], JETZT).fehler).toEqual([]);
+});
+
+test("ein Team, das zuerst nur als Kennung bekannt ist, bekommt den Namen aus einem späteren Wettbewerb", () => {
+  const ohneName = fussball("bundesliga", "BL", [], ["359"]);
+  const mitName = fussball(
+    "champions-league",
+    "CL",
+    [partie("cl-1", "vorher", "359", "132")],
+    ["359"],
+  );
+  const team = uebersicht([ohneName, mitName], JETZT).meinTeam[0];
+  expect(team).toMatchObject({ id: "359", name: "Team 359" });
+});
+
+test("Live-Einträge tragen Mein Team ihrer Kachel", () => {
+  const ergebnis = uebersicht(
+    [
+      fussball(
+        "bundesliga",
+        "BL",
+        [partie("bl-1", "laeuft", "132", "28")],
+        ["132"],
+      ),
+    ],
+    JETZT,
+  );
+  expect(ergebnis.live[0].meinTeam).toEqual(["132"]);
+});
