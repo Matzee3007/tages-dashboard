@@ -234,6 +234,6 @@ Unsichtbare Anforderungen: Die Kachel steht wie alle unter `/api/kacheln` hinter
 
 - [x] **Schritt 1: Tool-Notizen schreiben** (Adressen und Felder aus der Tabelle oben, Fehler 400 beim Datumsbereich, inoffiziell).
 - [x] **Schritt 2: `npm run check`, PR öffnen, `/code-review`, Funde mit dem Entwickler durchgehen** (PR #49, 10 Funde, 9 behoben, Fund 6 bewusst offen)
-- [x] **Schritt 3: Nach dem Merge Abnahme durch den Entwickler** (2026-11-09 bestanden: Spieltag, Tabelle, Logos, ↻ auf iPhone und Mac. Der
-  Live-Teil ist offen, das erste Spiel ist am 2026-11-20 um 20:30 Uhr.) auf der Live-Adresse, iPhone und Mac: Spieltag, Tabelle, Logos, bei einem
+- [x] **Schritt 3: Nach dem Merge Abnahme durch den Entwickler** (2026-11-09 bestanden: Spieltag, Tabelle, Logos, ↻ auf iPhone und Mac. Live-Teil
+  am 2026-11-20 bestanden: Minute, Spielstand und Torschützen erschienen wie erwartet.) auf der Live-Adresse, iPhone und Mac: Spieltag, Tabelle, Logos, bei einem
   laufenden Spiel Minute und Torschützen innerhalb von rund 2 Minuten.
