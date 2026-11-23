@@ -84,3 +84,24 @@ fing die Prüfung nicht ab.
 **Entscheidung:** `ai/gemma4:e4b` erzeugt im Container Spielberichte **und** Zusammenfassungen. Alternative: zwei Modelle im Wechsel (qwen3 für
 die KI-News, schneller), abgelehnt wegen mehr Code und des bekannten Speicherfehlers bei zwei geladenen Modellen. Folge: Zusammenfassungen
 dauern etwa dreimal so lang (Evaluation vom 2026-11-15: Median 46 statt 17 s), bei Qualität wie bisher.
+
+## Nachtrag 2026-11-23: Mac im Ruhezustand
+
+**Kontext:** Am Wochenende 2026-11-21/22 schlief der Mac fast durchgehend und wachte nur etwa alle 15 Minuten für rund 20 Sekunden auf
+(DarkWake, 288-mal laut `pmset -g log`). Docker rechnet nur in diesen Sekunden. Ein Durchlauf zog sich so über bis zu 17 Stunden, der Bericht
+zum Freitagsspiel kam rund 10 Stunden nach Abpfiff. Mitten in solchen Durchläufen lehnte Supabase Anfragen mit `JWT expired` (PGRST303) ab:
+zwei Partien blieben ohne Bericht, die Premier League wurde einmal übersprungen.
+
+**Entscheidung:** hinnehmen. Schläft der Mac, kommen Berichte und Zusammenfassungen später. Eine Partie, die an `JWT expired` scheitert,
+holt der nächste Durchlauf nach, wie jede andere Partie ohne Bericht. Am 2026-11-23 holte der erste Durchlauf bei wachem Mac 12 Berichte nach.
+Am Code ändert sich nichts.
+
+**Alternativen:**
+
+- **Mac zu Spielzeiten wach halten** (`pmset` oder `caffeinate`, nur am Netzteil): Berichte kämen pünktlich, kostet aber Strom und eine
+  weitere Einrichtung auf dem Mac. Abgelehnt.
+- **`JWT expired` im Code abfangen** (Ausweis vor jedem Schreiben erneuern): behebt nur das Symptom, die Wartezeit bliebe. Die genaue
+  Ursache (Schlaf mitten in der Anfrage, Uhr der Docker-VM nach dem Aufwachen, Netz noch nicht da) ist nicht gemessen.
+
+**Konsequenzen:** „Etwa 20 Minuten nach Abpfiff“ gilt nur bei wachem Mac. Fällt ein Spieltag ganz in eine Schlafphase und wechselt danach,
+fehlen seine Berichte ganz (siehe Konsequenzen oben). `JWT expired` im Log ist bei schlafendem Mac erwartet und kein Fehler.
