@@ -1,6 +1,6 @@
 ---
 titel: "Plan: Spielberichte"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-17
 tags: [plan, sport, sprachmodell, docker, supabase, phase-3]
 ---
@@ -432,7 +432,11 @@ docker compose logs -f zusammenfassen # erwartet: „Durchlauf: …“ und „Sp
 Ergebnis 2026-11-17: neu gebaut mit `ai/gemma4:e4b`, erster Durchlauf `Durchlauf: neu 6, ohne 6` (OpenAI und SCMP 403, YouTube ohne
 Artikel, wie bisher) und `Spielberichte: neu 0, ohne 0` (noch keine Partie im aktuellen Spieltag beendet).
 
-- [ ] **Schritt 2: Abnahme durch den Entwickler** am nächsten Spieltag (Bundesliga Freitag 2026-11-20 ab 20:30, mit dem Live-Test aus
+- [x] **Schritt 2: Abnahme durch den Entwickler** am nächsten Spieltag (Bundesliga Freitag 2026-11-20 ab 20:30, mit dem Live-Test aus
   der Übergabe): Etwa 20 Minuten nach Abpfiff zeigt die Partie in Production den Knopf „Bericht“, der Text passt zum Spiel. Ergebnis hier
   eintragen.
-- [ ] **Schritt 3: `plan-pruefer` laufen lassen,** dann PR, `/code-review medium`, Merge.
+
+  Ergebnis 2026-11-23: bestanden. Der Bericht erschien, sein Text passte gut zum Spiel. Log: `Spielberichte: neu 1, ohne 0` (2026-11-21)
+  und `neu 4, ohne 2` (2026-11-22). Die zwei fehlenden Berichte (ESPN 401884732, 401884729) und ein übersprungener Durchlauf der Premier
+  League scheiterten an `JWT expired` von Supabase, nicht am Bericht selbst. Der Fehler wird als eigener Punkt behoben.
+- [x] **Schritt 3: `plan-pruefer` laufen lassen,** dann PR, `/code-review medium`, Merge (PR #85).

@@ -234,7 +234,8 @@ Entscheidungen aus der Befragung vom 2026-11-04:
    dazwischen trennt seit 2026-11-16 der Spielplan (Nachtrag unten). PR 2 Champions League (Ligaphase) erledigt 2026-11-16, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-16-champions-league|Plan]]. PR 3 neues Aussehen erledigt 2026-11-16 (PR #80), siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-16-neues-aussehen|Plan]] (Nachtrag unten).
-3. **Spielberichte ([[projects/tages-dashboard/docs/adr/0013-spielberichte-vom-mac|ADR 0013]]):** deutscher Spielbericht je beendeter
+3. **Spielberichte ([[projects/tages-dashboard/docs/adr/0013-spielberichte-vom-mac|ADR 0013]])** (erledigt 2026-11-23, PR #85, siehe
+   [[projects/tages-dashboard/docs/plaene/2026-11-17-spielberichte|Plan]]): deutscher Spielbericht je beendeter
    Partie der Fußball-Kacheln, vom lokalen Modell auf dem Mac aus dem Liveticker von ESPN (Entscheidungen unten).
 4. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
 5. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
