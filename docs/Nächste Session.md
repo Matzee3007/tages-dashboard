@@ -78,6 +78,9 @@ Danach:
    in der README ein kurzer Abschnitt „Lizenz“. Eigener kleiner PR.
 2. **Phase 3, Schritt 4: Formel 1** (Jolpica, OpenF1): Rennwochenende und WM-Wertung im Kartensystem von Aussehen G. Erst Mock mit
    `mock-bauer`, dann Plan.
+3. **Software-Factory-Pilot** (aus dem Ecosystem, 2026-11-23, ADR 0027 dort): Nach dem Live-Test am 2026-11-24 und nach den
+   offenen PRs #87 bis #89 den Plan `~/claude-ecosystem/docs/plaene/2026-11-23-software-factory.md` umsetzen, mit dem Versuch
+   im Kopf des Plans beginnen. Koordinator ist eine Session in diesem Ordner, höchstens 2 Orca-Worker, Merge nur durch dich.
 
 Bekannte offene Punkte, ohne Eile:
 
