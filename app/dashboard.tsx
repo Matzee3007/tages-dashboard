@@ -6,8 +6,10 @@ import { abmelden } from "@/app/login/actions";
 import { holeDashboard } from "@/lib/kacheln/abruf";
 import { FussballAnsicht } from "@/lib/kacheln/fussball/ansicht";
 import { gruppiere } from "@/lib/kacheln/gruppen";
-import { FehlerHinweis, GrosserTitel, Kachel } from "@/lib/kacheln/kachel";
+import { FehlerHinweis, Kachel } from "@/lib/kacheln/kachel";
 import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
+import { HEUTE, reiterListe, reiterVon } from "@/lib/kacheln/reiter";
+import { ReiterLeiste } from "@/lib/kacheln/reiter-leiste";
 import { neuerStand } from "@/lib/kacheln/stand";
 import type { KachelAnzeige, KachelDaten } from "@/lib/kacheln/typen";
 import { useAktualisierung } from "@/lib/kacheln/use-aktualisierung";
@@ -50,6 +52,8 @@ export function Dashboard() {
   const [geladen, setGeladen] = useState(false);
   const [laedt, setLaedt] = useState(false);
   const [frischId, setFrischId] = useState<string | null>(null);
+  // Beim Öffnen steht die Übersicht vorn, ein Reiter ist keine eigene Route (ADR 0014).
+  const [aktiv, setAktiv] = useState(HEUTE);
   const laeuft = useRef(false);
   const router = useRouter();
 
@@ -83,7 +87,7 @@ export function Dashboard() {
   useAktualisierung(erneutVersuchen);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-9 px-3.5 pt-[22px] pb-9 min-[600px]:gap-11 min-[600px]:px-7 min-[600px]:pt-[30px] min-[600px]:pb-12">
+    <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-9 px-3.5 pt-[22px] pb-[calc(6rem+env(safe-area-inset-bottom))] min-[600px]:gap-11 min-[600px]:px-7 min-[600px]:pt-[30px] min-[600px]:pb-12">
       <header className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2.5">
         <h1
           aria-label={zeit ? datum(zeit) : "Heute"}
@@ -104,6 +108,13 @@ export function Dashboard() {
         </div>
       </header>
 
+      <ReiterLeiste
+        reiter={reiterListe(kacheln)}
+        aktiv={aktiv}
+        waehle={setAktiv}
+        abzeichen={{}}
+      />
+
       <main className="flex flex-col gap-9 min-[600px]:gap-11">
         {!geladen && <p className="text-gedaempft">Lädt …</p>}
         {geladen && kacheln.length === 0 && (
@@ -113,38 +124,42 @@ export function Dashboard() {
             laedt={laedt}
           />
         )}
-        {gruppiere(kacheln).map(({ gruppe, kacheln: imBlock }) => {
-          const liste = imBlock.map((kachel) => (
-            <Kachel
-              key={kachel.id}
-              kachel={kachel}
-              erneutVersuchen={erneutVersuchen}
-              aktualisieren={() => abrufen(kachel.id)}
-              laedt={laedt}
-              holtFrisch={frischId === kachel.id}
-            >
-              {kachel.daten && (
-                <KachelInhalt
-                  daten={kachel.daten}
-                  ebene={kachel.gruppe ? 4 : 3}
-                />
-              )}
-            </Kachel>
-          ));
-          if (gruppe === null) return liste;
-          return (
-            <section
-              key={`gruppe-${imBlock[0].id}`}
-              aria-label={gruppe}
-              className="@container flex flex-col gap-3.5"
-            >
-              <GrosserTitel>{gruppe}</GrosserTitel>
-              <div className="grid items-start gap-4 @[900px]:grid-cols-3">
-                {liste}
-              </div>
-            </section>
-          );
-        })}
+        {geladen && kacheln.length > 0 && aktiv === HEUTE && (
+          <p className="text-gedaempft">Übersicht folgt.</p>
+        )}
+        {gruppiere(kacheln.filter((kachel) => reiterVon(kachel) === aktiv)).map(
+          ({ gruppe, kacheln: imBlock }) => {
+            const liste = imBlock.map((kachel) => (
+              <Kachel
+                key={kachel.id}
+                kachel={kachel}
+                erneutVersuchen={erneutVersuchen}
+                aktualisieren={() => abrufen(kachel.id)}
+                laedt={laedt}
+                holtFrisch={frischId === kachel.id}
+              >
+                {kachel.daten && (
+                  <KachelInhalt
+                    daten={kachel.daten}
+                    ebene={kachel.gruppe ? 4 : 3}
+                  />
+                )}
+              </Kachel>
+            ));
+            if (gruppe === null) return liste;
+            return (
+              <section
+                key={`gruppe-${imBlock[0].id}`}
+                aria-label={gruppe}
+                className="@container flex flex-col gap-3.5"
+              >
+                <div className="grid items-start gap-4 @[900px]:grid-cols-3">
+                  {liste}
+                </div>
+              </section>
+            );
+          },
+        )}
       </main>
     </div>
   );

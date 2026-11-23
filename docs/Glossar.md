@@ -28,6 +28,15 @@ Mehrere Kacheln, die sichtbar unter einer gemeinsamen Überschrift stehen, z. B.
 Champions League. Jede Kachel darin bleibt eigenständig. Die KI-News stehen ohne Gruppe.
 _Nicht verwenden_: große Kachel, Bereich, Kategorie
 
+**Reiter**:
+Ein Bereich der Seite, den man oben (Mac, iPad) oder in der Leiste unten (iPhone) wählt: „Heute“ und je Gruppe einer, eine Kachel ohne
+Gruppe bekommt einen eigenen (z. B. „Sport“, „KI-News“). [[projects/tages-dashboard/docs/adr/0014-reiter-mit-uebersicht|ADR 0014]].
+_Nicht verwenden_: Tab, Seite
+
+**Übersicht**:
+Der Reiter „Heute“: das Wichtigste aller Kacheln, also laufende Partien, Mein Team und neue KI-News. Ein Tipp führt zur vollen Kachel.
+_Nicht verwenden_: Startseite, Dashboard
+
 ## Sport
 
 **Wettbewerb**:

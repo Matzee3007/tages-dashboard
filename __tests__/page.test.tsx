@@ -54,6 +54,14 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
+// Die Kacheln stehen in ihren Reitern, beim Öffnen ist „Heute“ vorn (ADR 0014).
+async function oeffne(reiter: string) {
+  const bereiche = await screen.findByRole("navigation", { name: "Bereiche" });
+  fireEvent.click(
+    await within(bereiche).findByRole("button", { name: reiter }),
+  );
+}
+
 test("zeigt Datum, Zeit der Aktualisierung, Kachel und Abmelden", async () => {
   vi.mocked(holeDashboard).mockResolvedValue(OK);
   render(<Page />);
@@ -66,6 +74,7 @@ test("zeigt Datum, Zeit der Aktualisierung, Kachel und Abmelden", async () => {
   ).toBeDefined();
   expect(screen.getByText("Sonntag")).toBeDefined();
   expect(screen.getByText("Aktualisiert 14:32")).toBeDefined();
+  await oeffne("KI-News");
   expect(
     screen.getByRole("heading", { level: 2, name: "KI-News" }),
   ).toBeDefined();
@@ -103,6 +112,7 @@ test("nach erneutem Versuch verschwindet der Hinweis", async () => {
   fireEvent.click(
     await screen.findByRole("button", { name: "Jetzt erneut versuchen" }),
   );
+  await oeffne("KI-News");
 
   expect(
     await screen.findByRole("heading", { level: 2, name: "KI-News" }),
@@ -137,6 +147,7 @@ test("wenn alle Kacheln scheitern, behauptet der Kopf keine Aktualisierung", asy
     ],
   });
   render(<Page />);
+  await oeffne("KI-News");
 
   expect(await screen.findByText("Neuer Versuch in 1 Minute.")).toBeDefined();
   expect(screen.queryByText("Aktualisiert 14:32")).toBeNull();
@@ -157,6 +168,7 @@ test("eine Kachel unbekannter Art bittet ums Neuladen", async () => {
     ],
   });
   render(<Page />);
+  await oeffne("Neu");
 
   expect(
     await screen.findByText("Neue Kachel, bitte die Seite neu laden."),
@@ -170,6 +182,7 @@ test("↻ holt die Kachel frisch, erneut versuchen und der Takt fragen ohne Argu
   fireEvent.click(
     await screen.findByRole("button", { name: "Jetzt erneut versuchen" }),
   );
+  await oeffne("KI-News");
   fireEvent.click(
     await screen.findByRole("button", { name: "KI-News aktualisieren" }),
   );
@@ -206,6 +219,7 @@ test("zeigt die Bundesliga-Kachel", async () => {
     ],
   });
   render(<Page />);
+  await oeffne("Bundesliga");
 
   expect(
     await screen.findByRole("heading", { level: 2, name: "Bundesliga" }),
@@ -213,6 +227,7 @@ test("zeigt die Bundesliga-Kachel", async () => {
   expect(
     screen.getByRole("heading", { name: "9. Spieltag · So 8. November" }),
   ).toBeDefined();
+  await oeffne("KI-News");
   expect(
     screen.getByRole("heading", { level: 2, name: "KI-News" }),
   ).toBeDefined();
@@ -236,15 +251,16 @@ test("die Fußball-Kacheln stehen unter Sport, die KI-News für sich", async () 
   });
   render(<Page />);
 
+  await oeffne("Sport");
   const sport = await screen.findByRole("region", { name: "Sport" });
-  expect(within(sport).getByRole("heading", { level: 2, name: "Sport" }));
   expect(within(sport).getByRole("heading", { level: 3, name: "Bundesliga" }));
   expect(within(sport).getByRole("heading", { name: "Premier League" }));
-  expect(within(sport).queryByRole("heading", { name: "KI-News" })).toBeNull();
+  expect(screen.queryByRole("heading", { name: "KI-News" })).toBeNull();
+  await oeffne("KI-News");
   expect(screen.getByRole("heading", { level: 2, name: "KI-News" }));
 });
 
-test("eine Gruppe, die zweimal vorkommt, bekommt zwei eigene Abschnitte", async () => {
+test("Kacheln einer Gruppe stehen in einem Reiter, auch wenn sie getrennt eingestellt sind", async () => {
   const fehlerLog = vi.spyOn(console, "error").mockImplementation(() => {});
   const sport = (id: string) => ({
     id,
@@ -258,12 +274,45 @@ test("eine Gruppe, die zweimal vorkommt, bekommt zwei eigene Abschnitte", async 
     kacheln: [sport("bl"), ...OK.kacheln, sport("pl")],
   });
   render(<Page />);
+  await oeffne("Sport");
 
-  expect(await screen.findAllByRole("region", { name: "Sport" })).toHaveLength(
-    2,
-  );
+  const bereich = await screen.findByRole("region", { name: "Sport" });
+  expect(within(bereich).getByRole("heading", { name: "bl" })).toBeDefined();
+  expect(within(bereich).getByRole("heading", { name: "pl" })).toBeDefined();
   expect(
     fehlerLog.mock.calls.some((aufruf) => String(aufruf[0]).includes("key")),
   ).toBe(false);
   fehlerLog.mockRestore();
+});
+
+test("Reiter wechseln zeigt die Kacheln des Reiters und ruft nicht neu ab", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      {
+        id: "bundesliga",
+        titel: "Bundesliga",
+        aussehen: { farbe: "#E3343F" },
+        gruppe: "Sport",
+        status: "fehler",
+      },
+      ...OK.kacheln,
+    ],
+  });
+  render(<Page />);
+
+  const bereiche = await screen.findByRole("navigation", { name: "Bereiche" });
+  const heute = within(bereiche).getByRole("button", { name: "Heute" });
+  await waitFor(() => expect(heute.getAttribute("aria-current")).toBe("page"));
+
+  fireEvent.click(within(bereiche).getByRole("button", { name: "Sport" }));
+  expect(screen.getByRole("heading", { name: "Bundesliga" })).toBeDefined();
+  expect(screen.queryByRole("link", { name: /Introducing Claude/ })).toBeNull();
+
+  fireEvent.click(within(bereiche).getByRole("button", { name: "KI-News" }));
+  expect(
+    screen.getByRole("link", { name: /Introducing Claude/ }),
+  ).toBeDefined();
+  expect(screen.queryByRole("heading", { name: "Bundesliga" })).toBeNull();
+  expect(holeDashboard).toHaveBeenCalledTimes(1);
 });
