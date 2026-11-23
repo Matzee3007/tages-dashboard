@@ -1,6 +1,6 @@
 ---
 titel: "Plan: Reiter und Übersicht „Heute“"
-status: aktiv
+status: abgeschlossen
 erstellt: 2026-11-23
 tags: [plan, aussehen, kacheln, phase-3]
 ---
@@ -208,8 +208,14 @@ Nachtrag 2026-11-23: Beim Bauen kamen `newsReiter` (wohin „Alle Meldungen“ f
 
 ### Aufgabe 6: Plan prüfen, PR und Abnahme
 
-- [ ] **Schritt 1:** `plan-pruefer` gegen diesen Plan, dann PR, `/code-review medium`, Funde mit dem Entwickler, Merge.
-- [ ] **Schritt 2: Abnahme durch den Entwickler** in Production auf Mac und iPhone (PWA neu öffnen): Reiter wechseln, Leiste unten liegt
+- [x] **Schritt 1:** `plan-pruefer` gegen diesen Plan, dann PR, `/code-review medium`, Funde mit dem Entwickler, Merge (PR #95).
+      `plan-pruefer` zuerst NICHT ERFÜLLT (drei fehlende Tests, nachgeholt). Review: 10 Funde, die 2 wichtigen und 5 kleinen behoben,
+      3 erst mit künftigen Kacheln spürbare in die Übergabe. Der Build brach beim Vorab-Rendern an `new Date()` ab, seitdem baut `checks.sh`
+      die Produktionsfassung mit.
+- [x] **Schritt 2: Abnahme durch den Entwickler** in Production auf Mac und iPhone (PWA neu öffnen): Reiter wechseln, Leiste unten liegt
       über dem Home-Balken und verdeckt nichts, „Heute“ zeigt Mein Team und Neues, an einem Spieltag auch „Jetzt live“. Ergebnis hier
       eintragen.
-- [ ] **Schritt 3:** Projektvision: Nachtrag „Reiter und Übersicht“ unter Phase 3 mit PR, dieser Plan `status: abgeschlossen`.
+
+  Ergebnis 2026-11-23: Vorschau von Vercel auf Mac und iPhone abgenommen („passt“). „Jetzt live“ an einem Spieltag und die PWA in
+  Production stehen mit dem Live-Test der Champions League am 2026-11-24 in der Übergabe.
+- [x] **Schritt 3:** Projektvision: Nachtrag „Reiter und Übersicht“ unter Phase 3 mit PR, dieser Plan `status: abgeschlossen`.

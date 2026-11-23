@@ -237,6 +237,10 @@ Entscheidungen aus der Befragung vom 2026-11-04:
 3. **Spielberichte ([[projects/tages-dashboard/docs/adr/0013-spielberichte-vom-mac|ADR 0013]])** (erledigt 2026-11-23, PR #85, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-17-spielberichte|Plan]]): deutscher Spielbericht je beendeter
    Partie der Fußball-Kacheln, vom lokalen Modell auf dem Mac aus dem Liveticker von ESPN (Entscheidungen unten).
+   *Nachtrag 2026-11-23, Reiter und Übersicht
+   ([[projects/tages-dashboard/docs/adr/0014-reiter-mit-uebersicht|ADR 0014]], PR #95, siehe
+   [[projects/tages-dashboard/docs/plaene/2026-11-23-reiter-und-heute|Plan]]):* Das Dashboard hat Reiter „Heute“, „Sport“, „KI-News“.
+   „Heute“ zeigt Jetzt live, Mein Team und neue KI-News. Neue Kacheln bringen dafür eine Kurzfassung mit.
 4. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
 5. **NFL (ESPN):** zuerst prüfen, ob die Schnittstelle vom Server aus antwortet (Testabruf ergab 403). Falls
    nicht, eine andere Gratis-Quelle suchen oder die Kachel unter „Später“ schieben.
