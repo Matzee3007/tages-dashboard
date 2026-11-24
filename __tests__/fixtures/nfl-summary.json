@@ -1,0 +1,164 @@
+{
+  "scoringPlays": [
+    {
+      "type": {
+        "text": "Field Goal Good",
+        "abbreviation": "FG"
+      },
+      "text": "Evan McPherson 38 Yd Field Goal",
+      "period": {
+        "number": 2
+      },
+      "clock": {
+        "displayValue": "6:17"
+      },
+      "team": {
+        "id": "4"
+      }
+    },
+    {
+      "type": {
+        "text": "Passing Touchdown",
+        "abbreviation": "TD"
+      },
+      "text": "Tee Higgins 31 Yd pass from Joe Burrow (Evan McPherson Kick)",
+      "period": {
+        "number": 2
+      },
+      "clock": {
+        "displayValue": "1:55"
+      },
+      "team": {
+        "id": "4"
+      }
+    },
+    {
+      "type": {
+        "text": "Rushing Touchdown",
+        "abbreviation": "TD"
+      },
+      "text": "Jacory Croskey-Merritt 1 Yd Rush (Drew Stevens Kick)",
+      "period": {
+        "number": 2
+      },
+      "clock": {
+        "displayValue": "0:12"
+      },
+      "team": {
+        "id": "28"
+      }
+    },
+    {
+      "type": {
+        "text": "Field Goal Good",
+        "abbreviation": "FG"
+      },
+      "text": "Drew Stevens 36 Yd Field Goal",
+      "period": {
+        "number": 3
+      },
+      "clock": {
+        "displayValue": "11:47"
+      },
+      "team": {
+        "id": "28"
+      }
+    },
+    {
+      "type": {
+        "text": "Passing Touchdown",
+        "abbreviation": "TD"
+      },
+      "text": "Colbie Young 4 Yd pass from Joe Burrow (Evan McPherson Kick)",
+      "period": {
+        "number": 3
+      },
+      "clock": {
+        "displayValue": "7:04"
+      },
+      "team": {
+        "id": "4"
+      }
+    },
+    {
+      "type": {
+        "text": "Field Goal Good",
+        "abbreviation": "FG"
+      },
+      "text": "Drew Stevens 40 Yd Field Goal ",
+      "period": {
+        "number": 3
+      },
+      "clock": {
+        "displayValue": "2:36"
+      },
+      "team": {
+        "id": "28"
+      }
+    },
+    {
+      "type": {
+        "text": "Field Goal Good",
+        "abbreviation": "FG"
+      },
+      "text": "Drew Stevens 25 Yd Field Goal",
+      "period": {
+        "number": 4
+      },
+      "clock": {
+        "displayValue": "10:32"
+      },
+      "team": {
+        "id": "28"
+      }
+    },
+    {
+      "type": {
+        "text": "Field Goal Good",
+        "abbreviation": "FG"
+      },
+      "text": "Drew Stevens 41 Yd Field Goal",
+      "period": {
+        "number": 4
+      },
+      "clock": {
+        "displayValue": "2:26"
+      },
+      "team": {
+        "id": "28"
+      }
+    },
+    {
+      "type": {
+        "text": "Field Goal Good",
+        "abbreviation": "FG"
+      },
+      "text": "Evan McPherson 56 Yd Field Goal",
+      "period": {
+        "number": 4
+      },
+      "clock": {
+        "displayValue": "0:46"
+      },
+      "team": {
+        "id": "4"
+      }
+    },
+    {
+      "type": {
+        "text": "Field Goal Good",
+        "abbreviation": "FG"
+      },
+      "text": "Drew Stevens 26 Yd Field Goal ",
+      "period": {
+        "number": 4
+      },
+      "clock": {
+        "displayValue": "0:00"
+      },
+      "team": {
+        "id": "28"
+      }
+    }
+  ]
+}
