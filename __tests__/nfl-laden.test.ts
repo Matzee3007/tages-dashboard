@@ -131,6 +131,7 @@ test("baut Woche, Partien mit Plays, spielfreie Teams und Tabellen", async () =>
     10,
   ]);
   expect(daten.meinTeam).toEqual(["26"]);
+  expect(daten.divisionName).toBe("NFC West");
   expect(daten.zonen).toEqual(EINSTELLUNG.zonen);
 });
 

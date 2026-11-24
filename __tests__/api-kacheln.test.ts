@@ -23,6 +23,7 @@ beforeEach(() => {
     tage: [],
     partien: [],
     spielfrei: [],
+    divisionName: "NFC West",
     division: null,
     conference: null,
     meinTeam: [],

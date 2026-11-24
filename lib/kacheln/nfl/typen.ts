@@ -21,6 +21,8 @@ export type NflDaten = {
   tage: string[];
   partien: Partie[];
   spielfrei: TeamStand[];
+  // Name der Division von Mein Team wie bei ESPN, z. B. „NFC West“. Die Conference heißt nach seinem ersten Wort.
+  divisionName: string;
   division: NflZeile[] | null;
   conference: (NflZeile | null)[] | null;
   meinTeam: string[];

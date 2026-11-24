@@ -148,6 +148,7 @@ export async function ladeNfl(
     tage: tageVon(partien),
     partien: sortierePartien(partien, einstellung.meinTeam),
     spielfrei: stand.spielfrei,
+    divisionName: einstellung.division,
     ...tabellen,
     meinTeam: einstellung.meinTeam,
     zonen: einstellung.zonen,

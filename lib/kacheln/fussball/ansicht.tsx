@@ -9,10 +9,10 @@ import type {
 import { spieltagTag } from "@/lib/kacheln/fussball/spieltag";
 import { datum, tageText, uhrzeit } from "@/lib/zeit";
 
-const MEIN_TEAM_GRUND = "bg-akzent/10";
+export const MEIN_TEAM_GRUND = "bg-akzent/10";
 
 // Direkt von ESPN, ohne next/image (Projektvision: Logos lädt der Browser beim Anbieter). Fehlt das Bild, bleibt der Platz.
-function Logo({ url }: { url: string | null }) {
+export function Logo({ url }: { url: string | null }) {
   if (!url) return <span aria-hidden className="size-5 shrink-0" />;
   return (
     // eslint-disable-next-line @next/next/no-img-element
@@ -31,7 +31,7 @@ function Logo({ url }: { url: string | null }) {
 }
 
 // heim: Name vor dem Logo, rechtsbündig zum Feld hin (Mock G).
-function Team({
+export function Team({
   team,
   mein,
   heim = false,
@@ -205,7 +205,9 @@ export function PartieZeile({
 }
 
 // Aufeinanderfolgende Partien desselben deutschen Tages unter einer Tageszeile, Schlüssel wie beim Sortieren.
-function nachTagen(partien: Partie[]): { tag: string; partien: Partie[] }[] {
+export function nachTagen(
+  partien: Partie[],
+): { tag: string; partien: Partie[] }[] {
   const tage: { tag: string; partien: Partie[] }[] = [];
   for (const partie of partien) {
     const tag = spieltagTag(partie);
@@ -216,7 +218,7 @@ function nachTagen(partien: Partie[]): { tag: string; partien: Partie[] }[] {
   return tage;
 }
 
-function zoneVon(zonen: Zone[], platz: number): Zone | undefined {
+export function zoneVon(zonen: Zone[], platz: number): Zone | undefined {
   return zonen.find((zone) => platz >= zone.von && platz <= zone.bis);
 }
 
@@ -234,7 +236,7 @@ function grenzeNach(
   );
 }
 
-function Legende({ zonen }: { zonen: Zone[] }) {
+export function Legende({ zonen }: { zonen: Zone[] }) {
   if (zonen.length === 0) return null;
   return (
     <ul
