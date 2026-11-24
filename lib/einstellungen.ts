@@ -53,7 +53,17 @@ export type FussballEinstellung = KachelBasis & {
       }
   );
 
-export type KachelEinstellung = KiNewsEinstellung | FussballEinstellung;
+// NFL von ESPN: division und conference wie in der Tabelle von ESPN benannt, zonen nach Playoff-Seed (Plan NFL).
+export type NflEinstellung = KachelBasis & {
+  art: "nfl";
+  meinTeam: string[];
+  division: string;
+  conference: string;
+  zonen: Zone[];
+};
+
+export type KachelEinstellung =
+  KiNewsEinstellung | FussballEinstellung | NflEinstellung;
 
 // Teams der Bundesliga mit deutschem Kurznamen nach der id von ESPN, Saison 2026/27 (Projektvision, Phase 3).
 export const TEAMS_BUNDESLIGA: Team[] = [
@@ -203,6 +213,21 @@ export const KACHELN: KachelEinstellung[] = [
     zonen: [
       { von: 1, bis: 8, name: "Achtelfinale", farbe: "#4CC38A" },
       { von: 9, bis: 24, name: "Play-offs", farbe: "#22B8CF" },
+    ],
+  },
+  // 26 sind die Seattle Seahawks bei ESPN. Zonen nach Playoff-Seed: 1–4 Division-Sieger, 5–7 Wildcard (Plan NFL).
+  {
+    id: "nfl",
+    art: "nfl",
+    titel: "NFL",
+    aussehen: { farbe: "#2F5BB7", kuerzel: "NFL" },
+    gruppe: "Sport",
+    meinTeam: ["26"],
+    division: "NFC West",
+    conference: "National Football Conference",
+    zonen: [
+      { von: 1, bis: 4, name: "Division-Sieger", farbe: "#4C8DF6" },
+      { von: 5, bis: 7, name: "Wildcard", farbe: "#22B8CF" },
     ],
   },
   {

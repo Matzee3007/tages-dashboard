@@ -2,6 +2,7 @@ import type { Aussehen } from "@/lib/einstellungen";
 import { fussballKurz, type TeamKurz } from "@/lib/kacheln/fussball/kurz";
 import type { Partie } from "@/lib/kacheln/fussball/typen";
 import { kiNewsKurz, type NeueMeldung } from "@/lib/kacheln/ki-news/kurz";
+import { nflKurz } from "@/lib/kacheln/nfl/kurz";
 import { reiterVon } from "@/lib/kacheln/reiter";
 import type { KachelAnzeige } from "@/lib/kacheln/typen";
 
@@ -16,8 +17,10 @@ export type Herkunft = {
 // meinTeam: die Teams der Kachel, damit die Partie in „Jetzt live“ hervorgehoben wird wie in der Kachel.
 export type LiveEintrag = Herkunft & { partie: Partie; meinTeam: string[] };
 
+// art: Kennungen von ESPN gelten nur innerhalb einer Sportart, die NFL-26 ist nicht der Fußball-Club 26.
 export type MeinTeamEintrag = {
   id: string;
+  art: "fussball" | "nfl";
   name: string;
   logo: string | null;
   wettbewerbe: (Herkunft & TeamKurz)[];
@@ -52,8 +55,13 @@ export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht {
     if (kachel.fehler) ergebnis.fehler.push(herkunft);
     if (!kachel.daten) continue;
     switch (kachel.daten.art) {
-      case "fussball": {
-        const kurz = fussballKurz(kachel.daten);
+      // Fußball und NFL liefern dieselbe Form der Kurzfassung.
+      case "fussball":
+      case "nfl": {
+        const kurz =
+          kachel.daten.art === "nfl"
+            ? nflKurz(kachel.daten)
+            : fussballKurz(kachel.daten);
         const { meinTeam } = kachel.daten;
         ergebnis.live.push(
           ...kurz.live.map((partie) => ({
@@ -63,7 +71,10 @@ export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht {
           })),
         );
         for (const team of kurz.meinTeam) {
-          const bekannt = ergebnis.meinTeam.find(({ id }) => id === team.id);
+          const art = kachel.daten.art;
+          const bekannt = ergebnis.meinTeam.find(
+            (eintrag) => eintrag.id === team.id && eintrag.art === art,
+          );
           const eintrag = { ...herkunft, ...team };
           if (bekannt) {
             bekannt.wettbewerbe.push(eintrag);
@@ -73,6 +84,7 @@ export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht {
           } else
             ergebnis.meinTeam.push({
               id: team.id,
+              art,
               name: team.name,
               logo: team.logo,
               wettbewerbe: [eintrag],

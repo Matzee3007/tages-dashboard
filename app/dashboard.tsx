@@ -9,6 +9,7 @@ import { Heute } from "@/lib/kacheln/heute";
 import { gruppiere } from "@/lib/kacheln/gruppen";
 import { FehlerHinweis, Kachel } from "@/lib/kacheln/kachel";
 import { KiNewsAnsicht } from "@/lib/kacheln/ki-news/ansicht";
+import { NflAnsicht } from "@/lib/kacheln/nfl/ansicht";
 import { HEUTE, reiterListe, reiterVon } from "@/lib/kacheln/reiter";
 import { ReiterLeiste } from "@/lib/kacheln/reiter-leiste";
 import { neuerStand } from "@/lib/kacheln/stand";
@@ -38,6 +39,8 @@ function KachelInhalt({ daten, ebene }: { daten: KachelDaten; ebene: 3 | 4 }) {
       return <KiNewsAnsicht daten={daten} />;
     case "fussball":
       return <FussballAnsicht daten={daten} ebene={ebene} />;
+    case "nfl":
+      return <NflAnsicht daten={daten} ebene={ebene} />;
     // Eine seit dem letzten Deploy offene Seite kennt eine neue Kachel-Art noch nicht.
     default:
       return (

@@ -138,10 +138,9 @@ test("dasselbe Team aus mehreren Wettbewerben steht einmal, mit je einem Eintrag
     ["359", ["premier-league", "champions-league"]],
   ]);
   expect(ergebnis.meinTeam[0]).toMatchObject({ name: "Team 132" });
-  expect(ergebnis.meinTeam[0].wettbewerbe[0].platz).toMatchObject({
-    platz: 1,
-    punkte: 31,
-  });
+  expect(ergebnis.meinTeam[0].wettbewerbe[0].platz?.text).toBe(
+    "Platz 1 · 31 Pkt",
+  );
 });
 
 test("neue KI-News mit Reiter, Kacheln ohne Daten werden übersprungen", () => {
@@ -221,4 +220,73 @@ test("Live-Einträge tragen Mein Team ihrer Kachel", () => {
     JETZT,
   );
   expect(ergebnis.live[0].meinTeam).toEqual(["132"]);
+});
+
+test("eine laufende NFL-Partie steht in Jetzt live, die Seahawks unter Mein Team", () => {
+  const nfl: KachelAnzeige = {
+    id: "nfl",
+    titel: "NFL",
+    aussehen: { farbe: "#2F5BB7", kuerzel: "NFL" },
+    gruppe: "Sport",
+    daten: {
+      art: "nfl",
+      titel: "Woche 12",
+      tage: [],
+      partien: [partie("nfl-1", "laeuft", "26", "14")],
+      spielfrei: [],
+      divisionName: "NFC West",
+      division: null,
+      conference: null,
+      meinTeam: ["26"],
+      zonen: [],
+    },
+    stand: JETZT.toISOString(),
+    fehler: false,
+  };
+  const ergebnis = uebersicht([nfl], JETZT);
+  expect(ergebnis.live.map((e) => [e.kachelId, e.reiter, e.partie.id])).toEqual(
+    [["nfl", "Sport", "nfl-1"]],
+  );
+  expect(ergebnis.live[0].meinTeam).toEqual(["26"]);
+  expect(
+    ergebnis.meinTeam.map((t) => [t.id, t.wettbewerbe[0].kachelId]),
+  ).toEqual([["26", "nfl"]]);
+});
+
+test("Mein Team aus NFL und Fußball mit gleicher Kennung bleibt getrennt", () => {
+  const nfl: KachelAnzeige = {
+    id: "nfl",
+    titel: "NFL",
+    aussehen: { farbe: "#2F5BB7", kuerzel: "NFL" },
+    gruppe: "Sport",
+    daten: {
+      art: "nfl",
+      titel: "Woche 12",
+      tage: [],
+      partien: [partie("nfl-1", "vorher", "132", "14")],
+      spielfrei: [],
+      divisionName: "NFC West",
+      division: null,
+      conference: null,
+      meinTeam: ["132"],
+      zonen: [],
+    },
+    stand: JETZT.toISOString(),
+    fehler: false,
+  };
+  const ergebnis = uebersicht(
+    [
+      fussball(
+        "bundesliga",
+        "BL",
+        [partie("bl-1", "laeuft", "132", "28")],
+        ["132"],
+      ),
+      nfl,
+    ],
+    JETZT,
+  );
+  expect(
+    ergebnis.meinTeam.map((t) => t.wettbewerbe.map((w) => w.kachelId)),
+  ).toEqual([["bundesliga"], ["nfl"]]);
 });

@@ -1,0 +1,1158 @@
+{
+  "children": [
+    {
+      "name": "American Football Conference",
+      "children": [
+        {
+          "name": "AFC East",
+          "standings": {
+            "entries": [
+              {
+                "team": {
+                  "id": "2",
+                  "shortDisplayName": "Bills",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/buf.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:45Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 1.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 1.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 9.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "17",
+                  "shortDisplayName": "Patriots",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/ne.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:54Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 5.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 8.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 5.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "20",
+                  "shortDisplayName": "Jets",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:55Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 8.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 12.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 3.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "15",
+                  "shortDisplayName": "Dolphins",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/mia.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:53Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 9.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 15.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "AFC North",
+          "standings": {
+            "entries": [
+              {
+                "team": {
+                  "id": "4",
+                  "shortDisplayName": "Bengals",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/cin.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:46Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 4.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 7.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "5",
+                  "shortDisplayName": "Browns",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/cle.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:47Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 4.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 6.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 6.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "23",
+                  "shortDisplayName": "Steelers",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/pit.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:56Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 4.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 7.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 6.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "33",
+                  "shortDisplayName": "Ravens",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/bal.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:44Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 7.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 11.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 4.0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "AFC South",
+          "standings": {
+            "entries": [
+              {
+                "team": {
+                  "id": "30",
+                  "shortDisplayName": "Jaguars",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/jax.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:50Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 7.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "34",
+                  "shortDisplayName": "Texans",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/hou.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:50Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 6.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 9.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 4.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "11",
+                  "shortDisplayName": "Colts",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/ind.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:50Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 8.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 13.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 3.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "10",
+                  "shortDisplayName": "Titans",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/ten.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2026-03-20T19:56Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 9.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 16.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "AFC West",
+          "standings": {
+            "entries": [
+              {
+                "team": {
+                  "id": "7",
+                  "shortDisplayName": "Broncos",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/den.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:48Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 8.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "12",
+                  "shortDisplayName": "Chiefs",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/kc.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:51Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 5.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 8.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "13",
+                  "shortDisplayName": "Raiders",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/lv.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-09-22T22:51Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 7.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 10.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 4.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "24",
+                  "shortDisplayName": "Chargers",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/lac.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:52Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 9.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 14.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "National Football Conference",
+      "children": [
+        {
+          "name": "NFC East",
+          "standings": {
+            "entries": [
+              {
+                "team": {
+                  "id": "19",
+                  "shortDisplayName": "Giants",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:55Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 1.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 6.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "6",
+                  "shortDisplayName": "Cowboys",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/dal.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:47Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 6.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 10.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 5.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "28",
+                  "shortDisplayName": "Commanders",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:58Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 5.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 11.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 1.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 4.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "21",
+                  "shortDisplayName": "Eagles",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/phi.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:55Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 7.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 15.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 3.0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "NFC North",
+          "standings": {
+            "entries": [
+              {
+                "team": {
+                  "id": "8",
+                  "shortDisplayName": "Lions",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/det.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:48Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 8.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "3",
+                  "shortDisplayName": "Bears",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:46Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 5.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 8.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "16",
+                  "shortDisplayName": "Vikings",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/min.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2023-08-24T19:26Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 6.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 7.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "9",
+                  "shortDisplayName": "Packers",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/gb.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-10-28T18:22Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 4.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 7.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 6.0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "NFC South",
+          "standings": {
+            "entries": [
+              {
+                "team": {
+                  "id": "29",
+                  "shortDisplayName": "Panthers",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/car.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:45Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 5.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 4.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 5.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "27",
+                  "shortDisplayName": "Buccaneers",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/tb.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:57Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 7.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 12.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 3.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "1",
+                  "shortDisplayName": "Falcons",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/atl.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:44Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 7.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 13.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 3.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "18",
+                  "shortDisplayName": "Saints",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/no.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:54Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 7.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 14.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 3.0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "NFC West",
+          "standings": {
+            "entries": [
+              {
+                "team": {
+                  "id": "25",
+                  "shortDisplayName": "49ers",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/sf.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:56Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 1.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 1.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 9.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "26",
+                  "shortDisplayName": "Seahawks",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:57Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 4.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 8.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 6.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "14",
+                  "shortDisplayName": "Rams",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/lar.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2026-04-24T14:36Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 4.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 9.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 6.0
+                  }
+                ]
+              },
+              {
+                "team": {
+                  "id": "22",
+                  "shortDisplayName": "Cardinals",
+                  "logos": [
+                    {
+                      "href": "https://a.espncdn.com/i/teamlogos/nfl/500/ari.png",
+                      "width": 500,
+                      "height": 500,
+                      "alt": "",
+                      "rel": ["full", "default"],
+                      "lastUpdated": "2024-06-25T18:43Z"
+                    }
+                  ]
+                },
+                "stats": [
+                  {
+                    "name": "losses",
+                    "value": 8.0
+                  },
+                  {
+                    "name": "playoffSeed",
+                    "value": 16.0
+                  },
+                  {
+                    "name": "ties",
+                    "value": 0.0
+                  },
+                  {
+                    "name": "wins",
+                    "value": 3.0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

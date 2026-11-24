@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mock: Kachel NFL (Tabelle A gestapelt, B umschaltbar)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:#5f656e;font-family:system-ui,sans-serif;line-height:1.35;color:#111}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid #8fc1ff;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Mock-Rahmen (nicht Teil des Entwurfs) ---------- */
+.mock-kopf{background:#262a31;color:#e9ecf0;padding:16px 20px 14px;display:flex;flex-direction:column;gap:8px}
+.mock-kopf h1{font-size:18px;font-weight:600}
+.mock-kopf p{font-size:13.5px;color:#b5bcc6;max-width:980px}
+.mock-kopf .beispiel{display:inline-block;background:#ffd166;color:#1f232a;font-weight:600;border-radius:4px;padding:0 6px;margin-right:6px}
+.mock-kopf nav{display:flex;flex-wrap:wrap;gap:6px}
+.mock-kopf nav a{border:1px solid #4a505c;border-radius:8px;min-height:36px;padding:0 10px;display:inline-flex;align-items:center;font-size:13px}
+.variante{padding:34px 20px 20px;max-width:1240px;margin:0 auto}
+.v-titel{color:#fff;margin-bottom:14px}
+.v-titel h2{font-size:24px;font-weight:650}
+.v-titel p{font-size:14.5px;color:#eef0f3;max-width:860px;margin-top:4px}
+.etikett{font-size:12.5px;color:#e2e6ec;margin:18px 0 6px;font-weight:600}
+.etikett span{font-weight:400;color:#c5cbd4}
+.mac-huelle{width:100%;overflow:hidden}
+.mac{width:1200px;border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35);transform-origin:0 0;background:#0F1318}
+.fenster{height:30px;display:flex;align-items:center;gap:8px;padding:0 12px;background:#1d2128;border-bottom:1px solid #000}
+.fenster i{width:12px;height:12px;border-radius:50%;background:#ff5f57}.fenster i:nth-child(2){background:#febc2e}.fenster i:nth-child(3){background:#28c840}
+.fenster span{flex:1;text-align:center;font-size:12px;color:#8a919c;margin-right:52px}
+.handys{display:flex;flex-wrap:wrap;gap:28px 40px;align-items:flex-start}
+.handy-platz{display:flex;flex-direction:column}
+.handy{width:410px;border:10px solid #07090c;border-radius:50px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35);background:#0F1318}
+.urteil{margin-top:22px;background:#2b3038;color:#e9ecf0;border-radius:12px;padding:14px 18px;font-size:14.5px;max-width:980px;display:grid;gap:6px}
+.urteil b{color:#fff}
+@media (max-width:460px){
+  .variante{padding:28px 0 16px}
+  .v-titel,.etikett,.urteil{margin-left:14px;margin-right:14px}
+  .mac-huelle{padding:0 14px}
+  .handys{gap:28px}
+  .handy-platz{width:100%}
+  .handy{width:100%;border:0;border-radius:0}
+}
+
+/* ================= Aussehen G (aus den Mocks 2026-11-17 und 2026-11-23) ================= */
+.vg{--seite:#0F1318;--karte:#1A1F27;--karte2:#222831;--linie:#2A313B;--grenze:#4A5260;--text:#E8EBF0;--ged:#939CAA;--rauch:#6C7583;--or:#FF8A3D;--or-grund:rgba(255,138,61,.10);--info:#86ABF5;--lese:#C9D0DA;--kz-grund:#2C333E;--kz-text:#C3CAD5;
+  background:var(--seite);color:var(--text);font-family:Commissioner,system-ui,sans-serif;font-weight:400;line-height:1.4;font-variant-numeric:tabular-nums}
+.inhalt{container:g / inline-size}
+.kz{display:inline-grid;place-items:center;border-radius:50%;flex-shrink:0;font-style:normal;font-weight:650;background:var(--kz-grund);color:var(--kz-text);width:22px;height:22px;font-size:7px;letter-spacing:.02em;font-family:system-ui,sans-serif}
+.name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.puls{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--or);animation:puls 1.6s ease-in-out infinite;flex-shrink:0}
+@keyframes puls{50%{opacity:.3}}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13.5px}
+th{font-size:11.5px;font-weight:500;color:var(--rauch);text-align:right;padding-bottom:4px}
+th.t-team{text-align:left}
+td{height:32px;padding:3px 0}
+td.pl{width:36px;color:var(--ged);font-weight:600;font-size:12.5px}
+td.pl span{display:flex;align-items:center;gap:9px}
+td.pl span::before{content:"";width:3px;height:18px;border-radius:2px;background:var(--z,transparent)}
+td.t-team{max-width:0}
+td.t-team>span{display:flex;align-items:center;gap:8px;min-width:0}
+td.z{width:34px;text-align:right;color:var(--ged)}
+td.pk{width:36px;text-align:right;font-weight:720}
+tr.mein td{background:var(--or-grund)}
+tr.mein .name{color:var(--or);font-weight:700}
+tr.grenze td{border-bottom:1px solid var(--grenze)}
+tr.luecke td{height:18px;padding:0;text-align:center;color:var(--rauch);letter-spacing:.3em;font-size:12px}
+.legende{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:11.5px;color:var(--ged);margin-top:10px}
+.legende span{display:inline-flex;align-items:center;gap:6px}
+.legende i{width:8px;height:8px;border-radius:2px;background:var(--z)}
+
+.vg .dash{padding:26px 28px 40px;display:flex;flex-direction:column;gap:30px}
+.vg .g-kopf{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px 16px}
+.vg .g-tag{font-size:15px;font-weight:600;color:var(--ged)}
+.vg .g-datum{font-size:34px;font-weight:780;letter-spacing:-.025em;line-height:1.05}
+.vg .g-rechts{display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--ged)}
+.vg .g-abm{min-height:44px;padding:0 18px;border-radius:22px;background:var(--karte);color:var(--text);font-weight:600}
+.vg .g-raster{display:grid;gap:16px;align-items:start}
+@container g (min-width:900px){.vg .g-raster{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.vg .g-karte{background:var(--karte);border-radius:16px;overflow:hidden;min-width:0}
+.vg .g-kk{display:flex;align-items:center;gap:12px;padding:12px 4px 12px 14px;min-height:58px}
+.vg .g-marke{width:34px;height:34px;border-radius:10px;background:var(--c);color:#fff;font-size:12.5px;font-weight:800;display:grid;place-items:center;flex-shrink:0;letter-spacing:-.01em}
+.vg .g-marke.drei{font-size:11px;letter-spacing:-.02em}
+.vg .g-kk>div{flex:1;min-width:0}
+.vg .g-kk h3{font-size:16.5px;font-weight:740;letter-spacing:-.01em;line-height:1.2}
+.vg .g-kk p{font-size:12.5px;color:var(--ged)}
+.vg .neu-laden{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;font-size:18px;color:var(--ged);flex-shrink:0}
+.vg .live-marke{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--or);background:var(--or-grund);border-radius:20px;padding:3px 10px;white-space:nowrap}
+.vg .g-tagzeile{background:var(--karte2);padding:6px 14px;font-size:12.5px;font-weight:650;color:var(--ged)}
+.vg .g-p{display:grid;grid-template-columns:36px minmax(0,1fr) 58px minmax(0,1fr);column-gap:8px;align-items:center;padding:9px 12px 9px 6px;min-height:52px;border-top:1px solid var(--linie)}
+.vg .g-tagzeile+.g-p,.vg .herkunft+.g-p{border-top:0}
+.vg .g-st{font-size:11.5px;font-weight:600;color:var(--rauch);text-align:center;line-height:1.15;display:flex;flex-direction:column;align-items:center;gap:2px}
+.vg .g-st .ot{font-weight:500;font-size:10.5px}
+.vg .g-p.live .g-st{color:var(--or)}
+.vg .g-team{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px;font-weight:500}
+.vg .g-heim{justify-content:flex-end;text-align:right}
+.vg .g-team.mein .name{color:var(--or);font-weight:720}
+.vg .g-box{justify-self:center;min-width:54px;height:30px;padding:0 6px;border-radius:8px;display:grid;place-items:center;font-size:15.5px;font-weight:760;letter-spacing:.01em;white-space:nowrap}
+.vg .g-box.erg{background:var(--karte2)}
+.vg .g-box.zeit{font-size:13.5px;font-weight:600;color:var(--ged)}
+.vg .g-p.live .g-box{background:var(--or-grund);color:var(--or);box-shadow:inset 0 0 0 1px rgba(255,138,61,.45)}
+.vg .g-p.mein{background:var(--or-grund)}
+.vg .g-tore{grid-row:2;font-size:11.5px;color:var(--rauch);line-height:1.45;margin-top:4px;min-width:0}
+.vg .g-tore.h{grid-column:2;text-align:right}
+.vg .g-tore.g{grid-column:4}
+.vg .g-tore span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vg .g-tab{border-top:1px solid var(--linie);padding:12px 14px 14px}
+.vg .g-tab h4{font-size:13.5px;font-weight:720;margin-bottom:6px}
+.vg .gekuerzt{padding:10px 14px 12px;border-top:1px dashed #3A424E;font-size:12.5px;color:var(--rauch);font-style:italic}
+/* Reiter */
+.reiter-oben{display:flex;gap:4px;background:var(--karte);border-radius:14px;padding:4px;align-self:flex-start}
+.reiter-oben button{min-height:44px;padding:0 16px;border-radius:10px;font-size:14.5px;font-weight:600;color:var(--ged);display:inline-flex;align-items:center;gap:7px}
+.reiter-oben button.an{background:var(--karte2);color:var(--text)}
+.zahl-or{background:var(--or);color:#0F1318;border-radius:9px;padding:0 6px;font-weight:700;font-size:11.5px;line-height:18px}
+.status{height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:15px;font-weight:650;font-family:system-ui,sans-serif}
+.status span{font-size:12px;letter-spacing:.1em;color:var(--ged)}
+.tabbar{display:flex;border-top:1px solid var(--linie);background:rgba(15,19,24,.96);padding:6px 6px 22px}
+.tabbar button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;border-radius:10px;font-size:14.5px;font-weight:600;color:var(--ged)}
+.tabbar button.an{background:var(--karte2);color:var(--text)}
+
+/* ================= Neu: NFL ================= */
+.vg .g-p.nfl{grid-template-columns:36px minmax(0,1fr) 64px minmax(0,1fr)}
+.vg .g-p.nfl .g-box{min-width:60px;font-size:15px}
+.vg .g-p.nfl .g-tore{align-self:start}
+.vg .g-p.nfl .g-tore span{white-space:normal;overflow:visible;line-height:1.35;margin-bottom:3px}
+.vg .g-p.nfl .g-tore b{font-weight:600;color:var(--ged)}
+@container g (min-width:900px){.vg .nfl-karte{grid-column:span 2}.vg .nfl-karte .g-tab>*{max-width:500px}}
+.vg .spielfrei{border-top:1px solid var(--linie);padding:10px 14px;font-size:12.5px;color:var(--ged)}
+.vg .spielfrei b{font-weight:650;color:var(--rauch)}
+.vg .spielfrei.mein{background:var(--or-grund);border-top:0}
+.vg .spielfrei.mein b,.vg .spielfrei .or{color:var(--or);font-weight:700}
+.vg .g-tab h4.zweit{margin-top:18px}
+.vg .g-tab h4 small{font-weight:500;color:var(--ged);font-size:12px;margin-left:6px}
+.vg td.wl{width:46px;text-align:right;font-weight:720}
+.vg td.seed{width:44px;text-align:right;color:var(--ged)}
+/* Schalter (Variante B) */
+.vg .tab-kopf{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.vg .tab-kopf h4{margin-bottom:0}
+.vg .seg{display:inline-flex;background:var(--karte2);border-radius:11px;padding:3px;gap:2px}
+.vg .seg button{min-height:38px;padding:0 13px;border-radius:8px;font-size:13px;font-weight:650;color:var(--ged)}
+.vg .seg button[aria-selected=true]{background:#343C48;color:var(--text)}
+/* Übersicht „Heute“ (wie lib/kacheln/heute.tsx) */
+.vg .heute-raster{display:grid;gap:16px;align-items:start}
+@container g (min-width:900px){.vg .heute-raster{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.vg .heute-raster .links{display:grid;gap:16px;min-width:0}
+.vg .h-marke{background:var(--karte2);color:var(--or)}
+.vg .herkunft{display:flex;align-items:center;gap:8px;width:100%;min-height:32px;background:var(--karte2);padding:6px 14px;font-size:12.5px;font-weight:650;color:var(--ged)}
+.vg .herkunft .t{flex:1}
+.vg .mm{display:inline-grid;place-items:center;height:18px;min-width:22px;padding:0 4px;border-radius:5px;background:var(--c);color:#fff;font-size:10px;font-weight:800}
+.vg .weiter{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:0 14px;border-top:1px solid var(--linie);font-size:13.5px;font-weight:600;color:var(--ged)}
+.vg .team{border-top:1px solid var(--linie)}
+.vg .team:first-of-type{border-top:0}
+.vg .team>p.tn{padding:12px 14px 6px;font-size:15px;font-weight:740}
+.vg .chips{display:flex;flex-wrap:wrap;gap:8px;padding:4px 14px 12px}
+.vg .chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:var(--karte2);padding:4px 10px 4px 4px;font-size:12.5px;color:var(--ged)}
+.vg .chip .mm{border-radius:999px}
+.vg .chip strong{color:var(--text);font-weight:700}
+.vg .hinweis{padding:8px 14px 10px;font-size:13px;color:var(--ged)}
+.vg .n-kurz{padding:0 14px 8px}
+.vg .n-von{font-size:12px;font-weight:720;color:var(--c);padding-top:8px}
+.vg .n-lead .n-von{font-size:13px;padding-top:0}
+.vg .n-z{border-top:1px solid var(--linie)}
+.vg .n-z b{display:block;font-size:15px;font-weight:600;line-height:1.32;margin:3px 0 2px}
+.vg .n-lead b{display:block;font-size:20px;font-weight:720;line-height:1.24;margin:4px 0 4px}
+.vg .alter{font-size:12.5px;color:var(--ged);padding-bottom:8px;display:flex;gap:8px}
+.vg .neu{color:var(--or);font-weight:650}
+.vg .neu::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--or);margin-right:6px;vertical-align:.08em}
+
+@container g (max-width:600px){
+  .vg .dash{padding:16px 14px 28px;gap:26px}
+  .vg .g-datum{font-size:30px}
+  .vg .g-kopf .g-abm{display:none}
+  .vg .g-p{grid-template-columns:32px minmax(0,1fr) 52px minmax(0,1fr);column-gap:6px;padding-right:10px}
+  .vg .g-p.nfl{grid-template-columns:34px minmax(0,1fr) 58px minmax(0,1fr)}
+  .vg .g-p.nfl .g-box{min-width:56px;font-size:14.5px}
+  .vg .g-team{font-size:13.5px;gap:6px}
+  .vg .g-box{min-width:48px}
+}
+</style>
+</head>
+<body>
+<header class="mock-kopf">
+  <h1>Mock: neue Kachel NFL im Reiter Sport und in „Heute“ (Aussehen G, Struktur D)</h1>
+  <p><span class="beispiel">Beispieldaten</span>Alle Partien, Ergebnisse, Scoring-Plays, Tabellen und Meldungen sind erfunden. Stand angenommen: Sonntag, 29. November 2026, 23:38 Uhr deutscher Zeit. NFL Woche 12: Seahawks – Rams (Anstoß 22:05) läuft im 3. Viertel, 11 Partien sind beendet, 2 kommen in der Nacht (Mo 02:20, Di 02:15 deutscher Zeit). Mein Team: FC Bayern, Arsenal, Seattle Seahawks. Teams als Kürzel-Kreise (ESPN-Kürzel), in der App stehen dort die Logos.</p>
+  <p>Offene Frage dieses Mocks ist nur die Tabelle: <b>A</b> zeigt Division und Conference untereinander, <b>B</b> schaltet zwischen beiden um. Spieltag, Live-Anzeige und „Heute“ sind in beiden gleich. Die Fußball-Kacheln sind auf dem iPhone gekürzt, damit die NFL-Kachel ohne langes Scrollen zu sehen ist. Am Mac reicht die NFL-Kachel über zwei Spalten: In einer Spalte bräche jeder Scoring-Play in zwei bis drei Zeilen um (Annahme des Mocks, nicht entschieden).</p>
+  <nav aria-label="Abschnitte"><a href="#vA">A gestapelt</a><a href="#vB">B umschaltbar</a><a href="#vH">Heute</a><a href="#vS">Mein Team spielfrei</a></nav>
+</header>
+<main id="buehne"></main>
+
+<script>
+/* ---------------- Beispieldaten ---------------- */
+const STAND = "23:38";
+const TAG = {Do:"Donnerstag, 26. November",Fr:"Freitag, 27. November",Sa:"Samstag, 28. November",So:"Sonntag, 29. November",Mo:"Montag, 30. November",Di:"Dienstag, 1. Dezember",Di8:"Dienstag, 8. Dezember",Mi9:"Mittwoch, 9. Dezember"};
+const KZ = {"Man City":"MCI","Man United":"MUN","Aston Villa":"AVL","Crystal Palace":"CRY","Real Madrid":"RMA","Inter Milan":"INT","Club Brugge":"BRU","Leverkusen":"B04","Gladbach":"BMG","Frankfurt":"SGE","Hoffenheim":"TSG","Tottenham":"TOT","Nottingham":"NFO","Bayern":"FCB","Dortmund":"BVB","Leipzig":"RBL","Stuttgart":"VFB","Liverpool":"LIV","Chelsea":"CHE","Arsenal":"ARS","Brighton":"BHA","Bournemouth":"BOU","Brentford":"BRE","Freiburg":"SCF","Union":"FCU","Atlético":"ATM","Barcelona":"BAR","Sporting":"SCP","Galatasaray":"GAL","Bodo/Glimt":"BOD","FC Porto":"POR","Fenerbahce":"FEN","Elversberg":"SVE","Paderborn":"SCP","Schalke":"S04",
+  "Seahawks":"SEA","Rams":"LAR","49ers":"SF","Cardinals":"ARI","Lions":"DET","Packers":"GB","Cowboys":"DAL","Giants":"NYG","Ravens":"BAL","Bengals":"CIN","Eagles":"PHI","Bears":"CHI","Bills":"BUF","Dolphins":"MIA","Steelers":"PIT","Browns":"CLE","Texans":"HOU","Jaguars":"JAX","Colts":"IND","Patriots":"NE","Falcons":"ATL","Saints":"NO","Panthers":"CAR","Buccaneers":"TB","Vikings":"MIN","Raiders":"LV","Chargers":"LAC","Broncos":"DEN","Chiefs":"KC","Commanders":"WSH","Jets":"NYJ","Titans":"TEN"};
+const kz = n => KZ[n] || n.normalize("NFD").replace(/[̀-ͯ]/g,"").slice(0,3).toUpperCase();
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const ZONEN = {cl:["Champions League","#4C8DF6"],el:["Europa League","#22B8CF"],ecl:["Conference League","#4CC38A"],ab:["Abstieg","#E5484D"],af:["Achtelfinale","#4CC38A"],po:["Play-offs","#22B8CF"],ds:["Division-Sieger","#4C8DF6"],wc:["Wildcard","#22B8CF"]};
+
+// Fußball: [Tag, Zeit, Heim, Gast, Ergebnis, Tore Heim, Tore Gast]
+const FUSSBALL = [
+  {titel:"Bundesliga", marke:"BL", farbe:"#E3343F", mein:["Bayern"], linien:[4,5,6], zonen:[[1,4,"cl"],[5,5,"el"],[6,6,"ecl"]], nr:"12. Spieltag", tage:"Fr 27. bis So 29. November",
+   partien:[["Fr","20:30","Leipzig","Dortmund","1:1",["Openda 30'"],["Guirassy 77'"]],["Sa","15:30","Freiburg","Leverkusen","0:2",[],["Schick 12'","Grimaldo 80'"]],["Sa","15:30","Bremen","Mainz","2:1",["Stage 8'","Grüll 66'"],["Amiri 51'"]],["Sa","15:30","Hoffenheim","Augsburg","3:0",["Kramarić 22', 59'","Hložek 84'"],[]],["Sa","15:30","HSV","Union","1:1",["Königsdörffer 37'"],["Ilić 72'"]],["Sa","18:30","Gladbach","Köln","2:2",["Kleindienst 15', 61'"],["Kaminski 44'","Waldschmidt 88'"]],["So","15:30","Elversberg","Frankfurt","0:1",[],["Burkardt 69'"]],["So","17:30","Bayern","Stuttgart","3:1",["Kane 14', 70'","Musiala 55'"],["Undav 40'"]],["So","19:30","Paderborn","Schalke","1:2",["Bilbija 23'"],["Karaman 50'","Sylla 81'"]]],
+   tabelle:[[1,"Dortmund",12,"+14",27],[2,"Bayern",12,"+13",26],[3,"Hoffenheim",12,"+11",26],[4,"Leverkusen",12,"+9",24],[5,"Leipzig",12,"+9",23],[6,"Frankfurt",12,"+3",20],[7,"Stuttgart",12,"+2",19]]},
+  {titel:"Premier League", marke:"PL", farbe:"#B061D1", mein:["Arsenal"], linien:[4,5], zonen:[[1,4,"cl"],[5,5,"el"]], nr:"13. Spieltag", tage:"Sa 28. bis Mo 30. November",
+   partien:[["Sa","13:30","Everton","Liverpool","1:3",["Beto 58'"],["Salah 11'","Isak 40'","Wirtz 77'"]],["Sa","16:00","Arsenal","Brighton","2:0",["Saka 31'","Gyökeres 64'"],[]],["Sa","16:00","Tottenham","Fulham","1:1",["Kudus 20'"],["Jiménez 83'"]],["Sa","16:00","Leeds","Sunderland","0:0",[],[]],["Sa","18:30","Newcastle","Man City","2:2",["Gordon 9'","Woltemade 71'"],["Haaland 33', 90+1'"]],["So","15:00","Aston Villa","Chelsea","1:2",["Watkins 26'"],["Palmer 48'","João Pedro 79'"]],["So","15:00","Bournemouth","Ipswich","3:1",["Kluivert 6'","Semenyo 39', 70'"],["Hirst 55'"]],["So","17:30","Man United","Brentford","2:1",["Mbeumo 18'","Cunha 74'"],["Thiago 60'"]],["Mo","21:00","Crystal Palace","Nottingham"],["Mo","21:00","Hull","Coventry"]],
+   tabelle:[[1,"Man City",13,"+15",29],[2,"Arsenal",13,"+15",28],[3,"Liverpool",13,"+14",28],[4,"Chelsea",13,"+9",25],[5,"Brighton",13,"+3",21]]},
+  {titel:"Champions League", marke:"CL", farbe:"#5B8DEF", mein:["Bayern","Arsenal"], linien:[8], zonen:[[1,8,"af"],[9,24,"po"]], nr:"Ligaphase, 6. Spieltag", tage:"Di 8. bis Mi 9. Dezember",
+   partien:[["Di8","18:45","Bodo/Glimt","Inter Milan"],["Di8","21:00","Bayern","Sporting"],["Di8","21:00","Napoli","Liverpool"],["Di8","21:00","Leipzig","Barcelona"],["Di8","21:00","Atlético","Club Brugge"],["Mi9","18:45","Galatasaray","Stuttgart"],["Mi9","21:00","Arsenal","Real Madrid"],["Mi9","21:00","Man City","Dortmund"],["Mi9","21:00","FC Porto","Aston Villa"],["Mi9","21:00","Chelsea","Fenerbahce"]],
+   tabelle:[[1,"Liverpool",5,"+12",15],[2,"Arsenal",5,"+9",13],[3,"Real Madrid",5,"+8",12],[4,"Inter Milan",5,"+6",12],null,[7,"Bayern",5,"+4",10],[8,"Man City",5,"+3",10],[9,"Dortmund",5,"+2",10]]},
+];
+
+// NFL Woche 12 (Tage in deutscher Zeit): [Tag, Anstoß, Heim, Gast, Ergebnis, Status, Uhr, Scoring Heim, Scoring Gast, Verlängerung]
+const MEIN = "Seahawks";
+const NFL_PARTIEN = [
+  ["Do","18:30","Lions","Packers",[27,24],"ende","",["Q1 8:03 TD Gibbs 12 Yd Lauf","Q2 3:41 TD St. Brown 9 Yd Pass (Goff)","Q2 0:04 FG Bates 52 Yd","Q3 6:50 FG Bates 45 Yd","Q4 0:21 TD LaPorta 4 Yd Pass (Goff)"],["Q1 2:15 TD Jacobs 3 Yd Lauf","Q2 9:30 FG McManus 41 Yd","Q3 11:02 TD Watson 38 Yd Pass (Love)","Q4 4:12 TD Kraft 15 Yd Pass (Love)"]],
+  ["Do","22:30","Cowboys","Giants",[31,17],"ende","",["Q1 10:20 TD Lamb 22 Yd Pass (Prescott)","Q2 5:05 FG Aubrey 56 Yd","Q2 0:38 TD Pickens 7 Yd Pass (Prescott)","Q3 7:44 TD Williams 2 Yd Lauf","Q4 9:10 TD Ferguson 11 Yd Pass (Prescott)"],["Q1 4:30 FG Gano 33 Yd","Q2 8:12 TD Nabers 45 Yd Pass (Dart)","Q4 2:01 TD Tracy 6 Yd Lauf"]],
+  ["Fr","02:20","Ravens","Bengals",[20,23],"ende","",["Q1 6:44 TD Henry 18 Yd Lauf","Q2 2:10 FG Loop 47 Yd","Q3 9:55 TD Flowers 27 Yd Pass (Jackson)","Q4 5:30 FG Loop 39 Yd"],["Q2 6:17 FG McPherson 38 Yd","Q2 1:55 TD Higgins 31 Yd Pass (Burrow)","Q3 3:08 TD Chase 14 Yd Pass (Burrow)","Q4 8:40 FG McPherson 29 Yd","Q4 0:00 FG McPherson 51 Yd"]],
+  ["Fr","21:00","Eagles","Bears",[24,20],"ende","",["Q1 7:30 TD Barkley 41 Yd Lauf","Q2 0:45 FG Elliott 48 Yd","Q3 4:20 TD Brown 19 Yd Pass (Hurts)","Q4 1:52 TD Hurts 1 Yd Lauf"],["Q1 0:58 TD Odunze 25 Yd Pass (Williams)","Q2 10:05 FG Santos 44 Yd","Q3 12:31 TD Swift 5 Yd Lauf","Q4 6:14 FG Santos 36 Yd"]],
+  ["So","19:00","Bills","Dolphins",[34,13],"ende","",["Q1 9:48 TD Cook 8 Yd Lauf","Q1 1:30 TD Allen 3 Yd Lauf","Q2 4:22 FG Bass 40 Yd","Q3 8:15 TD Kincaid 17 Yd Pass (Allen)","Q4 11:40 TD Shakir 29 Yd Pass (Allen)","Q4 3:05 FG Bass 33 Yd"],["Q2 0:12 FG Sanders 49 Yd","Q3 2:47 TD Waddle 54 Yd Pass (Tagovailoa)","Q4 7:58 FG Sanders 42 Yd"]],
+  ["So","19:00","Steelers","Browns",[16,10],"ende","",["Q1 3:33 FG Boswell 50 Yd","Q2 7:19 TD Metcalf 22 Yd Pass (Rodgers)","Q3 5:41 FG Boswell 37 Yd","Q4 2:28 FG Boswell 44 Yd"],["Q2 1:04 TD Judkins 2 Yd Lauf","Q4 9:12 FG Hopkins 46 Yd"]],
+  ["So","19:00","Texans","Jaguars",[21,24],"ende","",["Q1 5:15 TD Collins 35 Yd Pass (Stroud)","Q3 10:40 TD Mixon 4 Yd Lauf","Q4 3:50 TD Schultz 6 Yd Pass (Stroud)"],["Q1 0:30 TD Thomas Jr. 60 Yd Pass (Lawrence)","Q2 6:02 FG Little 43 Yd","Q3 1:18 TD Etienne 12 Yd Lauf","Q4 0:42 TD Hunter 9 Yd Pass (Lawrence)"]],
+  ["So","19:00","Colts","Patriots",[27,30],"ende","",["Q1 8:20 TD Taylor 15 Yd Lauf","Q2 2:44 TD Pittman 11 Yd Pass (Jones)","Q3 6:06 FG Gay 41 Yd","Q4 1:10 TD Taylor 2 Yd Lauf","Q4 0:03 FG Gay 48 Yd"],["Q1 4:01 FG Borregales 37 Yd","Q2 9:36 TD Henderson 24 Yd Lauf","Q2 0:20 FG Borregales 45 Yd","Q3 0:51 TD Diggs 8 Yd Pass (Maye)","Q4 4:44 TD Maye 6 Yd Lauf","OT 5:19 FG Borregales 33 Yd"],1],
+  ["So","19:00","Falcons","Saints",[17,20],"ende","",["Q1 6:39 TD Robinson 28 Yd Lauf","Q2 3:15 FG Koo 39 Yd","Q4 8:02 TD London 13 Yd Pass (Penix Jr.)"],["Q2 11:20 TD Olave 33 Yd Pass (Shough)","Q3 7:07 TD Kamara 5 Yd Lauf","Q3 0:40 FG Grupe 30 Yd","Q4 0:00 FG Grupe 52 Yd"]],
+  ["So","19:00","Panthers","Buccaneers",[10,28],"ende","",["Q2 4:48 TD McMillan 18 Yd Pass (Young)","Q4 6:30 FG Fitzgerald 40 Yd"],["Q1 7:12 TD Evans 26 Yd Pass (Mayfield)","Q2 0:50 TD Irving 7 Yd Lauf","Q3 9:04 TD Egbuka 41 Yd Pass (Mayfield)","Q4 10:55 TD White 3 Yd Lauf"]],
+  ["So","19:00","Vikings","Raiders",[23,17],"ende","",["Q1 2:22 TD Jefferson 35 Yd Pass (McCarthy)","Q2 5:50 FG Reichard 44 Yd","Q3 8:33 TD Jones 9 Yd Lauf","Q4 7:20 FG Reichard 50 Yd","Q4 1:46 FG Reichard 38 Yd"],["Q1 9:05 FG Carlson 32 Yd","Q2 0:27 TD Bowers 16 Yd Pass (Smith)","Q4 4:10 TD Jeanty 21 Yd Lauf"]],
+  ["So","22:05","Seahawks","Rams",[17,13],"live","Q3 8:42",["Q1 9:12 TD Walker III 4 Yd Lauf","Q2 1:41 TD Smith-Njigba 31 Yd Pass (Darnold)","Q3 12:20 FG Myers 44 Yd"],["Q1 2:40 FG Karty 38 Yd","Q2 7:03 TD Nacua 12 Yd Pass (Stafford)","Q2 0:08 FG Karty 51 Yd"]],
+  ["Mo","02:20","Cardinals","49ers",null,"kommt","",[],[]],
+  ["Di","02:15","Chargers","Broncos",null,"kommt","",[],[]],
+].map(p => ({tag:p[0], zeit:p[1], h:p[2], g:p[3], erg:p[4], st:p[5], uhr:p[6], sH:p[7], sG:p[8], ot:!!p[9]}));
+const SPIELFREI = ["Chiefs","Commanders","Jets","Titans"];
+const NFL = {titel:"NFL", marke:"NFL", farbe:"#2F5BB7", nr:"Woche 12", tage:"Do 26. November bis Di 1. Dezember"};
+// Division: [Platz, Team, W–L, Div, Seed]; Conference: [Seed, Team, W–L, Conf, +/−]
+const NFC_WEST = [[1,"49ers","9–1","3–0",1],[2,"Seahawks","6–4","1–1",8],[3,"Rams","6–4","1–1",9],[4,"Cardinals","3–8","0–3",13]];
+const NFC = [[1,"49ers","9–1","7–1","+98"],null,[6,"Packers","7–4","5–3","+40"],[7,"Cowboys","7–4","6–3","+22"],[8,"Seahawks","6–4","4–3","+31"],[9,"Rams","6–4","4–4","+24"]];
+const seedZone = s => s <= 4 ? "ds" : s <= 7 ? "wc" : null;
+
+const KI = [
+  ["The Decoder","#7FA8AE","Anthropic stellt neues Modell für Unternehmen vor","vor 40 Min."],
+  ["Hugging Face","#F2C14E","SmolLM4: small models that reason step by step","vor 1 Std."],
+  ["Simon Willison","#B79A6B","Notes on running five Claude Code agents in parallel","vor 2 Std."],
+  ["Claude Updates","#9AAE7E","Claude Code 2.4: background agents for all plans","vor 3 Std."],
+  ["t3n","#6FB38F","KI-Browser im Test: Wie Agenten das Surfen verändern","vor 3 Std."],
+  ["OpenAI","#ECECEC","Introducing GPT-5.5 mini","vor 5 Std."],
+  ["Google DeepMind","#4285F4","Gemini 3 Ultra: thinking at scale","vor 9 Std."],
+];
+
+/* ---------------- Bausteine ---------------- */
+const zoneVon = (w, pl) => { const z = w.zonen.find(([a,b]) => pl >= a && pl <= b); return z ? z[2] : null; };
+const legende = keys => `<p class="legende">${keys.map(k=>`<span style="--z:${ZONEN[k][1]}"><i></i>${ZONEN[k][0]}</span>`).join("")}</p>`;
+const teamZelle = (n, mein) => `<td class="t-team"><span><i class="kz">${kz(n)}</i><span class="name">${esc(n)}</span></span></td>`;
+
+function fbTabelle(w){
+  const t = w.tabelle;
+  const tr = t.map((z,i) => {
+    if (!z) return `<tr class="luecke"><td colspan="5">···</td></tr>`;
+    const zo = zoneVon(w, z[0]), n = t[i+1], grenze = w.linien.includes(z[0]) && n && n[0] === z[0]+1;
+    return `<tr class="${w.mein.includes(z[1])?"mein ":""}${grenze?"grenze":""}"><td class="pl"><span style="${zo?`--z:${ZONEN[zo][1]}`:""}">${z[0]}</span></td>${teamZelle(z[1])}<td class="z">${z[2]}</td><td class="z">${z[3]}</td><td class="pk">${z[4]}</td></tr>`;
+  }).join("");
+  const da = [...new Set(t.filter(Boolean).map(z => zoneVon(w,z[0])).filter(Boolean))];
+  return `<table><thead><tr><th></th><th class="t-team"></th><th>Sp</th><th>+/−</th><th>Pkt</th></tr></thead><tbody>${tr}</tbody></table>${legende(da)}`;
+}
+function fbPartie(w, p, opt = {}){
+  const [tag, zeit, h, g, erg = "", tH = [], tG = []] = p, mH = w.mein.includes(h), mG = w.mein.includes(g);
+  const box = erg ? `<span class="g-box erg">${erg.replace(":"," – ")}</span>` : `<span class="g-box zeit">${zeit}</span>`;
+  const tore = !opt.ohneTore && (tH.length || tG.length) ? `<span class="g-tore h">${tH.map(t=>`<span>${esc(t)}</span>`).join("")}</span><span class="g-tore g">${tG.map(t=>`<span>${esc(t)}</span>`).join("")}</span>` : "";
+  return `<div class="g-p${mH||mG?" mein":""}"><span class="g-st">${erg?"Ende":""}</span>
+    <span class="g-team g-heim${mH?" mein":""}"><span class="name">${esc(h)}</span><i class="kz">${kz(h)}</i></span>${box}
+    <span class="g-team${mG?" mein":""}"><i class="kz">${kz(g)}</i><span class="name">${esc(g)}</span></span>${tore}</div>`;
+}
+const kartenKopf = (marke, farbe, titel, unter, rechts = "") =>
+  `<header class="g-kk"><span class="g-marke${marke.length>2?" drei":""}" style="--c:${farbe}" aria-hidden="true">${marke}</span><div><h3>${titel}</h3><p>${unter}</p></div>${rechts}<button class="neu-laden" aria-label="${titel} aktualisieren">↻</button></header>`;
+function fbKarte(w, gekuerzt){
+  let h = "", tag = "";
+  if (!gekuerzt) for (const p of w.partien){ if (p[0] !== tag){ tag = p[0]; h += `<p class="g-tagzeile">${TAG[tag]}</p>`; } h += fbPartie(w, p); }
+  return `<section class="g-karte">${kartenKopf(w.marke, w.farbe, w.titel, `${w.nr}, ${w.tage}`)}
+    ${gekuerzt ? `<p class="gekuerzt">Spieltag und Tabelle im Mock ausgelassen</p>` : `${h}<div class="g-tab"><h4>Tabelle</h4>${fbTabelle(w)}</div>`}</section>`;
+}
+
+/* NFL */
+function nflPartie(p, opt = {}){
+  const live = p.st === "live", mH = p.h === MEIN, mG = p.g === MEIN;
+  const [viertel, uhr] = p.uhr.split(" ");
+  const st = live ? `<span class="puls" aria-label="live"></span><span>${viertel}</span><span>${uhr}</span>`
+           : p.st === "ende" ? `<span>Ende</span>${p.ot?'<span class="ot">n. V.</span>':""}` : "";
+  const box = p.erg ? `<span class="g-box erg">${p.erg[0]} – ${p.erg[1]}</span>` : `<span class="g-box zeit">${p.zeit}</span>`;
+  const play = t => { const [q, u, ...r] = t.split(" "); return `<span><b>${q} ${u}</b> ${esc(r.join(" "))}</span>`; };
+  const plays = !opt.ohnePlays && (p.sH.length || p.sG.length)
+    ? `<span class="g-tore h">${p.sH.map(play).join("")}</span><span class="g-tore g">${p.sG.map(play).join("")}</span>` : "";
+  return `<div class="g-p nfl${mH||mG?" mein":""}${live?" live":""}"><span class="g-st">${st}</span>
+    <span class="g-team g-heim${mH?" mein":""}"><span class="name">${esc(p.h)}</span><i class="kz">${kz(p.h)}</i></span>${box}
+    <span class="g-team${mG?" mein":""}"><i class="kz">${kz(p.g)}</i><span class="name">${esc(p.g)}</span></span>${plays}</div>`;
+}
+function spielfreiZeile(teams, meinFrei){
+  const namen = teams.map(t => t === MEIN ? `<span class="or">${t}</span>` : t).join(", ");
+  return meinFrei ? `<p class="spielfrei mein"><b>Mein Team spielfrei:</b> ${namen}</p>` : `<p class="spielfrei"><b>Spielfrei:</b> ${namen}</p>`;
+}
+function nflSpieltag(){
+  let h = "", tag = "";
+  for (const p of NFL_PARTIEN){ if (p.tag !== tag){ tag = p.tag; h += `<p class="g-tagzeile">${TAG[tag]}</p>`; } h += nflPartie(p); }
+  return h + spielfreiZeile(SPIELFREI);
+}
+function divTabelle(){
+  const tr = NFC_WEST.map(z => { const zo = seedZone(z[4]);
+    return `<tr class="${z[1]===MEIN?"mein":""}"><td class="pl"><span style="${zo?`--z:${ZONEN[zo][1]}`:""}">${z[0]}</span></td>${teamZelle(z[1])}<td class="wl">${z[2]}</td><td class="seed">${z[3]}</td><td class="seed">${z[4]}</td></tr>`; }).join("");
+  return `<table><thead><tr><th></th><th class="t-team"></th><th>W–L</th><th>Div</th><th>Seed</th></tr></thead><tbody>${tr}</tbody></table>`;
+}
+function confTabelle(){
+  const tr = NFC.map((z,i) => {
+    if (!z) return `<tr class="luecke"><td colspan="5">···</td></tr>`;
+    const zo = seedZone(z[0]), n = NFC[i+1], grenze = z[0] === 7 && n && n[0] === 8;
+    return `<tr class="${z[1]===MEIN?"mein ":""}${grenze?"grenze":""}"><td class="pl"><span style="${zo?`--z:${ZONEN[zo][1]}`:""}">${z[0]}</span></td>${teamZelle(z[1])}<td class="wl">${z[2]}</td><td class="seed">${z[3]}</td><td class="seed">${z[4]}</td></tr>`; }).join("");
+  return `<table><thead><tr><th></th><th class="t-team"></th><th>W–L</th><th>Conf</th><th>+/−</th></tr></thead><tbody>${tr}</tbody></table>`;
+}
+const NFL_LEGENDE = legende(["ds","wc"]);
+function nflTabelleA(){
+  return `<div class="g-tab"><h4>NFC West</h4>${divTabelle()}<h4 class="zweit">NFC<small>Playoff-Seeds</small></h4>${confTabelle()}${NFL_LEGENDE}</div>`;
+}
+let segNr = 0;
+function nflTabelleB(start = "div"){
+  const id = "seg" + (segNr++), d = start === "div";
+  return `<div class="g-tab" data-seg="${id}"><div class="tab-kopf"><h4>Tabelle</h4>
+    <div class="seg" role="tablist" aria-label="Tabelle wählen"><button role="tab" aria-selected="${d}" data-zeige="div">NFC West</button><button role="tab" aria-selected="${!d}" data-zeige="conf">NFC</button></div></div>
+    <div data-teil="div"${d?"":" hidden"}>${divTabelle()}</div><div data-teil="conf"${d?" hidden":""}>${confTabelle()}</div>${NFL_LEGENDE}</div>`;
+}
+const liveMarke = `<span class="live-marke"><span class="puls"></span>Live</span>`;
+function nflKarte(v){
+  return `<section class="g-karte nfl-karte">${kartenKopf(NFL.marke, NFL.farbe, NFL.titel, `${NFL.nr}, ${NFL.tage}`, liveMarke)}
+    ${nflSpieltag()}${v === "A" ? nflTabelleA() : nflTabelleB()}</section>`;
+}
+
+/* Seite: Kopf, Reiter */
+const datumKopf = () => `<header class="g-kopf"><div><p class="g-tag">Sonntag</p><p class="g-datum">29. November</p></div><div class="g-rechts"><span>Aktualisiert ${STAND}</span><button class="g-abm">Abmelden</button></div></header>`;
+const reiterKnoepfe = an => [["Heute",""],["Sport",'<span class="puls"></span>'],["KI-News",`<span class="zahl-or">${KI.length}</span>`]].map(([n,z]) => `<button class="${n===an?"an":""}">${n}${z}</button>`).join("");
+const reiterOben = an => `<nav class="reiter-oben" aria-label="Bereiche">${reiterKnoepfe(an)}</nav>`;
+const tabbar = an => `<nav class="tabbar" aria-label="Bereiche">${reiterKnoepfe(an)}</nav>`;
+const STATUS = `<div class="status"><b>${STAND}</b><span>▂▄▆ 5G ▮▮▮</span></div>`;
+function mac(inhalt, an){
+  return `<div class="mac-huelle"><div class="mac"><div class="fenster"><i></i><i></i><i></i><span>Tages-Dashboard</span></div>
+    <div class="vg inhalt"><div class="dash">${datumKopf()}${reiterOben(an)}${inhalt}</div></div></div></div>`;
+}
+function handy(inhalt, an){
+  return `<div class="handy"><div class="vg">${STATUS}<div class="inhalt"><div class="dash">${datumKopf()}${inhalt}</div></div>${tabbar(an)}</div></div>`;
+}
+const sportMac = v => `<div class="g-raster">${FUSSBALL.map(w => fbKarte(w)).join("")}${nflKarte(v)}</div>`;
+const sportHandy = v => `<div class="g-raster">${FUSSBALL.map(w => fbKarte(w, true)).join("")}${nflKarte(v)}</div>`;
+
+/* Heute */
+const herkunft = (w, zusatz) => `<p class="herkunft"><span class="mm" style="--c:${w.farbe}">${w.marke}</span><span class="t">${[w.titel, zusatz].filter(Boolean).join(" · ")}</span><span aria-hidden="true">›</span></p>`;
+const chip = (w, text) => `<span class="chip"><span class="mm" style="--c:${w.farbe}">${w.marke}</span><span>${text}</span></span>`;
+const karteH = (marke, titel, unter, inhalt) => `<section class="g-karte"><header class="g-kk" style="padding-right:14px"><span class="g-marke h-marke" aria-hidden="true">${marke}</span><div><h3>${titel}</h3><p>${unter}</p></div></header>${inhalt}</section>`;
+function fbPlatz(w, team){ const z = w.tabelle.filter(Boolean).find(r => r[1] === team); return chip(w, `Platz <strong>${z[0]}</strong> · ${z[4]} Pkt`); }
+function heute(meinFrei, ohneNews){
+  const [BL, PL, CL] = FUSSBALL, sea = NFL_PARTIEN.find(p => p.h === MEIN || p.g === MEIN);
+  const fb = (w, p, zusatz) => herkunft(w, zusatz) + fbPartie(w, p, {ohneTore:1});
+  const live = karteH(`<span class="puls" style="width:10px;height:10px"></span>`, "Jetzt live", "1 Partie",
+    herkunft(NFL) + nflPartie(sea) + `<p class="weiter">Alle Partien im Reiter Sport<span aria-hidden="true">›</span></p>`);
+  const seahawks = meinFrei
+    ? `<div class="team"><p class="tn">Seattle Seahawks</p>${herkunft(NFL, "Woche 12")}<p class="hinweis">Spielfrei in dieser Woche. Die nächste Partie steht hier, sobald Woche 13 beginnt.</p><div class="chips">${chip(NFL, "<strong>6–4</strong> · Seed 8")}</div></div>`
+    : `<div class="team"><p class="tn">Seattle Seahawks</p>${herkunft(NFL, "Sonntag, 29. November")}${nflPartie(sea, {ohnePlays:1})}<div class="chips">${chip(NFL, "<strong>6–4</strong> · Seed 8")}</div></div>`;
+  const mein = karteH("★", "Mein Team", "Nächste oder letzte Partie, Platz",
+    `<div class="team"><p class="tn">FC Bayern</p>${fb(BL, BL.partien[7], "Sonntag, 29. November")}${fb(CL, CL.partien[1], "Dienstag, 8. Dezember")}<div class="chips">${fbPlatz(BL,"Bayern")}${fbPlatz(CL,"Bayern")}</div></div>
+     <div class="team"><p class="tn">Arsenal</p>${fb(PL, PL.partien[1], "Samstag, 28. November")}${fb(CL, CL.partien[6], "Mittwoch, 9. Dezember")}<div class="chips">${fbPlatz(PL,"Arsenal")}${fbPlatz(CL,"Arsenal")}</div></div>
+     ${seahawks}`);
+  const [l, ...rest] = KI;
+  const news = karteH("KI", "Neu in den KI-News", `${KI.length} neue Meldungen, neueste zuerst`,
+    `<div class="n-kurz"><div class="n-lead" style="--c:${l[1]}"><p class="n-von">${l[0]}</p><b>${esc(l[2])}</b><p class="alter"><span class="neu">Neu</span>${l[3]}</p></div>
+     ${rest.map(m => `<div class="n-z" style="--c:${m[1]}"><p class="n-von">${m[0]}</p><b>${esc(m[2])}</b><p class="alter"><span class="neu">Neu</span>${m[3]}</p></div>`).join("")}</div>
+     <p class="weiter">Alle Meldungen im Reiter KI-News<span aria-hidden="true">›</span></p>`);
+  return `<div class="heute-raster"><div class="links">${meinFrei ? "" : live}${mein}</div>${ohneNews ? "" : news}</div>`;
+}
+
+/* Zustand: Mein Team spielfrei (nur der Anfang der Karte) */
+function spielfreiKarte(){
+  const partien = NFL_PARTIEN.filter(p => p.h !== MEIN && p.g !== MEIN && p.h !== "Rams" && p.g !== "Rams").slice(0, 3);
+  return `<section class="g-karte">${kartenKopf(NFL.marke, NFL.farbe, NFL.titel, `${NFL.nr}, ${NFL.tage}`)}
+    ${spielfreiZeile(["Seahawks","Rams","Chiefs","Jets"], true)}<p class="g-tagzeile">${TAG.Do}</p>${partien.slice(0,2).map(p => nflPartie(p, {ohnePlays:1})).join("")}
+    <p class="gekuerzt">übrige Partien und Tabelle wie oben</p></section>`;
+}
+
+/* ---------------- Seite ---------------- */
+const VARIANTEN = [
+  {id:"A", name:"A: gestapelt", text:"Unter dem Spieltag stehen zwei Tabellen in derselben Karte: zuerst die NFC West mit Bilanz (W–L), Bilanz in der Division und aktuellem Seed, darunter der Ausschnitt der NFC mit Seed 1 und den Seahawks samt Nachbarn. Die Linie nach Seed 7 trennt die Playoff-Plätze.",
+   pro:"Alles ohne Tippen sichtbar: das Rennen in der Division und das Rennen um die Wildcard gleichzeitig. Kein neues Bedienelement und kein Zustand, den die App sich merken müsste; gebaut wie die Fußball-Tabellen, nur zweimal.",
+   contra:"Die ohnehin längste Kachel wird noch rund 220 px länger (zwei Überschriften, 10 Tabellenzeilen). Seahawks und 49ers stehen in beiden Tabellen, das wirkt doppelt."},
+  {id:"B", name:"B: umschaltbar", text:"Über der Tabelle wählt ein kleiner Schalter „NFC West | NFC“. Beim Öffnen steht die Division vorn, ein Tipp zeigt den Ausschnitt der Conference mit Seeds. Die Spalte „Seed“ in der Division verrät den Playoff-Platz auch ohne Umschalten.",
+   pro:"Die Karte bleibt so lang wie eine Fußball-Kachel mit Tabelle, und die Conference hätte später Platz für alle 16 Teams statt eines Ausschnitts.",
+   contra:"Ein neues Bedienelement, das keine andere Kachel hat, und eine Frage mehr: Bleibt die Wahl nach dem Neuladen? Die Wildcard-Linie und die Nachbarn sieht man erst nach einem Tipp."},
+];
+const NUR = new URLSearchParams(location.search).get("nur");
+function bauen(){
+  const teile = [];
+  VARIANTEN.forEach(x => teile.push([x.id.toLowerCase(), `<section class="variante" id="v${x.id}"><div class="v-titel"><h2>${x.name}</h2><p>${x.text}</p></div>
+    <p class="etikett">Mac <span>(1200 px, Reiter Sport: drei Fußball-Kacheln, die NFL-Kachel darunter über zwei Spalten)</span></p>${mac(sportMac(x.id), "Sport")}
+    <div class="handys"><div class="handy-platz"><p class="etikett">iPhone <span>(390 px, Reiter Sport, Fußball gekürzt)</span></p>${handy(sportHandy(x.id), "Sport")}</div>
+    ${x.id === "B" ? `<div class="handy-platz"><p class="etikett">iPhone <span>(nach Tipp auf „NFC“, nur die Tabelle)</span></p><div class="handy"><div class="vg"><div class="inhalt"><div class="dash"><section class="g-karte">${nflTabelleB("conf")}</section></div></div></div></div></div>` : ""}</div>
+    <div class="urteil"><p><b>Vorteile:</b> ${x.pro}</p><p><b>Nachteile:</b> ${x.contra}</p></div></section>`]));
+  teile.push(["heute", `<section class="variante" id="vH"><div class="v-titel"><h2>„Heute“ mit NFL (gleich für A und B)</h2><p>„Jetzt live“ zeigt die Partie der Seahawks mit Viertel und Spieluhr sowie den Scoring-Plays. Unter „Mein Team“ stehen die Seahawks als drittes Team mit ihrer Partie (ohne Scoring-Plays, die stehen schon oben) und dem Chip „6–4 · Seed 8“ statt „Platz · Pkt“.</p></div>
+    <p class="etikett">Mac <span>(1200 px, Reiter Heute)</span></p>${mac(heute(), "Heute")}
+    <div class="handys"><div class="handy-platz"><p class="etikett">iPhone <span>(390 px, Reiter Heute)</span></p>${handy(heute(), "Heute")}</div></div></section>`]);
+  teile.push(["frei", `<section class="variante" id="vS"><div class="v-titel"><h2>Zustand: Mein Team spielfrei</h2><p>Hat Mein Team eine Bye-Woche, rückt die Zeile „Spielfrei“ orange an den Anfang des Spieltags (sonst steht sie klein am Ende). In „Heute“ steht ein Hinweis statt einer Partie, der Chip bleibt.</p></div>
+    <div class="handys"><div class="handy-platz"><p class="etikett">Kachel NFL <span>(Anfang, 390 px)</span></p><div class="handy"><div class="vg"><div class="inhalt"><div class="dash">${spielfreiKarte()}</div></div></div></div></div>
+    <div class="handy-platz"><p class="etikett">„Heute“, Mein Team <span>(390 px, ohne Live)</span></p><div class="handy"><div class="vg"><div class="inhalt"><div class="dash">${heute(true, true)}</div></div></div></div></div></div></section>`]);
+  document.getElementById("buehne").innerHTML = teile.filter(([k]) => !NUR || NUR === k).map(([, h]) => h).join("");
+  skalieren();
+}
+function skalieren(){
+  document.querySelectorAll(".mac-huelle").forEach(h => { const m = h.firstElementChild; m.style.transform = "";
+    const f = Math.min(1, h.clientWidth / 1200); m.style.transform = `scale(${f})`; h.style.height = (m.offsetHeight * f) + "px"; });
+}
+addEventListener("resize", skalieren);
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-zeige]"); if (!b) return;
+  const box = b.closest("[data-seg]");
+  box.querySelectorAll("[data-zeige]").forEach(x => x.setAttribute("aria-selected", x === b));
+  box.querySelectorAll("[data-teil]").forEach(t => t.hidden = t.dataset.teil !== b.dataset.zeige);
+  skalieren();
+});
+bauen();
+if (document.fonts) document.fonts.ready.then(skalieren);
+</script>
+</body>
+</html>

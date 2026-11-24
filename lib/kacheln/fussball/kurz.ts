@@ -5,7 +5,8 @@ import type {
   TabellenZeile,
 } from "@/lib/kacheln/fussball/typen";
 
-export type Platz = { platz: number; punkte: number; zone: Zone | null };
+// text: was der Chip in „Heute“ zeigt, z. B. „Platz 1 · 31 Pkt“ (NFL: „6–4 · Seed 8“).
+export type Platz = { text: string; zone: Zone | null };
 
 export type TeamKurz = {
   id: string;
@@ -42,8 +43,7 @@ function teamKurz(daten: FussballDaten, id: string): TeamKurz {
     partie,
     platz: zeile
       ? {
-          platz: zeile.platz,
-          punkte: zeile.punkte,
+          text: `Platz ${zeile.platz} · ${zeile.punkte} Pkt`,
           zone:
             daten.zonen.find(
               (zone) => zone.von <= zeile.platz && zeile.platz <= zone.bis,
@@ -53,8 +53,8 @@ function teamKurz(daten: FussballDaten, id: string): TeamKurz {
   };
 }
 
-// Laufend vor der nächsten (früheste zuerst), sonst die letzte. Abgesagte zählen nie.
-function wichtigstePartie(partien: Partie[]): Partie | null {
+// Laufend vor der nächsten (früheste zuerst), sonst die letzte. Abgesagte zählen nie. Gilt auch für die NFL.
+export function wichtigstePartie(partien: Partie[]): Partie | null {
   const nachAnstoss = [...partien].sort(
     (a, b) => Date.parse(a.anstoss) - Date.parse(b.anstoss),
   );

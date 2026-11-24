@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { expect, test } from "vitest";
 import {
+  KACHELN,
   TEAMS_CHAMPIONS_LEAGUE,
   type FussballEinstellung,
 } from "@/lib/einstellungen";
@@ -38,5 +39,19 @@ test("die Champions League kennt 36 Teams mit eindeutigen ids, darunter Bayern u
     espn: "359",
     footballData: 57,
     name: "Arsenal",
+  });
+});
+
+test("die NFL steht nach der Champions League im Reiter Sport, Mein Team sind die Seahawks", () => {
+  const ids = KACHELN.map((kachel) => kachel.id);
+  expect(ids.indexOf("nfl")).toBe(ids.indexOf("champions-league") + 1);
+  const nfl = KACHELN.find((kachel) => kachel.id === "nfl");
+  expect(nfl).toMatchObject({
+    art: "nfl",
+    gruppe: "Sport",
+    meinTeam: ["26"],
+    division: "NFC West",
+    conference: "National Football Conference",
+    aussehen: { kuerzel: "NFL" },
   });
 });

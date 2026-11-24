@@ -16,10 +16,11 @@ export async function holeJson(
   speicher: Speicher,
   jetzt: Date,
   header: Record<string, string> = {},
+  zeitlimitMs = ABRUF_ZEITLIMIT_MS,
 ): Promise<unknown> {
   const antwort = await fetch(url, {
     headers: { "User-Agent": "Tages-Dashboard", ...header },
-    signal: AbortSignal.timeout(ABRUF_ZEITLIMIT_MS),
+    signal: AbortSignal.timeout(zeitlimitMs),
     ...(speicher === "frisch"
       ? { cache: "no-store" as const }
       : {

@@ -51,6 +51,13 @@ nur die Partien eines Tages. Fehlt der Spielplan von football-data.org oder ist 
 Kachel als Etikett für den Knopf ↻ (`bundesliga`, `premier-league`, `champions-league`, ADR 0008). Eine gespeicherte
 Antwort darf höchstens doppelt so alt sein wie ihre Speicherzeit, mindestens 1 Stunde, sonst gilt sie als Ausfall (wie ADR 0005).
 
+**NFL** (Plan NFL, Etikett `nfl`): Kalender `…/football/nfl/scoreboard` (Feld `leagues[0].calendar`, Eintrag `Regular Season` mit Woche,
+`startDate`, `endDate`; 24 Std.), eine Woche `…/nfl/scoreboard?week=12&seasontype=2` (15 Min., live frisch; spielfreie Teams in
+`week.teamsOnBye`), Tabelle `https://site.api.espn.com/apis/v2/sports/football/nfl/standings?level=3` (Conferences mit je vier Divisions,
+Felder `wins`, `losses`, `ties`, `playoffSeed`; 15 Min., live frisch), Scoring-Plays `…/nfl/summary?event=<id>` (Feld `scoringPlays` mit
+`period.number`, `clock.displayValue`, `type.abbreviation`, `text`, `team.id`; nur laufende Partien und Mein Team, beendet 24 Std.). Der
+Kalender wechselt die Woche schon am Mittwoch 08:00 UTC, die Kachel hält die alte Woche nach der Regel aller Wettbewerbe bis Mitternacht.
+
 Zum Ausprobieren im Terminal:
 
 ```bash
@@ -72,3 +79,5 @@ Zum Ausprobieren im Terminal:
 - 2026-11-17: Jedes Tor in `competitions[0].details[]` trägt `team.id`, das Team, dem es gutgeschrieben wird. Bei einem Eigentor
   (`ownGoal: true`) ist das der Gegner des Schützen, geprüft an 5 Eigentoren der Bundesliga und Premier League (z. B. Bischof → Freiburg).
   Daraus liest `leseTag` die Seite des Tors (`heim` oder `gast`).
+- 2026-11-24: NFL vom Mac und vom Server bei Vercel aus Status 200 (`scoreboard` 15 KB, `standings` 8 KB, mit `?level=3` je Division).
+  Der frühere 403 vom 2026-10-24 tritt nicht mehr auf.
