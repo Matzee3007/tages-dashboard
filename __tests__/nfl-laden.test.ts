@@ -184,3 +184,19 @@ test("ab Donnerstag gilt Woche 12", async () => {
   expect(daten.titel).toBe("Woche 12");
   expect(daten.partien.map((partie) => partie.id)).toEqual(["w12-1"]);
 });
+
+test("Mein Team steht je Tag zuerst, seine beendete Partie bekommt Plays aus dem Speicher mit Etikett", async () => {
+  const raiders = "401873075";
+  antworten({ [NFL_ADRESSEN.plays(raiders)]: summary });
+  const daten = await ladeNfl({ ...EINSTELLUNG, meinTeam: ["13"] }, JETZT);
+
+  const sonntag = daten.partien.filter((partie) =>
+    partie.anstoss.startsWith("2026-11-22"),
+  );
+  expect(sonntag[0].id).toBe(raiders);
+  expect(sonntag[0].tore.length).toBeGreaterThan(0);
+  expect(optionen(NFL_ADRESSEN.plays(raiders))[0].next).toEqual({
+    revalidate: 86400,
+    tags: ["nfl"],
+  });
+});

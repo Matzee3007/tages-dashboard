@@ -99,3 +99,77 @@ test("falsche Form wirft", () => {
     "Unerwartete Antwort von ESPN",
   );
 });
+
+test("Kürzel der Plays nach Art: TD, FG, Safety, 2Pt", () => {
+  const play = (text: string, abbreviation: string) => ({
+    type: { text, abbreviation },
+    text: "Max Muster 1 Yd Rush",
+    period: { number: 4 },
+    clock: { displayValue: "2:00" },
+    team: { id: "1" },
+  });
+  const plays = leseScoringPlays(
+    {
+      scoringPlays: [
+        play("Rushing Touchdown", "TD"),
+        play("Field Goal Good", "FG"),
+        play("Safety", "SF"),
+        play("Two-Point Conversion", "2PT"),
+        play("Fumble Return Touchdown", "FRTD"),
+      ],
+    },
+    "1",
+    "2",
+  );
+  expect(plays.map((p) => p.text.split(" ")[2])).toEqual([
+    "TD",
+    "FG",
+    "Safety",
+    "2Pt",
+    "TD",
+  ]);
+});
+
+test("Overtime und Halbzeit", () => {
+  const spiel = (status: object) => ({
+    events: [
+      {
+        id: "1",
+        date: "2026-11-22T18:00Z",
+        status,
+        competitions: [
+          {
+            competitors: [
+              {
+                homeAway: "home",
+                score: "7",
+                team: { id: "1", shortDisplayName: "A" },
+              },
+              {
+                homeAway: "away",
+                score: "7",
+                team: { id: "2", shortDisplayName: "B" },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+  const minute = (status: object) =>
+    leseWoche(spiel(status), JETZT).partien[0].minute;
+  expect(
+    minute({
+      period: 5,
+      displayClock: "3:10",
+      type: { state: "in", name: "STATUS_IN_PROGRESS" },
+    }),
+  ).toBe("OT 3:10");
+  expect(
+    minute({
+      period: 2,
+      displayClock: "0:00",
+      type: { state: "in", name: "STATUS_HALFTIME" },
+    }),
+  ).toBe("Halbzeit");
+});

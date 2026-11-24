@@ -81,15 +81,18 @@ async function ladeGewaehlteWoche(
 // Scoring-Plays nur bei laufenden Partien und bei Mein Team (Entscheidung vom 2026-11-25). Ein Fehler trifft nur diese Partie.
 async function mitPlays(
   partie: Partie,
-  meinTeam: string[],
+  einstellung: NflEinstellung,
   jetzt: Date,
 ): Promise<Partie> {
+  const { meinTeam } = einstellung;
   const mein =
     meinTeam.includes(partie.heim.id) || meinTeam.includes(partie.gast.id);
   const angepfiffen = partie.status === "laeuft" || partie.status === "vorbei";
   if (!angepfiffen || (partie.status !== "laeuft" && !mein)) return partie;
   const speicher: Speicher =
-    partie.status === "laeuft" ? "frisch" : { sekunden: TAG_SEKUNDEN };
+    partie.status === "laeuft"
+      ? "frisch"
+      : { sekunden: TAG_SEKUNDEN, etikett: einstellung.id };
   try {
     const json = await holeJson(NFL_ADRESSEN.plays(partie.id), speicher, jetzt);
     return {
@@ -136,9 +139,7 @@ export async function ladeNfl(
   const { nummer, stand } = await ladeGewaehlteWoche(einstellung, jetzt);
   const [partien, tabellen] = await Promise.all([
     Promise.all(
-      stand.partien.map((partie) =>
-        mitPlays(partie, einstellung.meinTeam, jetzt),
-      ),
+      stand.partien.map((partie) => mitPlays(partie, einstellung, jetzt)),
     ),
     ladeTabellen(einstellung, laeuftEine(stand.partien), jetzt),
   ]);

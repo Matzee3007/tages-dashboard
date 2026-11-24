@@ -27,29 +27,21 @@ function Spielfrei({ teams, mein }: { teams: TeamStand[]; mein: boolean }) {
   );
 }
 
-// Eine Linie trennt zwei Zonen, wenn die nächste Zeile direkt folgt (wie beim Fußball).
-function linieNach(
-  zonen: Zone[],
-  zeile: NflZeile,
-  naechste: NflZeile | null | undefined,
-): boolean {
-  return (
-    !!naechste &&
-    naechste.seed > zeile.seed &&
-    zoneVon(zonen, zeile.seed) !== zoneVon(zonen, naechste.seed)
-  );
-}
+// Die Linie steht nur in der Conference nach Seed 7: Bis dorthin reicht es für die Playoffs (Plan NFL, Mock).
+const PLAYOFF_SEEDS = 7;
 
 function Tabelle({
   name,
   zeilen,
   meinTeam,
   zonen,
+  mitLinie,
 }: {
   name: string;
   zeilen: (NflZeile | null)[];
   meinTeam: string[];
   zonen: Zone[];
+  mitLinie: boolean;
 }) {
   return (
     <table aria-label={name} className="w-full border-collapse text-[13.5px]">
@@ -79,7 +71,12 @@ function Tabelle({
           }
           const mein = meinTeam.includes(zeile.id);
           const zone = zoneVon(zonen, zeile.seed);
-          const linie = linieNach(zonen, zeile, zeilen[index + 1]);
+          const naechste = zeilen[index + 1];
+          const linie =
+            mitLinie &&
+            !!naechste &&
+            zeile.seed <= PLAYOFF_SEEDS &&
+            naechste.seed > PLAYOFF_SEEDS;
           const zelle = `h-8 py-[3px] ${mein ? MEIN_TEAM_GRUND : ""} ${
             linie ? "border-b border-b-grenze" : ""
           }`;
@@ -171,12 +168,14 @@ export function NflAnsicht({
               zeilen={daten.division}
               meinTeam={daten.meinTeam}
               zonen={daten.zonen}
+              mitLinie={false}
             />
             <Tabelle
               name={daten.divisionName.split(" ")[0]}
               zeilen={daten.conference}
               meinTeam={daten.meinTeam}
               zonen={daten.zonen}
+              mitLinie
             />
             <Legende zonen={daten.zonen} />
           </>

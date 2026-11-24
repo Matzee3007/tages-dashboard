@@ -181,6 +181,16 @@ function playText(text: string): string {
     .replace(/^\S+\s+/, "");
 }
 
+// Kürzel nach der Art des Spielzugs (Plan NFL), sonst das von ESPN.
+function kuerzel(art: { text?: string; abbreviation?: string } | undefined) {
+  const text = art?.text ?? "";
+  if (/touchdown/i.test(text)) return "TD";
+  if (/field goal/i.test(text)) return "FG";
+  if (/safety/i.test(text)) return "Safety";
+  if (/two-point|2pt/i.test(text)) return "2Pt";
+  return art?.abbreviation;
+}
+
 // Punkte-Spielzüge einer Partie als Zeilen wie Torschützen: „Q2 1:55 TD Higgins 31 Yd pass“, Seite nach dem Team.
 export function leseScoringPlays(
   json: unknown,
@@ -190,7 +200,7 @@ export function leseScoringPlays(
   const plays = (
     json as {
       scoringPlays?: {
-        type?: { abbreviation?: string };
+        type?: { text?: string; abbreviation?: string };
         text?: string;
         period?: { number?: number };
         clock?: { displayValue?: string };
@@ -205,7 +215,7 @@ export function leseScoringPlays(
     const teile = [
       viertel,
       play.clock?.displayValue,
-      play.type?.abbreviation,
+      kuerzel(play.type),
       playText(play.text ?? ""),
     ].filter(Boolean);
     const id = play.team?.id;

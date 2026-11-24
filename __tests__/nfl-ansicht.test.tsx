@@ -103,3 +103,36 @@ test("ohne Tabelle steht ein Hinweis", () => {
   expect(screen.getByText("Tabelle gerade nicht erreichbar")).toBeDefined();
   expect(screen.queryByRole("table")).toBeNull();
 });
+
+test("ein Spiel nach Mitternacht steht unter dem deutschen Tag mit deutscher Uhrzeit", () => {
+  const basis = daten(["26"]);
+  const nacht = {
+    ...basis.partien[0],
+    id: "mnf",
+    anstoss: "2026-12-01T01:15Z",
+    status: "vorher" as const,
+    minute: null,
+    heim: { ...basis.partien[0].heim, tore: null },
+    gast: { ...basis.partien[0].gast, tore: null },
+  };
+  render(
+    <NflAnsicht daten={{ ...basis, partien: [...basis.partien, nacht] }} />,
+  );
+  const dienstag = screen.getByRole("group", { name: "Dienstag, 1. Dezember" });
+  expect(
+    within(within(dienstag).getByTestId("partie-mnf")).getByTestId("feld")
+      .textContent,
+  ).toBe("02:15");
+});
+
+test("Linien nur nach Seed 7 der Conference, nicht in der Division", () => {
+  render(<NflAnsicht daten={daten(["26"])} />);
+  const division = screen.getByRole("table", { name: "NFC West" });
+  expect(division.querySelectorAll("[data-linie]")).toHaveLength(0);
+  const conference = screen.getByRole("table", { name: "NFC" });
+  expect(
+    [...conference.querySelectorAll("[data-linie]")].map((zeile) =>
+      zeile.getAttribute("data-seed"),
+    ),
+  ).toEqual(["7"]);
+});
