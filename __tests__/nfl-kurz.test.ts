@@ -119,3 +119,9 @@ test("ohne Tabelle kein Chip", () => {
   const kurz = nflKurz({ ...daten([]), division: null });
   expect(kurz.meinTeam[0]).toMatchObject({ id: "26", name: "26", platz: null });
 });
+
+test("ohne Seed zeigt der Chip nur die Bilanz", () => {
+  const ohne = daten([]);
+  ohne.division = [{ ...ohne.division![1], seed: null }];
+  expect(nflKurz(ohne).meinTeam[0].platz).toEqual({ text: "6–4", zone: null });
+});

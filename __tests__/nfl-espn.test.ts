@@ -79,7 +79,7 @@ test("leseTabellen: unbekannte Division wirft", () => {
 test("leseScoringPlays: Viertel, Uhr, Kürzel und Text ohne Vornamen, Seite nach Team", () => {
   const plays = leseScoringPlays(summary, "28", "4");
   expect(plays[0]).toEqual({
-    text: "Q2 6:17 FG McPherson 38 Yd Field Goal",
+    text: "Q2 6:17 FG McPherson 38 Yd",
     seite: "gast",
   });
   expect(plays[1]).toEqual({
@@ -172,4 +172,65 @@ test("Overtime und Halbzeit", () => {
       type: { state: "in", name: "STATUS_HALFTIME" },
     }),
   ).toBe("Halbzeit");
+});
+
+test("ohne Seed steht das Team am Ende mit seed null", () => {
+  const ohneSeed = structuredClone(tabelle);
+  const west = ohneSeed.children[1].children.find(
+    (d) => d.name === "NFC West",
+  )!;
+  west.standings.entries[0].stats = west.standings.entries[0].stats.filter(
+    (s) => s.name !== "playoffSeed",
+  );
+  const { division, conference } = leseTabellen(
+    ohneSeed,
+    "NFC West",
+    "National Football Conference",
+  );
+  expect(division.at(-1)?.seed).toBeNull();
+  expect(conference.at(-1)?.seed).toBeNull();
+});
+
+test("Plays ohne passendes Team fallen weg, FG und Safety stehen nicht doppelt", () => {
+  const plays = leseScoringPlays(
+    {
+      scoringPlays: [
+        {
+          type: { text: "Field Goal Good" },
+          text: "Jason Myers 45 Yd Field Goal",
+          period: { number: 4 },
+          clock: { displayValue: "0:03" },
+          team: { id: "1" },
+        },
+        {
+          type: { text: "Safety" },
+          text: "Team Safety",
+          period: { number: 3 },
+          clock: { displayValue: "5:10" },
+          team: { id: "2" },
+        },
+        {
+          type: { text: "Rushing Touchdown" },
+          text: "Max Muster 1 Yd Rush",
+          period: { number: 1 },
+          clock: { displayValue: "9:00" },
+          team: {},
+        },
+      ],
+    },
+    "1",
+    "2",
+  );
+  expect(plays).toEqual([
+    { text: "Q4 0:03 FG Myers 45 Yd", seite: "heim" },
+    { text: "Q3 5:10 Safety", seite: "gast" },
+  ]);
+});
+
+test("ein leerer Kalender ist eine falsche Form", () => {
+  expect(() =>
+    leseWochen({
+      leagues: [{ calendar: [{ label: "Regular Season", entries: [] }] }],
+    }),
+  ).toThrow("Unerwartete Antwort von ESPN");
 });

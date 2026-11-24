@@ -70,20 +70,22 @@ function Tabelle({
             );
           }
           const mein = meinTeam.includes(zeile.id);
-          const zone = zoneVon(zonen, zeile.seed);
+          const zone =
+            zeile.seed === null ? undefined : zoneVon(zonen, zeile.seed);
           const naechste = zeilen[index + 1];
           const linie =
             mitLinie &&
             !!naechste &&
+            zeile.seed !== null &&
             zeile.seed <= PLAYOFF_SEEDS &&
-            naechste.seed > PLAYOFF_SEEDS;
+            (naechste.seed ?? Infinity) > PLAYOFF_SEEDS;
           const zelle = `h-8 py-[3px] ${mein ? MEIN_TEAM_GRUND : ""} ${
             linie ? "border-b border-b-grenze" : ""
           }`;
           return (
             <tr
               key={zeile.id}
-              data-seed={zeile.seed}
+              data-seed={zeile.seed ?? undefined}
               data-mein-team={mein || undefined}
               data-linie={linie || undefined}
             >
@@ -96,7 +98,7 @@ function Tabelle({
                     className="h-[18px] w-[3px] rounded-[2px]"
                     style={{ background: zone?.farbe ?? "transparent" }}
                   />
-                  {zeile.seed}
+                  {zeile.seed ?? "–"}
                 </span>
               </td>
               <td className={`${zelle} max-w-0`}>

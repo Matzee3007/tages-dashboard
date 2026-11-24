@@ -22,6 +22,13 @@ import type { NflDaten } from "@/lib/kacheln/nfl/typen";
 import { waehleWoche } from "@/lib/kacheln/nfl/woche";
 import { heute } from "@/lib/zeit";
 
+// Bis zu vier Abrufe laufen nacheinander (Kalender, Woche, Woche frisch, Plays). Mit je 2 Sekunden bleiben sie unter dem
+// Limit der Kachel von 8 Sekunden (Review von PR #98). Scheitern Plays oder Tabelle, fehlt nur dieser Teil.
+const NFL_ZEITLIMIT_MS = 2000;
+
+const hole = (url: string, speicher: Speicher, jetzt: Date) =>
+  holeJson(url, speicher, jetzt, {}, NFL_ZEITLIMIT_MS);
+
 type WochenStand = { partien: Partie[]; spielfrei: TeamStand[] };
 
 const laeuftEine = (partien: Partie[]) =>
@@ -38,11 +45,11 @@ async function ladeWoche(
 ): Promise<WochenStand> {
   const url = NFL_ADRESSEN.woche(nummer);
   const stand = leseWoche(
-    await holeJson(url, { sekunden: NORMAL_SEKUNDEN, etikett }, jetzt),
+    await hole(url, { sekunden: NORMAL_SEKUNDEN, etikett }, jetzt),
     jetzt,
   );
   if (!laeuftEine(stand.partien)) return stand;
-  return leseWoche(await holeJson(url, "frisch", jetzt), jetzt);
+  return leseWoche(await hole(url, "frisch", jetzt), jetzt);
 }
 
 // Die Woche nach der Regel aller Wettbewerbe. Die Vorwoche wird nur geladen, wenn heute vor dem ersten Spiel liegt.
@@ -51,7 +58,7 @@ async function ladeGewaehlteWoche(
   jetzt: Date,
 ): Promise<{ nummer: number; stand: WochenStand }> {
   const wochen = leseWochen(
-    await holeJson(
+    await hole(
       NFL_ADRESSEN.kalender,
       { sekunden: TAG_SEKUNDEN, etikett: einstellung.id },
       jetzt,
@@ -94,7 +101,7 @@ async function mitPlays(
       ? "frisch"
       : { sekunden: TAG_SEKUNDEN, etikett: einstellung.id };
   try {
-    const json = await holeJson(NFL_ADRESSEN.plays(partie.id), speicher, jetzt);
+    const json = await hole(NFL_ADRESSEN.plays(partie.id), speicher, jetzt);
     return {
       ...partie,
       tore: leseScoringPlays(json, partie.heim.id, partie.gast.id),
@@ -112,7 +119,7 @@ async function ladeTabellen(
 ): Promise<Pick<NflDaten, "division" | "conference">> {
   try {
     const { division, conference } = leseTabellen(
-      await holeJson(
+      await hole(
         NFL_ADRESSEN.tabelle,
         frisch
           ? "frisch"

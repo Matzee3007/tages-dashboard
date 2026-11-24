@@ -386,5 +386,7 @@ Entscheidungen zu Schritt 5 (NFL) vom 2026-11-24/25, Mock `assets/mocks/2026-11-
 - Parkplatz: RAG „Frag meine News“ (erst passende Zusammenfassungen suchen, dann antworten lassen). Wieder aufgreifen, wenn Stufe 3 des
   KI-Features zwei Wochen im Alltag läuft.
 - Parkplatz: Agent mit Werkzeugen für die KI-News. Wieder aufgreifen, wenn Stufe 3 des KI-Features zwei Wochen im Alltag läuft.
+- Parkplatz: Playoffs der NFL (Wild Card bis Super Bowl, `seasontype=3`). Die Kachel liest nur die Regular Season und bleibt danach auf
+  Woche 18 stehen (Review von PR #98). Wieder aufgreifen Anfang Januar 2027, vor dem Ende der Regular Season.
 - Parkplatz: K.-o.-Phase der Champions League (Hin- und Rückspiel, keine Tabelle). Wieder aufgreifen, wenn die Ligaphase endet
   (27. Januar 2027).

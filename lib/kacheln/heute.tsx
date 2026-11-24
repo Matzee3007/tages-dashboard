@@ -147,7 +147,7 @@ export function Heute({
           >
             {meinTeam.map((team) => (
               <div
-                key={team.id}
+                key={`${team.art}-${team.id}`}
                 className="border-t border-rand first:border-t-0"
               >
                 <p className="px-3.5 pt-3 pb-1.5 text-[15px] font-[740]">

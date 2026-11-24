@@ -17,8 +17,10 @@ export type Herkunft = {
 // meinTeam: die Teams der Kachel, damit die Partie in „Jetzt live“ hervorgehoben wird wie in der Kachel.
 export type LiveEintrag = Herkunft & { partie: Partie; meinTeam: string[] };
 
+// art: Kennungen von ESPN gelten nur innerhalb einer Sportart, die NFL-26 ist nicht der Fußball-Club 26.
 export type MeinTeamEintrag = {
   id: string;
+  art: "fussball" | "nfl";
   name: string;
   logo: string | null;
   wettbewerbe: (Herkunft & TeamKurz)[];
@@ -69,7 +71,10 @@ export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht {
           })),
         );
         for (const team of kurz.meinTeam) {
-          const bekannt = ergebnis.meinTeam.find(({ id }) => id === team.id);
+          const art = kachel.daten.art;
+          const bekannt = ergebnis.meinTeam.find(
+            (eintrag) => eintrag.id === team.id && eintrag.art === art,
+          );
           const eintrag = { ...herkunft, ...team };
           if (bekannt) {
             bekannt.wettbewerbe.push(eintrag);
@@ -79,6 +84,7 @@ export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht {
           } else
             ergebnis.meinTeam.push({
               id: team.id,
+              art,
               name: team.name,
               logo: team.logo,
               wettbewerbe: [eintrag],

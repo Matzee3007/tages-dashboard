@@ -33,10 +33,16 @@ export function nflKurz(daten: NflDaten): FussballKurz {
         partie,
         platz: zeile
           ? {
-              text: `${bilanz(zeile)} · Seed ${zeile.seed}`,
+              text:
+                zeile.seed === null
+                  ? bilanz(zeile)
+                  : `${bilanz(zeile)} · Seed ${zeile.seed}`,
               zone:
                 daten.zonen.find(
-                  (zone) => zone.von <= zeile.seed && zeile.seed <= zone.bis,
+                  ({ von, bis }) =>
+                    zeile.seed !== null &&
+                    von <= zeile.seed &&
+                    zeile.seed <= bis,
                 ) ?? null,
             }
           : null,

@@ -2,8 +2,9 @@ import type { Zone } from "@/lib/einstellungen";
 import type { Partie, TeamStand } from "@/lib/kacheln/fussball/typen";
 
 // Eine Zeile der Tabelle: Seed in der Conference (1–16), Bilanz aus Siegen, Niederlagen und Unentschieden.
+// seed null: ESPN nennt keinen (z. B. vor der ersten Woche), das Team steht dann am Ende.
 export type NflZeile = {
-  seed: number;
+  seed: number | null;
   id: string;
   name: string;
   logo: string | null;

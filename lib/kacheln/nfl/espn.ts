@@ -41,7 +41,8 @@ export function leseWochen(json: unknown): Woche[] {
     }
   )?.leagues?.[0]?.calendar;
   const saison = kalender?.find(({ label }) => label === "Regular Season");
-  if (!Array.isArray(saison?.entries)) falscheForm();
+  if (!Array.isArray(saison?.entries) || saison.entries.length === 0)
+    falscheForm();
   return saison.entries.map((eintrag) => ({
     nummer: Number(eintrag.value ?? falscheForm()),
     start: eintrag.startDate ?? falscheForm(),
@@ -139,16 +140,16 @@ type EspnGruppe = {
 function zeilen(gruppe: EspnGruppe): NflZeile[] {
   return (gruppe.standings?.entries ?? []).map((eintrag) => {
     const wert = (name: string) =>
-      eintrag.stats?.find((stat) => stat.name === name)?.value ?? 0;
+      eintrag.stats?.find((stat) => stat.name === name)?.value;
     const { id, name, logo } = team(eintrag.team, null);
     return {
-      seed: wert("playoffSeed"),
+      seed: wert("playoffSeed") ?? null,
       id,
       name,
       logo,
-      siege: wert("wins"),
-      niederlagen: wert("losses"),
-      unentschieden: wert("ties"),
+      siege: wert("wins") ?? 0,
+      niederlagen: wert("losses") ?? 0,
+      unentschieden: wert("ties") ?? 0,
     };
   });
 }
@@ -166,7 +167,8 @@ export function leseTabellen(
     ({ name }) => name === division,
   );
   if (!roheConference || !roheDivision) falscheForm();
-  const nachSeed = (a: NflZeile, b: NflZeile) => a.seed - b.seed;
+  const nachSeed = (a: NflZeile, b: NflZeile) =>
+    (a.seed ?? Infinity) - (b.seed ?? Infinity);
   return {
     division: zeilen(roheDivision).sort(nachSeed),
     conference: (roheConference.children ?? []).flatMap(zeilen).sort(nachSeed),
@@ -174,11 +176,14 @@ export function leseTabellen(
 }
 
 // „Tee Higgins 31 Yd pass from Joe Burrow (Evan McPherson Kick)“ → „Higgins 31 Yd pass“: ohne Vorname, Passgeber und Zusatz.
+// Was das Kürzel schon sagt („Field Goal“, „Safety“), fällt am Ende weg.
 function playText(text: string): string {
   return text
     .replace(/\s*\(.*$/, "")
     .replace(/\s+from\s+.*$/, "")
-    .replace(/^\S+\s+/, "");
+    .replace(/^\S+\s+/, "")
+    .replace(/\s*\b(Field Goal|Safety)$/i, "")
+    .replace(/^(Field Goal|Safety)$/i, "");
 }
 
 // Kürzel nach der Art des Spielzugs (Plan NFL), sonst das von ESPN.
@@ -209,7 +214,13 @@ export function leseScoringPlays(
     }
   )?.scoringPlays;
   if (!Array.isArray(plays)) falscheForm();
-  return plays.map((play) => {
+  // Ein Play ohne passendes Team fällt weg, statt beim falschen Team zu stehen (Review von PR #98).
+  return plays.flatMap((play) => {
+    const id = play.team?.id;
+    if (id !== heimId && id !== gastId) {
+      console.error(`Play mit unbekanntem Team ${id}`);
+      return [];
+    }
     const periode = play.period?.number ?? 0;
     const viertel = periode > 4 ? "OT" : `Q${periode}`;
     const teile = [
@@ -218,9 +229,11 @@ export function leseScoringPlays(
       kuerzel(play.type),
       playText(play.text ?? ""),
     ].filter(Boolean);
-    const id = play.team?.id;
-    if (id !== heimId && id !== gastId)
-      console.error(`Play mit unbekanntem Team ${id}`);
-    return { text: teile.join(" "), seite: id === gastId ? "gast" : "heim" };
+    return [
+      {
+        text: teile.join(" "),
+        seite: id === gastId ? ("gast" as const) : ("heim" as const),
+      },
+    ];
   });
 }

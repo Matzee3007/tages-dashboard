@@ -187,7 +187,14 @@ test("ab Donnerstag gilt Woche 12", async () => {
 
 test("Mein Team steht je Tag zuerst, seine beendete Partie bekommt Plays aus dem Speicher mit Etikett", async () => {
   const raiders = "401873075";
-  antworten({ [NFL_ADRESSEN.plays(raiders)]: summary });
+  // Die Plays aus dem Fixture, umgeschrieben auf Broncos (7) und Raiders (13).
+  const plays = {
+    scoringPlays: summary.scoringPlays.map((play) => ({
+      ...play,
+      team: { id: play.team.id === "28" ? "7" : "13" },
+    })),
+  };
+  antworten({ [NFL_ADRESSEN.plays(raiders)]: plays });
   const daten = await ladeNfl({ ...EINSTELLUNG, meinTeam: ["13"] }, JETZT);
 
   const sonntag = daten.partien.filter((partie) =>
@@ -199,4 +206,13 @@ test("Mein Team steht je Tag zuerst, seine beendete Partie bekommt Plays aus dem
     revalidate: 86400,
     tags: ["nfl"],
   });
+});
+
+test("jeder Abruf der NFL hat höchstens 2 Sekunden, damit vier nacheinander unter dem Limit der Kachel bleiben", async () => {
+  const zeitlimit = vi.spyOn(AbortSignal, "timeout");
+  await ladeNfl(EINSTELLUNG, JETZT);
+  expect(zeitlimit).toHaveBeenCalled();
+  expect(new Set(zeitlimit.mock.calls.map(([ms]) => ms))).toEqual(
+    new Set([2000]),
+  );
 });
