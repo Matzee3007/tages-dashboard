@@ -1,4 +1,4 @@
-import type { Partie, TabellenZeile } from "@/lib/kacheln/fussball/typen";
+import type { Partie } from "@/lib/kacheln/fussball/typen";
 import { folgetag, heute } from "@/lib/zeit";
 
 // Spieltag wählen und benennen (Projektvision, Entscheidungen der Befragung vom 2026-11-08).
@@ -102,10 +102,11 @@ export function sortierePartien(
 }
 
 // Platz 1 und Mein Team mit je 2 Plätzen darüber und darunter, null steht für eine Lücke. Ohne Mein Team Plätze 1–5.
-export function tabellenAusschnitt(
-  tabelle: TabellenZeile[],
+// Gilt auch für die Conference der NFL (Plan NFL).
+export function tabellenAusschnitt<Zeile extends { id: string }>(
+  tabelle: Zeile[],
   meinTeam: string[],
-): (TabellenZeile | null)[] {
+): (Zeile | null)[] {
   const gezeigt = new Set([0]);
   tabelle.forEach((zeile, index) => {
     if (!meinTeam.includes(zeile.id)) return;
@@ -113,7 +114,7 @@ export function tabellenAusschnitt(
   });
   if (gezeigt.size === 1) [1, 2, 3, 4].forEach((index) => gezeigt.add(index));
 
-  const ausschnitt: (TabellenZeile | null)[] = [];
+  const ausschnitt: (Zeile | null)[] = [];
   tabelle.forEach((zeile, index) => {
     if (!gezeigt.has(index)) return;
     if (index > 0 && !gezeigt.has(index - 1)) ausschnitt.push(null);

@@ -4,16 +4,30 @@ import { revalidateTag } from "next/cache";
 import { GET, POST } from "@/app/api/kacheln/route";
 import { ladeFussball } from "@/lib/kacheln/fussball/laden";
 import { ladeKiNews } from "@/lib/kacheln/ki-news/laden";
+import { ladeNfl } from "@/lib/kacheln/nfl/laden";
 
 vi.mock("next/server", () => ({ connection: vi.fn(async () => {}) }));
 vi.mock("next/cache", () => ({ revalidateTag: vi.fn() }));
 vi.mock("@/lib/kacheln/ki-news/laden", () => ({ ladeKiNews: vi.fn() }));
 vi.mock("@/lib/kacheln/fussball/laden", () => ({ ladeFussball: vi.fn() }));
+vi.mock("@/lib/kacheln/nfl/laden", () => ({ ladeNfl: vi.fn() }));
 
 beforeEach(() => {
   vi.mocked(revalidateTag).mockReset();
   vi.mocked(ladeKiNews).mockReset();
   vi.mocked(ladeKiNews).mockResolvedValue([]);
+  vi.mocked(ladeNfl).mockReset();
+  vi.mocked(ladeNfl).mockResolvedValue({
+    art: "nfl",
+    titel: "Woche 11",
+    tage: [],
+    partien: [],
+    spielfrei: [],
+    division: null,
+    conference: null,
+    meinTeam: [],
+    zonen: [],
+  });
   vi.mocked(ladeFussball).mockReset();
   vi.mocked(ladeFussball).mockResolvedValue({
     art: "fussball",
@@ -36,6 +50,7 @@ test("liefert die Kacheln und verbietet das Zwischenspeichern", async () => {
     "bundesliga",
     "premier-league",
     "champions-league",
+    "nfl",
     "ki-news",
   ]);
   expect(
@@ -51,7 +66,7 @@ test("eine fehlerhafte Kachel ändert den Status der Antwort nicht", async () =>
 
   expect(antwort.status).toBe(200);
   const daten = await antwort.json();
-  expect(daten.kacheln[3]).toMatchObject({ id: "ki-news", status: "fehler" });
+  expect(daten.kacheln[4]).toMatchObject({ id: "ki-news", status: "fehler" });
   expect(daten.kacheln[0]).toMatchObject({ id: "bundesliga", status: "ok" });
 });
 
@@ -70,7 +85,7 @@ test("POST mit frisch leert den Speicher der Kachel vor dem Laden", async () => 
   expect(antwort.status).toBe(200);
   expect(antwort.headers.get("Cache-Control")).toBe("no-store");
   const daten = await antwort.json();
-  expect(daten.kacheln[3]).toMatchObject({ id: "ki-news", status: "ok" });
+  expect(daten.kacheln[4]).toMatchObject({ id: "ki-news", status: "ok" });
   expect(ladeKiNews).toHaveBeenCalledTimes(1);
   expect(ladeKiNews).toHaveBeenCalledWith(
     expect.anything(),

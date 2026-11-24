@@ -1,6 +1,7 @@
 import { KACHELN, type KachelEinstellung } from "@/lib/einstellungen";
 import { ladeFussballKachel } from "@/lib/kacheln/fussball/kachel";
 import { ladeKiNewsKachel } from "@/lib/kacheln/ki-news/kachel";
+import { ladeNfl } from "@/lib/kacheln/nfl/laden";
 import {
   kopfVon,
   type DashboardAntwort,
@@ -19,6 +20,8 @@ function lade(
       return ladeKiNewsKachel(einstellung, jetzt);
     case "fussball":
       return ladeFussballKachel(einstellung, jetzt);
+    case "nfl":
+      return ladeNfl(einstellung, jetzt).then((daten) => ({ daten }));
   }
 }
 
