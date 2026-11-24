@@ -87,8 +87,7 @@ test("Mein Team: laufende Partie vor der nächsten, Platz mit Zone aus der Tabel
       logo: "https://logo/132.png",
       partie: expect.objectContaining({ id: "live" }),
       platz: {
-        platz: 1,
-        punkte: 30,
+        text: "Platz 1 · 30 Pkt",
         zone: { von: 1, bis: 4, name: "Champions League", farbe: "#4C8DF6" },
       },
     },
@@ -135,8 +134,7 @@ test("Mein Team ohne Partie und ohne Tabelle: Name aus der Tabelle oder die id, 
     name: "Tabelle 7",
     logo: null,
     platz: {
-      platz: 2,
-      punkte: 25,
+      text: "Platz 2 · 25 Pkt",
       zone: expect.objectContaining({ name: "Champions League" }),
     },
   });
@@ -155,5 +153,8 @@ test("ein Platz außerhalb jeder Zone hat zone null, Lücken in der Tabelle stö
   const kurz = fussballKurz(
     daten([], ["11"], [zeile(1, "132", 30), null, zeile(10, "11", 15)]),
   );
-  expect(kurz.meinTeam[0].platz).toEqual({ platz: 10, punkte: 15, zone: null });
+  expect(kurz.meinTeam[0].platz).toEqual({
+    text: "Platz 10 · 15 Pkt",
+    zone: null,
+  });
 });

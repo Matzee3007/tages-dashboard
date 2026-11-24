@@ -185,10 +185,7 @@ export function Heute({
                           >
                             {wettbewerb.aussehen.kuerzel}
                           </span>
-                          <span>
-                            Platz {wettbewerb.platz.platz} ·{" "}
-                            {wettbewerb.platz.punkte} Pkt
-                          </span>
+                          <span>{wettbewerb.platz.text}</span>
                         </span>
                       ),
                   )}

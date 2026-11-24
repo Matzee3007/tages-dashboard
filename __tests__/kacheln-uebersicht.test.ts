@@ -138,10 +138,9 @@ test("dasselbe Team aus mehreren Wettbewerben steht einmal, mit je einem Eintrag
     ["359", ["premier-league", "champions-league"]],
   ]);
   expect(ergebnis.meinTeam[0]).toMatchObject({ name: "Team 132" });
-  expect(ergebnis.meinTeam[0].wettbewerbe[0].platz).toMatchObject({
-    platz: 1,
-    punkte: 31,
-  });
+  expect(ergebnis.meinTeam[0].wettbewerbe[0].platz?.text).toBe(
+    "Platz 1 · 31 Pkt",
+  );
 });
 
 test("neue KI-News mit Reiter, Kacheln ohne Daten werden übersprungen", () => {
