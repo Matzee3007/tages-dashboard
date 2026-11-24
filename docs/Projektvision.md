@@ -353,12 +353,22 @@ Entscheidungen aus der Befragung zu Schritt 3 (Spielberichte) vom 2026-11-17, fe
   „Bericht“ unter dem Ergebnis klappt den Absatz unter der Partie auf, mit der Marke „KI-generiert“, wie „Zusammenfassung“ bei den
   KI-News. Partien ohne Bericht bleiben wie bisher.
 
+Entscheidungen zu Schritt 5 (NFL) vom 2026-11-24/25, Mock `assets/mocks/2026-11-24-nfl.html` (Variante A), Plan
+[[projects/tages-dashboard/docs/plaene/2026-11-25-nfl|NFL]]:
+
+- **ESPN antwortet vom Server bei Vercel** (Versuch am 2026-11-24, beide Abrufe Status 200). Keine andere Quelle nötig.
+- **Spieltag ist die ganze Woche,** Partien unter dem deutschen Tag (Sonntagabend in den USA steht am Montag um 02:20).
+- **Live:** Stand mit Viertel und Uhr („Q3 8:42“). **Scoring-Plays** unter dem Team wie Torschützen, aber nur bei laufenden Partien und bei
+  Mein Team, damit die Karte kurz bleibt und es weniger Abrufe gibt.
+- **Tabelle:** die Division von Mein Team (NFC West) und darunter die Conference als Ausschnitt mit Seed und Linie nach Seed 7.
+- **Breite:** eine Spalte wie die anderen Kacheln. **In „Heute“:** Chip „6–4 · Seed 8“.
+
 ## Stolpersteine
 
 - **Arsenal und Champions League nur verzögert:** football-data.org liefert im Gratis-Tarif verzögerte
   Ergebnisse (10 Abrufe pro Minute). Live kostet 12 € im Monat (Stand 2026-10-24).
 - **NFL über eine inoffizielle Schnittstelle:** ESPN dokumentiert sie nicht, sie kann sich ohne Ankündigung ändern.
-  Ein Testabruf am 2026-10-24 wurde mit 403 abgewiesen, das ist in Phase 3 zu klären.
+  Ein Testabruf am 2026-10-24 wurde mit 403 abgewiesen. Geklärt am 2026-11-24: Vom Mac und vom Server bei Vercel aus Status 200.
 - **Formel 1 live kostet:** OpenF1 gibt Live-Daten während der Sessions nur für 9,90 € im Monat, Ergebnisse
   danach sind gratis.
 - **X-API kostet:** 0,005 $ je gelesenem Post, derselbe Post zählt pro Tag nur einmal (X-Doku, Stand 2026-11-04). Für vier Konten wären
@@ -372,7 +382,6 @@ Entscheidungen aus der Befragung zu Schritt 3 (Spielberichte) vom 2026-11-17, fe
 
 ## Offene Fragen
 
-- Antwortet die ESPN-Schnittstelle von einem Server aus (Testabruf ergab 403)?
 - Lohnen sich später Live-Daten für Arsenal (12 €/Monat) oder Formel 1 (9,90 €/Monat)?
 - Parkplatz: RAG „Frag meine News“ (erst passende Zusammenfassungen suchen, dann antworten lassen). Wieder aufgreifen, wenn Stufe 3 des
   KI-Features zwei Wochen im Alltag läuft.

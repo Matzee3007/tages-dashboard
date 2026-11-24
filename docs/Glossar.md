@@ -55,6 +55,14 @@ die Woche, in der Formel 1 das Rennwochenende. Ein Spieltag bleibt bis Mitternac
 Spiel aktuell, danach ist es der nächste.
 _Nicht verwenden_: Matchday, Runde, heute
 
+**Seed**:
+Der Platz eines NFL-Teams in seiner Conference (1–16) für die Playoffs. Seeds 1–4 sind die Division-Sieger, 5–7 die Wildcards.
+_Nicht verwenden_: Rang, Setzplatz
+
+**Spielfrei**:
+Ein NFL-Team hat in dieser Woche keine Partie (englisch Bye). Jedes Team hat eine spielfreie Woche je Saison.
+_Nicht verwenden_: Bye-Week, Pause
+
 **Partie**:
 Ein einzelnes Spiel zweier Teams in einem Spieltag.
 _Nicht verwenden_: Match, Begegnung
