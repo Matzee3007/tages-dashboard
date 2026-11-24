@@ -2,6 +2,7 @@ import type { Aussehen } from "@/lib/einstellungen";
 import { fussballKurz, type TeamKurz } from "@/lib/kacheln/fussball/kurz";
 import type { Partie } from "@/lib/kacheln/fussball/typen";
 import { kiNewsKurz, type NeueMeldung } from "@/lib/kacheln/ki-news/kurz";
+import { nflKurz } from "@/lib/kacheln/nfl/kurz";
 import { reiterVon } from "@/lib/kacheln/reiter";
 import type { KachelAnzeige } from "@/lib/kacheln/typen";
 
@@ -52,8 +53,13 @@ export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht {
     if (kachel.fehler) ergebnis.fehler.push(herkunft);
     if (!kachel.daten) continue;
     switch (kachel.daten.art) {
-      case "fussball": {
-        const kurz = fussballKurz(kachel.daten);
+      // Fußball und NFL liefern dieselbe Form der Kurzfassung.
+      case "fussball":
+      case "nfl": {
+        const kurz =
+          kachel.daten.art === "nfl"
+            ? nflKurz(kachel.daten)
+            : fussballKurz(kachel.daten);
         const { meinTeam } = kachel.daten;
         ergebnis.live.push(
           ...kurz.live.map((partie) => ({

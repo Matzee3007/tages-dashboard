@@ -53,8 +53,8 @@ function teamKurz(daten: FussballDaten, id: string): TeamKurz {
   };
 }
 
-// Laufend vor der nächsten (früheste zuerst), sonst die letzte. Abgesagte zählen nie.
-function wichtigstePartie(partien: Partie[]): Partie | null {
+// Laufend vor der nächsten (früheste zuerst), sonst die letzte. Abgesagte zählen nie. Gilt auch für die NFL.
+export function wichtigstePartie(partien: Partie[]): Partie | null {
   const nachAnstoss = [...partien].sort(
     (a, b) => Date.parse(a.anstoss) - Date.parse(b.anstoss),
   );

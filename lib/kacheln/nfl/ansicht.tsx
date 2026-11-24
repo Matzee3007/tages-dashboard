@@ -8,15 +8,9 @@ import {
   zoneVon,
 } from "@/lib/kacheln/fussball/ansicht";
 import type { TeamStand } from "@/lib/kacheln/fussball/typen";
+import { bilanz } from "@/lib/kacheln/nfl/kurz";
 import type { NflDaten, NflZeile } from "@/lib/kacheln/nfl/typen";
 import { datum, tageText } from "@/lib/zeit";
-
-// „6–4“, mit Unentschieden „6–4–1“.
-export function bilanz(zeile: NflZeile): string {
-  return [zeile.siege, zeile.niederlagen, zeile.unentschieden || null]
-    .filter((wert) => wert !== null)
-    .join("–");
-}
 
 // Ist Mein Team spielfrei, steht die Zeile oben und orange, sonst klein am Ende (Mock NFL).
 function Spielfrei({ teams, mein }: { teams: TeamStand[]; mein: boolean }) {
