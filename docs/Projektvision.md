@@ -241,7 +241,8 @@ Entscheidungen aus der Befragung vom 2026-11-04:
    ([[projects/tages-dashboard/docs/adr/0014-reiter-mit-uebersicht|ADR 0014]], PR #95, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-23-reiter-und-heute|Plan]]):* Das Dashboard hat Reiter „Heute“, „Sport“, „KI-News“.
    „Heute“ zeigt Jetzt live, Mein Team und neue KI-News. Neue Kacheln bringen dafür eine Kurzfassung mit.
-4. **Formel 1 (Jolpica):** Rennwochenende und WM-Wertung (Entscheidungen unten, OpenF1 nicht genutzt).
+4. **Formel 1 (Jolpica)** (erledigt 2026-11-27, PR #100, siehe [[projects/tages-dashboard/docs/plaene/2026-11-27-formel-1|Plan]]):
+   Rennwochenende und WM-Wertung (Entscheidungen unten, OpenF1 nicht genutzt).
 5. **NFL (ESPN)** (erledigt 2026-11-25, PR #98, siehe [[projects/tages-dashboard/docs/plaene/2026-11-25-nfl|Plan]]): ESPN antwortet
    vom Server aus. Ganze Woche, live mit Viertel und Scoring-Plays, Tabelle der NFC West und der NFC (Entscheidungen unten).
 
