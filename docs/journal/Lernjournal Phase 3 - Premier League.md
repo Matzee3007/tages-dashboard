@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 3 - Premier League
-status: aktiv
+status: abgeschlossen
 phase: 3
 erstellt: 2026-11-16
 tags: [lernjournal, phase-3, premier-league, football-data, espn, module-entwerfen, plan-schreiben, tdd, assistent-bauen, supabase, dependabot, tailwind]

@@ -108,7 +108,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
   einer Beispielkachel, online auf Vercel
 - [x] **Phase 2 – KI-News:** Feeds und selbst ausgelesene Seiten von Anthropic, Claude Updates, OpenAI, Google DeepMind,
   Karpathy, Matt Pocock und Fachseiten in einer Kachel mit einem Abschnitt pro Absender
-- [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (ESPN), Premier League und Champions League
+- [x] **Phase 3 – Sport** (abgeschlossen 2026-11-27): je eine Kachel für Bundesliga (ESPN), Premier League und Champions League
   (ESPN und football-data.org), NFL (ESPN) und Formel 1 (Jolpica), jeweils mit Spieltag und Tabelle
 - [x] **Einschub – KI-Feature:** Zusammenfassung je Meldung der KI-News mit einem lokalen Sprachmodell
   ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]), in drei Stufen: erster Modellaufruf, Evaluation mit

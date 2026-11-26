@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 3 - Bundesliga-Kachel
-status: aktiv
+status: abgeschlossen
 phase: 3
 erstellt: 2026-11-09
 tags: [lernjournal, phase-3, sport, bundesliga, espn, openligadb, revalidatetag, grill-with-docs, mock, tdd, code-review, plan-pruefer]

@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 3 - KI-Zusammenfassungen
-status: aktiv
+status: abgeschlossen
 phase: 3
 erstellt: 2026-11-15
 tags: [lernjournal, phase-3, ki-feature, sprachmodell, docker, docker-model-runner, supabase, rls, grill-with-docs, tdd, evaluation, football-data, module-entwerfen]

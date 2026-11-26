@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 3 - Neue KI-Quellen
-status: aktiv
+status: abgeschlossen
 phase: 3
 erstellt: 2026-11-19
 tags: [lernjournal, phase-3, ki-news, rss, fast-xml-parser, code-review, vercel]
