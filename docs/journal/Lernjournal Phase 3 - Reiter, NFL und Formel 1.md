@@ -24,8 +24,8 @@ Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]]. Sessio
 - [x] Formel-1-Kachel (Schritt 4): Versuch vom Server, Mock, Plan, Rennwochenende, Qualifying und Rennergebnis, WM-Wertung, Winterpause
   (PR #100, Abnahme PR #101).
 - [x] Phase 3 – Sport abgeschlossen: alle fünf Schritte gebaut und in der Vorschau abgenommen.
-- [ ] Live-Abnahmen: Champions League (Di 24.11., Ergebnis nicht berichtet), NFL mit laufender Partie, Formel 1 in Katar (Sa 28.11. 19:00,
-  So 29.11. 17:00).
+- [x] Live-Test Champions League am 2026-11-24: lief gut (laut Entwickler).
+- [ ] Live-Abnahmen: NFL mit laufender Partie, Formel 1 in Katar (Sa 28.11. 19:00, So 29.11. 17:00).
 
 ## Entscheidungen
 
@@ -40,11 +40,11 @@ Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]]. Sessio
 | Prüfen | `checks.sh` baut die Produktionsfassung | Build-Fehler sonst erst in der CI | Entwickler |
 | Produkt | NFL: ganze Woche, Scoring-Plays nur live und bei den Seahawks, Tabelle NFC West + NFC, eine Spalte breit | Karte bleibt kurz | Entwickler |
 | Produkt | NFL-Playoffs geparkt bis Anfang Januar 2027 | Regular Season zuerst | Entwickler |
-| Technik | Abrufe der NFL und Formel 1 je 2 Sekunden Zeitlimit | bis zu vier Abrufe nacheinander bleiben unter 8 s je Kachel | ungefragt |
+| Technik | Abrufe der NFL und Formel 1 je 2 Sekunden Zeitlimit | bis zu vier Abrufe nacheinander bleiben unter 8 s je Kachel | Entwickler (bestätigt) |
 | Produkt | Formel 1 nur Jolpica, ohne OpenF1; live nur „läuft“ | Prinzip „Erst gratis“ | Entwickler |
 | Produkt | Formel 1: alle Sessions, Top 10, Fahrer und Teams Top 5, Petrol, nächste Session mit Randstreifen | Mock und Rückfragen | Entwickler |
-| Produkt | Winterpause der Formel 1 bis 7 Tage vor der ersten Session der neuen Saison, solange Vorsaison zeigen | Review von PR #100 | ungefragt (Zahl 7) |
-| Technik | In der Projekt-`CLAUDE.md` „Jolpica und OpenF1“ → „Jolpica“ | folgt der Entscheidung „nur Jolpica“, Fund des `plan-pruefer` | ungefragt |
+| Produkt | Winterpause der Formel 1 bis 7 Tage vor der ersten Session der neuen Saison, solange Vorsaison zeigen | Review von PR #100 | Entwickler (bestätigt) |
+| Technik | In der Projekt-`CLAUDE.md` „Jolpica und OpenF1“ → „Jolpica“ | folgt der Entscheidung „nur Jolpica“, Fund des `plan-pruefer` | Entwickler (bestätigt) |
 
 ## Befehle: Diagnose des Containers
 
@@ -135,7 +135,6 @@ dafür nicht.
 
 ## Offene Fragen
 
-- Wie lief der Live-Test der Champions League am 2026-11-24?
 - Grenzen und Nutzungsbedingungen von Jolpica sind nicht nachgelesen (Annahme 4/s, 500/Std.).
 - Offene kleine Funde aus Reviews: Typen `@types/jsdom` noch auf 30, jsdom unter `devDependencies` obwohl der Container es braucht; aus dem
   Review von PR #95 Reiternamen können kollidieren, „Alles im Reiter …“ führt nur zu einem Reiter, Abzeichen live und neu im selben Reiter.
