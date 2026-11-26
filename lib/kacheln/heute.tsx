@@ -2,10 +2,26 @@ import type { ReactNode } from "react";
 import { PartieZeile } from "@/lib/kacheln/fussball/ansicht";
 import { farbVariablen } from "@/lib/kacheln/kachel";
 import { MeldungsLink } from "@/lib/kacheln/ki-news/ansicht";
-import type { Herkunft, Uebersicht } from "@/lib/kacheln/uebersicht";
+import type {
+  Herkunft,
+  LiveEintrag,
+  Uebersicht,
+} from "@/lib/kacheln/uebersicht";
 import { datum } from "@/lib/zeit";
 
 const WEITERE_MELDUNGEN = 6;
+
+// „2 Partien, 1 Rennen“: Partien und Sessions der Formel 1 getrennt gezählt.
+function liveText(live: LiveEintrag[]): string {
+  const partien = live.filter((eintrag) => "partie" in eintrag).length;
+  const sessions = live.length - partien;
+  return [
+    partien && `${partien} ${partien === 1 ? "Partie" : "Partien"}`,
+    sessions && `${sessions} ${sessions === 1 ? "Session" : "Sessions"}`,
+  ]
+    .filter(Boolean)
+    .join(", ");
+}
 
 // Eine Karte der Übersicht, Kopf wie eine Kachel in einer Gruppe (Mock Variante D, `dHeute`).
 function Karte({
@@ -120,21 +136,34 @@ export function Heute({
         {live.length > 0 && (
           <Karte
             titel="Jetzt live"
-            untertitel={`${live.length} ${live.length === 1 ? "Partie" : "Partien"}`}
+            untertitel={liveText(live)}
             marke={<span className="size-2.5 rounded-full bg-akzent" />}
           >
-            {live.map((eintrag) => (
-              <div key={eintrag.partie.id}>
-                <Herkunftszeile herkunft={eintrag} waehle={waehle} />
-                <PartieZeile
-                  partie={eintrag.partie}
-                  meinTeam={eintrag.meinTeam}
-                  mitBericht={false}
-                />
-              </div>
-            ))}
+            {live.map((eintrag) =>
+              "partie" in eintrag ? (
+                <div key={eintrag.partie.id}>
+                  <Herkunftszeile herkunft={eintrag} waehle={waehle} />
+                  <PartieZeile
+                    partie={eintrag.partie}
+                    meinTeam={eintrag.meinTeam}
+                    mitBericht={false}
+                  />
+                </div>
+              ) : (
+                <div key={`${eintrag.kachelId}-${eintrag.session}`}>
+                  <Herkunftszeile herkunft={eintrag} waehle={waehle} />
+                  <p className="flex items-center gap-2 border-t border-rand px-3.5 py-2.5 text-[14px] font-semibold">
+                    <span
+                      aria-hidden
+                      className="size-[7px] rounded-full bg-akzent"
+                    />
+                    {`${eintrag.session} läuft · ${eintrag.rennen}`}
+                  </p>
+                </div>
+              ),
+            )}
             <Weiter
-              text={`Alle Partien im Reiter ${live[0].reiter}`}
+              text={`Alles im Reiter ${live[0].reiter}`}
               onClick={() => waehle(live[0].reiter)}
             />
           </Karte>

@@ -101,7 +101,7 @@ test("Live aus allen Wettbewerben mit Herkunft und Reiter", () => {
       eintrag.kachelId,
       eintrag.reiter,
       eintrag.aussehen.kuerzel,
-      eintrag.partie.id,
+      "partie" in eintrag ? eintrag.partie.id : null,
     ]),
   ).toEqual([
     ["bundesliga", "Sport", "BL", "bl-1"],
@@ -219,7 +219,9 @@ test("Live-Einträge tragen Mein Team ihrer Kachel", () => {
     ],
     JETZT,
   );
-  expect(ergebnis.live[0].meinTeam).toEqual(["132"]);
+  expect("meinTeam" in ergebnis.live[0] && ergebnis.live[0].meinTeam).toEqual([
+    "132",
+  ]);
 });
 
 test("eine laufende NFL-Partie steht in Jetzt live, die Seahawks unter Mein Team", () => {
@@ -244,10 +246,16 @@ test("eine laufende NFL-Partie steht in Jetzt live, die Seahawks unter Mein Team
     fehler: false,
   };
   const ergebnis = uebersicht([nfl], JETZT);
-  expect(ergebnis.live.map((e) => [e.kachelId, e.reiter, e.partie.id])).toEqual(
-    [["nfl", "Sport", "nfl-1"]],
-  );
-  expect(ergebnis.live[0].meinTeam).toEqual(["26"]);
+  expect(
+    ergebnis.live.map((e) => [
+      e.kachelId,
+      e.reiter,
+      "partie" in e ? e.partie.id : null,
+    ]),
+  ).toEqual([["nfl", "Sport", "nfl-1"]]);
+  expect("meinTeam" in ergebnis.live[0] && ergebnis.live[0].meinTeam).toEqual([
+    "26",
+  ]);
   expect(
     ergebnis.meinTeam.map((t) => [t.id, t.wettbewerbe[0].kachelId]),
   ).toEqual([["26", "nfl"]]);
@@ -289,4 +297,49 @@ test("Mein Team aus NFL und Fußball mit gleicher Kennung bleibt getrennt", () =
   expect(
     ergebnis.meinTeam.map((t) => t.wettbewerbe.map((w) => w.kachelId)),
   ).toEqual([["bundesliga"], ["nfl"]]);
+});
+
+test("eine laufende Session der Formel 1 steht in Jetzt live, mit Abzeichen am Reiter Sport", () => {
+  const f1: KachelAnzeige = {
+    id: "formel-1",
+    titel: "Formel 1",
+    aussehen: { farbe: "#0E8F82", kuerzel: "F1" },
+    gruppe: "Sport",
+    daten: {
+      art: "formel-1",
+      rennen: {
+        saison: 2026,
+        runde: 22,
+        name: "Großer Preis von Katar",
+        ort: "Lusail",
+        sessions: [
+          {
+            art: "rennen",
+            name: "Rennen",
+            start: "2026-11-29T16:00:00Z",
+            status: "laeuft",
+          },
+        ],
+      },
+      letzteRunde: 23,
+      winterpause: false,
+      ergebnis: null,
+      fahrer: null,
+      teams: null,
+      wertungNachRunde: null,
+      saisonstart: null,
+    },
+    stand: JETZT.toISOString(),
+    fehler: false,
+  };
+  const ergebnis = uebersicht([f1], JETZT);
+  expect(ergebnis.live).toEqual([
+    expect.objectContaining({
+      kachelId: "formel-1",
+      reiter: "Sport",
+      session: "Rennen",
+      rennen: "Großer Preis von Katar",
+    }),
+  ]);
+  expect(abzeichen(ergebnis)).toEqual({ Sport: "live" });
 });

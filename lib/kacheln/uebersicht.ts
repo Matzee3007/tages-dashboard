@@ -3,6 +3,7 @@ import { fussballKurz, type TeamKurz } from "@/lib/kacheln/fussball/kurz";
 import type { Partie } from "@/lib/kacheln/fussball/typen";
 import { kiNewsKurz, type NeueMeldung } from "@/lib/kacheln/ki-news/kurz";
 import { nflKurz } from "@/lib/kacheln/nfl/kurz";
+import { formel1Kurz } from "@/lib/kacheln/formel-1/kurz";
 import { reiterVon } from "@/lib/kacheln/reiter";
 import type { KachelAnzeige } from "@/lib/kacheln/typen";
 
@@ -15,7 +16,11 @@ export type Herkunft = {
 };
 
 // meinTeam: die Teams der Kachel, damit die Partie in „Jetzt live“ hervorgehoben wird wie in der Kachel.
-export type LiveEintrag = Herkunft & { partie: Partie; meinTeam: string[] };
+// Eine laufende Partie oder eine laufende Session der Formel 1 (ohne Live-Daten nur Name und Rennen).
+export type LiveEintrag = Herkunft &
+  (
+    { partie: Partie; meinTeam: string[] } | { session: string; rennen: string }
+  );
 
 // art: Kennungen von ESPN gelten nur innerhalb einer Sportart, die NFL-26 ist nicht der Fußball-Club 26.
 export type MeinTeamEintrag = {
@@ -90,6 +95,11 @@ export function uebersicht(kacheln: KachelAnzeige[], jetzt: Date): Uebersicht {
               wettbewerbe: [eintrag],
             });
         }
+        break;
+      }
+      case "formel-1": {
+        const laufend = formel1Kurz(kachel.daten);
+        if (laufend) ergebnis.live.push({ ...herkunft, ...laufend });
         break;
       }
       case "ki-news":
