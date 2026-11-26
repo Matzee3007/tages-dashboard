@@ -23,7 +23,7 @@ Gleichwertiges Ziel ist das **Lernen**: PWA, Login mit Supabase Auth, mehrere fr
 - **Tests und Qualität:** Vitest, Testing Library, ESLint, Prettier
 - **Datenquellen:** ESPN (Partien von Bundesliga, Premier League, Champions League und NFL, inoffiziell, ADR 0009),
   OpenLigaDB (Spielplan der Bundesliga), football-data.org (Spieltag und Tabelle von Premier League und Champions League,
-  ADR 0011), Jolpica und OpenF1 (Formel 1), RSS-Feeds (KI-News), iPhone-Kurzbefehl (Schritte aus Apple Health)
+  ADR 0011), Jolpica (Formel 1), RSS-Feeds (KI-News), iPhone-Kurzbefehl (Schritte aus Apple Health)
 - **Zusammenfassungen der KI-News:** lokales Sprachmodell über Docker Model Runner, Skript im Container per Docker Compose
   auf dem Mac (ADR 0010)
 

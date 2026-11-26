@@ -55,3 +55,15 @@ test("die NFL steht nach der Champions League im Reiter Sport, Mein Team sind di
     aussehen: { kuerzel: "NFL" },
   });
 });
+
+test("die Formel 1 steht nach der NFL im Reiter Sport, ohne Mein Team", () => {
+  const ids = KACHELN.map((kachel) => kachel.id);
+  expect(ids.indexOf("formel-1")).toBe(ids.indexOf("nfl") + 1);
+  expect(KACHELN.find((kachel) => kachel.id === "formel-1")).toEqual({
+    id: "formel-1",
+    art: "formel-1",
+    titel: "Formel 1",
+    aussehen: { farbe: "#0E8F82", kuerzel: "F1" },
+    gruppe: "Sport",
+  });
+});

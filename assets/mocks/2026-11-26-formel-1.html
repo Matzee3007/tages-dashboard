@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mock: Kachel Formel 1 (vier Zustände)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:#5f656e;font-family:system-ui,sans-serif;line-height:1.35;color:#111}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:inherit}
+:focus-visible{outline:2px solid #8fc1ff;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Mock-Rahmen (nicht Teil des Entwurfs) ---------- */
+.mock-kopf{background:#262a31;color:#e9ecf0;padding:16px 20px 14px;display:flex;flex-direction:column;gap:8px}
+.mock-kopf h1{font-size:18px;font-weight:600}
+.mock-kopf p{font-size:13.5px;color:#b5bcc6;max-width:980px}
+.mock-kopf .beispiel{display:inline-block;background:#ffd166;color:#1f232a;font-weight:600;border-radius:4px;padding:0 6px;margin-right:6px}
+.mock-kopf nav{display:flex;flex-wrap:wrap;gap:6px}
+.mock-kopf nav a{color:inherit;text-decoration:none;border:1px solid #4a505c;border-radius:8px;min-height:36px;padding:0 10px;display:inline-flex;align-items:center;font-size:13px}
+.variante{padding:34px 20px 20px;max-width:1240px;margin:0 auto}
+.v-titel{color:#fff;margin-bottom:14px}
+.v-titel h2{font-size:24px;font-weight:650}
+.v-titel p{font-size:14.5px;color:#eef0f3;max-width:860px;margin-top:4px}
+.etikett{font-size:12.5px;color:#e2e6ec;margin:18px 0 6px;font-weight:600}
+.etikett span{font-weight:400;color:#c5cbd4}
+.mac-huelle{width:100%;overflow:hidden}
+.mac{width:1200px;border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35);transform-origin:0 0;background:#0F1318}
+.fenster{height:30px;display:flex;align-items:center;gap:8px;padding:0 12px;background:#1d2128;border-bottom:1px solid #000}
+.fenster i{width:12px;height:12px;border-radius:50%;background:#ff5f57}.fenster i:nth-child(2){background:#febc2e}.fenster i:nth-child(3){background:#28c840}
+.fenster span{flex:1;text-align:center;font-size:12px;color:#8a919c;margin-right:52px}
+.handys{display:flex;flex-wrap:wrap;gap:28px 40px;align-items:flex-start}
+.handy-platz{display:flex;flex-direction:column}
+.handy{width:410px;border:10px solid #07090c;border-radius:50px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35);background:#0F1318}
+.seitenende{color:#e2e6ec;text-align:center;font-size:13px;padding:30px 0 40px}
+@media (max-width:460px){
+  .variante{padding:28px 0 16px}
+  .v-titel,.etikett{margin-left:14px;margin-right:14px}
+  .mac-huelle{padding:0 14px}
+  .handys{gap:28px}
+  .handy-platz{width:100%}
+  .handy{width:100%;border:0;border-radius:0}
+}
+
+/* ================= Aussehen G (wie Mock NFL 2026-11-24) ================= */
+.vg{--seite:#0F1318;--karte:#1A1F27;--karte2:#222831;--linie:#2A313B;--grenze:#4A5260;--text:#E8EBF0;--ged:#939CAA;--rauch:#6C7583;--or:#FF8A3D;--or-grund:rgba(255,138,61,.10);--info:#86ABF5;--kz-grund:#2C333E;--kz-text:#C3CAD5;
+  background:var(--seite);color:var(--text);font-family:Commissioner,system-ui,sans-serif;font-weight:400;line-height:1.4;font-variant-numeric:tabular-nums}
+.inhalt{container:g / inline-size}
+.kz{display:inline-grid;place-items:center;border-radius:50%;flex-shrink:0;font-style:normal;font-weight:650;background:var(--kz-grund);color:var(--kz-text);width:22px;height:22px;font-size:7px;letter-spacing:.02em;font-family:system-ui,sans-serif}
+.name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.puls{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--or);animation:puls 1.6s ease-in-out infinite;flex-shrink:0}
+@keyframes puls{50%{opacity:.3}}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13.5px}
+th{font-size:11.5px;font-weight:500;color:var(--rauch);text-align:right;padding-bottom:4px}
+th.l{text-align:left}
+td{height:32px;padding:3px 0}
+td.pl{width:30px;color:var(--ged);font-weight:600;font-size:12.5px}
+td.wer{max-width:0}
+td.wer>span{display:flex;align-items:center;gap:8px;min-width:0}
+td.tm{width:86px;color:var(--ged);font-size:12.5px;max-width:86px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:6px}
+td.zt{width:74px;text-align:right;font-weight:600}
+td.zt.abst{color:var(--ged);font-weight:500}
+td.pk{width:40px;text-align:right;font-weight:720}
+
+.vg .dash{padding:26px 28px 40px;display:flex;flex-direction:column;gap:30px}
+.vg .g-kopf{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px 16px}
+.vg .g-tag{font-size:15px;font-weight:600;color:var(--ged)}
+.vg .g-datum{font-size:34px;font-weight:780;letter-spacing:-.025em;line-height:1.05}
+.vg .g-rechts{display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--ged)}
+.vg .g-abm{min-height:44px;padding:0 18px;border-radius:22px;background:var(--karte);color:var(--text);font-weight:600}
+.vg .g-raster{display:grid;gap:16px;align-items:start}
+@container g (min-width:900px){.vg .g-raster{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.vg .g-karte{background:var(--karte);border-radius:16px;overflow:hidden;min-width:0}
+.vg .g-kk{display:flex;align-items:center;gap:12px;padding:12px 4px 12px 14px;min-height:58px}
+.vg .g-marke{width:34px;height:34px;border-radius:10px;background:var(--c);color:#fff;font-size:12.5px;font-weight:800;display:grid;place-items:center;flex-shrink:0;letter-spacing:-.01em}
+.vg .g-marke.drei{font-size:11px;letter-spacing:-.02em}
+.vg .g-kk>div{flex:1;min-width:0}
+.vg .g-kk h3{font-size:16.5px;font-weight:740;letter-spacing:-.01em;line-height:1.2}
+.vg .g-kk p{font-size:12.5px;color:var(--ged)}
+.vg .unterkopf{margin-top:-10px;padding:0 14px 12px 62px;font-size:12.5px;color:var(--ged)}
+.vg .unterkopf b{display:block;font-size:14px;font-weight:680;color:var(--text)}
+.vg .neu-laden{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;font-size:18px;color:var(--ged);flex-shrink:0}
+.vg .live-marke{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--or);background:var(--or-grund);border-radius:20px;padding:3px 10px;white-space:nowrap}
+.vg .g-tagzeile{background:var(--karte2);padding:6px 14px;font-size:12.5px;font-weight:650;color:var(--ged)}
+.vg .gekuerzt{padding:10px 14px 12px;border-top:1px dashed #3A424E;font-size:12.5px;color:var(--rauch);font-style:italic}
+.vg .g-tab{border-top:1px solid var(--linie);padding:12px 14px 14px}
+.vg .g-tab h4{font-size:13.5px;font-weight:720;margin-bottom:6px}
+.vg .g-tab h4.zweit{margin-top:18px}
+.vg .g-tab h4 small{font-weight:500;color:var(--ged);font-size:12px;margin-left:6px}
+/* Reiter */
+.reiter-oben{display:flex;gap:4px;background:var(--karte);border-radius:14px;padding:4px;align-self:flex-start}
+.reiter-oben button{min-height:44px;padding:0 16px;border-radius:10px;font-size:14.5px;font-weight:600;color:var(--ged);display:inline-flex;align-items:center;gap:7px}
+.reiter-oben button.an{background:var(--karte2);color:var(--text)}
+.zahl-or{background:var(--or);color:#0F1318;border-radius:9px;padding:0 6px;font-weight:700;font-size:11.5px;line-height:18px}
+.status{height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:15px;font-weight:650;font-family:system-ui,sans-serif}
+.status span{font-size:12px;letter-spacing:.1em;color:var(--ged)}
+.tabbar{display:flex;border-top:1px solid var(--linie);background:rgba(15,19,24,.96);padding:6px 6px 22px}
+.tabbar button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;border-radius:10px;font-size:14.5px;font-weight:600;color:var(--ged)}
+.tabbar button.an{background:var(--karte2);color:var(--text)}
+
+/* ================= Neu: Formel 1 ================= */
+.vg .ses{display:grid;grid-template-columns:22px minmax(0,1fr) auto;align-items:center;column-gap:10px;min-height:44px;padding:6px 14px;border-top:1px solid var(--linie);font-size:14px}
+.vg .g-tagzeile+.ses{border-top:0}
+.vg .ses .ic{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;box-shadow:inset 0 0 0 1.5px var(--grenze)}
+.vg .ses .n{font-weight:560;min-width:0;display:flex;align-items:center;gap:8px}
+.vg .ses .wann{font-size:13.5px;color:var(--ged);text-align:right;white-space:nowrap;display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.vg .ses.fertig{color:var(--rauch)}
+.vg .ses.fertig .n{font-weight:450}
+.vg .ses.fertig .wann{color:var(--rauch)}
+.vg .ses.fertig .ic{box-shadow:none;background:var(--karte2);color:var(--ged)}
+.vg .ses.naechste{background:var(--karte2);box-shadow:inset 3px 0 0 var(--info)}
+.vg .ses.naechste .n{font-weight:720}
+.vg .ses.naechste .wann{color:var(--text);font-weight:650}
+.vg .ses.naechste .ic{box-shadow:inset 0 0 0 2px var(--info)}
+.vg .pille{font-size:11px;font-weight:700;color:var(--info);background:rgba(134,171,245,.12);border-radius:10px;padding:1px 7px;white-space:nowrap}
+.vg .ses.live{background:var(--or-grund)}
+.vg .ses.live .n{font-weight:720}
+.vg .ses.live .ic{box-shadow:none}
+.vg .ses.live .laeuft{color:var(--or);font-weight:720;display:inline-flex;align-items:center;gap:6px}
+.vg .pause{border-top:1px solid var(--linie);padding:10px 14px;font-size:13px;color:var(--ged);background:var(--karte2)}
+.vg .pause b{color:var(--text);font-weight:680}
+/* „Heute“ */
+.vg .heute-raster{display:grid;gap:16px;align-items:start}
+@container g (min-width:900px){.vg .heute-raster{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.vg .heute-raster .links{display:grid;gap:16px;min-width:0}
+.vg .h-marke{background:var(--karte2);color:var(--or)}
+.vg .herkunft{display:flex;align-items:center;gap:8px;width:100%;min-height:32px;background:var(--karte2);padding:6px 14px;font-size:12.5px;font-weight:650;color:var(--ged)}
+.vg .herkunft .t{flex:1}
+.vg .mm{display:inline-grid;place-items:center;height:18px;min-width:22px;padding:0 4px;border-radius:5px;background:var(--c);color:#fff;font-size:10px;font-weight:800}
+.vg .weiter{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:0 14px;border-top:1px solid var(--linie);font-size:13.5px;font-weight:600;color:var(--ged)}
+.vg .g-p{display:grid;grid-template-columns:36px minmax(0,1fr) 58px minmax(0,1fr);column-gap:8px;align-items:center;padding:9px 12px 9px 6px;min-height:52px}
+.vg .g-st{font-size:11.5px;font-weight:600;color:var(--or);text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px}
+.vg .g-team{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px;font-weight:500}
+.vg .g-heim{justify-content:flex-end;text-align:right}
+.vg .g-team.mein .name{color:var(--or);font-weight:720}
+.vg .g-p.mein{background:var(--or-grund)}
+.vg .g-box{justify-self:center;min-width:54px;height:30px;padding:0 6px;border-radius:8px;display:grid;place-items:center;font-size:15.5px;font-weight:760;background:var(--or-grund);color:var(--or);box-shadow:inset 0 0 0 1px rgba(255,138,61,.45)}
+.vg .f1-live{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:8px 14px;border-top:1px solid var(--linie);font-size:14px}
+.vg .f1-live .mm{height:20px;min-width:26px;font-size:10.5px}
+.vg .f1-live .t{flex:1;min-width:0;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.vg .f1-live .t b{font-weight:720}
+.vg .f1-live .t .or{color:var(--or);font-weight:720;display:inline-flex;align-items:center;gap:6px}
+.vg .f1-live .gp{color:var(--ged);font-size:12.5px}
+.vg .f1-live .pfeil{color:var(--ged)}
+
+@container g (max-width:600px){
+  .vg .dash{padding:16px 14px 28px;gap:26px}
+  .vg .g-datum{font-size:30px}
+  .vg .g-kopf .g-abm{display:none}
+  .vg .g-p{grid-template-columns:32px minmax(0,1fr) 52px minmax(0,1fr);column-gap:6px;padding-right:10px}
+  .vg .g-team{font-size:13.5px;gap:6px}
+}
+</style>
+</head>
+<body>
+<header class="mock-kopf">
+  <h1>Mock: neue Kachel Formel 1 im Reiter Sport, vier Zustände (Aussehen G, Struktur D)</h1>
+  <p><span class="beispiel">Beispieldaten</span>Ergebnisse, Zeiten, Abstände und Punkte sind erfunden, nur die WM-Stände vor Katar stammen aus dem Auftrag. Saison 2026, Großer Preis von Katar (Runde 22 von 23, ohne Sprint) und Abu Dhabi (Runde 23). Alle Zeiten deutsche Zeit. Fahrer und Teams als Kürzel-Kreise wie bei der NFL, in der App stehen dort keine Logos (Jolpica liefert keine).</p>
+  <p>Das sind keine Varianten, sondern vier Zustände derselben Kachel. Die Fußball- und NFL-Kacheln sind nur angedeutet. Am Mac steht die Formel 1 eine Spalte breit in der zweiten Reihe neben der NFL.</p>
+  <nav aria-label="Abschnitte"><a href="#z1">1 Vor dem Wochenende</a><a href="#z2">2 Nach dem Qualifying</a><a href="#z3">3 Rennen läuft</a><a href="#z4">4 Winterpause</a></nav>
+</header>
+<main id="buehne"></main>
+
+<script>
+/* ---------------- Beispieldaten ---------------- */
+const F1 = {titel:"Formel 1", marke:"F1", farbe:"#0E8F82"};
+const FUSSBALL = [
+  {titel:"Bundesliga", marke:"BL", farbe:"#E3343F", unter:"12. Spieltag, Fr 27. bis So 29. November"},
+  {titel:"Premier League", marke:"PL", farbe:"#B061D1", unter:"13. Spieltag, Sa 28. bis Mo 30. November"},
+  {titel:"Champions League", marke:"CL", farbe:"#5B8DEF", unter:"Ligaphase, 6. Spieltag, Di 8. bis Mi 9. Dezember"},
+  {titel:"NFL", marke:"NFL", farbe:"#2F5BB7", unter:"Woche 12, Do 26. November bis Di 1. Dezember"},
+];
+const TEAMKZ = {Mercedes:"MER",Ferrari:"FER","Red Bull":"RBR",McLaren:"MCL",RB:"RB","Aston Martin":"AMR",Williams:"WIL"};
+const FAHRER = {ANT:["Antonelli","Mercedes"],RUS:["Russell","Mercedes"],VER:["Verstappen","Red Bull"],HAD:["Hadjar","Red Bull"],HAM:["Hamilton","Ferrari"],LEC:["Leclerc","Ferrari"],NOR:["Norris","McLaren"],PIA:["Piastri","McLaren"],ALO:["Alonso","Aston Martin"],LAW:["Lawson","RB"],GAS:["Gasly","Alpine"]};
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+const KATAR = {name:"Großer Preis von Katar · Lusail", runde:"Runde 22 von 23 · Fr 27. bis So 29. November",
+  sessions:[["1. Training","Fr 14:30"],["2. Training","Fr 18:30"],["3. Training","Sa 15:30"],["Qualifying","Sa 19:00"],["Rennen","So 17:00"]]};
+const ABU = {name:"Großer Preis von Abu Dhabi · Yas Marina", runde:"Runde 23 von 23 · Fr 4. bis So 6. Dezember"};
+const STARTAUFSTELLUNG = [["ANT","1:19,387"],["RUS","1:19,512"],["VER","1:19,640"],["NOR","1:19,701"],["HAM","1:19,788"],["LEC","1:19,845"],["PIA","1:19,903"],["HAD","1:20,121"],["ALO","1:20,240"],["LAW","1:20,377"]];
+const ERGEBNIS_ABU = [["VER","1:26:07,469"],["ANT","+0,639"],["NOR","+5,212"],["RUS","+8,904"],["LEC","+12,377"],["HAM","+19,020"],["PIA","+24,566"],["HAD","+41,308"],["LAW","+58,712"],["GAS","+1:04,155"]];
+const WM_VOR = {fahrer:[["Antonelli","Mercedes",402],["Verstappen","Red Bull",304],["Hamilton","Ferrari",267],["Russell","Mercedes",264],["Norris","McLaren",264]],
+  teams:[["Mercedes",666],["Ferrari",517],["Red Bull",440],["McLaren",431],["RB",114]]};
+const WM_ENDE = {fahrer:[["Antonelli","Mercedes",445],["Verstappen","Red Bull",347],["Russell","Mercedes",291],["Norris","McLaren",289],["Hamilton","Ferrari",287]],
+  teams:[["Mercedes",736],["Ferrari",555],["Red Bull",491],["McLaren",468],["RB",116]]};
+const KI_ZAHL = 7;
+
+/* ---------------- Bausteine ---------------- */
+const kartenKopf = (marke, farbe, titel, rechts = "") =>
+  `<header class="g-kk"><span class="g-marke${marke.length>2?" drei":""}" style="--c:${farbe}" aria-hidden="true">${marke}</span><div><h3>${titel}</h3></div>${rechts}<button class="neu-laden" aria-label="${titel} aktualisieren">↻</button></header>`;
+const angedeutet = w => `<section class="g-karte">${kartenKopf(w.marke, w.farbe, w.titel)}<p class="unterkopf">${w.unter}</p><p class="gekuerzt">Spieltag und Tabelle im Mock ausgelassen</p></section>`;
+const liveMarke = `<span class="live-marke"><span class="puls"></span>Live</span>`;
+
+// Zustand jeder Session: fertig, naechste, live, kommt
+function sessionZeile([name, wann], zustand){
+  const ic = zustand === "fertig" ? `<span class="ic" aria-label="beendet">✓</span>`
+    : zustand === "live" ? `<span class="ic"><span class="puls" style="width:9px;height:9px"></span></span>` : `<span class="ic"></span>`;
+  const rechts = zustand === "live" ? `<span>${wann}</span><span class="laeuft">läuft</span>`
+    : zustand === "naechste" ? `<span class="pille">Nächste</span><span>${wann}</span>` : `<span>${wann}</span>`;
+  return `<div class="ses ${zustand}">${ic}<span class="n"><span class="name">${name}</span></span><span class="wann">${rechts}</span></div>`;
+}
+function sessions(fertig, live){
+  return `<p class="g-tagzeile">Rennwochenende</p>` + KATAR.sessions.map((s,i) =>
+    sessionZeile(s, i < fertig ? "fertig" : i === live ? "live" : i === fertig && live === undefined ? "naechste" : "kommt")).join("");
+}
+const fahrerZelle = k => `<td class="wer"><span><i class="kz">${k}</i><span class="name">${FAHRER[k][0]}</span></span></td>`;
+function ergebnisTabelle(zeilen, titel, klein, abstand){
+  const tr = zeilen.map(([k, z], i) => `<tr><td class="pl">${i+1}</td>${fahrerZelle(k)}<td class="tm">${FAHRER[k][1]}</td><td class="zt${abstand && i ? " abst" : ""}">${z}</td></tr>`).join("");
+  return `<div class="g-tab"><h4>${titel}<small>${klein}</small></h4><table><thead><tr><th></th><th class="l">Fahrer</th><th class="l" style="padding-left:6px">Team</th><th>${abstand ? "Abstand" : "Zeit"}</th></tr></thead><tbody>${tr}</tbody></table></div>`;
+}
+function wertung(wm, klein){
+  const f = wm.fahrer.map(([n, t, p], i) => `<tr><td class="pl">${i+1}</td><td class="wer"><span><i class="kz">${n.slice(0,3).toUpperCase()}</i><span class="name">${n}</span></span></td><td class="tm">${t}</td><td class="pk">${p}</td></tr>`).join("");
+  const t = wm.teams.map(([n, p], i) => `<tr><td class="pl">${i+1}</td><td class="wer"><span><i class="kz">${TEAMKZ[n]}</i><span class="name">${n}</span></span></td><td class="pk">${p}</td></tr>`).join("");
+  return `<div class="g-tab"><h4>WM-Wertung<small>${klein}</small></h4>
+    <table aria-label="Fahrer"><thead><tr><th></th><th class="l">Fahrer</th><th class="l" style="padding-left:6px">Team</th><th>Pkt</th></tr></thead><tbody>${f}</tbody></table>
+    <h4 class="zweit">Teams</h4>
+    <table aria-label="Teams"><thead><tr><th></th><th class="l">Team</th><th>Pkt</th></tr></thead><tbody>${t}</tbody></table></div>`;
+}
+function f1Karte(z){
+  const live = z === 3;
+  const kopf = kartenKopf(F1.marke, F1.farbe, F1.titel, live ? liveMarke : "");
+  if (z === 4) return `<section class="g-karte">${kopf}<p class="unterkopf"><b>${ABU.name}</b>${ABU.runde}</p>
+    <p class="pause"><b>Winterpause.</b> Saisonstart: Großer Preis von Australien, <span style="white-space:nowrap">6.–8. März</span></p>
+    ${ergebnisTabelle(ERGEBNIS_ABU, "Rennergebnis", "So 6. Dezember", true)}${wertung(WM_ENDE, "Endstand 2026")}</section>`;
+  const teile = z === 1 ? sessions(0) : z === 2 ? sessions(4) : sessions(4, 4);
+  const erg = z >= 2 ? ergebnisTabelle(STARTAUFSTELLUNG, "Startaufstellung", "nach dem Qualifying", false) : "";
+  return `<section class="g-karte">${kopf}<p class="unterkopf"><b>${KATAR.name}</b>${KATAR.runde}</p>${teile}${erg}${wertung(WM_VOR, "nach Runde 21")}</section>`;
+}
+
+/* Seite: Kopf, Reiter */
+const datumKopf = (tag, datum, stand) => `<header class="g-kopf"><div><p class="g-tag">${tag}</p><p class="g-datum">${datum}</p></div><div class="g-rechts"><span>Aktualisiert ${stand}</span><button class="g-abm">Abmelden</button></div></header>`;
+const reiterKnoepfe = (an, live) => [["Heute",""],["Sport",live?'<span class="puls"></span>':""],["KI-News",`<span class="zahl-or">${KI_ZAHL}</span>`]].map(([n,z]) => `<button class="${n===an?"an":""}">${n}${z}</button>`).join("");
+function mac(kopf, inhalt, an, live){
+  return `<div class="mac-huelle"><div class="mac"><div class="fenster"><i></i><i></i><i></i><span>Tages-Dashboard</span></div>
+    <div class="vg inhalt"><div class="dash">${kopf}<nav class="reiter-oben" aria-label="Bereiche">${reiterKnoepfe(an, live)}</nav>${inhalt}</div></div></div></div>`;
+}
+function handy(stand, kopf, inhalt, an, live){
+  return `<div class="handy"><div class="vg"><div class="status"><b>${stand}</b><span>▂▄▆ 5G ▮▮▮</span></div><div class="inhalt"><div class="dash">${kopf}${inhalt}</div></div><nav class="tabbar" aria-label="Bereiche">${reiterKnoepfe(an, live)}</nav></div></div>`;
+}
+const sport = z => `<div class="g-raster">${FUSSBALL.map(angedeutet).join("")}${f1Karte(z)}</div>`;
+
+/* Heute im Zustand 3 */
+function heute(){
+  const BL = FUSSBALL[0];
+  const karteH = (marke, titel, unter, inhalt) => `<section class="g-karte"><header class="g-kk" style="padding-right:14px"><span class="g-marke h-marke" aria-hidden="true">${marke}</span><div><h3>${titel}</h3><p>${unter}</p></div></header>${inhalt}</section>`;
+  const partie = `<p class="herkunft"><span class="mm" style="--c:${BL.farbe}">BL</span><span class="t">Bundesliga</span><span aria-hidden="true">›</span></p>
+    <div class="g-p mein"><span class="g-st"><span class="puls"></span><span>1'</span></span><span class="g-team g-heim mein"><span class="name">Bayern</span><i class="kz">FCB</i></span><span class="g-box">0 – 0</span><span class="g-team"><i class="kz">VFB</i><span class="name">Stuttgart</span></span></div>`;
+  const f1 = `<div class="f1-live"><span class="mm" style="--c:${F1.farbe}">F1</span><span class="t"><b>Formel 1 ·</b><span class="or"><span class="puls"></span>Rennen läuft</span><span class="gp">Großer Preis von Katar</span></span><span class="pfeil" aria-hidden="true">›</span></div>`;
+  const live = karteH(`<span class="puls" style="width:10px;height:10px"></span>`, "Jetzt live", "1 Partie, 1 Rennen", partie + f1 + `<p class="weiter">Alles im Reiter Sport<span aria-hidden="true">›</span></p>`);
+  const mein = karteH("★", "Mein Team", "Nächste oder letzte Partie, Platz", `<p class="gekuerzt">Im Mock ausgelassen (Formel 1 hat kein Mein Team)</p>`);
+  const news = karteH("KI", "Neu in den KI-News", `${KI_ZAHL} neue Meldungen, neueste zuerst`, `<p class="gekuerzt">Im Mock ausgelassen</p>`);
+  return `<div class="heute-raster"><div class="links">${live}${mein}</div>${news}</div>`;
+}
+
+/* ---------------- Seite ---------------- */
+const ZUSTAENDE = [
+  {id:1, titel:"1 Vor dem Wochenende", tag:"Mittwoch", datum:"25. November", stand:"09:12",
+   text:"Kopf mit Rennen, Ort und Runde, darunter alle fünf Sessions mit Wochentag und Uhrzeit. Das 1. Training ist als nächste Session hervorgehoben (blauer Rand, „Nächste“). Noch keine Ergebnisse, darunter die WM-Wertung nach Runde 21."},
+  {id:2, titel:"2 Samstag nach dem Qualifying", tag:"Samstag", datum:"28. November", stand:"20:30",
+   text:"Training und Qualifying sind gedimmt und gehakt, das Rennen ist die nächste Session. Neu ist die Startaufstellung: die ersten 10 mit Fahrer, Team und Bestzeit."},
+  {id:3, titel:"3 Rennen läuft", tag:"Sonntag", datum:"29. November", stand:"17:30", live:true,
+   text:"Das Rennen trägt einen orangen Punkt und „läuft“, ohne Zwischenstand. Die Kachel zeigt „Live“ im Kopf, der Reiter Sport den Punkt. Die Startaufstellung bleibt stehen, bis das Ergebnis da ist. Darunter „Heute“ mit der Zeile „Formel 1 · Rennen läuft“ unter „Jetzt live“."},
+  {id:4, titel:"4 Winterpause", tag:"Mittwoch", datum:"9. Dezember", stand:"08:40",
+   text:"Nach dem letzten Rennen: Kopf mit Abu Dhabi, darunter der Hinweis auf den Saisonstart. Die Sessions entfallen, es bleiben das Rennergebnis (Sieger mit Gesamtzeit, dann Abstand) und der WM-Endstand."},
+];
+const NUR = new URLSearchParams(location.search).get("nur");
+function bauen(){
+  const teile = ZUSTAENDE.map(z => {
+    const kopf = datumKopf(z.tag, z.datum, z.stand);
+    const heuteTeil = z.live ? `<p class="etikett">Mac <span>(1200 px, Reiter Heute)</span></p>${mac(kopf, heute(), "Heute", true)}
+      <div class="handys"><div class="handy-platz"><p class="etikett">iPhone <span>(390 px, Reiter Heute)</span></p>${handy(z.stand, kopf, heute(), "Heute", true)}</div></div>` : "";
+    return [String(z.id), `<section class="variante" id="z${z.id}"><div class="v-titel"><h2>${z.titel}</h2><p>${z.text}</p></div>
+      <p class="etikett">Mac <span>(1200 px, Reiter Sport, ${z.tag} ${z.datum} ${z.stand})</span></p>${mac(kopf, sport(z.id), "Sport", z.live)}
+      <div class="handys"><div class="handy-platz"><p class="etikett">iPhone <span>(390 px, Reiter Sport, übrige Kacheln angedeutet)</span></p>${handy(z.stand, kopf, sport(z.id), "Sport", z.live)}</div></div>
+      ${heuteTeil}</section>`];
+  });
+  document.getElementById("buehne").innerHTML = teile.filter(([k]) => !NUR || NUR === k).map(([, h]) => h).join("") + `<p class="seitenende">Ende des Mocks</p>`;
+  skalieren();
+}
+function skalieren(){
+  document.querySelectorAll(".mac-huelle").forEach(h => { const m = h.firstElementChild; m.style.transform = "";
+    const f = Math.min(1, h.clientWidth / 1200); m.style.transform = `scale(${f})`; h.style.height = (m.offsetHeight * f) + "px"; });
+}
+addEventListener("resize", skalieren);
+bauen();
+if (document.fonts) document.fonts.ready.then(skalieren);
+</script>
+</body>
+</html>

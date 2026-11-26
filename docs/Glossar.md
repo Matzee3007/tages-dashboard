@@ -53,11 +53,17 @@ _Nicht verwenden_: Lieblingsverein, Favorit
 Die aktuelle Runde eines Wettbewerbs mit allen Partien, auch wenn sie nicht heute stattfinden. In der NFL ist das
 die Woche, in der Formel 1 das Rennwochenende. Ein Spieltag bleibt bis Mitternacht (deutsche Zeit) des Tages nach seinem letzten
 Spiel aktuell, danach ist es der nächste.
-_Nicht verwenden_: Matchday, Runde, heute
+_Nicht verwenden_: Matchday, Runde, heute. Ausnahme Formel 1: „Runde 22 von 23“ ist die Nummer des Rennens in der Saison, wie die
+Formel 1 selbst zählt.
 
 **Seed**:
 Der Platz eines NFL-Teams in seiner Conference (1–16) für die Playoffs. Seeds 1–4 sind die Division-Sieger, 5–7 die Wildcards.
 _Nicht verwenden_: Rang, Setzplatz
+
+**Session**:
+Ein Teil eines Rennwochenendes der Formel 1: 1. bis 3. Training, Sprint-Qualifying, Sprint, Qualifying, Rennen. Während einer Session
+steht „läuft“, Zwischenstände gibt es nicht.
+_Nicht verwenden_: Lauf, Event
 
 **Spielfrei**:
 Ein NFL-Team hat in dieser Woche keine Partie (englisch Bye). Jedes Team hat eine spielfreie Woche je Saison.

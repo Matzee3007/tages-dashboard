@@ -61,7 +61,7 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 | Login und Datenbank | Supabase (Auth, Postgres) |
 | Hosting | Vercel (kostenloser Tarif) |
 | Tests und Qualität | Vitest, Testing Library, ESLint, Prettier |
-| Sportdaten | ESPN (inoffiziell, Bundesliga, Premier League, Champions League und NFL), football-data.org (Spieltag und Tabelle von PL und CL), Jolpica, OpenF1 |
+| Sportdaten | ESPN (inoffiziell, Bundesliga, Premier League, Champions League und NFL), football-data.org (Spieltag und Tabelle von PL und CL), Jolpica (Formel 1, OpenF1 seit 2026-11-27 nicht genutzt) |
 | News | RSS- und Atom-Feeds (`fast-xml-parser`), selbst ausgelesene Seiten |
 | Schritte | iPhone-Kurzbefehl → eigene Schnittstelle der App |
 | Zusammenfassungen | lokales Sprachmodell auf dem Mac über Docker Model Runner, Skript in Docker Compose ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac\|ADR 0010]]) |
@@ -109,7 +109,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 - [x] **Phase 2 – KI-News:** Feeds und selbst ausgelesene Seiten von Anthropic, Claude Updates, OpenAI, Google DeepMind,
   Karpathy, Matt Pocock und Fachseiten in einer Kachel mit einem Abschnitt pro Absender
 - [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (ESPN), Premier League und Champions League
-  (ESPN und football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
+  (ESPN und football-data.org), NFL (ESPN) und Formel 1 (Jolpica), jeweils mit Spieltag und Tabelle
 - [x] **Einschub – KI-Feature:** Zusammenfassung je Meldung der KI-News mit einem lokalen Sprachmodell
   ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]), in drei Stufen: erster Modellaufruf, Evaluation mit
   Testsatz, Structured Output. Phase 3, Schritt 2 ruht so lange.
@@ -241,7 +241,7 @@ Entscheidungen aus der Befragung vom 2026-11-04:
    ([[projects/tages-dashboard/docs/adr/0014-reiter-mit-uebersicht|ADR 0014]], PR #95, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-23-reiter-und-heute|Plan]]):* Das Dashboard hat Reiter „Heute“, „Sport“, „KI-News“.
    „Heute“ zeigt Jetzt live, Mein Team und neue KI-News. Neue Kacheln bringen dafür eine Kurzfassung mit.
-4. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
+4. **Formel 1 (Jolpica):** Rennwochenende und WM-Wertung (Entscheidungen unten, OpenF1 nicht genutzt).
 5. **NFL (ESPN)** (erledigt 2026-11-25, PR #98, siehe [[projects/tages-dashboard/docs/plaene/2026-11-25-nfl|Plan]]): ESPN antwortet
    vom Server aus. Ganze Woche, live mit Viertel und Scoring-Plays, Tabelle der NFC West und der NFC (Entscheidungen unten).
 
@@ -363,6 +363,16 @@ Entscheidungen zu Schritt 5 (NFL) vom 2026-11-24/25, Mock `assets/mocks/2026-11-
 - **Tabelle:** die Division von Mein Team (NFC West) und darunter die Conference als Ausschnitt mit Seed und Linie nach Seed 7.
 - **Breite:** eine Spalte wie die anderen Kacheln. **In „Heute“:** Chip „6–4 · Seed 8“.
 
+Entscheidungen zu Schritt 4 (Formel 1) vom 2026-11-25/27, Mock `assets/mocks/2026-11-26-formel-1.html`, Plan
+[[projects/tages-dashboard/docs/plaene/2026-11-27-formel-1|Formel 1]]:
+
+- **Nur Jolpica, kein OpenF1:** gratis, keine Live-Daten. Während einer Session steht „läuft“, berechnet aus Startzeit und Dauer.
+- **Rennwochenende:** alle Sessions mit deutscher Uhrzeit, nach dem Qualifying die Top 10 der Startaufstellung, nach dem Rennen die Top 10
+  mit Abstand.
+- **WM-Wertung:** Fahrer Top 5 und darunter Teams Top 5.
+- **Winterpause:** letztes Rennen und Endstand bleiben, dazu „Saisonstart: …“, sobald Jolpica die neue Saison kennt.
+- **Aussehen:** Marke Petrol `#0E8F82`, die nächste Session mit blauem Randstreifen, Formel 1 ohne Mein Team.
+
 ## Stolpersteine
 
 - **Arsenal und Champions League nur verzögert:** football-data.org liefert im Gratis-Tarif verzögerte
@@ -370,7 +380,7 @@ Entscheidungen zu Schritt 5 (NFL) vom 2026-11-24/25, Mock `assets/mocks/2026-11-
 - **NFL über eine inoffizielle Schnittstelle:** ESPN dokumentiert sie nicht, sie kann sich ohne Ankündigung ändern.
   Ein Testabruf am 2026-10-24 wurde mit 403 abgewiesen. Geklärt am 2026-11-24: Vom Mac und vom Server bei Vercel aus Status 200.
 - **Formel 1 live kostet:** OpenF1 gibt Live-Daten während der Sessions nur für 9,90 € im Monat, Ergebnisse
-  danach sind gratis.
+  danach sind gratis. Seit 2026-11-27 nutzt die Kachel nur Jolpica, ohne Live-Daten.
 - **X-API kostet:** 0,005 $ je gelesenem Post, derselbe Post zählt pro Tag nur einmal (X-Doku, Stand 2026-11-04). Für vier Konten wären
   das geschätzt 3 $ im Monat. Am 2026-11-04 abgelehnt, weil das Dashboard nichts kosten soll. Auslesen ohne API verbieten die Regeln von X
   laut Berichten.

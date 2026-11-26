@@ -455,7 +455,7 @@ test("aus Heute in den Reiter springen, über einen Wettbewerb bis zu seiner Kac
 
   fireEvent.click(within(bereiche).getByRole("button", { name: "Heute" }));
   fireEvent.click(
-    screen.getByRole("button", { name: /Alle Partien im Reiter Sport/ }),
+    screen.getByRole("button", { name: /Alles im Reiter Sport/ }),
   );
   expect(aktiv()).toMatch(/^Sport/);
 });
@@ -585,4 +585,49 @@ test("Heute nennt Kacheln, die gerade nicht erreichbar sind, und führt zu ihnen
   });
   fireEvent.click(within(hinweis).getByRole("button", { name: /KI-News/ }));
   expect(await screen.findByText("Neuer Versuch in 1 Minute.")).toBeDefined();
+});
+
+test("Heute zeigt eine laufende Session der Formel 1 unter Jetzt live", async () => {
+  vi.mocked(holeDashboard).mockResolvedValue({
+    zeit: ZEIT,
+    kacheln: [
+      {
+        id: "formel-1",
+        titel: "Formel 1",
+        aussehen: { farbe: "#0E8F82", kuerzel: "F1" },
+        gruppe: "Sport",
+        status: "ok",
+        daten: {
+          art: "formel-1",
+          rennen: {
+            saison: 2026,
+            runde: 22,
+            name: "Großer Preis von Katar",
+            ort: "Lusail",
+            sessions: [
+              { art: "rennen", name: "Rennen", start: ZEIT, status: "laeuft" },
+            ],
+          },
+          letzteRunde: 23,
+          winterpause: false,
+          ergebnis: null,
+          fahrer: null,
+          teams: null,
+          wertungNachRunde: null,
+          saisonstart: null,
+        },
+        stand: ZEIT,
+      },
+    ],
+  });
+  render(<Page />);
+
+  const live = await screen.findByRole("region", { name: "Jetzt live" });
+  expect(within(live).getByRole("button", { name: /Formel 1/ })).toBeDefined();
+  expect(
+    within(live).getByText("Rennen läuft · Großer Preis von Katar"),
+  ).toBeDefined();
+  expect(
+    within(live).getByRole("button", { name: /Alles im Reiter Sport/ }),
+  ).toBeDefined();
 });
