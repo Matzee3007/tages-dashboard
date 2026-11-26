@@ -1,24 +1,25 @@
 ---
 titel: Nächste Session
 status: aktiv
-erstellt: 2026-11-19
+erstellt: 2026-11-27
 tags: [session, übergabe]
 ---
 
 # Nächste Session
 
-Stand vom 2026-11-19. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
-[[projects/tages-dashboard/docs/journal/Lernjournal Phase 3 - Neue KI-Quellen|Lernjournal Phase 3 - Neue KI-Quellen]].
+Stand vom 2026-11-27. Gehört zu [[projects/tages-dashboard/docs/Projektvision|Projektvision]], letztes Journal:
+[[projects/tages-dashboard/docs/journal/Lernjournal Phase 3 - Reiter, NFL und Formel 1|Lernjournal Phase 3 - Reiter, NFL und Formel 1]].
 
 ## Stand bei Sessionende
 
-- **Branch:** `main` (nach dem Merge von PR #91, Journal und Übergabe)
-- **Offene PRs:** #87, #88, #89 (Dependabot, siehe „Wartet auf dich“)
+- **Branch:** `main` (nach dem Merge von PR #102, Journal und Übergabe)
+- **Offene PRs:** keine
 - **Nicht committet:** nichts
 - **Supabase:** gehostet, kein lokaler Container (so gewollt)
-- **Container `zusammenfassen`:** läuft mit `ai/gemma4:e4b`, alle 15 Minuten KI-News und Spielberichte (ADR 0013)
-- **KI-News:** seit PR #90 ohne The Verge, neu t3n, Ars Technica, Simon Willison, Hugging Face, Import AI, Latent Space (live geprüft)
-- **Phase 3, Schritt 3 (Spielberichte):** gebaut und gemergt (PR #85), Abnahme offen, siehe unten
+- **Docker Desktop:** beendet (so gewollt). Damit läuft auch der Container `zusammenfassen` nicht: keine neuen Zusammenfassungen und
+  Spielberichte, bis Docker wieder läuft.
+- **Phase 3 – Sport:** abgeschlossen am 2026-11-27 (Bundesliga, Premier League, Champions League, Spielberichte, NFL, Formel 1, dazu
+  Reiter mit Übersicht „Heute“, ADR 0014)
 
 ## Vor dem Start
 
@@ -29,72 +30,63 @@ Stand vom 2026-11-19. Gehört zu [[projects/tages-dashboard/docs/Projektvision|P
    claude
    ```
 
+2. Sollen Zusammenfassungen und Spielberichte laufen: Docker Desktop öffnen, dann
+
+   ```bash
+   docker compose up -d
+   ```
+
+   startet den Container `zusammenfassen` wieder, der alle 15 Minuten KI-News und Spielberichte erzeugt (ADR 0010, ADR 0013).
+
 ## Wartet auf dich
 
-- [ ] **Abnahme Spielberichte, Freitag 2026-11-20** nach Abpfiff der ersten Bundesliga-Partie (Anstoß 20:30) (blockiert: Schritt 3 als
-      erledigt markieren)
-  - Ort: Dashboard in Production auf Mac und iPhone, etwa 20 Minuten nach Abpfiff. Vorher prüfen, ob der Mac wach ist und Docker läuft.
-  - Erwartet: Unter der beendeten Partie steht mittig der Knopf „Bericht“, er klappt einen Kasten mit „KI-generiert“ und 4 bis 6
-    deutschen Sätzen auf. Ergebnis und ob der Text zum Spiel passt, im
-    [[projects/tages-dashboard/docs/plaene/2026-11-17-spielberichte|Plan der Spielberichte]] bei Aufgabe 8, Schritt 2 eintragen.
-  - Im Log nachsehen: `docker compose logs --since 30m zusammenfassen`, erwartet `Spielberichte: neu 1, ohne 0`.
-- [ ] **Live-Test Bundesliga, Freitag 2026-11-20 ab 20:30** und **Premier League am Samstag** (blockiert: nichts)
-  - Ort: Dashboard in Production, während eine Partie läuft.
-  - Erwartet: Minute mit orangem Punkt im Feld, Spielstand und Torschützen unter dem richtigen Team innerhalb von rund 2 Minuten nach
-    einem Tor. Ergebnis im [[projects/tages-dashboard/docs/plaene/2026-11-08-bundesliga|Plan der Bundesliga]] bei Aufgabe 5, Schritt 3
-    nachtragen.
-- [ ] **Live-Test Champions League, Dienstag 2026-11-24 abends** (blockiert: nichts)
-  - Ort: Dashboard in Production, ab 18:45.
-  - Erwartet: alle Partien des Abends unter „Dienstag, 24. November“, live mit Minute; Ergebnis im
-    [[projects/tages-dashboard/docs/plaene/2026-11-16-champions-league|Plan der Champions League]] bei Aufgabe 4, Schritt 3 nachtragen.
-- [ ] **Dashboard auf jedem Gerät einmal neu laden** (blockiert: nichts). Seit PR #81 und PR #85 hat sich die Antwort der Kacheln
-      geändert, eine vorher geöffnete Seite kann beim nächsten Minutentakt abstürzen.
-  - Mac im Browser: `Cmd + R`. iPhone und iPad: die PWA im App-Umschalter schließen und neu öffnen.
-  - Erwartet: Karten mit den Marken BL, PL, CL, KI-News in 3 Spalten auf dem Mac.
+- [ ] **Live-Abnahme Formel 1 in Katar** (blockiert: nichts, Plan ist abgeschlossen)
+  - Ort: Dashboard in Production, Reiter „Sport“ und „Heute“. Qualifying Sa 28.11. 19:00, Rennen So 29.11. 17:00.
+  - Erwartet: Während der Session an ihr „läuft“ mit orangem Punkt, in „Heute“ unter „Jetzt live“ die Zeile „Qualifying läuft · Großer
+    Preis von Katar“ und am Reiter Sport ein Punkt. Nach dem Qualifying die Tabelle „Qualifying“, nach dem Rennen (Jolpica braucht etwas)
+    das „Rennergebnis“. Ergebnis im [[projects/tages-dashboard/docs/plaene/2026-11-27-formel-1|Plan Formel 1]] bei Aufgabe 6 nachtragen.
+- [ ] **Live-Abnahme NFL** (blockiert: nichts)
+  - Ort: Dashboard in Production, So 29.11. ab 19:00 (Woche 12).
+  - Erwartet: laufende Partie mit „Q2 3:41“ o. Ä., Scoring-Plays bei laufenden Partien und den Seahawks unter dem richtigen Team, in „Heute“
+    unter „Jetzt live“. Ergebnis im [[projects/tages-dashboard/docs/plaene/2026-11-25-nfl|Plan NFL]] bei Aufgabe 7 nachtragen.
 - [ ] **Mac-App neu bauen**, damit sie beim Start den Grundton `#0F1318` zeigt (blockiert: nichts)
   - Befehl im eigenen Terminal: `npm run tauri -- build`
   - Erwartet: Beim Öffnen der App blitzt kein anderer Farbton mehr auf.
 
-- [ ] **Dependabot-PRs #87, #88, #89 prüfen** (blockiert: nichts). Nicht gemergt, weil in dieser Session nicht reviewt.
-  - Ort: mit Claude, je PR `bash checks.sh` auf dem Branch und `/code-review low <nr>`, #89 (jsdom 31, neue Hauptversion) mit `medium`.
-  - Erwartet: Prüfungen grün, Funde durchgesprochen, dann Merge.
-
 ## Womit es weitergeht
 
-**Phase 3, Schritt 3 (Spielberichte)** ist gebaut, erledigt ist er erst nach der Abnahme am Freitag. Dann in der Projektvision als
-erledigt markieren und den Plan auf `status: abgeschlossen` setzen.
+**Phase 4 – Schritte** beginnt (Roadmap in der [[projects/tages-dashboard/docs/Projektvision|Projektvision]]): iPhone-Kurzbefehl schickt
+die Schritte aus Apple Health an die App, Kachel mit Tageswert, Tagesziel und Verlauf.
 
-Anstehende Entscheidungen, am Anfang der Session:
+1. **Zuerst fragen, ob vorher etwas anderes ansteht.** Vorschläge:
+   - **MIT-Lizenz** (aus dem Ecosystem, 2026-11-17): `LICENSE` im Wurzelordner, Rechteinhaber `Matzee3007` (kein Klarname), in der README
+     ein Abschnitt „Lizenz“. Eigener kleiner PR.
+   - **Software-Factory-Pilot** (aus dem Ecosystem, ADR 0027 dort): Plan `~/claude-ecosystem/docs/plaene/2026-11-23-software-factory.md`,
+     mit dem Versuch im Kopf beginnen. Koordinator ist eine Session in diesem Ordner, höchstens 2 Orca-Worker, Merge nur durch dich.
+   - Kleine offene Funde: `@types/jsdom` noch auf 30 (es gibt keine 31), jsdom unter `devDependencies`, obwohl der Container es zur Laufzeit
+     braucht; aus dem Review von PR #95 Reiternamen können kollidieren, „Alles im Reiter …“ führt nur zu einem Reiter, Abzeichen live und neu
+     im selben Reiter.
+   - Grenzen und Nutzungsbedingungen von Jolpica nachlesen (Annahme 4/s, 500/Std.), z. B. mit dem Agent `quellen-leser`.
+2. **`docs/Tools für später.md` prüfen:** Dort ist für den Start von Phase 4 die **lokale Supabase über Docker** vorgemerkt, sobald die
+   Schritte eigene Tabellen brauchen. Daran erinnern.
+3. Phase 4 mit `/grill-with-docs` klären (Kurzbefehl, eigener geheimer Schlüssel für den Eingang laut Prinzip 2, Tabelle, Tagesziel), dann
+   Mock und Plan.
 
-1. **Drei ungefragte Entscheidungen aus dem Journal bestätigen oder umdrehen:** Wechsel fehlen in den `keyEvents`, die Zeile `Tore:` nennt
-   je Tor das Team, Fund 5 des `plan-pruefer` (Test für die Reihenfolge in `zusammenfassen/lauf.ts`) nicht umgesetzt.
-2. **Fehlversuche begrenzen?** (Fund 3 aus dem Review von PR #85): Ein Bericht, der immer durchfällt, wird alle 15 Minuten neu versucht und
-   kostet jedes Mal rund 1 Minute Rechenzeit, bis der Spieltag vorbei ist. Nach der Abnahme mit echten Zahlen aus dem Log entscheiden:
-   jetzt bauen, parken oder streichen.
+Anstehende Entscheidungen: keine offenen „ungefragt“. Parkplätze mit Termin:
 
-Danach:
-
-1. **MIT-Lizenz** (aus dem Ecosystem, 2026-11-17): `LICENSE` mit MIT-Lizenz im Wurzelordner, Rechteinhaber `Matzee3007` (kein Klarname),
-   in der README ein kurzer Abschnitt „Lizenz“. Eigener kleiner PR.
-2. **Phase 3, Schritt 4: Formel 1** (Jolpica, OpenF1): Rennwochenende und WM-Wertung im Kartensystem von Aussehen G. Erst Mock mit
-   `mock-bauer`, dann Plan.
-3. **Software-Factory-Pilot** (aus dem Ecosystem, 2026-11-23, ADR 0027 dort): Nach dem Live-Test am 2026-11-24 und nach den
-   offenen PRs #87 bis #89 den Plan `~/claude-ecosystem/docs/plaene/2026-11-23-software-factory.md` umsetzen, mit dem Versuch
-   im Kopf des Plans beginnen. Koordinator ist eine Session in diesem Ordner, höchstens 2 Orca-Worker, Merge nur durch dich.
+- **NFL-Playoffs** (Projektvision, Offene Fragen): Anfang Januar 2027 aufgreifen, vor dem Ende der Regular Season.
 
 Bekannte offene Punkte, ohne Eile:
 
 - Wackelige Tests: Beim ersten Lauf von `checks.sh` am 2026-11-19 waren 2 Tests rot (einer zu `leseArtikel`), danach grün. Mit
   `fehler-diagnose` eingrenzen.
-- Nach PR #90 beobachten, ob die KI-News-Kachel mit 14 Absendern unter 8 Sekunden bleibt (Feed von Hugging Face rund 270 KB) und wie
-  viel länger der Durchlauf der Zusammenfassungen auf dem Mac dauert.
-
-- Hausfarben und Zonenfarben sind nicht mit den offiziellen Farben abgeglichen (Plan Aussehen G, „Aufgetaucht“).
+- Beobachten, ob die KI-News-Kachel mit 14 Absendern unter 8 Sekunden bleibt.
+- Hausfarben und Zonenfarben sind nicht mit den offiziellen Farben abgeglichen.
 - Fund 6 aus dem Review von PR #81 (Tag je Partie beim Sortieren nur einmal berechnen) bewusst nicht behoben.
-- Zusammenfassungen dauern mit `gemma4:e4b` etwa dreimal so lang wie vorher (ADR 0013), im Log beobachten.
+- Fehlversuche bei Spielberichten begrenzen: geparkt (Journal vom 2026-11-27).
 
 ## Passende Skills
 
-- `plan-schreiben`: für den Plan der Formel 1 nach dem Mock
-- `tdd`: beim Bauen
-- `fehler-diagnose`: falls am Freitag kein Bericht erscheint, und für die wackeligen Tests
+- `grill-with-docs`: Phase 4 klären, bevor ein Plan entsteht
+- `plan-schreiben`: Plan der Schritte nach Mock und Befragung
+- `assistent-bauen`: geheimen Schlüssel für den Eingang des Kurzbefehls in `.env` und bei Vercel eintragen
