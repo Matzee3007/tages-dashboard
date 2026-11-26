@@ -1,0 +1,377 @@
+{
+  "MRData": {
+    "RaceTable": {
+      "Races": [
+        {
+          "season": "2026",
+          "round": "21",
+          "raceName": "Las Vegas Grand Prix",
+          "Results": [
+            {
+              "position": "1",
+              "Driver": {
+                "code": "VER",
+                "givenName": "Max",
+                "familyName": "Verstappen"
+              },
+              "Constructor": {
+                "name": "Red Bull"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5259624",
+                "time": "1:27:39.624"
+              }
+            },
+            {
+              "position": "2",
+              "Driver": {
+                "code": "NOR",
+                "givenName": "Lando",
+                "familyName": "Norris"
+              },
+              "Constructor": {
+                "name": "McLaren"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5260263",
+                "time": "+0.639"
+              }
+            },
+            {
+              "position": "3",
+              "Driver": {
+                "code": "PIA",
+                "givenName": "Oscar",
+                "familyName": "Piastri"
+              },
+              "Constructor": {
+                "name": "McLaren"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5261153",
+                "time": "+1.529"
+              }
+            },
+            {
+              "position": "4",
+              "Driver": {
+                "code": "ANT",
+                "givenName": "Andrea Kimi",
+                "familyName": "Antonelli"
+              },
+              "Constructor": {
+                "name": "Mercedes"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5262198",
+                "time": "+2.574"
+              }
+            },
+            {
+              "position": "5",
+              "Driver": {
+                "code": "GAS",
+                "givenName": "Pierre",
+                "familyName": "Gasly"
+              },
+              "Constructor": {
+                "name": "Alpine F1 Team"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5262551",
+                "time": "+2.927"
+              }
+            },
+            {
+              "position": "6",
+              "Driver": {
+                "code": "COL",
+                "givenName": "Franco",
+                "familyName": "Colapinto"
+              },
+              "Constructor": {
+                "name": "Alpine F1 Team"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5267579",
+                "time": "+7.955"
+              }
+            },
+            {
+              "position": "7",
+              "Driver": {
+                "code": "HAM",
+                "givenName": "Lewis",
+                "familyName": "Hamilton"
+              },
+              "Constructor": {
+                "name": "Ferrari"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5272419",
+                "time": "+12.795"
+              }
+            },
+            {
+              "position": "8",
+              "Driver": {
+                "code": "SAI",
+                "givenName": "Carlos",
+                "familyName": "Sainz"
+              },
+              "Constructor": {
+                "name": "Williams"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5272562",
+                "time": "+12.938"
+              }
+            },
+            {
+              "position": "9",
+              "Driver": {
+                "code": "RUS",
+                "givenName": "George",
+                "familyName": "Russell"
+              },
+              "Constructor": {
+                "name": "Mercedes"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5272816",
+                "time": "+13.192"
+              }
+            },
+            {
+              "position": "10",
+              "Driver": {
+                "code": "LEC",
+                "givenName": "Charles",
+                "familyName": "Leclerc"
+              },
+              "Constructor": {
+                "name": "Ferrari"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5277178",
+                "time": "+17.554"
+              }
+            },
+            {
+              "position": "11",
+              "Driver": {
+                "code": "HUL",
+                "givenName": "Nico",
+                "familyName": "Hülkenberg"
+              },
+              "Constructor": {
+                "name": "Audi"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5282344",
+                "time": "+22.720"
+              }
+            },
+            {
+              "position": "12",
+              "Driver": {
+                "code": "BOR",
+                "givenName": "Gabriel",
+                "familyName": "Bortoleto"
+              },
+              "Constructor": {
+                "name": "Audi"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5288226",
+                "time": "+28.602"
+              }
+            },
+            {
+              "position": "13",
+              "Driver": {
+                "code": "BEA",
+                "givenName": "Oliver",
+                "familyName": "Bearman"
+              },
+              "Constructor": {
+                "name": "Haas F1 Team"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5288467",
+                "time": "+28.843"
+              }
+            },
+            {
+              "position": "14",
+              "Driver": {
+                "code": "LAW",
+                "givenName": "Liam",
+                "familyName": "Lawson"
+              },
+              "Constructor": {
+                "name": "RB F1 Team"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5296212",
+                "time": "+36.588"
+              }
+            },
+            {
+              "position": "15",
+              "Driver": {
+                "code": "HAD",
+                "givenName": "Isack",
+                "familyName": "Hadjar"
+              },
+              "Constructor": {
+                "name": "Red Bull"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5306112",
+                "time": "+46.488"
+              }
+            },
+            {
+              "position": "16",
+              "Driver": {
+                "code": "CAM",
+                "givenName": "Rafael",
+                "familyName": "Camara"
+              },
+              "Constructor": {
+                "name": "Haas F1 Team"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5307438",
+                "time": "+47.814"
+              }
+            },
+            {
+              "position": "17",
+              "Driver": {
+                "code": "STR",
+                "givenName": "Lance",
+                "familyName": "Stroll"
+              },
+              "Constructor": {
+                "name": "Aston Martin"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5327977",
+                "time": "+1:08.353"
+              }
+            },
+            {
+              "position": "18",
+              "Driver": {
+                "code": "BOT",
+                "givenName": "Valtteri",
+                "familyName": "Bottas"
+              },
+              "Constructor": {
+                "name": "Cadillac F1 Team"
+              },
+              "status": "Finished",
+              "laps": "50",
+              "Time": {
+                "millis": "5331297",
+                "time": "+1:11.673"
+              }
+            },
+            {
+              "position": "19",
+              "Driver": {
+                "code": "ALO",
+                "givenName": "Fernando",
+                "familyName": "Alonso"
+              },
+              "Constructor": {
+                "name": "Aston Martin"
+              },
+              "status": "Retired",
+              "laps": "49",
+              "Time": {
+                "millis": "5230040",
+                "time": ""
+              }
+            },
+            {
+              "position": "20",
+              "Driver": {
+                "code": "LIN",
+                "givenName": "Arvid",
+                "familyName": "Lindblad"
+              },
+              "Constructor": {
+                "name": "RB F1 Team"
+              },
+              "status": "Retired",
+              "laps": "19"
+            },
+            {
+              "position": "21",
+              "Driver": {
+                "code": "PER",
+                "givenName": "Sergio",
+                "familyName": "Pérez"
+              },
+              "Constructor": {
+                "name": "Cadillac F1 Team"
+              },
+              "status": "Retired",
+              "laps": "17"
+            },
+            {
+              "position": "22",
+              "Driver": {
+                "code": "ALB",
+                "givenName": "Alexander",
+                "familyName": "Albon"
+              },
+              "Constructor": {
+                "name": "Williams"
+              },
+              "status": "Did not start",
+              "laps": "0"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
