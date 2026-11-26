@@ -363,6 +363,16 @@ Entscheidungen zu Schritt 5 (NFL) vom 2026-11-24/25, Mock `assets/mocks/2026-11-
 - **Tabelle:** die Division von Mein Team (NFC West) und darunter die Conference als Ausschnitt mit Seed und Linie nach Seed 7.
 - **Breite:** eine Spalte wie die anderen Kacheln. **In „Heute“:** Chip „6–4 · Seed 8“.
 
+Entscheidungen zu Schritt 4 (Formel 1) vom 2026-11-25/27, Mock `assets/mocks/2026-11-26-formel-1.html`, Plan
+[[projects/tages-dashboard/docs/plaene/2026-11-27-formel-1|Formel 1]]:
+
+- **Nur Jolpica, kein OpenF1:** gratis, keine Live-Daten. Während einer Session steht „läuft“, berechnet aus Startzeit und Dauer.
+- **Rennwochenende:** alle Sessions mit deutscher Uhrzeit, nach dem Qualifying die Top 10 der Startaufstellung, nach dem Rennen die Top 10
+  mit Abstand.
+- **WM-Wertung:** Fahrer Top 5 und darunter Teams Top 5.
+- **Winterpause:** letztes Rennen und Endstand bleiben, dazu „Saisonstart: …“, sobald Jolpica die neue Saison kennt.
+- **Aussehen:** Marke Petrol `#0E8F82`, die nächste Session mit blauem Randstreifen, Formel 1 ohne Mein Team.
+
 ## Stolpersteine
 
 - **Arsenal und Champions League nur verzögert:** football-data.org liefert im Gratis-Tarif verzögerte
@@ -370,7 +380,7 @@ Entscheidungen zu Schritt 5 (NFL) vom 2026-11-24/25, Mock `assets/mocks/2026-11-
 - **NFL über eine inoffizielle Schnittstelle:** ESPN dokumentiert sie nicht, sie kann sich ohne Ankündigung ändern.
   Ein Testabruf am 2026-10-24 wurde mit 403 abgewiesen. Geklärt am 2026-11-24: Vom Mac und vom Server bei Vercel aus Status 200.
 - **Formel 1 live kostet:** OpenF1 gibt Live-Daten während der Sessions nur für 9,90 € im Monat, Ergebnisse
-  danach sind gratis.
+  danach sind gratis. Seit 2026-11-27 nutzt die Kachel nur Jolpica, ohne Live-Daten.
 - **X-API kostet:** 0,005 $ je gelesenem Post, derselbe Post zählt pro Tag nur einmal (X-Doku, Stand 2026-11-04). Für vier Konten wären
   das geschätzt 3 $ im Monat. Am 2026-11-04 abgelehnt, weil das Dashboard nichts kosten soll. Auslesen ohne API verbieten die Regeln von X
   laut Berichten.

@@ -59,6 +59,11 @@ _Nicht verwenden_: Matchday, Runde, heute
 Der Platz eines NFL-Teams in seiner Conference (1–16) für die Playoffs. Seeds 1–4 sind die Division-Sieger, 5–7 die Wildcards.
 _Nicht verwenden_: Rang, Setzplatz
 
+**Session**:
+Ein Teil eines Rennwochenendes der Formel 1: 1. bis 3. Training, Sprint-Qualifying, Sprint, Qualifying, Rennen. Während einer Session
+steht „läuft“, Zwischenstände gibt es nicht.
+_Nicht verwenden_: Lauf, Event
+
 **Spielfrei**:
 Ein NFL-Team hat in dieser Woche keine Partie (englisch Bye). Jedes Team hat eine spielfreie Woche je Saison.
 _Nicht verwenden_: Bye-Week, Pause
