@@ -61,7 +61,7 @@ Begründung und Alternativen: [[projects/tages-dashboard/docs/adr/0001-stack|ADR
 | Login und Datenbank | Supabase (Auth, Postgres) |
 | Hosting | Vercel (kostenloser Tarif) |
 | Tests und Qualität | Vitest, Testing Library, ESLint, Prettier |
-| Sportdaten | ESPN (inoffiziell, Bundesliga, Premier League, Champions League und NFL), football-data.org (Spieltag und Tabelle von PL und CL), Jolpica, OpenF1 |
+| Sportdaten | ESPN (inoffiziell, Bundesliga, Premier League, Champions League und NFL), football-data.org (Spieltag und Tabelle von PL und CL), Jolpica (Formel 1, OpenF1 seit 2026-11-27 nicht genutzt) |
 | News | RSS- und Atom-Feeds (`fast-xml-parser`), selbst ausgelesene Seiten |
 | Schritte | iPhone-Kurzbefehl → eigene Schnittstelle der App |
 | Zusammenfassungen | lokales Sprachmodell auf dem Mac über Docker Model Runner, Skript in Docker Compose ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac\|ADR 0010]]) |
@@ -109,7 +109,7 @@ abgeschlossen (Regel „Phasenwechsel“ in der globalen `CLAUDE.md`).
 - [x] **Phase 2 – KI-News:** Feeds und selbst ausgelesene Seiten von Anthropic, Claude Updates, OpenAI, Google DeepMind,
   Karpathy, Matt Pocock und Fachseiten in einer Kachel mit einem Abschnitt pro Absender
 - [ ] **Phase 3 – Sport:** je eine Kachel für Bundesliga (ESPN), Premier League und Champions League
-  (ESPN und football-data.org), NFL (ESPN) und Formel 1 (Jolpica, OpenF1), jeweils mit Spieltag und Tabelle
+  (ESPN und football-data.org), NFL (ESPN) und Formel 1 (Jolpica), jeweils mit Spieltag und Tabelle
 - [x] **Einschub – KI-Feature:** Zusammenfassung je Meldung der KI-News mit einem lokalen Sprachmodell
   ([[projects/tages-dashboard/docs/adr/0010-zusammenfassungen-vom-mac|ADR 0010]]), in drei Stufen: erster Modellaufruf, Evaluation mit
   Testsatz, Structured Output. Phase 3, Schritt 2 ruht so lange.
@@ -241,7 +241,7 @@ Entscheidungen aus der Befragung vom 2026-11-04:
    ([[projects/tages-dashboard/docs/adr/0014-reiter-mit-uebersicht|ADR 0014]], PR #95, siehe
    [[projects/tages-dashboard/docs/plaene/2026-11-23-reiter-und-heute|Plan]]):* Das Dashboard hat Reiter „Heute“, „Sport“, „KI-News“.
    „Heute“ zeigt Jetzt live, Mein Team und neue KI-News. Neue Kacheln bringen dafür eine Kurzfassung mit.
-4. **Formel 1 (Jolpica, OpenF1):** Rennwochenende und WM-Wertung.
+4. **Formel 1 (Jolpica):** Rennwochenende und WM-Wertung (Entscheidungen unten, OpenF1 nicht genutzt).
 5. **NFL (ESPN)** (erledigt 2026-11-25, PR #98, siehe [[projects/tages-dashboard/docs/plaene/2026-11-25-nfl|Plan]]): ESPN antwortet
    vom Server aus. Ganze Woche, live mit Viertel und Scoring-Plays, Tabelle der NFC West und der NFC (Entscheidungen unten).
 

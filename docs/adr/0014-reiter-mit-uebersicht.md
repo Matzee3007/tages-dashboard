@@ -45,3 +45,9 @@ Variante D aus dem Mock `assets/mocks/2026-11-23-struktur.html`:
   selbst mit, andere Kacheln ändern sich nicht).
 - Ein Reiter hat keine eigene Adresse. Ein Lesezeichen auf „Sport“ ist nicht möglich.
 - Die Grundform der Seite (`app/dashboard.tsx`) ändert sich. Formel 1 (Phase 3, Schritt 4) baut danach auf den Reitern auf.
+
+## Nachtrag 2026-11-27: Sessions der Formel 1 in „Jetzt live“
+
+„Jetzt live“ zeigt neben laufenden Partien auch laufende Sessions der Formel 1 („Rennen läuft · Großer Preis von Katar“), ohne
+Zwischenstand. Der Knopf darunter heißt deshalb „Alles im Reiter …“ statt „Alle Partien im Reiter …“
+([[projects/tages-dashboard/docs/plaene/2026-11-27-formel-1|Plan Formel 1]], Aufgabe 5).

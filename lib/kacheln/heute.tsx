@@ -11,7 +11,7 @@ import { datum } from "@/lib/zeit";
 
 const WEITERE_MELDUNGEN = 6;
 
-// „2 Partien, 1 Rennen“: Partien und Sessions der Formel 1 getrennt gezählt.
+// „2 Partien, 1 Session“: Partien und Sessions der Formel 1 getrennt gezählt.
 function liveText(live: LiveEintrag[]): string {
   const partien = live.filter((eintrag) => "partie" in eintrag).length;
   const sessions = live.length - partien;

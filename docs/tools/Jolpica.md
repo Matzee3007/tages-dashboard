@@ -44,6 +44,16 @@ Zum Ausprobieren im Terminal:
   braucht die Kachel rund 20 Abrufe pro Stunde.
 - Die Antwort sagt `cache-control: max-age=600`, Kopfzeilen zu Grenzen schickt Jolpica nicht (2026-11-25).
 
+## Fehler
+
+- **Leere Liste `{"MRData": {"RaceTable": {"Races": []}}}`** bei Qualifying oder Rennergebnis: **Ursache:** Die Session ist noch nicht
+  gefahren oder Jolpica hat das Ergebnis noch nicht eingetragen. **Lösung:** Die Leser geben dann keine Zeilen zurück. Nach dem Rennen bleibt
+  bis dahin die Startaufstellung stehen.
+- **`Unerwartete Antwort von Jolpica`** im Server-Log: **Ursache:** Ein Feld fehlt, das die Kachel braucht (z. B. `MRData.RaceTable.Races`
+  im Kalender). **Lösung:** Antwort im Terminal mit dem Befehl oben ansehen und den Leser in `lib/kacheln/formel-1/jolpica.ts` anpassen.
+- **`Status 500 von …`** oder Zeitüberschreitung nach 2 Sekunden: **Ursache:** Jolpica ist gerade nicht erreichbar. **Lösung:** keine nötig.
+  Fehlt der Kalender, zeigt die Kachel den letzten Stand mit Hinweis, fehlen Ergebnis oder Wertung, fehlt nur dieser Teil.
+
 ## Stand
 
 - 2026-11-25: Vom Mac aus alle Abrufe Status 200 in 80–150 ms. Saison 2026 mit 23 Rennen, 6 davon mit Sprint. Kalender 2027 noch leer.
