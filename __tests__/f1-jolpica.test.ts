@@ -4,6 +4,7 @@ import {
   leseErgebnis,
   leseKalender,
   leseQualifying,
+  leseSaison,
   leseWertung,
 } from "@/lib/kacheln/formel-1/jolpica";
 import ergebnis from "@/__tests__/fixtures/f1-ergebnis.json";
@@ -79,13 +80,31 @@ test("leseErgebnis: Top 10, Sieger mit Gesamtzeit, dann Abstand", () => {
   expect(zeilen[1]).toMatchObject({ platz: 2, kuerzel: "NOR", zeit: "+0,639" });
 });
 
-test("leseErgebnis: Überrundete und Ausfälle", () => {
+test("leseErgebnis: Überrundete nach Runden, auch mit Zeit; Ausfälle und Nichtstarter", () => {
   const roh = structuredClone(ergebnis);
   const liste = roh.MRData.RaceTable.Races[0].Results;
-  liste[8] = { ...liste[8], status: "+1 Lap", Time: undefined } as never;
-  liste[9] = { ...liste[9], status: "Retired", Time: undefined } as never;
+  const runden = Number(liste[0].laps);
+  liste[7] = {
+    ...liste[7],
+    status: "Lapped",
+    laps: String(runden - 1),
+    Time: { time: "+4.593" },
+  } as never;
+  liste[8] = {
+    ...liste[8],
+    status: "Lapped",
+    laps: String(runden - 2),
+    Time: undefined,
+  } as never;
+  liste[9] = {
+    ...liste[9],
+    status: "Retired",
+    laps: "40",
+    Time: { time: "+1:00.000" },
+  } as never;
   const zeilen = leseErgebnis(roh);
-  expect(zeilen[8].zeit).toBe("+1 Rd.");
+  expect(zeilen[7].zeit).toBe("+1 Rd.");
+  expect(zeilen[8].zeit).toBe("+2 Rd.");
   expect(zeilen[9].zeit).toBe("Ausfall");
 });
 
@@ -100,6 +119,31 @@ test("leseWertung: Fahrer und Teams mit Runde", () => {
   });
   const t = leseWertung(teams, "teams");
   expect(t.zeilen[0]).toEqual({ platz: 1, name: "Mercedes", punkte: 666 });
+});
+
+test("leseSaison: auch ein leerer Kalender nennt seine Saison", () => {
+  expect(leseSaison(kalender)).toBe(2026);
+  expect(
+    leseSaison({ MRData: { RaceTable: { season: "2027", Races: [] } } }),
+  ).toBe(2027);
+  expect(
+    leseKalender({ MRData: { RaceTable: { season: "2027", Races: [] } } }),
+  ).toEqual([]);
+});
+
+test("eine Session ohne Uhrzeit trägt ohneZeit", () => {
+  const roh = structuredClone(kalender);
+  const katar = roh.MRData.RaceTable.Races[21] as Record<string, unknown>;
+  katar.FirstPractice = { date: "2026-11-27" };
+  const training = leseKalender(roh)[21].sessions[0];
+  expect(training).toMatchObject({ art: "training1", ohneZeit: true });
+});
+
+test("leseWertung: vor Runde 1 ist die Wertung leer, kein Fehler", () => {
+  const leer = {
+    MRData: { StandingsTable: { season: "2027", StandingsLists: [] } },
+  };
+  expect(leseWertung(leer, "fahrer")).toEqual({ nachRunde: 0, zeilen: [] });
 });
 
 test("falsche Form wirft", () => {

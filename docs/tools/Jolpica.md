@@ -27,8 +27,8 @@ steht nur „läuft“, berechnet aus Startzeit und Dauer.
 | Kalender der Saison | `https://api.jolpi.ca/ergast/f1/current.json`, Sessions in `FirstPractice`, `SecondPractice`, `ThirdPractice`, `SprintQualifying`, `Sprint`, `Qualifying`, Rennen in `date`/`time` | 24 Std. |
 | Qualifying | `…/f1/2026/22/qualifying.json` (leere Liste `Races: []`, bis es gefahren ist) | 15 Min. |
 | Rennergebnis | `…/f1/2026/22/results.json` (ebenso leer bis nach dem Rennen) | 15 Min. |
-| Fahrer- und Team-Wertung | `…/f1/current/driverStandings.json`, `…/current/constructorStandings.json` | 15 Min. |
-| Nächste Saison | `…/f1/2027.json`, nur in der Winterpause | 24 Std. |
+| Fahrer- und Team-Wertung | `…/f1/2026/driverStandings.json`, `…/2026/constructorStandings.json` (je Saison, vor Runde 1 `StandingsLists: []`) | 15 Min. |
+| Nächste oder vorige Saison | `…/f1/2027.json` (Dezember, für den Saisonstart) oder `…/f1/2026.json` (Januar bis März, solange die neue Saison nicht begonnen hat) | 24 Std. |
 
 Alle mit `User-Agent: Tages-Dashboard`, 2 Sekunden Zeitlimit und Etikett `formel-1` für den Knopf ↻.
 
@@ -53,6 +53,9 @@ Zum Ausprobieren im Terminal:
   im Kalender). **Lösung:** Antwort im Terminal mit dem Befehl oben ansehen und den Leser in `lib/kacheln/formel-1/jolpica.ts` anpassen.
 - **`Status 500 von …`** oder Zeitüberschreitung nach 2 Sekunden: **Ursache:** Jolpica ist gerade nicht erreichbar. **Lösung:** keine nötig.
   Fehlt der Kalender, zeigt die Kachel den letzten Stand mit Hinweis, fehlen Ergebnis oder Wertung, fehlt nur dieser Teil.
+
+- **Überrundete als „Ausfall“** (Review von PR #100): **Ursache:** Jolpica meldet sie seit 2026 als `Lapped`, teils ohne Zeit, teils mit
+  einer irreführenden Zeit (`+4.593` bei einer Runde Rückstand, Australien 2026). **Lösung:** „+n Rd.“ aus den Runden zum Sieger (`laps`).
 
 ## Stand
 

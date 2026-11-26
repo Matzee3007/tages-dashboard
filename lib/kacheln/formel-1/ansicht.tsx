@@ -49,7 +49,9 @@ function SessionZeile({
         <span className="text-[12.5px] font-[650] text-akzent">läuft</span>
       )}
       <span className="text-[12.5px] text-gedaempft tabular-nums">
-        {wochentag(session.start)} {uhrzeit(session.start)}
+        {session.ohneZeit
+          ? wochentag(session.start)
+          : `${wochentag(session.start)} ${uhrzeit(session.start)}`}
       </span>
     </li>
   );
@@ -220,15 +222,13 @@ export function Formel1Ansicht({
         {daten.ergebnis && (
           <ErgebnisTabelle
             name={
-              daten.ergebnis.art === "rennen"
-                ? "Rennergebnis"
-                : "Startaufstellung"
+              daten.ergebnis.art === "rennen" ? "Rennergebnis" : "Qualifying"
             }
             zeilen={daten.ergebnis.zeilen}
           />
         )}
         <Ueberschrift className="text-[13.5px] font-[720]">
-          {daten.wertungNachRunde === null
+          {!daten.wertungNachRunde
             ? "WM-Wertung"
             : `WM-Wertung nach Runde ${daten.wertungNachRunde}`}
         </Ueberschrift>
@@ -236,12 +236,14 @@ export function Formel1Ansicht({
           <p className="text-[13.5px] text-gedaempft">
             WM-Wertung gerade nicht erreichbar
           </p>
+        ) : !daten.fahrer?.length && !daten.teams?.length ? (
+          <p className="text-[13.5px] text-gedaempft">Noch keine WM-Wertung</p>
         ) : (
           <>
-            {daten.fahrer && (
+            {!!daten.fahrer?.length && (
               <WertungsTabelle name="Fahrer" zeilen={daten.fahrer} />
             )}
-            {daten.teams && (
+            {!!daten.teams?.length && (
               <WertungsTabelle name="Teams" zeilen={daten.teams} />
             )}
           </>

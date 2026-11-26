@@ -14,6 +14,8 @@ export type Session = {
   name: string;
   start: string;
   status: "vorher" | "laeuft" | "vorbei";
+  // Jolpica nennt nur den Tag, noch keine Uhrzeit.
+  ohneZeit?: true;
 };
 
 export type Rennen = {

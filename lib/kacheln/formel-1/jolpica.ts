@@ -17,8 +17,9 @@ export const F1_ADRESSEN = {
     `${JOLPICA}/${saison}/${runde}/qualifying.json`,
   ergebnis: (saison: number, runde: number) =>
     `${JOLPICA}/${saison}/${runde}/results.json`,
-  fahrer: `${JOLPICA}/current/driverStandings.json`,
-  teams: `${JOLPICA}/current/constructorStandings.json`,
+  // Je Saison, damit die Winterpause im Januar den Endstand der Vorsaison zeigt.
+  fahrer: (saison: number) => `${JOLPICA}/${saison}/driverStandings.json`,
+  teams: (saison: number) => `${JOLPICA}/${saison}/constructorStandings.json`,
 };
 
 // Deutsche Namen der Rennen. Fehlt einer, bleibt der englische.
@@ -92,20 +93,33 @@ function rennen(json: unknown): RohesRennen[] {
 }
 
 // Alle Rennen einer Saison mit ihren Sessions, jede noch mit Status „vorher“ (den setzt wochenende.ts).
+// Ohne Uhrzeit (neu veröffentlichte Kalender) zählt nur der Tag: ohneZeit, kein „läuft“, keine Uhrzeit in der Ansicht.
+function mitStart(session: Omit<Session, "start">, termin: Termin): Session {
+  return {
+    ...session,
+    start: start(termin),
+    ...(!termin.time && { ohneZeit: true as const }),
+  };
+}
+
+// Die Saison des Kalenders, auch wenn er noch leer ist (z. B. „2027“ im Januar).
+export function leseSaison(json: unknown): number {
+  const saison = (json as { MRData?: { RaceTable?: { season?: string } } })
+    ?.MRData?.RaceTable?.season;
+  return Number(saison ?? falscheForm());
+}
+
 export function leseKalender(json: unknown): Rennen[] {
   return rennen(json).map((roh) => {
     const sessions: Session[] = SESSIONS.flatMap(({ feld, art, name }) => {
       const termin = roh[feld] as Termin | undefined;
       return termin
-        ? [{ art, name, start: start(termin), status: "vorher" as const }]
+        ? [mitStart({ art, name, status: "vorher" as const }, termin)]
         : [];
     });
-    sessions.push({
-      art: "rennen",
-      name: "Rennen",
-      start: start(roh),
-      status: "vorher",
-    });
+    sessions.push(
+      mitStart({ art: "rennen", name: "Rennen", status: "vorher" }, roh),
+    );
     return {
       saison: Number(roh.season ?? falscheForm()),
       runde: Number(roh.round ?? falscheForm()),
@@ -156,7 +170,8 @@ export function leseQualifying(json: unknown): ErgebnisZeile[] {
     .map((roh) => zeile(roh, komma(roh.Q3 ?? roh.Q2 ?? roh.Q1 ?? "")));
 }
 
-// Die ersten 10 des Rennens: Sieger mit Gesamtzeit, sonst Abstand, Überrundete „+1 Rd.“, sonst „Ausfall“.
+// Die ersten 10 des Rennens: Sieger mit Gesamtzeit, sonst Abstand. Überrundete („Lapped“, Jolpica 2026) nach Runden zum Sieger,
+// auch wenn sie eine Zeit tragen. „Ausfall“ für alles andere ohne Zeit oder mit Status wie „Retired“.
 // Vor dem Ende des Rennens: keine Zeilen.
 export function leseErgebnis(json: unknown): ErgebnisZeile[] {
   if (rennen(json).length === 0) return [];
@@ -165,19 +180,25 @@ export function leseErgebnis(json: unknown): ErgebnisZeile[] {
       | {
           Results?: (RoheZeile & {
             status?: string;
+            laps?: string;
             Time?: { time?: string };
           })[];
         }
       | undefined
   )?.Results;
   if (!Array.isArray(liste)) falscheForm();
+  const siegerRunden = Number(liste[0]?.laps ?? 0);
   return liste.slice(0, 10).map((roh) => {
-    const runden = roh.status?.match(/^\+(\d+) Laps?$/)?.[1];
-    const zeit = roh.Time?.time
-      ? komma(roh.Time.time)
-      : runden
-        ? `+${runden} Rd.`
-        : "Ausfall";
+    const zurueck =
+      Number(roh.status?.match(/^\+(\d+) Laps?$/)?.[1] ?? 0) ||
+      (roh.status === "Lapped" ? siegerRunden - Number(roh.laps ?? 0) : 0);
+    const gewertet = roh.status === "Finished" || roh.status === "Lapped";
+    const zeit =
+      zurueck > 0
+        ? `+${zurueck} Rd.`
+        : gewertet && roh.Time?.time
+          ? komma(roh.Time.time)
+          : "Ausfall";
     return zeile(roh, zeit);
   });
 }
@@ -187,7 +208,7 @@ export function leseWertung(
   json: unknown,
   art: "fahrer" | "teams",
 ): { nachRunde: number; zeilen: WertungsZeile[] } {
-  const liste = (
+  const listen = (
     json as {
       MRData?: {
         StandingsTable?: {
@@ -202,7 +223,11 @@ export function leseWertung(
         };
       };
     }
-  )?.MRData?.StandingsTable?.StandingsLists?.[0];
+  )?.MRData?.StandingsTable?.StandingsLists;
+  if (!Array.isArray(listen)) falscheForm();
+  // Vor dem ersten Rennen einer Saison gibt es noch keine Wertung.
+  if (listen.length === 0) return { nachRunde: 0, zeilen: [] };
+  const liste = listen[0];
   const eintraege =
     art === "fahrer" ? liste?.DriverStandings : liste?.ConstructorStandings;
   if (!liste || !Array.isArray(eintraege)) falscheForm();

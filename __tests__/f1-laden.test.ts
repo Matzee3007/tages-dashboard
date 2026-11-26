@@ -24,8 +24,8 @@ const ANTWORTEN: Record<string, unknown> = {
   [F1_ADRESSEN.ergebnis(2026, 22)]: LEER,
   [F1_ADRESSEN.qualifying(2026, 23)]: qualifying,
   [F1_ADRESSEN.ergebnis(2026, 23)]: ergebnis,
-  [F1_ADRESSEN.fahrer]: fahrer,
-  [F1_ADRESSEN.teams]: teams,
+  [F1_ADRESSEN.fahrer(2026)]: fahrer,
+  [F1_ADRESSEN.teams(2026)]: teams,
   [F1_ADRESSEN.saison(2027)]: LEER,
 };
 
@@ -114,7 +114,10 @@ test("Qualifying nicht erreichbar: ohne Ergebnis, Rest da", async () => {
 });
 
 test("Wertung nicht erreichbar: Fahrer und Teams null", async () => {
-  antworten({ [F1_ADRESSEN.fahrer]: 500, [F1_ADRESSEN.teams]: 500 });
+  antworten({
+    [F1_ADRESSEN.fahrer(2026)]: 500,
+    [F1_ADRESSEN.teams(2026)]: 500,
+  });
   const daten = await ladeFormel1(
     EINSTELLUNG,
     new Date("2026-11-25T10:00:00Z"),
@@ -165,4 +168,76 @@ test("alle Abrufe mit Etikett formel-1 und 2 Sekunden Zeitlimit", async () => {
   for (const [, optionen] of fetchMock.mock.calls) {
     expect(optionen.next.tags).toEqual(["formel-1"]);
   }
+});
+
+// Der Kalender von Australien 2027, wie Jolpica ihn im Januar liefern könnte.
+const KALENDER_2027 = {
+  MRData: {
+    RaceTable: {
+      season: "2027",
+      Races: [
+        {
+          season: "2027",
+          round: "1",
+          raceName: "Australian Grand Prix",
+          date: "2027-03-07",
+          time: "04:00:00Z",
+          Circuit: { Location: { locality: "Melbourne" } },
+          FirstPractice: { date: "2027-03-05", time: "01:30:00Z" },
+        },
+      ],
+    },
+  },
+};
+
+test("im Januar mit leerem Kalender 2027: Vorsaison mit Abu Dhabi und Endstand, Winterpause", async () => {
+  antworten({
+    [F1_ADRESSEN.kalender]: {
+      MRData: { RaceTable: { season: "2027", Races: [] } },
+    },
+    [F1_ADRESSEN.saison(2026)]: kalender,
+  });
+  const daten = await ladeFormel1(
+    EINSTELLUNG,
+    new Date("2027-01-10T12:00:00Z"),
+  );
+  expect(daten.rennen.runde).toBe(23);
+  expect(daten.winterpause).toBe(true);
+  expect(daten.ergebnis?.art).toBe("rennen");
+  expect(daten.fahrer?.[0].name).toBe("Antonelli");
+  expect(daten.saisonstart).toBeNull();
+});
+
+test("im Februar mit Kalender 2027: weiter Vorsaison, dazu der Saisonstart", async () => {
+  antworten({
+    [F1_ADRESSEN.kalender]: KALENDER_2027,
+    [F1_ADRESSEN.saison(2026)]: kalender,
+  });
+  const daten = await ladeFormel1(
+    EINSTELLUNG,
+    new Date("2027-02-10T12:00:00Z"),
+  );
+  expect(daten.rennen.saison).toBe(2026);
+  expect(daten.winterpause).toBe(true);
+  expect(daten.saisonstart).toEqual({
+    name: "Großer Preis von Australien",
+    tage: ["2027-03-05", "2027-03-07"],
+  });
+});
+
+test("eine leere Wertung vor Runde 1 ist kein Fehler", async () => {
+  const leer = {
+    MRData: { StandingsTable: { season: "2026", StandingsLists: [] } },
+  };
+  antworten({
+    [F1_ADRESSEN.fahrer(2026)]: leer,
+    [F1_ADRESSEN.teams(2026)]: leer,
+  });
+  const daten = await ladeFormel1(
+    EINSTELLUNG,
+    new Date("2026-11-25T10:00:00Z"),
+  );
+  expect(daten.fahrer).toEqual([]);
+  expect(daten.teams).toEqual([]);
+  expect(console.error).not.toHaveBeenCalled();
 });

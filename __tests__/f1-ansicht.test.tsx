@@ -55,7 +55,7 @@ test("Kopf mit Name, Ort, Runde und Tagen, Sessions mit Wochentag und Uhrzeit", 
   expect(zeilen[0].getAttribute("data-naechste")).toBe("true");
 });
 
-test("nach dem Qualifying: gehakt, Rennen als nächste, Startaufstellung mit 10 Zeilen", () => {
+test("nach dem Qualifying: gehakt, Rennen als nächste, Qualifying mit 10 Zeilen", () => {
   render(
     <Formel1Ansicht
       daten={daten("2026-11-28T19:30:00Z", {
@@ -68,7 +68,7 @@ test("nach dem Qualifying: gehakt, Rennen als nächste, Startaufstellung mit 10 
   ).getAllByRole("listitem");
   expect(zeilen[3].getAttribute("data-status")).toBe("vorbei");
   expect(zeilen[4].getAttribute("data-naechste")).toBe("true");
-  const tabelle = screen.getByRole("table", { name: "Startaufstellung" });
+  const tabelle = screen.getByRole("table", { name: "Qualifying" });
   expect(within(tabelle).getAllByRole("row")).toHaveLength(11);
   expect(tabelle.textContent).toContain("1:33,893");
 });
@@ -141,4 +141,32 @@ test("ohne Wertung ein Hinweis", () => {
     />,
   );
   expect(screen.getByText("WM-Wertung gerade nicht erreichbar")).toBeDefined();
+});
+
+test("leere Wertung vor Runde 1: Hinweis statt leerer Tabellen", () => {
+  render(
+    <Formel1Ansicht
+      daten={daten("2026-11-25T10:00:00Z", {
+        fahrer: [],
+        teams: [],
+        wertungNachRunde: 0,
+      })}
+    />,
+  );
+  expect(screen.getByText("Noch keine WM-Wertung")).toBeDefined();
+  expect(screen.queryByRole("table", { name: "Fahrer" })).toBeNull();
+});
+
+test("eine Session ohne Uhrzeit zeigt nur den Tag", () => {
+  const mit = daten("2026-11-25T10:00:00Z");
+  mit.rennen.sessions[0] = {
+    ...mit.rennen.sessions[0],
+    start: "2026-11-27T00:00:00Z",
+    ohneZeit: true,
+  };
+  render(<Formel1Ansicht daten={mit} />);
+  const zeile = within(
+    screen.getByRole("list", { name: "Rennwochenende" }),
+  ).getAllByRole("listitem")[0];
+  expect(zeile.textContent).toBe("1. TrainingFr");
 });
