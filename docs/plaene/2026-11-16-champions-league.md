@@ -189,5 +189,5 @@ Riskantestes zuerst: der neue Weg zu den Tagen.
   `plan-pruefer` ERFÜLLT.
 - [x] **Schritt 2 (Entwickler, bestanden am 2026-11-16):** In der Vorschau einloggen: Champions League steht zwischen Premier League und KI-News, Titel „5. Spieltag“ mit
   Di 24. – Mi 25. November, 18 Partien mit Anstoßzeit, Bayern und Arsenal oben, Tabelle mit Platz 1 und je 2 Plätzen um Bayern und Arsenal.
-- [ ] **Schritt 3 (24.11., abends, nach dem Merge, offen, steht in der Übergabe):** live: Minute mit orangem Punkt, Spielstand und Torschützen innerhalb von rund
-  2 Minuten nach einem Tor.
+- [x] **Schritt 3 (24.11., abends, nach dem Merge):** live: Minute mit orangem Punkt, Spielstand und Torschützen innerhalb von rund
+  2 Minuten nach einem Tor. Ergebnis 2026-11-27: lief gut (laut Entwickler).

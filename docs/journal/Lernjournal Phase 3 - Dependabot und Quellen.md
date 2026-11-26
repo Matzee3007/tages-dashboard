@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 3 - Dependabot und Quellen
-status: aktiv
+status: abgeschlossen
 phase: 3
 erstellt: 2026-11-12
 tags: [lernjournal, phase-3, sport, dependabot, code-review, espn, openligadb, supabase, grill-with-docs]

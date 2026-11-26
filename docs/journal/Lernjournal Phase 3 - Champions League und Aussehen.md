@@ -1,6 +1,6 @@
 ---
 titel: Lernjournal Phase 3 - Champions League und Aussehen
-status: aktiv
+status: abgeschlossen
 phase: 3
 erstellt: 2026-11-17
 tags: [lernjournal, phase-3, champions-league, espn, football-data, aussehen, mock-bauer, frontend-design, tailwind, tdd, plan-pruefer, spielberichte, docker-model-runner, gemma4, supabase, grill-with-docs]
