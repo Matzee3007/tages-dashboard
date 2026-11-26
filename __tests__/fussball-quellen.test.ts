@@ -165,12 +165,13 @@ test("der Schlüssel steht nie in der Antwort an den Browser", async () => {
   expect(JSON.stringify(antwort)).not.toContain(SCHLUESSEL);
 });
 
-test("Reihenfolge Bundesliga, Premier League, Champions League, NFL, KI-News mit Mein Team", () => {
+test("Reihenfolge Bundesliga, Premier League, Champions League, NFL, Formel 1, KI-News mit Mein Team", () => {
   expect(KACHELN.map((kachel) => kachel.id)).toEqual([
     "bundesliga",
     "premier-league",
     "champions-league",
     "nfl",
+    "formel-1",
     "ki-news",
   ]);
   const premierLeague = KACHELN[1] as FussballEinstellung;

@@ -108,3 +108,9 @@ test("falsche Form wirft", () => {
     "Unerwartete Antwort von Jolpica",
   );
 });
+
+test("vor der Session ist die Liste leer: keine Zeilen statt Fehler", () => {
+  const leer = { MRData: { RaceTable: { Races: [] } } };
+  expect(leseQualifying(leer)).toEqual([]);
+  expect(leseErgebnis(leer)).toEqual([]);
+});

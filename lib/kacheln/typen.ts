@@ -2,10 +2,11 @@ import type { Aussehen } from "@/lib/einstellungen";
 import type { FussballDaten } from "@/lib/kacheln/fussball/typen";
 import type { AbsenderStand } from "@/lib/kacheln/ki-news/laden";
 import type { NflDaten } from "@/lib/kacheln/nfl/typen";
+import type { Formel1Daten } from "@/lib/kacheln/formel-1/typen";
 
 export type KiNewsDaten = { art: "ki-news"; absender: AbsenderStand[] };
 
-export type KachelDaten = KiNewsDaten | FussballDaten | NflDaten;
+export type KachelDaten = KiNewsDaten | FussballDaten | NflDaten | Formel1Daten;
 
 // Was jede Kachel immer trägt, auch im Fehlerfall.
 export type KachelKopf = {

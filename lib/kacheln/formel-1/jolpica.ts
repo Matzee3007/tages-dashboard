@@ -136,8 +136,9 @@ function zeile(roh: RoheZeile, zeit: string): ErgebnisZeile {
 
 const komma = (zeit: string) => zeit.replace(".", ",");
 
-// Die ersten 10 der Startaufstellung mit der besten Zeit aus Q3, Q2 oder Q1.
+// Die ersten 10 der Startaufstellung mit der besten Zeit aus Q3, Q2 oder Q1. Vor dem Qualifying: keine Zeilen.
 export function leseQualifying(json: unknown): ErgebnisZeile[] {
+  if (rennen(json).length === 0) return [];
   const liste = (
     rennen(json)[0] as
       | {
@@ -156,7 +157,9 @@ export function leseQualifying(json: unknown): ErgebnisZeile[] {
 }
 
 // Die ersten 10 des Rennens: Sieger mit Gesamtzeit, sonst Abstand, Überrundete „+1 Rd.“, sonst „Ausfall“.
+// Vor dem Ende des Rennens: keine Zeilen.
 export function leseErgebnis(json: unknown): ErgebnisZeile[] {
+  if (rennen(json).length === 0) return [];
   const liste = (
     rennen(json)[0] as
       | {

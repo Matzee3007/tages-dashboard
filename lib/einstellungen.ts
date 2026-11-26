@@ -62,8 +62,11 @@ export type NflEinstellung = KachelBasis & {
   zonen: Zone[];
 };
 
+// Formel 1 von Jolpica, ohne Mein Team (Glossar: Mein Team, Plan Formel 1).
+export type Formel1Einstellung = KachelBasis & { art: "formel-1" };
+
 export type KachelEinstellung =
-  KiNewsEinstellung | FussballEinstellung | NflEinstellung;
+  KiNewsEinstellung | FussballEinstellung | NflEinstellung | Formel1Einstellung;
 
 // Teams der Bundesliga mit deutschem Kurznamen nach der id von ESPN, Saison 2026/27 (Projektvision, Phase 3).
 export const TEAMS_BUNDESLIGA: Team[] = [
@@ -229,6 +232,13 @@ export const KACHELN: KachelEinstellung[] = [
       { von: 1, bis: 4, name: "Division-Sieger", farbe: "#4C8DF6" },
       { von: 5, bis: 7, name: "Wildcard", farbe: "#22B8CF" },
     ],
+  },
+  {
+    id: "formel-1",
+    art: "formel-1",
+    titel: "Formel 1",
+    aussehen: { farbe: "#0E8F82", kuerzel: "F1" },
+    gruppe: "Sport",
   },
   {
     id: "ki-news",
